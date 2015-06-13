@@ -7,9 +7,9 @@ import org.parboiled2._
  */
 
 class ParserClean(val input: ParserInput) extends Parser {
-  def InputLine = rule { Expression ~ EOI }
+  def InputLine = rule { ScientificName ~ EOI }
 
-  def Expression: Rule1[Int] = rule {
+  def ScientificName: Rule1[String] = rule {
     Term ~ zeroOrMore(
       '+' ~ Term ~> ((_: Int) + _)
     | '-' ~ Term ~> ((_: Int) - _))
@@ -28,4 +28,6 @@ class ParserClean(val input: ParserInput) extends Parser {
   def Number = rule { capture(Digits) ~> (_.toInt) }
 
   def Digits = rule { oneOrMore(CharPredicate.Digit) }
+
+  def LowChars = rule { oneOrMore(CharPredicate.LowerAlpha)}
 }
