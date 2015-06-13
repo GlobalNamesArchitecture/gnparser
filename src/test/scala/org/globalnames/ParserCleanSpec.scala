@@ -1,20 +1,21 @@
 package org.globalnames
 
-import org.specs2.Specification
-import scala.util._
+import org.specs2.mutable.Specification
+import scala.util.{Success, Failure}
 
-/**
- * Created by dimus on 6/13/15.
- */
-class ParserCleanAddSpec extends Specification{
-  def is = s2"""Add two numbers
-    |
-    |1+1 = 2                      $e1
-    |5-2 = 3                      $e2
-    |5*2 = 10                     $e3
-  """.stripMargin
+class ParserCleanSpec extends Specification {
+  "ParserClean" should {
+    "parse 1+1 to 2" in
+      parse("1+1") === 2
+    "parse 2-1 to 1" in
+      parse("2-1") === 1
+  }
 
-  def e1 = new ParserClean("1+1").InputLine.run() must_== Success(2)
-  def e2 = new ParserClean("5-2").InputLine.run() must_== Success(3)
-  def e3 = new ParserClean("5*2").InputLine.run() must_== Success(10)
+  def parse(input: String): Int = {
+    val pc = new ParserClean(input).InputLine.run()
+    pc match {
+      case Success(res: Int) => res
+      case Failure(_) => 0
+    }
+  }
 }

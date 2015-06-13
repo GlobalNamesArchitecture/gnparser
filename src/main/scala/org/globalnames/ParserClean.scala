@@ -7,12 +7,11 @@ import org.parboiled2._
  */
 
 class ParserClean(val input: ParserInput) extends Parser {
-  def InputLine = rule { ScientificName ~ EOI }
+  def InputLine = rule { Expression ~ EOI }
 
-  def ScientificName: Rule1[String] = rule {
+  def Expression: Rule1[Int] = rule {
     Term ~ zeroOrMore(
-      '+' ~ Term ~> ((_: Int) + _)
-    | '-' ~ Term ~> ((_: Int) - _))
+      '+' ~ Term ~> ((_: Int) + _) | '-' ~ Term ~> ((_: Int) - _))
   }
 
   def Term = rule {

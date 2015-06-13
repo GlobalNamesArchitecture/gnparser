@@ -1,0 +1,5 @@
+Picked up JAVA_TOOL_OPTIONS: -javaagent:/usr/share/java/jayatanaag.jar 
+Java HotSpot(TM) 64-Bit Server VM warning: ignoring option MaxPermSize=350m; support was removed in 8.0
+[   9125]   WARN - openapi.wm.impl.ToolWindowImpl - ToolWindow icons should be 13x13. Please fix ToolWindow (ID:  SBT) or icon jar:file:/home/dimus/.IdeaIC14/config/plugins/Scala/lib/scala-plugin.jar!/sbt.png 
+[  11475]   WARN - openapi.wm.impl.ToolWindowImpl - ToolWindow icons should be 13x13. Please fix ToolWindow (ID:  SBT) or icon jar:file:/home/dimus/.IdeaIC14/config/plugins/Scala/lib/scala-plugin.jar!/sbt.png 
+[  12911]   WARN - ution.rmi.RemoteProcessSupport - Picked up JAVA_TOOL_OPTIONS: -javaagent:/usr/share/java/jayatanaag.jar 
