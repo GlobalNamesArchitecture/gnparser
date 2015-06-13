@@ -1,5 +1,6 @@
-package org.globalnames
+package org.globalnames.parser
 
+import spray.json.{ParserInput => _, _}
 import org.parboiled2._
 
 /**

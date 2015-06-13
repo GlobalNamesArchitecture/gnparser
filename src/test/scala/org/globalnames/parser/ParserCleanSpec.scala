@@ -1,4 +1,4 @@
-package org.globalnames
+package org.globalnames.parser
 
 import org.specs2.mutable.Specification
 import scala.util.{Success, Failure}

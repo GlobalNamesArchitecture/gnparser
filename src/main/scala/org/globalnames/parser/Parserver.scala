@@ -1,4 +1,4 @@
-package org.globalnames
+package org.globalnames.parser
 
 object Parserver {
   def main(args: Array[String]) {
