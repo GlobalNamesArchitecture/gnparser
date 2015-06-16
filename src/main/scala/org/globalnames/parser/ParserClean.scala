@@ -1,33 +1,76 @@
 package org.globalnames.parser
 
-import spray.json.{ParserInput => _, _}
 import org.parboiled2._
+import scala.annotation.switch
+import scala.util.{ Try, Success, Failure }
 
-/**
- * Created by dimus on 6/13/15.
- */
+object ParseUtil {
+  trait Line
+  trait Word
+
+
+  case class Comment() extends Line
+  case class Blank() extends Line
+  case class Name(verbatim: String) extends Line
+  case class LatinWord(word: String) extends Word
+  case class CapLatinWord(word: String) extends Word
+}
 
 class ParserClean(val input: ParserInput) extends Parser {
-  def InputLine = rule { Expression ~ EOI }
+  import CharPredicate.{Printable}
+  import ParseUtil._
 
-  def Expression: Rule1[Int] = rule {
-    Term ~ zeroOrMore(
-      '+' ~ Term ~> ((_: Int) + _) | '-' ~ Term ~> ((_: Int) - _))
+  def line: Rule1[Line] = rule { noName | name }
+
+  private def noName: Rule1[Line] = rule { blank | comment }
+
+  private def name: Rule1[Line] = rule {
+    softSpace ~ ( binomial | uninomial ) ~
+      softSpace ~ EOI ~> (x => Name(x))
   }
 
-  def Term = rule {
-    Factor ~ zeroOrMore(
-      '*' ~ Factor ~> ((_: Int) * _)
-    | '/' ~ Factor ~> ((_: Int) / _))
+  private def blank: Rule1[Line] = rule {
+    softSpace ~ EOI ~ push(Blank())
   }
 
-  def Factor = rule { Number | Parens }
+  private def comment: Rule1[Line] = rule {
+    softSpace ~ '#' ~ zeroOrMore(Printable) ~
+      EOI ~ push(Comment())
+  }
 
-  def Parens = rule { '(' ~ Expression ~ ')' }
+  private def binomial: Rule1[String] = rule {
+    capWord ~ space ~ word ~> ((w1: String, w2: String) =>
+    s"$w1 $w2".toString)
+  }
 
-  def Number = rule { capture(Digits) ~> (_.toInt) }
+  private def uninomial: Rule1[String] = rule {
+    capWord
+  }
+//
+//  private def authorWord: Rule1[String] = rule {
+//    capture(CharPredicate.UpperAlpha ~
+//      CharPredicate.LowerAlpha ~ '.'.?)
+//  }
 
-  def Digits = rule { oneOrMore(CharPredicate.Digit) }
+  private def capWord: Rule1[String] = rule {
+    capture(upperChar ~ oneOrMore(lowerChar))
+  }
 
-  def LowChars = rule { oneOrMore(CharPredicate.LowerAlpha)}
+  private def word: Rule1[String] = rule {
+    capture(lowerChar ~ oneOrMore(lowerChar))
+  }
+
+  private def upperChar = rule {
+    CharPredicate("ABCDEFGHIJKLMNOPQRSTUVWXYZËÆŒ")
+  }
+
+  private def lowerChar = rule {
+    CharPredicate("abcdefghijklmnopqrstuvwxyzëæœ")
+  }
+
+  private def softSpace = rule { zeroOrMore(spaceChars) }
+
+  private def space = rule { oneOrMore(spaceChars) }
+
+  private def spaceChars = rule { CharPredicate(" \t\r\n\f") }
 }

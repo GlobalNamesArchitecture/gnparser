@@ -5,17 +5,19 @@ import scala.util.{Success, Failure}
 
 class ParserCleanSpec extends Specification {
   "ParserClean" should {
-    "parse 1+1 to 2" in
-      parse("1+1") === 2
-    "parse 2-1 to 1" in
-      parse("2-1") === 1
+    "parse carramba" in parse("2") === 2
   }
+  "no parse carramba" in parse("what the ?") === 0
 
   def parse(input: String): Int = {
-    val pc = new ParserClean(input).InputLine.run()
-    pc match {
+    val pc = new ParserClean(input)
+    val parsed = pc.InputLine.run()
+    parsed match {
       case Success(res: Int) => res
-      case Failure(_) => 0
+      case Failure(err) => {
+        println(err)
+        0
+      }
     }
   }
 }
