@@ -17,6 +17,7 @@ There is no official package yet.
 
 ```
 git clone https://github.com/GlobalNamesArchitecture/gnparser.git
+cd gnparser
 sbt test
 ```
 
