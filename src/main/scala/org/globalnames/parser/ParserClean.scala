@@ -11,8 +11,7 @@ object ParserClean {
   case class Name(verbatim: String) extends Line
 }
 
-class ParserClean(val input: ParserInput)
-  extends Parser with StringBuilding {
+class ParserClean(val input: ParserInput) extends Parser with StringBuilding {
 
   import CharPredicate.{Digit, Printable}
   import ParserClean._

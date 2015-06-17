@@ -4,20 +4,30 @@ import org.specs2.mutable.Specification
 import scala.util.{Success, Failure}
 
 class ParserCleanSpec extends Specification {
-  "ParserClean" should {
-    "parse carramba" in parse("2") === 2
+  "ParserClean parses" >> {
+    "Betula" in parse("Betula").verbatim === "Betula"
+    "Quercus quercus" in parse("Quercus quercus").verbatim === "Quercus quercus"
+    "Modanthos Alef" in
+    parse("Modanthos Alef")
+      .verbatim === "Modanthos Alef"
+    "Modanthos geranioides Alef." in
+    parse("Modanthos geranioides Alef.")
+      .verbatim === "Modanthos geranioides Alef."
+    "Sifangtaiella ganzhaoensis Su 1989" in
+    parse("Sifangtaiella ganzhaoensis Su 1989")
+      .verbatim === "Sifangtaiella ganzhaoensis Su 1989"
   }
-  "no parse carramba" in parse("what the ?") === 0
 
-  def parse(input: String): Int = {
+  def parse(input: String): ParserClean.Name = {
     val pc = new ParserClean(input)
-    val parsed = pc.InputLine.run()
+    val parsed = pc.line.run()
     parsed match {
-      case Success(res: Int) => res
+      case Success(res: ParserClean.Name) => res
       case Failure(err) => {
         println(err)
-        0
+        ParserClean.Name("")
       }
+      case _ => ParserClean.Name("")
     }
   }
 }
