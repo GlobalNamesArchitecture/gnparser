@@ -1,6 +1,13 @@
 Global Names Parser
 ===================
 
-Port of Biodiversity gem -- Ruby-based parser of scientific names
+Port of Biodiversity gem (a scientific names parser written in ruby)
 
-Please note that gnparser is a very early release
+Please note that gnparser is at the very early stage of development
+
+Copyright
+---------
+
+Released under MIT  [license][license] for further details.
+
+[license]: /LICENSE
