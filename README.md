@@ -8,6 +8,6 @@ Please note that gnparser is at the very early stage of development
 Copyright
 ---------
 
-Released under MIT  [license][license] for further details.
+Released under [MIT license][license] for further details.
 
 [license]: /LICENSE
