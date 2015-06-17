@@ -2,29 +2,20 @@ package org.globalnames.parser
 
 import org.parboiled2._
 
-object ParseUtil {
+object ParserClean {
 
   trait Line
 
-  trait Word
-
-
   case class Comment() extends Line
-
   case class Blank() extends Line
-
   case class Name(verbatim: String) extends Line
-
-  case class LatinWord(word: String) extends Word
-
-  case class CapLatinWord(word: String) extends Word
-
 }
 
-class ParserClean(val input: ParserInput) extends Parser {
+class ParserClean(val input: ParserInput)
+  extends Parser with StringBuilding {
 
   import CharPredicate.{Digit, Printable}
-  import ParseUtil._
+  import ParserClean._
 
   def line: Rule1[Line] = rule {
     noName | sciName
