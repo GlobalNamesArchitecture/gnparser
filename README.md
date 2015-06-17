@@ -23,6 +23,6 @@ sbt test
 Copyright
 ---------
 
-Released under [MIT license][license] for further details.
+Released under [MIT license][license]
 
 [license]: /LICENSE
