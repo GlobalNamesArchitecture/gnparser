@@ -37,6 +37,7 @@ class ParserCleanSpec extends Specification {
     }
     "Sifangtaiella ganzhaoensis Su 1989" in {
       val res = parse("Sifangtaiella ganzhaoensis Su 1989")
+      println(res.toJson)
       res.isParsed === true
       res.normalized === Some("Sifangtaiella ganzhaoensis Su 1989")
     }

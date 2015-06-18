@@ -1,5 +1,8 @@
 package org.globalnames.parser
 
+import org.json4s._
+import org.json4s.JsonDSL._
+import org.json4s.jackson.JsonMethods._
 import org.apache.commons.id.uuid.UUID
 import scala.collection._
 
@@ -15,8 +18,21 @@ case class SciName(
 
   def id: String = {
     val uuid = UUID.nameUUIDFromString(verbatim, gn, "SHA1").toString
-    uuid.substring(0, 14) ++ "5" ++ uuid.substring(15, uuid.length)
+    s"${uuid.substring(0, 14)}5${uuid.substring(15, uuid.length)}"
   }
 
+  def toJson: String = compact(render(toMap))
+
   private val gn = UUID.fromString("90181196-fecf-5082-a4c1-411d4f314cda")
+
+  private val toMap = ("scientificName" ->
+    ("id" -> id) ~
+    ("verbatim" -> verbatim) ~
+    ("normalized" -> normalized.getOrElse(null)) ~
+    ("canonical" -> canonical.getOrElse(null)) ~
+    ("parsed" -> isParsed) ~
+    ("hybrid" -> isHybrid) ~
+    ("virus" -> isVirus) ~
+    ("parser_version" -> parserVersion))
+
 }
