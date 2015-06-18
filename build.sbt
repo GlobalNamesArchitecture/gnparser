@@ -11,8 +11,6 @@ lazy val root = (project in file(".")).
 
 libraryDependencies ++= Seq(
   "org.specs2" %% "specs2-core" % "3.3.1" % "test",
-  "org.json4s" %% "json4s-core" % "3.2.11",
-  "org.json4s" %% "json4s-native" % "3.2.11",
   "org.json4s" %% "json4s-jackson" % "3.2.11",
   "org.littleshoot" % "littleshoot-commons-id" % "1.0.3",
   "org.parboiled" %% "parboiled" % "2.1.0"

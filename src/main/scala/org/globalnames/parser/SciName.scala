@@ -5,6 +5,7 @@ import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods._
 import org.apache.commons.id.uuid.UUID
 import scala.collection._
+import scala.util.{Success, Failure}
 
 case class SciName(
   verbatim: String,
@@ -35,4 +36,19 @@ case class SciName(
     ("virus" -> isVirus) ~
     ("parser_version" -> parserVersion))
 
+}
+
+object SciName {
+  def fromString(input: String): SciName = {
+    val pc = new ParserClean(input)
+    val parsed = pc.sciName.run()
+    parsed match {
+      case Success(res: SciName) => res
+      case Failure(err) => {
+        println(err)
+          SciName(input)
+      }
+      case _ => SciName(input)
+    }
+  }
 }
