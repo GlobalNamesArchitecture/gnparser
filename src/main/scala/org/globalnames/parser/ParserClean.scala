@@ -15,8 +15,9 @@ class ParserClean(val input: ParserInput) extends Parser with StringBuilding {
     softSpace ~ (nameAuthor | name) ~
       softSpace ~ EOI ~> ((x: String) =>
       SciName(
-        verbatim = input.toString,
+        verbatim = input.sliceString(0, input.length),
         normalized =  Some(x),
+        canonical = Some(x),
         isParsed = true
       )
     )

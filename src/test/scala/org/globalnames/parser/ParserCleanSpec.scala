@@ -1,13 +1,25 @@
 package org.globalnames.parser
 
 import org.specs2.mutable.Specification
+import org.specs2.mutable.Specification
 import scala.util.{Success, Failure}
 
 class ParserCleanSpec extends Specification {
   "ParserClean parses" >> {
+    "Homo sapiens" in {
+      val res = parse("Homo sapiens")
+      res.verbatim === "Homo sapiens"
+      res.normalized === Some("Homo sapiens")
+      res.canonical === Some("Homo sapiens")
+      res.isParsed must beTrue
+      res.isVirus must beFalse
+      res.isHybrid must beFalse
+      res.id === "16f235a0-e4a3-529c-9b83-bd15fe722110"
+      res.parserVersion must =~("""^\d+\.\d+\.\d+(-SNAPSHOT)?$""")
+    }
     "Betula" in {
       val res = parse("Betula")
-      res.isParsed === true
+      res.isParsed must beTrue
       res.normalized.get === "Betula"
     }
     "Quercus quercus" in {
