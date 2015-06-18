@@ -13,13 +13,19 @@ class ParserClean(val input: ParserInput) extends Parser with StringBuilding {
 
   def sciName: Rule1[SciName] = rule {
     softSpace ~ (nameAuthor | name) ~
-      softSpace ~ EOI ~> ((x: String) =>
+      softSpace ~ EOI ~> ((x: Node) =>
       SciName(
         verbatim = input.sliceString(0, input.length),
-        normalized =  Some(x),
-        canonical = Some(x),
+        normalized =  Some(x.normalized),
+        canonical = Some(x.canonical),
         isParsed = true
       )
+    )
+  }
+
+  private def nameAuthor: Rule1[Node] = rule {
+    name ~ space ~ authorship ~> ((w1: Node, w2: String) =>
+      w1.copy(normalized = s"${w1.normalized} $w2")
     )
   }
 
@@ -32,22 +38,19 @@ class ParserClean(val input: ParserInput) extends Parser with StringBuilding {
       s"$a $y".toString)
   }
 
-  private def nameAuthor: Rule1[String] = rule {
-    name ~ space ~ authorship ~> ((w1: String, w2: String) =>
-      s"$w1 $w2".toString)
-  }
-
-  private def name: Rule1[String] = rule {
+  private def name: Rule1[Node] = rule {
     binomial | uninomial
   }
 
-  private def binomial: Rule1[String] = rule {
+  private def binomial: Rule1[Node] = rule {
     capWord ~ space ~ word ~> ((w1: String, w2: String) =>
-      s"$w1 $w2".toString)
+      Node(normalized = s"$w1 $w2", canonical = s"$w1 $w2")
+    )
   }
 
-  private def uninomial: Rule1[String] = rule {
-    capWord
+  private def uninomial: Rule1[Node] = rule {
+    capWord ~> ((x: String) =>
+      Node(normalized = x, canonical = x))
   }
 
   private def authorWord: Rule1[String] = rule {
