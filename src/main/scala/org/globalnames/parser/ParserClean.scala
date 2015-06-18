@@ -4,11 +4,6 @@ import org.parboiled2._
 
 object ParserClean {
 
-  trait Line
-
-  case class Comment() extends Line
-  case class Blank() extends Line
-  case class Name(verbatim: String) extends Line
 }
 
 class ParserClean(val input: ParserInput) extends Parser with StringBuilding {
@@ -16,17 +11,15 @@ class ParserClean(val input: ParserInput) extends Parser with StringBuilding {
   import CharPredicate.{Digit, Printable}
   import ParserClean._
 
-  def line: Rule1[Line] = rule {
-    noName | sciName
-  }
-
-  private def noName: Rule1[Line] = rule {
-    blank | comment
-  }
-
-  private def sciName: Rule1[Line] = rule {
+  def sciName: Rule1[SciName] = rule {
     softSpace ~ (nameAuthor | name) ~
-      softSpace ~ EOI ~> (x => Name(x))
+      softSpace ~ EOI ~> ((x: String) =>
+      SciName(
+        verbatim = input.toString,
+        normalized =  Some(x),
+        isParsed = true
+      )
+    )
   }
 
   private def authorship: Rule1[String] = rule {
@@ -45,15 +38,6 @@ class ParserClean(val input: ParserInput) extends Parser with StringBuilding {
 
   private def name: Rule1[String] = rule {
     binomial | uninomial
-  }
-
-  private def blank: Rule1[Line] = rule {
-    softSpace ~ EOI ~ push(Blank())
-  }
-
-  private def comment: Rule1[Line] = rule {
-    softSpace ~ '#' ~ zeroOrMore(Printable) ~
-      EOI ~ push(Comment())
   }
 
   private def binomial: Rule1[String] = rule {
