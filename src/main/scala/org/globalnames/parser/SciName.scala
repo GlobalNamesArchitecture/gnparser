@@ -4,8 +4,9 @@ import org.json4s._
 import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods._
 import org.apache.commons.id.uuid.UUID
+import org.parboiled2._
 import scala.collection._
-import scala.util.{Success, Failure}
+import scala.util.{Success, Failure, Try}
 
 case class SciName(
   verbatim: String,
@@ -43,11 +44,21 @@ object SciName {
   def fromString(input: String): SciName = {
     val pc = new ParserClean(input)
     val parsed = pc.sciName.run()
-    parsed match {
+    processParsed(input, pc, parsed)
+  }
+
+  def processParsed(input: String,
+    parser: Parser,
+    result: Try[Any]): SciName = {
+    result match {
       case Success(res: SciName) => res
+      case Failure(err: ParseError) => {
+        println(parser.formatError(err))
+          SciName(input)
+      }
       case Failure(err) => {
         println(err)
-          SciName(input)
+        SciName(input)
       }
       case _ => SciName(input)
     }

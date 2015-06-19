@@ -3,7 +3,7 @@ package org.globalnames.parser
 import org.parboiled2._
 import CharPredicate.{Digit, Printable}
 
-trait RulesClean {
+trait RulesClean extends Parser {
   def sciName: Rule1[SciName] = rule {
     softSpace ~ (nameAuthor | name) ~
       softSpace ~ EOI ~> ((x: Node) =>
@@ -64,7 +64,7 @@ trait RulesClean {
     CharPredicate("ABCDEFGHIJKLMNOPQRSTUVWXYZËÆŒ")
   }
 
-  private def lowerChar = rule {
+  def lowerChar = rule {
     CharPredicate("abcdefghijklmnopqrstuvwxyzëæœ")
   }
 
