@@ -1,11 +1,9 @@
 package org.globalnames.parser
 
 import org.parboiled2._
+import CharPredicate.{Digit, Printable}
 
-class ParserClean(val input: ParserInput) extends Parser with RulesClean {
-
-  import CharPredicate.{Digit, Printable}
-
+trait RulesClean {
   def sciName: Rule1[SciName] = rule {
     softSpace ~ (nameAuthor | name) ~
       softSpace ~ EOI ~> ((x: Node) =>
@@ -87,3 +85,4 @@ class ParserClean(val input: ParserInput) extends Parser with RulesClean {
     CharPredicate(" \t\r\n\f")
   }
 }
+

@@ -1,7 +1,6 @@
 package org.globalnames.parser
 
 import org.specs2.mutable.Specification
-import org.specs2.mutable.Specification
 import scala.util.{Success, Failure}
 
 class ParserCleanSpec extends Specification {
