@@ -1,6 +1,8 @@
 Global Names Parser
 ===================
 
+[![Continuous Integration Status][ci_svg]][ci_link]
+
 Port of Biodiversity gem (a scientific names parser written in ruby)
 
 Please note that gnparser is at the very early stage of development
@@ -27,3 +29,6 @@ Copyright
 Released under [MIT license][license]
 
 [license]: /LICENSE
+
+[ci_svg]: https://secure.travis-ci.org/GlobalNamesArchitecture/gnparser.svg
+[ci_link]: http://travis-ci.org/GlobalNamesArchitecture/gnparser
