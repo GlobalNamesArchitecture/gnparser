@@ -14,6 +14,7 @@ case class SciName(
   isParsed: Boolean = false,
   isVirus: Boolean = false,
   isHybrid: Boolean = false,
+  parserRun: Int = -1,
   parserVersion: String = BuildInfo.version
 ) {
 
@@ -28,14 +29,14 @@ case class SciName(
 
   private val toMap = ("scientificName" ->
     ("id" -> id) ~
+    ("parsed" -> isParsed) ~
+    ("parser_version" -> parserVersion) ~
+    ("parser_run" -> parserRun) ~
     ("verbatim" -> verbatim) ~
     ("normalized" -> normalized.getOrElse(null)) ~
     ("canonical" -> canonical.getOrElse(null)) ~
-    ("parsed" -> isParsed) ~
-    ("hybrid" -> isHybrid) ~
-    ("virus" -> isVirus) ~
-    ("parser_version" -> parserVersion))
-
+    ("hybrid" -> isHybrid)
+  )
 }
 
 object SciName {

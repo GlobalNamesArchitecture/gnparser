@@ -18,7 +18,8 @@ class ParserClean(val input: ParserInput) extends Parser with StringBuilding {
         verbatim = input.sliceString(0, input.length),
         normalized =  Some(x.normalized),
         canonical = Some(x.canonical),
-        isParsed = true
+        isParsed = true,
+        parserRun = 1
       )
     )
   }
