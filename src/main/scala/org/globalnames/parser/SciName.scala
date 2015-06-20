@@ -42,14 +42,21 @@ case class SciName(
 
 object SciName {
   def fromString(input: String): SciName = {
-    val pc = new ParserClean(input)
-    val parsed = pc.sciName.run()
-    processParsed(input, pc, parsed)
+    val parserClean = new ParserClean(input)
+    val resClean = parserClean.sciName.run()
+    resClean match {
+      case Success(_) => processParsed(input, parserClean, resClean)
+      case Failure(_) => {
+        val parserRelaxed = new ParserRelaxed(input)
+        val resRelaxed = parserRelaxed.sciName.run()
+        processParsed(input, parserRelaxed, resRelaxed)
+      }
+    }
   }
 
   def processParsed(input: String,
     parser: Parser,
-    result: Try[Any]): SciName = {
+    result: Try[SciName]): SciName = {
     result match {
       case Success(res: SciName) => res
       case Failure(err: ParseError) => {

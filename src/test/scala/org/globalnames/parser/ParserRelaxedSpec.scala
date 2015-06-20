@@ -12,8 +12,8 @@ class ParserRelaxedSpec extends Specification {
     "Döringina Ihering 1929" in {
       val res = parse("Döringina Ihering 1929")
       res.verbatim === "Döringina Ihering 1929"
-      res.normalized === Some("Döringina Ihering 1929")
-      res.canonical === Some("Döringina")
+      res.normalized === Some("Doringina Ihering 1929")
+      res.canonical === Some("Doringina")
       res.isParsed must beTrue
       res.isVirus must beFalse
       res.isHybrid must beFalse

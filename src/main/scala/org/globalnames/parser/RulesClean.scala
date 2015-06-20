@@ -38,13 +38,14 @@ trait RulesClean extends Parser {
 
   private def binomial: Rule1[Node] = rule {
     capWord ~ space ~ word ~> ((w1: String, w2: String) =>
-      Node(normalized = s"$w1 $w2", canonical = s"$w1 $w2")
+      Node(normalized = Util.norm(s"$w1 $w2"),
+           canonical = Util.norm(s"$w1 $w2"))
     )
   }
 
   private def uninomial: Rule1[Node] = rule {
     capWord ~> ((x: String) =>
-      Node(normalized = x, canonical = x))
+      Node(normalized = Util.norm(x), canonical = Util.norm(x)))
   }
 
   private def authorWord: Rule1[String] = rule {
