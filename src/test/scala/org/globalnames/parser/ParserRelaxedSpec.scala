@@ -24,6 +24,7 @@ class ParserRelaxedSpec extends Specification {
   def parse(input: String): SciName = {
     val parser = new ParserRelaxed(input)
     val result = parser.sciName.run()
+    SciName(input)
     SciName.processParsed(input, parser, result)
   }
 }
