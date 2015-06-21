@@ -1,7 +1,7 @@
 package org.globalnames.parser
 
 import org.parboiled2._
-import CharPredicate.{Digit, Printable}
+import CharPredicate.{Digit, Printable, Alpha}
 
 trait RulesClean extends Parser {
   def sciName: Rule1[SciName] = rule {
@@ -47,17 +47,28 @@ trait RulesClean extends Parser {
   }
 
   def uninomial: Rule1[Node] = rule {
-    capWord ~> ((x: String) =>
+    (twoLetterGenera | capWord) ~> ((x: String) =>
       Node(normalized = Util.norm(x), canonical = Util.norm(x)))
   }
 
   def authorWord: Rule1[String] = rule {
-    capture(CharPredicate.UpperAlpha ~
-      zeroOrMore(CharPredicate.LowerAlpha) ~ '.'.?)
+    capture((CharPredicate("ABCDEFGHIJKLMNOPQRSTUVWYZ") |
+      CharPredicate("ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝ") |
+      CharPredicate("ĆČĎİĶĹĺĽľŁłŅŌŐŒŘŚŜŞŠŸŹŻŽƒǾȘȚ"))
+    ~
+    zeroOrMore(CharPredicate.LowerAlpha |
+      CharPredicate("-àáâãäåæçèéêëìíîïðñòóôõöøùúûüýÿāăąćĉčďđ") |
+      CharPredicate("ēĕėęěğīĭİıĺľłńņňŏőœŕřśşšţťũūŭůűźżžſǎǔǧșțȳ"))
+     ~ '.'.?)
   }
 
   def capWord: Rule1[String] = rule {
-    capture(upperChar ~ oneOrMore(lowerChar))
+    capture(upperChar ~ lowerChar ~ oneOrMore(lowerChar))
+  }
+
+  def twoLetterGenera: Rule1[String] = rule {
+    capture("Ca" | "Ea" | "Ge" | "Ia" | "Io" | "Io" | "Ix" | "Lo" | "Oa" |
+      "Ra" | "Ty" | "Ua" | "Aa" | "Ja" | "Zu" | "La" | "Qu" | "As" | "Ba")
   }
 
   def word: Rule1[String] = rule {
@@ -73,8 +84,21 @@ trait RulesClean extends Parser {
   }
 
   def year: Rule1[String] = rule {
+    yearWithParens | yearWithChar | yearNumber
+  }
+
+
+  def yearWithParens: Rule1[String] = rule {
+    '(' ~ (yearWithChar | yearNumber) ~ ')'
+  }
+
+  def yearWithChar: Rule1[String] = rule {
+    yearNumber ~ CharPredicate(Alpha)
+  }
+
+  def yearNumber: Rule1[String] = rule {
     capture(CharPredicate("12") ~
-      CharPredicate("0789") ~ Digit ~ Digit)
+      CharPredicate("0789") ~ Digit ~ (Digit|'?') ~ '?'.?)
   }
 
   def softSpace = rule {
