@@ -31,7 +31,7 @@ trait RulesClean extends Parser {
   }
 
   def authorYear: Rule1[String] = rule {
-    authorWord ~ softSpace ~ year ~> ((a: String, y: String) =>
+    authorWord ~ softSpace ~ ','.? ~ softSpace ~ year ~> ((a: String, y: String) =>
       s"$a $y".toString)
   }
 
