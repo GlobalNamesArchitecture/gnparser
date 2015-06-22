@@ -135,14 +135,21 @@ trait RulesClean extends Parser {
   }
 
   def authorWord3: Rule1[String] = rule {
-    capture((CharPredicate("ABCDEFGHIJKLMNOPQRSTUVWYZ") |
-      CharPredicate("ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝ") |
-      CharPredicate("ĆČĎİĶĹĺĽľŁłŅŌŐŒŘŚŜŞŠŸŹŻŽƒǾȘȚ"))
-    ~
-    zeroOrMore(CharPredicate.LowerAlpha |
-      CharPredicate("àáâãäåæçèéêëìíîïðñòóôõöøùúûüýÿāăąćĉčďđ") |
-      CharPredicate("ēĕėęěğīĭİıĺľłńņňŏőœŕřśşšţťũūŭůűźżžſǎǔǧșțȳ"))
-     ~ '.'.?)
+    capture(authCharUpper ~ zeroOrMore(authCharUpper | authCharLower)
+      ~ '.'.?) ~>
+      ((w: String) => Util.normAuth(w))
+  }
+
+  def authCharLower = rule {
+    CharPredicate.LowerAlpha |
+    CharPredicate("àáâãäåæçèéêëìíîïðñòóôõöøùúûüýÿāăąćĉčďđ") |
+    CharPredicate("ēĕėęěğīĭİıĺľłńņňŏőœŕřśşšţťũūŭůűźżžſǎǔǧșțȳ")
+  }
+
+  def authCharUpper = rule {
+    CharPredicate("ABCDEFGHIJKLMNOPQRSTUVWYZ") |
+    CharPredicate("ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝ") |
+    CharPredicate("ĆČĎİĶĹĺĽľŁłŅŌŐŒŘŚŜŞŠŸŹŻŽƒǾȘȚ")
   }
 
   def authorWord4: Rule1[String] = rule {
@@ -165,7 +172,7 @@ trait RulesClean extends Parser {
   }
 
   def capWord: Rule1[String] = rule {
-    capture(upperChar ~ lowerChar ~ oneOrMore(lowerChar))
+    capture(upperChar ~ lowerChar ~ oneOrMore(lowerChar) ~ '?'.?)
   }
 
   def twoLetterGenera: Rule1[String] = rule {
