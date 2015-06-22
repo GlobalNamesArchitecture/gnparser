@@ -78,21 +78,40 @@ trait RulesClean extends Parser {
   }
 
   def authors: Rule1[String] = rule {
-    authors1 | author
+    authors1
+    // ((au: String, _: Option[String]) => au)
   }
 
   def authors1: Rule1[String] = rule {
-    author ~ authorSep ~ author ~>
-      ((a1: String, sep: String, a2: String) => {
+    author ~ authorSep.? ~ authors1.? ~>
+    ((au1: String, sep: Option[String], au2: Option[String]) => {
+      if (au2 == None) au1
+      else {
         sep match {
-          case "," => s"$a1$sep $a2"
-          case"&" => s"$a1 $sep $a2"
+          case None => au1 // should not happen
+          case Some(",") => s"$au1, ${au2.get}"
+          // mix of two semantic meanings & and ex!
+          // could not figure out how to separate them correctly :\
+          case Some(x) => s"$au1 $x ${au2.get}"
         }
-      })
+      }
+    })
   }
 
   def authorSep: Rule1[String] = rule {
-    softSpace ~ capture("," | "&") ~ softSpace
+    softSpace ~ (authorComma | authorAnd | authorEx) ~ softSpace
+  }
+
+  def authorEx: Rule1[String] = rule {
+    "ex" ~ push("ex")
+  }
+
+  def authorAnd: Rule1[String] = rule {
+    ("and" | "&" | "et") ~ push("&")
+  }
+
+  def authorComma: Rule1[String] = rule {
+    "," ~ push(",")
   }
 
   def author: Rule1[String] = rule{

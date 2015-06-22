@@ -61,6 +61,10 @@ class ParserCleanSpec extends Specification {
       val res = parseName("S. ganzhaoensis (B. de Su 1989)Someone, 1999")
       res.normalized === Some("S. ganzhaoensis (B. de Su 1989) Someone 1999")
     }
+    "Schottera nicaeënsis (J.V. Lamouroux ex Duby) Guiry & Hollenberg" in {
+      val res = parseName("Schottera nicaeënsis (J.V. Lamouroux ex Duby) Guiry & Hollenberg")
+      res.normalized === Some("Schottera nicaeensis (J. V. Lamouroux ex Duby) Guiry & Hollenberg")
+    }
   }
   "ParserClean does not parse" >> {
     "whateva" in {
