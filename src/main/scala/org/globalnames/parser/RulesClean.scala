@@ -78,12 +78,7 @@ trait RulesClean extends Parser {
   }
 
   def authors: Rule1[String] = rule {
-    authors1
-    // ((au: String, _: Option[String]) => au)
-  }
-
-  def authors1: Rule1[String] = rule {
-    author ~ authorSep.? ~ authors1.? ~>
+    author ~ authorSep.? ~ authors.? ~>
     ((au1: String, sep: Option[String], au2: Option[String]) => {
       if (au2 == None) au1
       else {
@@ -107,7 +102,7 @@ trait RulesClean extends Parser {
   }
 
   def authorAnd: Rule1[String] = rule {
-    ("and" | "&" | "et") ~ push("&")
+    ("&amp;" | "and" | "&" | "et") ~ push("&")
   }
 
   def authorComma: Rule1[String] = rule {
