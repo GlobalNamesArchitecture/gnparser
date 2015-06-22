@@ -27,6 +27,11 @@ class ParserCleanSpec extends Specification {
       res.normalized === Some("Quercus quercus")
       res.canonical === Some("Quercus quercus")
     }
+    "Betula alba" in {
+      val res = parseName("Betula alba")
+      res.normalized === Some("Betula alba")
+      res.canonical === Some("Betula alba")
+    }
     "Modanthos Alef" in {
       val res = parseName("Modanthos Alef")
       res.normalized === Some("Modanthos Alef")

@@ -55,25 +55,32 @@ trait RulesClean extends Parser {
   }
 
   def binomial: Rule1[Node] = rule {
-    binomial1 | binomial2
+    binomial2 | binomial1
   }
 
   def binomial1: Rule1[Node] = rule {
-    abbrGenus ~ softSpace ~ word ~> ((w1: String, w2: String) =>
-      Node(normalized = Util.norm(s"$w1 $w2"),
-           canonical = Util.norm(s"$w1 $w2"))
-    )
+    uninomial ~ softSpace ~ subGenus ~ softSpace ~ word ~>
+    ((g: Node, sg: Node, s: String) => {
+      Node(normalized = s"${g.normalized} ${sg.normalized} ${Util.norm(s)}",
+           canonical = s"${g.canonical} ${Util.norm(s)}")
+    })
   }
 
   def binomial2: Rule1[Node] = rule {
-    capWord ~ space ~ word ~> ((w1: String, w2: String) =>
-      Node(normalized = Util.norm(s"$w1 $w2"),
-           canonical = Util.norm(s"$w1 $w2"))
+    uninomial ~ softSpace ~ word ~> ((w1: Node, w2: String) =>
+      Node(normalized = s"${w1.normalized} ${Util.norm(w2)}",
+           canonical = s"${w1.canonical} ${Util.norm(w2)}")
     )
   }
 
+  def subGenus: Rule1[Node] = rule {
+    "(" ~ softSpace ~ uninomial ~ softSpace ~ ")" ~>
+    ((x: Node) =>
+        Node(normalized = s"(${x.normalized})", canonical = ""))
+  }
+
   def uninomial: Rule1[Node] = rule {
-    (twoLetterGenera | capWord) ~> ((x: String) =>
+    (abbrGenus | capWord | twoLetterGenera) ~> ((x: String) =>
       Node(normalized = Util.norm(x), canonical = Util.norm(x)))
   }
 
