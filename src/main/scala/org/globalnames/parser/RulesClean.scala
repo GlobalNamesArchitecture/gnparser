@@ -157,6 +157,6 @@ trait RulesClean extends Parser {
   }
 
   def spaceChars = rule {
-    CharPredicate(" \t\r\n\f")
+    CharPredicate(" \t\r\n\f_")
   }
 }
