@@ -28,6 +28,20 @@ trait RulesClean extends Parser {
   }
 
   def authorship: Rule1[String] = rule {
+    combinedAuthorship | basionymAuthorship | authorship1
+  }
+
+  def combinedAuthorship: Rule1[String] = rule {
+    basionymAuthorship ~ softSpace ~ authorship1 ~>
+    ((bauth: String, auth: String) => s"$bauth $auth")
+  }
+
+  def basionymAuthorship: Rule1[String] = rule {
+    "(" ~ softSpace ~ authorship1 ~ softSpace ~ ")" ~>
+    ((auth: String) => s"($auth)")
+  }
+
+  def authorship1: Rule1[String] = rule {
     authorsYear | authors
   }
 
@@ -41,6 +55,17 @@ trait RulesClean extends Parser {
   }
 
   def binomial: Rule1[Node] = rule {
+    binomial1 | binomial2
+  }
+
+  def binomial1: Rule1[Node] = rule {
+    abbrGenus ~ softSpace ~ word ~> ((w1: String, w2: String) =>
+      Node(normalized = Util.norm(s"$w1 $w2"),
+           canonical = Util.norm(s"$w1 $w2"))
+    )
+  }
+
+  def binomial2: Rule1[Node] = rule {
     capWord ~ space ~ word ~> ((w1: String, w2: String) =>
       Node(normalized = Util.norm(s"$w1 $w2"),
            canonical = Util.norm(s"$w1 $w2"))
@@ -77,7 +102,7 @@ trait RulesClean extends Parser {
 
 
   def authorWord: Rule1[String] = rule {
-    authorWord1 | authorWord2 | authorWord3 | authorPre
+    authorWord1 | authorWord2 | authorWord4 | authorWord3 | authorPre
   }
 
   def authorWord1: Rule1[String] = rule {
@@ -94,9 +119,14 @@ trait RulesClean extends Parser {
       CharPredicate("ĆČĎİĶĹĺĽľŁłŅŌŐŒŘŚŜŞŠŸŹŻŽƒǾȘȚ"))
     ~
     zeroOrMore(CharPredicate.LowerAlpha |
-      CharPredicate("-àáâãäåæçèéêëìíîïðñòóôõöøùúûüýÿāăąćĉčďđ") |
+      CharPredicate("àáâãäåæçèéêëìíîïðñòóôõöøùúûüýÿāăąćĉčďđ") |
       CharPredicate("ēĕėęěğīĭİıĺľłńņňŏőœŕřśşšţťũūŭůűźżžſǎǔǧșțȳ"))
      ~ '.'.?)
+  }
+
+  def authorWord4: Rule1[String] = rule {
+    authorWord3 ~ "-" ~ authorWord3 ~>
+      ((au1: String, au2: String) => s"$au1-$au2" )
   }
 
   def authorPost: Rule1[String] = rule {
@@ -109,6 +139,9 @@ trait RulesClean extends Parser {
             "la" | "ter" | "van" | "von")
   }
 
+  def abbrGenus: Rule1[String] = rule {
+    capture(upperChar ~ lowerChar.? ~ lowerChar.? ~ '.')
+  }
 
   def capWord: Rule1[String] = rule {
     capture(upperChar ~ lowerChar ~ oneOrMore(lowerChar))
@@ -128,7 +161,7 @@ trait RulesClean extends Parser {
   }
 
   def lowerChar = rule {
-    CharPredicate("abcdefghijklmnopqrstuvwxyzëæœ")
+    CharPredicate("abcdefghijklmnopqrstuvwxyz'ëæœ")
   }
 
   def year: Rule1[String] = rule {

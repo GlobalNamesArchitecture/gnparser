@@ -17,6 +17,7 @@ object Util {
         case 'Œ' => "OE".foreach(output += _)
         case 'æ' => "ae".foreach(output += _)
         case 'œ' => "oe".foreach(output += _)
+        case '\'' =>
         case _ => output += (if (index > -1) charTo(index) else chr)
       }
     }
