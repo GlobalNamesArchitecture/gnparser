@@ -45,6 +45,10 @@ class ParserCleanSpec extends Specification {
       res.normalized === Some("Sifangtaiella ganzhaoensis Su 1989")
       res.canonical === Some("Sifangtaiella ganzhaoensis")
     }
+    "Sifangtaiella ganzhaoensis B. de Dosu 1989" in {
+      val res = parseName("Sifangtaiella ganzhaoensis B. de Su 1989")
+      res.normalized === Some("Sifangtaiella ganzhaoensis B. de Su 1989")
+    }
   }
   "ParserClean does not parse" >> {
     "whateva" in {

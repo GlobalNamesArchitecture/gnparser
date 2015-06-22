@@ -28,11 +28,11 @@ trait RulesClean extends Parser {
   }
 
   def authorship: Rule1[String] = rule {
-    authorYear | author
+    authorsYear | authors
   }
 
-  def authorYear: Rule1[String] = rule {
-    author ~ softSpace ~ ','.? ~ softSpace ~ year ~>
+  def authorsYear: Rule1[String] = rule {
+    authors ~ softSpace ~ ','.? ~ softSpace ~ year ~>
     ((a: String, y: String) => s"$a $y".toString)
   }
 
@@ -50,6 +50,24 @@ trait RulesClean extends Parser {
   def uninomial: Rule1[Node] = rule {
     (twoLetterGenera | capWord) ~> ((x: String) =>
       Node(normalized = Util.norm(x), canonical = Util.norm(x)))
+  }
+
+  def authors: Rule1[String] = rule {
+    authors1 | author
+  }
+
+  def authors1: Rule1[String] = rule {
+    author ~ authorSep ~ author ~>
+      ((a1: String, sep: String, a2: String) => {
+        sep match {
+          case "," => s"$a1$sep $a2"
+          case"&" => s"$a1 $sep $a2"
+        }
+      })
+  }
+
+  def authorSep: Rule1[String] = rule {
+    softSpace ~ capture("," | "&") ~ softSpace
   }
 
   def author: Rule1[String] = rule{
