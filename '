@@ -28,11 +28,11 @@ trait RulesClean extends Parser {
   }
 
   def authorship: Rule1[String] = rule {
-    authorYear | author
+    authorYear | authorWord
   }
 
   def authorYear: Rule1[String] = rule {
-    author ~ softSpace ~ ','.? ~ softSpace ~ year ~>
+    authorWord ~ softSpace ~ ','.? ~ softSpace ~ year ~>
     ((a: String, y: String) => s"$a $y".toString)
   }
 
@@ -52,9 +52,9 @@ trait RulesClean extends Parser {
       Node(normalized = Util.norm(x), canonical = Util.norm(x)))
   }
 
-  def author: Rule1[String] = rule{
-    oneOrMore(authorWord ~ softSpace) ~>
-      ((au: Seq[String]) => au.map(_.trim).mkString(" "))
+  def author: Rule1[Seq[String]] = rule{
+    oneOrMore(authorWord ~ softSpace)
+    ~> ((au: Seq[String]) => au.map(_.trim).toList.mkString(" "))
   }
 
 
