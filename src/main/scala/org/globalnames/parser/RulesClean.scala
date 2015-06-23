@@ -16,8 +16,11 @@ trait RulesClean extends Parser {
       )
     )
   }
-
   def sciName1: Rule1[Node] = rule {
+    sciName2 ~ (space ~ "sec." ~ oneOrMore(Printable)).?
+  }
+
+  def sciName2: Rule1[Node] = rule {
     (nameAuthor | name)
   }
 
@@ -189,7 +192,7 @@ trait RulesClean extends Parser {
   }
 
   def lowerChar = rule {
-    CharPredicate("abcdefghijklmnopqrstuvwxyz'ëæœ")
+    CharPredicate("abcdefghijklmnopqrstuvwxyz'ëæœſ")
   }
 
   def year: Rule1[String] = rule {

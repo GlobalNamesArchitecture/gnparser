@@ -11,9 +11,9 @@ object Util {
   def norm(input: String): String = {
     var output: Buffer[Char] = Buffer()
     val charFrom = "ÀÂÅÃÄÁÇČËÉÈÍÌÏŇÑÑÓÒÔØÕÖÚÙÜŔŘŖŠŠŞŽ" +
-                   "àâåãäáçčëéèíìïňññóòôøõöúùüŕřŗššşž"
+                   "àâåãäáçčëéèíìïňññóòôøõöúùüŕřŗſššşž"
     val charTo   = "AAAAAACCEEEIIINNNOOOOOOUUURRRSSSZ" +
-                   "aaaaaacceeeiiinnnoooooouuurrrsssz"
+                   "aaaaaacceeeiiinnnoooooouuurrrssssz"
 
     for (chr <- input) {
       val index = charFrom.indexOf(chr)
