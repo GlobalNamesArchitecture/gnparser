@@ -31,12 +31,18 @@ trait RulesClean extends Parser {
   }
 
   def authorship: Rule1[String] = rule {
-    combinedAuthorship | basionymAuthorship | authorship1
+    combinedAuthorship | basionymYearMisformed |
+    basionymAuthorship | authorship1
   }
 
   def combinedAuthorship: Rule1[String] = rule {
     basionymAuthorship ~ softSpace ~ authorship1 ~>
     ((bauth: String, auth: String) => s"$bauth $auth")
+  }
+
+  def basionymYearMisformed: Rule1[String] = rule {
+    '(' ~ softSpace ~ authors ~ ')' ~ softSpace ~ ','.? ~ softSpace ~ year ~>
+    ((a: String, y: String) => s"($a $y)")
   }
 
   def basionymAuthorship: Rule1[String] = rule {
