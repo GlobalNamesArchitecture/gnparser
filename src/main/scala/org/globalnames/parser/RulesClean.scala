@@ -25,7 +25,7 @@ trait RulesClean extends Parser {
   }
 
   def nameAuthor: Rule1[Node] = rule {
-    name ~ space ~ authorship ~> ((w1: Node, w2: String) =>
+    name ~ softSpace ~ authorship ~> ((w1: Node, w2: String) =>
       w1.copy(normalized = s"${w1.normalized} $w2")
     )
   }

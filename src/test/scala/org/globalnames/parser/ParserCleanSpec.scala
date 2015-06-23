@@ -70,6 +70,10 @@ class ParserCleanSpec extends Specification {
       val res = parseName("Schottera nicaeënsis (J.V. Lamouroux ex Duby) Guiry & Hollenberg")
       res.normalized === Some("Schottera nicaeensis (J. V. Lamouroux ex Duby) Guiry & Hollenberg")
     }
+    "Pseudocercospora dendrobii(H.C.  Burnett 1873)U. Braun & Crous ,   2003" in {
+      val res = parseName("Pseudocercospora dendrobii(H.C.  Burnett 1873)U. Braun & Crous ,   2003")
+      res.normalized === Some("Pseudocercospora dendrobii (H. C. Burnett 1873) U. Braun & Crous 2003")
+    }
   }
   "ParserClean does not parse" >> {
     "whateva" in {
