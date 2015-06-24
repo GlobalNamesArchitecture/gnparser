@@ -26,7 +26,7 @@ trait RulesClean extends Parser {
   }
 
   def sciName3: Rule1[Node] = rule {
-    multinomial | multinomial1
+    multinomial | multinomial1 | multinomial2
   }
 
   def sciName4: Rule1[Node] = rule {
@@ -73,7 +73,7 @@ trait RulesClean extends Parser {
   }
 
   def multinomial: Rule1[Node] = rule {
-    multinomial1 ~ softSpace ~ authorship ~>
+    (multinomial1 | multinomial2) ~ softSpace ~ authorship ~>
     ((m: Node, a: String) => {
       Node(normalized = s"${m.normalized} $a",
            canonical = s"${m.canonical}")
@@ -81,6 +81,14 @@ trait RulesClean extends Parser {
   }
 
   def multinomial1: Rule1[Node] = rule {
+    (nameAuthor|name) ~ softSpace ~ rank ~ softSpace ~ word ~>
+    ((b: Node, r: String, i: String) => {
+      Node(normalized = s"${b.normalized} ${r.trim} ${Util.norm(i)}",
+           canonical = s"${b.canonical} ${Util.norm(i)}")
+    })
+  }
+
+  def multinomial2: Rule1[Node] = rule {
     name ~ softSpace ~ word ~>
     ((b: Node, i: String) => {
       Node(normalized = s"${b.normalized} ${Util.norm(i)}",
@@ -105,6 +113,16 @@ trait RulesClean extends Parser {
       Node(normalized = s"${w1.normalized} ${Util.norm(w2)}",
            canonical = s"${w1.canonical} ${Util.norm(w2)}")
     )
+  }
+
+  def rank: Rule1[String] = rule {
+    capture("morph." | "f.sp." | "B " | "ssp." | "ssp " | "mut." | "nat " |
+     "nothosubsp." | "convar." | "pseudovar." | "sect." | "ser." | "var." |
+     "subvar." |  "[var.]"  | "var " | "subsp." | "subsp " | "subf." |
+     "race " | "forma." | "forma " | "fma." | "fma " | "form." |
+     "form " | "fo." | "fo " | "f." | "α" | "ββ" | "β" | "γ" | "δ" |
+     "ε" | "φ" | "θ" | "μ" | "a." | "b." | "c." | "d." | "e." | "g." |
+     "k." | "****" | "**" | "*")
   }
 
   def subGenus: Rule1[Node] = rule {
