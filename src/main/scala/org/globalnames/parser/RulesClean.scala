@@ -21,6 +21,14 @@ trait RulesClean extends Parser {
   }
 
   def sciName2: Rule1[Node] = rule {
+    sciName3 | sciName4
+  }
+
+  def sciName3: Rule1[Node] = rule {
+    multinomial | multinomial1
+  }
+
+  def sciName4: Rule1[Node] = rule {
     (nameAuthor | name)
   }
 
@@ -61,6 +69,22 @@ trait RulesClean extends Parser {
 
   def name: Rule1[Node] = rule {
     binomial | uninomial
+  }
+
+  def multinomial: Rule1[Node] = rule {
+    multinomial1 ~ softSpace ~ authorship ~>
+    ((m: Node, a: String) => {
+      Node(normalized = s"${m.normalized} $a",
+           canonical = s"${m.canonical}")
+    })
+  }
+
+  def multinomial1: Rule1[Node] = rule {
+    name ~ softSpace ~ word ~>
+    ((b: Node, i: String) => {
+      Node(normalized = s"${b.normalized} ${Util.norm(i)}",
+           canonical = s"${b.canonical} ${Util.norm(i)}")
+    })
   }
 
   def binomial: Rule1[Node] = rule {
