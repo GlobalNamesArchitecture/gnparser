@@ -5,7 +5,7 @@ import CharPredicate.{Digit, Printable}
 
 trait RulesRelaxed extends RulesClean {
   override def sciName: Rule1[SciName] = rule {
-    softSpace ~ sciName1 ~ softSpace ~ EOI ~> ((x: Node) =>
+    softSpace ~ sciName1 ~ softSpace ~ garbage.? ~ EOI ~> ((x: Node) =>
       SciName(
         verbatim = input.sliceString(0, input.length),
         normalized =  Some(x.normalized),
@@ -16,12 +16,8 @@ trait RulesRelaxed extends RulesClean {
     )
   }
 
-  override def sciName1: Rule1[Node] = rule {
-    (nameAuthor | name) ~ garbage.?
-  }
-
   def garbage = rule {
-    space ~ oneOrMore(CharPredicate(Printable))
+    oneOrMore(CharPredicate(Printable))
   }
 
   val az = "abcdefghijklmnopqrstuvwxyz-æœàâåãäáçčëéèíìïňññóòôøõöúùüŕřŗššşž"
