@@ -16,6 +16,7 @@ trait RulesClean extends Parser {
       )
     )
   }
+
   def sciName1: Rule1[Node] = rule {
     sciName2 ~ (space ~ "sec." ~ oneOrMore(Printable)).?
   }
@@ -153,7 +154,6 @@ trait RulesClean extends Parser {
     oneOrMore(authorWord ~ softSpace) ~>
       ((au: Seq[String]) => au.map(_.trim).mkString(" "))
   }
-
 
   def authorWord: Rule1[String] = rule {
     authorWord1 | authorWord2 | authorWord4 | authorWord3 | authorPre
