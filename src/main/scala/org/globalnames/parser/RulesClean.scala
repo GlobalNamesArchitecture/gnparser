@@ -17,16 +17,17 @@ trait RulesClean extends Parser {
     )
   }
 
+  //no sciName2 for now
   def sciName1: Rule1[Node] = rule {
-    sciName2 ~ (space ~ "sec." ~ oneOrMore(Printable)).?
-  }
-
-  def sciName2: Rule1[Node] = rule {
     sciName3 | sciName4
   }
 
   def sciName3: Rule1[Node] = rule {
-    multinomial | multinomial1 | multinomial2
+    sciName4 ~ space ~ (multinomial | multinomial1) ~>
+    ((n: Node, m: Node) => {
+      Node(normalized = s"${n.normalized} ${m.normalized}",
+           canonical = s"${n.canonical} ${m.canonical}")
+    })
   }
 
   def sciName4: Rule1[Node] = rule {
@@ -82,26 +83,38 @@ trait RulesClean extends Parser {
   }
 
   def multinomial: Rule1[Node] = rule {
-    (multinomial1 | multinomial2) ~ space ~ authorship ~>
+    multinomial1 ~ space ~ (multinomial | multinomial1) ~>
+    ((m1: Node, m2: Node) => {
+      Node(normalized = s"${m1.normalized} ${m2.normalized}",
+           canonical = s"${m1.canonical} ${m2.canonical}")
+    })
+  }
+
+  def multinomial1: Rule1[Node] = rule {
+    multinomial2 | multinomial3 | multinomial4
+  }
+
+  def multinomial2: Rule1[Node] = rule {
+    (multinomial3 | multinomial4) ~ space ~ authorship ~>
     ((m: Node, a: String) => {
       Node(normalized = s"${m.normalized} $a",
            canonical = s"${m.canonical}")
     })
   }
 
-  def multinomial1: Rule1[Node] = rule {
-    (nameAuthor|name) ~ space ~ rank ~ space ~ word ~>
-    ((b: Node, r: String, i: String) => {
-      Node(normalized = s"${b.normalized} ${r.trim} ${Util.norm(i)}",
-           canonical = s"${b.canonical} ${Util.norm(i)}")
+  def multinomial3: Rule1[Node] = rule {
+    rank ~ space ~ word ~>
+    ((r: String, i: String) => {
+      Node(normalized = s"${r.trim} ${Util.norm(i)}",
+           canonical = s"${Util.norm(i)}")
     })
   }
 
-  def multinomial2: Rule1[Node] = rule {
-    name ~ space ~ word ~>
-    ((b: Node, i: String) => {
-      Node(normalized = s"${b.normalized} ${Util.norm(i)}",
-           canonical = s"${b.canonical} ${Util.norm(i)}")
+  def multinomial4: Rule1[Node] = rule {
+    word ~>
+    ((i: String) => {
+      Node(normalized = s"${Util.norm(i)}",
+           canonical = s"${Util.norm(i)}")
     })
   }
 

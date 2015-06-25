@@ -78,12 +78,13 @@ object SciName {
     var parserRun = 1
     val unescaped = StringEscapeUtils.unescapeHtml(input)
     val unquoted = unescaped.replaceAllLiterally("\"", "")
+    val unsensu = unquoted.replaceFirst("""\s+(sec\.|sensu\.).*$""", "")
     if (unescaped != input || unquoted != unescaped) parserRun = 2
-    (parserSpaces(unquoted), parserRun)
+    (parserSpaces(unsensu), parserRun)
   }
 
   private def parserSpaces(input: String): String = {
-    val spaces = input.replaceAll("""([^\sщ])([&\(\),])""", "$1щ$2")
-    spaces.replaceAll("""([&\.\)\(,])([^\sщ])""", "$1щ$2")
+    val res1 = input.replaceAll("""([^\sщ])([&\(\),])""", "$1щ$2")
+    res1.replaceAll("""([&\.\)\(,])([^\sщ])""", "$1щ$2")
   }
 }
