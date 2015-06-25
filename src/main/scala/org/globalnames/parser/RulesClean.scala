@@ -34,7 +34,7 @@ trait RulesClean extends Parser {
   }
 
   def nameAuthor: Rule1[Node] = rule {
-    name ~ softSpace ~ authorship ~> ((w1: Node, w2: String) =>
+    name ~ space ~ authorship ~> ((w1: Node, w2: String) =>
       w1.copy(normalized = s"${w1.normalized} $w2")
     )
   }
@@ -45,17 +45,17 @@ trait RulesClean extends Parser {
   }
 
   def combinedAuthorship: Rule1[String] = rule {
-    basionymAuthorship ~ softSpace ~ authorship1 ~>
+    basionymAuthorship ~ space ~ authorship1 ~>
     ((bauth: String, auth: String) => s"$bauth $auth")
   }
 
   def basionymYearMisformed: Rule1[String] = rule {
-    '(' ~ softSpace ~ authors ~ ')' ~ softSpace ~ ','.? ~ softSpace ~ year ~>
+    '(' ~ space ~ authors ~ space ~ ')' ~ (space ~ ',').? ~ space ~ year ~>
     ((a: String, y: String) => s"($a $y)")
   }
 
   def basionymAuthorship: Rule1[String] = rule {
-    "(" ~ softSpace ~ authorship1 ~ softSpace ~ ")" ~>
+    '(' ~ space ~ authorship1 ~ space ~ ')' ~>
     ((auth: String) => s"($auth)")
   }
 
@@ -64,7 +64,16 @@ trait RulesClean extends Parser {
   }
 
   def authorsYear: Rule1[String] = rule {
-    authors ~ softSpace ~ ','.? ~ softSpace ~ year ~>
+    authorsYear1 | authorsYear2
+  }
+
+  def authorsYear1: Rule1[String] = rule {
+    authors ~ space ~ ',' ~ space ~ year ~>
+    ((a: String, y: String) => s"$a $y".toString)
+  }
+
+  def authorsYear2: Rule1[String] = rule {
+    authors ~ space ~ year ~>
     ((a: String, y: String) => s"$a $y".toString)
   }
 
@@ -73,7 +82,7 @@ trait RulesClean extends Parser {
   }
 
   def multinomial: Rule1[Node] = rule {
-    (multinomial1 | multinomial2) ~ softSpace ~ authorship ~>
+    (multinomial1 | multinomial2) ~ space ~ authorship ~>
     ((m: Node, a: String) => {
       Node(normalized = s"${m.normalized} $a",
            canonical = s"${m.canonical}")
@@ -81,7 +90,7 @@ trait RulesClean extends Parser {
   }
 
   def multinomial1: Rule1[Node] = rule {
-    (nameAuthor|name) ~ softSpace ~ rank ~ softSpace ~ word ~>
+    (nameAuthor|name) ~ space ~ rank ~ space ~ word ~>
     ((b: Node, r: String, i: String) => {
       Node(normalized = s"${b.normalized} ${r.trim} ${Util.norm(i)}",
            canonical = s"${b.canonical} ${Util.norm(i)}")
@@ -89,7 +98,7 @@ trait RulesClean extends Parser {
   }
 
   def multinomial2: Rule1[Node] = rule {
-    name ~ softSpace ~ word ~>
+    name ~ space ~ word ~>
     ((b: Node, i: String) => {
       Node(normalized = s"${b.normalized} ${Util.norm(i)}",
            canonical = s"${b.canonical} ${Util.norm(i)}")
@@ -101,7 +110,7 @@ trait RulesClean extends Parser {
   }
 
   def binomial1: Rule1[Node] = rule {
-    uninomial ~ softSpace ~ subGenus ~ softSpace ~ word ~>
+    uninomial ~ space ~ subGenus ~ space ~ word ~>
     ((g: Node, sg: Node, s: String) => {
       Node(normalized = s"${g.normalized} ${sg.normalized} ${Util.norm(s)}",
            canonical = s"${g.canonical} ${Util.norm(s)}")
@@ -109,24 +118,24 @@ trait RulesClean extends Parser {
   }
 
   def binomial2: Rule1[Node] = rule {
-    uninomial ~ softSpace ~ word ~> ((w1: Node, w2: String) =>
+    uninomial ~ space ~ word ~> ((w1: Node, w2: String) =>
       Node(normalized = s"${w1.normalized} ${Util.norm(w2)}",
            canonical = s"${w1.canonical} ${Util.norm(w2)}")
     )
   }
 
   def rank: Rule1[String] = rule {
-    capture("morph." | "f.sp." | "B " | "ssp." | "ssp " | "mut." | "nat " |
+    capture("morph." | "f.sp." | "B" | "ssp." | "ssp" | "mut." | "nat" |
      "nothosubsp." | "convar." | "pseudovar." | "sect." | "ser." | "var." |
-     "subvar." |  "[var.]"  | "var " | "subsp." | "subsp " | "subf." |
-     "race " | "forma." | "forma " | "fma." | "fma " | "form." |
-     "form " | "fo." | "fo " | "f." | "α" | "ββ" | "β" | "γ" | "δ" |
+     "subvar." |  "[var.]"  | "var" | "subsp." | "subsp" | "subf." |
+     "race" | "forma." | "forma" | "fma." | "fma" | "form." |
+     "form" | "fo." | "fo" | "f." | "α" | "ββ" | "β" | "γ" | "δ" |
      "ε" | "φ" | "θ" | "μ" | "a." | "b." | "c." | "d." | "e." | "g." |
      "k." | "****" | "**" | "*")
   }
 
   def subGenus: Rule1[Node] = rule {
-    "(" ~ softSpace ~ uninomial ~ softSpace ~ ")" ~>
+    "(" ~ space ~ uninomial ~ space ~ ")" ~>
     ((x: Node) =>
         Node(normalized = s"(${x.normalized})", canonical = ""))
   }
@@ -137,23 +146,21 @@ trait RulesClean extends Parser {
   }
 
   def authors: Rule1[String] = rule {
-    author ~ authorSep.? ~ authors.? ~>
-    ((au1: String, sep: Option[String], au2: Option[String]) => {
-      if (au2 == None) au1
-      else {
+    authors1 | author
+  }
+
+  def authors1: Rule1[String] = rule {
+    author ~ space ~ authorSep ~ space ~ (authors | author) ~>
+    ((au1: String, sep: String, au2: String) => {
         sep match {
-          case None => au1 // should not happen
-          case Some(",") => s"$au1, ${au2.get}"
-          // mix of two semantic meanings & and ex!
-          // could not figure out how to separate them correctly :\
-          case Some(x) => s"$au1 $x ${au2.get}"
+          case "," => s"$au1, $au2"
+          case x => s"$au1 $x $au2"
         }
-      }
-    })
+      })
   }
 
   def authorSep: Rule1[String] = rule {
-    softSpace ~ (authorComma | authorAnd | authorEx) ~ softSpace
+    authorComma | authorAnd | authorEx
   }
 
   def authorEx: Rule1[String] = rule {
@@ -169,7 +176,7 @@ trait RulesClean extends Parser {
   }
 
   def author: Rule1[String] = rule{
-    oneOrMore(authorWord ~ softSpace) ~>
+    oneOrMore(softSpace ~ authorWord) ~>
       ((au: Seq[String]) => au.map(_.trim).mkString(" "))
   }
 
@@ -248,7 +255,7 @@ trait RulesClean extends Parser {
   }
 
   def yearWithParens: Rule1[String] = rule {
-    '(' ~ (yearWithChar | yearNumber) ~ ')'
+    '(' ~ space ~ (yearWithChar | yearNumber) ~ space ~ ')'
   }
 
   def yearWithChar: Rule1[String] = rule {
@@ -269,6 +276,6 @@ trait RulesClean extends Parser {
   }
 
   def spaceChars = rule {
-    CharPredicate(" \t\r\n\f_")
+    CharPredicate(" \t\r\n\f_щ")
   }
 }

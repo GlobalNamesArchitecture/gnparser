@@ -43,13 +43,14 @@ case class SciName(
 
 object SciName {
   def fromString(input: String): SciName = {
-    // val (parserInput, parserRun) = preprocess(input)
-    val parserClean = new ParserClean(input)
+    val (parserInput, parserRun) = preprocess(input)
+    println(s"***'$parserInput': '$input'")
+    val parserClean = new ParserClean(parserInput)
     val resClean = parserClean.sciName.run()
     resClean match {
       case Success(_) => processParsed(input, parserClean, resClean)
       case Failure(_) => {
-        val parserRelaxed = new ParserRelaxed(input)
+        val parserRelaxed = new ParserRelaxed(parserInput)
         val resRelaxed = parserRelaxed.sciName.run()
         processParsed(input, parserRelaxed, resRelaxed)
       }
@@ -73,16 +74,16 @@ object SciName {
     }
   }
 
-  // private def preprocess(input: String): (String, Int) = {
-  //   // var parserRun = 1
-  //   // val unescaped = StringEscapeUtils.unescapeHtml(input)
-  //   // val unquoted = unescaped.replaceAllLiterally("\"", "")
-  //   // if (unescaped != input || unquoted != unescaped) parserRun = 2
-  //   (parserSpaces(unquoted), parserRun)
-  // }
-  //
-  // private def parserSpaces(input: String): String = {
-  //   val spaces = input.replaceAll("""([^\sщ])([&\(\),])""", "$1щ$2")
-  //   spaces.replaceAll("""([&\.\)\(,])([^\sщ])""", "$1щ$2")
-  // }
+  private def preprocess(input: String): (String, Int) = {
+    var parserRun = 1
+    val unescaped = StringEscapeUtils.unescapeHtml(input)
+    val unquoted = unescaped.replaceAllLiterally("\"", "")
+    if (unescaped != input || unquoted != unescaped) parserRun = 2
+    (parserSpaces(unquoted), parserRun)
+  }
+
+  private def parserSpaces(input: String): String = {
+    val spaces = input.replaceAll("""([^\sщ])([&\(\),])""", "$1щ$2")
+    spaces.replaceAll("""([&\.\)\(,])([^\sщ])""", "$1щ$2")
+  }
 }

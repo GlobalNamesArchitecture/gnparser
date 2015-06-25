@@ -8,11 +8,13 @@ import scala.io.Source
 import scala.util.{Success, Failure}
 
 class SciNameSpec extends Specification {
+  var fileEnd = false
   val lines = Source.fromURL(
     getClass.getResource("/test_data.txt")).getLines
 
   def notComment(line: String): Boolean = {
-    line.length > 0 && !("#\r\n\f\t " contains line.charAt(0))
+    if (line.trim == "__END__") fileEnd = true
+    !fileEnd && line.length > 1 && !("#\r\n\f\t " contains line.charAt(0))
   }
 
   for (line <- lines if notComment(line)) {
