@@ -7,6 +7,7 @@ import org.apache.commons.id.uuid.UUID
 import org.parboiled2._
 import scala.collection._
 import scala.util.{Success, Failure, Try}
+import org.apache.commons.lang.StringEscapeUtils
 
 case class SciName(
   verbatim: String,
@@ -42,6 +43,7 @@ case class SciName(
 
 object SciName {
   def fromString(input: String): SciName = {
+    // val (parserInput, parserRun) = preprocess(input)
     val parserClean = new ParserClean(input)
     val resClean = parserClean.sciName.run()
     resClean match {
@@ -58,7 +60,7 @@ object SciName {
     parser: Parser,
     result: Try[SciName]): SciName = {
     result match {
-      case Success(res: SciName) => res
+      case Success(res: SciName) => res.copy(input)
       case Failure(err: ParseError) => {
         println(parser.formatError(err))
           SciName(input)
@@ -70,4 +72,17 @@ object SciName {
       case _ => SciName(input)
     }
   }
+
+  // private def preprocess(input: String): (String, Int) = {
+  //   // var parserRun = 1
+  //   // val unescaped = StringEscapeUtils.unescapeHtml(input)
+  //   // val unquoted = unescaped.replaceAllLiterally("\"", "")
+  //   // if (unescaped != input || unquoted != unescaped) parserRun = 2
+  //   (parserSpaces(unquoted), parserRun)
+  // }
+  //
+  // private def parserSpaces(input: String): String = {
+  //   val spaces = input.replaceAll("""([^\sщ])([&\(\),])""", "$1щ$2")
+  //   spaces.replaceAll("""([&\.\)\(,])([^\sщ])""", "$1щ$2")
+  // }
 }
