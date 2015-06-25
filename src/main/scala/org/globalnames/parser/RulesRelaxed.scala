@@ -17,7 +17,7 @@ trait RulesRelaxed extends RulesClean {
   }
 
   def garbage = rule {
-    oneOrMore(CharPredicate(Printable)|'щ')
+    space ~ oneOrMore(CharPredicate(Printable)|'щ')
   }
 
   val az = "abcdefghijklmnopqrstuvwxyz'ëæœſ-àâåãäáçčéèíìïňññóòôøõöúùüŕřŗššşž"
