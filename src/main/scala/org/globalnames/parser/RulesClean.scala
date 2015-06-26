@@ -25,8 +25,8 @@ trait RulesClean extends Parser {
   def sciName3: Rule1[Node] = rule {
     sciName4 ~ space ~ (multinomial | multinomial1) ~>
     ((n: Node, m: Node) => {
-      Node(normalized = s"${n.normalized} ${m.normalized}",
-           canonical = s"${n.canonical} ${m.canonical}")
+      Node(normalized = s"${n.normalized} ${m.normalized}".trim,
+           canonical = s"${n.canonical} ${m.canonical}".trim)
     })
   }
 
@@ -103,10 +103,15 @@ trait RulesClean extends Parser {
   }
 
   def multinomial3: Rule1[Node] = rule {
-    rank ~ space ~ word ~>
-    ((r: String, i: String) => {
-      Node(normalized = s"${r.trim} ${Util.norm(i)}",
-           canonical = s"${Util.norm(i)}")
+    rank ~ (space ~ word).? ~>
+    ((r: String, i: Option[String]) => {
+      i match {
+        case Some(x) =>
+          Node(normalized = s"$r ${Util.norm(x)}",
+               canonical = s"${Util.norm(x)}")
+        case None =>
+          Node(normalized = "", canonical = "")
+      }
     })
   }
 
@@ -119,10 +124,22 @@ trait RulesClean extends Parser {
   }
 
   def binomial: Rule1[Node] = rule {
-    binomial2 | binomial1
+    binomial1 | binomial2 | binomial3
   }
 
   def binomial1: Rule1[Node] = rule {
+    uninomial ~ space ~ comparison ~ (space ~ word).? ~>
+    ((g: Node, _: String, s: Option[String]) => {
+      s match {
+        case Some(x) =>
+          Node(normalized = s"${g.normalized} cf. ${Util.norm(x)}",
+               canonical = s"${g.canonical} ${Util.norm(x)}")
+        case None => g
+      }
+    })
+  }
+
+  def binomial2: Rule1[Node] = rule {
     uninomial ~ space ~ subGenus ~ space ~ word ~>
     ((g: Node, sg: Node, s: String) => {
       Node(normalized = s"${g.normalized} ${sg.normalized} ${Util.norm(s)}",
@@ -130,11 +147,21 @@ trait RulesClean extends Parser {
     })
   }
 
-  def binomial2: Rule1[Node] = rule {
+  def binomial3: Rule1[Node] = rule {
     uninomial ~ space ~ word ~> ((w1: Node, w2: String) =>
       Node(normalized = s"${w1.normalized} ${Util.norm(w2)}",
            canonical = s"${w1.canonical} ${Util.norm(w2)}")
     )
+  }
+
+  def comparison: Rule1[String] = rule {
+    capture("cf." | "cf")
+  }
+
+  def approximation: Rule1[String] = rule {
+    capture("spp." | "spp" | "sp.nr." | "sp. nr." | "nr." | "nr" | "sp.aff." |
+      "sp. aff." | "sp." | "sp" | "species" |
+      "aff." | "aff" | "monst." | "?")
   }
 
   def rank: Rule1[String] = rule {
@@ -154,6 +181,15 @@ trait RulesClean extends Parser {
   }
 
   def uninomial: Rule1[Node] = rule {
+    uninomial1 | uninomial2
+  }
+
+  def uninomial1: Rule1[Node] = rule {
+    uninomial2 ~ space ~ approximation ~ (space ~ word).? ~>
+      ((uninomial: Node, _: String, _: Option[String]) => uninomial)
+  }
+
+  def uninomial2: Rule1[Node] = rule {
     (abbrGenus | capWord | twoLetterGenera) ~> ((x: String) =>
       Node(normalized = Util.norm(x), canonical = Util.norm(x)))
   }
