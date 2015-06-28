@@ -3,5 +3,6 @@ import scala.collection._
 
 case class Node(
   normalized: String = "",
-  canonical: String = ""
+  canonical: String = "",
+  hybrid: Boolean = false
 )

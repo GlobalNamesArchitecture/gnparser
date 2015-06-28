@@ -12,13 +12,18 @@ trait RulesClean extends Parser {
         normalized =  Some(x.normalized),
         canonical = Some(x.canonical),
         isParsed = true,
+        isHybrid = x.hybrid,
         parserRun = 1
       )
     )
   }
 
-  //no sciName2 for now
+
   def sciName1: Rule1[Node] = rule {
+   namedHybrid | approxName | sciName2
+  }
+
+  def sciName2: Rule1[Node] = rule {
     sciName3 | sciName4
   }
 
@@ -34,6 +39,17 @@ trait RulesClean extends Parser {
     (nameAuthor | name)
   }
 
+  def namedHybrid: Rule1[Node] = rule {
+    namedHybrid1
+  }
+
+  def namedHybrid1: Rule1[Node] = rule {
+    hybridChar ~ softSpace ~ sciName2 ~>
+    ((n: Node) =>
+      Node(normalized = s"× ${n.normalized}",
+        canonical = s"× ${n.canonical}", hybrid = true))
+  }
+
   def nameAuthor: Rule1[Node] = rule {
     name ~ space ~ authorship ~> ((w1: Node, w2: String) =>
       w1.copy(normalized = s"${w1.normalized} $w2")
@@ -44,8 +60,16 @@ trait RulesClean extends Parser {
     combinedAuthorship | basionymYearMisformed |
     basionymAuthorship | authorship1
   }
-
   def combinedAuthorship: Rule1[String] = rule {
+    combinedAuthorship1 | combinedAuthorship2
+  }
+
+  def combinedAuthorship1: Rule1[String] = rule {
+    basionymAuthorship ~ space ~ authorEx ~ space ~ authorship1 ~>
+    ((bauth: String,ex: String, auth: String) => s"$bauth ex $auth")
+  }
+
+  def combinedAuthorship2: Rule1[String] = rule {
     basionymAuthorship ~ space ~ authorship1 ~>
     ((bauth: String, auth: String) => s"$bauth $auth")
   }
@@ -181,17 +205,25 @@ trait RulesClean extends Parser {
   }
 
   def uninomial: Rule1[Node] = rule {
-    uninomial1 | uninomial2
-  }
-
-  def uninomial1: Rule1[Node] = rule {
-    uninomial2 ~ space ~ approximation ~ (space ~ word).? ~>
-      ((uninomial: Node, _: String, _: Option[String]) => uninomial)
-  }
-
-  def uninomial2: Rule1[Node] = rule {
     (abbrGenus | capWord | twoLetterGenera) ~> ((x: String) =>
       Node(normalized = Util.norm(x), canonical = Util.norm(x)))
+  }
+
+  def approxName: Rule1[Node] = rule {
+    approxName1 | approxName2
+  }
+
+  def approxName1: Rule1[Node] = rule {
+    uninomial ~ space ~ approximation ~ zeroOrMore(Printable|"щ") ~>
+      ((g: Node, _: String) => g)
+  }
+
+  def approxName2: Rule1[Node] = rule {
+    uninomial ~ space ~ word ~ space ~
+    approximation ~ zeroOrMore(Printable|"щ") ~>
+      ((g: Node, s: String, _: String) =>
+          Node(normalized = s"${g.normalized} ${Util.norm(s)}",
+               canonical = s"${g.canonical} ${Util.norm(s)}"))
   }
 
   def authors: Rule1[String] = rule {
@@ -213,7 +245,7 @@ trait RulesClean extends Parser {
   }
 
   def authorEx: Rule1[String] = rule {
-    "ex" ~ push("ex")
+    ("ex" | "in") ~ push("ex")
   }
 
   def authorAnd: Rule1[String] = rule {
@@ -224,9 +256,18 @@ trait RulesClean extends Parser {
     "," ~ push(",")
   }
 
-  def author: Rule1[String] = rule{
+  def author: Rule1[String] = rule {
+    unknownAuthor | author1
+  }
+
+  def author1: Rule1[String] = rule {
     oneOrMore(softSpace ~ authorWord) ~>
       ((au: Seq[String]) => au.map(_.trim).mkString(" "))
+  }
+
+  def unknownAuthor: Rule1[String] = rule {
+    capture("?" | "auct." | "auct" | "anon." | "anon" | "ht." | "ht" |
+      "hort." | "hort")
   }
 
   def authorWord: Rule1[String] = rule {
@@ -290,6 +331,12 @@ trait RulesClean extends Parser {
   def word: Rule1[String] = rule {
     capture(lowerChar ~ oneOrMore(lowerChar))
   }
+
+  def hybridChar = rule {
+    "x" | "X" | multChar
+  }
+
+  def multChar = rule { "×" | "*" }
 
   def upperChar = rule {
     CharPredicate("ABCDEFGHIJKLMNOPQRSTUVWXYZËÆŒ")
