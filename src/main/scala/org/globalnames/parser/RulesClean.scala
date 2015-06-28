@@ -19,7 +19,7 @@ trait RulesClean extends Parser {
   }
 
   def sciName1: Rule1[Node] = rule {
-   namedHybrid | approxName | sciName2
+   hybridFormula | namedHybrid | approxName | sciName2
   }
 
   def sciName2: Rule1[Node] = rule {
@@ -38,11 +38,37 @@ trait RulesClean extends Parser {
     name
   }
 
-  def namedHybrid: Rule1[Node] = rule {
-    namedHybrid1
+  def hybridFormula: Rule1[Node] = rule {
+    hybridFormula1 | hybridFormula2
   }
 
-  def namedHybrid1: Rule1[Node] = rule {
+  def hybridFormula1: Rule1[Node] = rule {
+    sciName2 ~ space ~ multChar ~ (species | sciName2).? ~>
+    ((n1: Node, n2: Option[Node]) =>
+        n2 match {
+          case Some(x) =>
+            Node(normalized = s"${n1.normalized} × ${x.normalized}",
+              canonical = s"${n1.canonical} × ${x.canonical}", hybrid = true)
+          case None =>
+            Node(normalized = s"${n1.normalized} ×",
+              canonical = s"${n1.canonical} ×", hybrid = true)
+    })
+  }
+
+  def hybridFormula2: Rule1[Node] = rule {
+    sciName2 ~ space ~ hybridChar ~ ( space ~ (species | sciName2)).? ~>
+    ((n1: Node, n2: Option[Node]) =>
+        n2 match {
+          case Some(x) =>
+            Node(normalized = s"${n1.normalized} × ${x.normalized}",
+              canonical = s"${n1.canonical} × ${x.canonical}", hybrid = true)
+          case None =>
+            Node(normalized = s"${n1.normalized} ×",
+              canonical = s"${n1.canonical} ×", hybrid = true)
+    })
+  }
+
+  def namedHybrid: Rule1[Node] = rule {
     hybridChar ~ softSpace ~ sciName2 ~>
     ((n: Node) =>
       Node(normalized = s"× ${n.normalized}",
