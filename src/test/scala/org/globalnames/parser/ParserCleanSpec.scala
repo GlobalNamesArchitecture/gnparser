@@ -37,19 +37,19 @@ import scala.util.{Success, Failure, Try}
 //       res.normalized === Some("Modanthos Alef")
 //       res.canonical === Some("Modanthos")
 //     }
-//     "Modanthos geranioides Alef." in {
-//       val res = parseName("Modanthos geranioides Alef.")
-//       res.isParsed === true
-//       res.normalized === Some("Modanthos geranioides Alef.")
-//       res.canonical === Some("Modanthos geranioides")
-//     }
-//     "Sifangtaiella ganzhaoensis Su 1989" in {
-//       val res = parseName("Sifangtaiella ganzhaoensis Su 1989")
-//       println(res.toJson)
-//       res.isParsed === true
-//       res.normalized === Some("Sifangtaiella ganzhaoensis Su 1989")
-//       res.canonical === Some("Sifangtaiella ganzhaoensis")
-//     }
+//     // "Modanthos geranioides Alef." in {
+//     //   val res = parseName("Modanthos geranioides Alef.")
+//     //   res.isParsed === true
+//     //   res.normalized === Some("Modanthos geranioides Alef.")
+//     //   res.canonical === Some("Modanthos geranioides")
+//     // }
+//     // "Sifangtaiella ganzhaoensis Su 1989" in {
+//     //   val res = parseName("Sifangtaiella ganzhaoensis Su 1989")
+//     //   println(res.toJson)
+//     //   res.isParsed === true
+//     //   res.normalized === Some("Sifangtaiella ganzhaoensis Su 1989")
+//     //   res.canonical === Some("Sifangtaiella ganzhaoensis")
+//     // }
 //     // "Sifangtaiella ganzhaoensis B. de Su 1989" in {
 //     //   val res = parseName("Sifangtaiella ganzhaoensis B. de Su 1989")
 //     //   res.normalized === Some("Sifangtaiella ganzhaoensis B. de Su 1989")

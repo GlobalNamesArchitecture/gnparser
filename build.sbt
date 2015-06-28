@@ -20,3 +20,6 @@ libraryDependencies ++= Seq(
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
 
 scalacOptions in Test ++= Seq("-Yrangepos")
+
+
+fork in run := true
