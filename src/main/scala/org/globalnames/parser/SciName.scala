@@ -79,8 +79,38 @@ object SciName {
     val unescaped = StringEscapeUtils.unescapeHtml(input)
     val unquoted = unescaped.replaceAllLiterally("\"", "")
     val unsensu = unquoted.replaceFirst("""\s+(sec\.|sensu\.).*$""", "")
+    val unjunk = removeJunk(unsensu)
     if (unescaped != input || unquoted != unescaped) parserRun = 2
-    (parserSpaces(unsensu), parserRun)
+    (parserSpaces(unjunk), parserRun)
+  }
+
+  private def removeJunk(input: String): String = {
+    val notes = """(?ix)\s+(species\s+group|
+                   species\s+complex|group|author)\b.*$"""
+    val taxonConcepts1 = """(?i)\s+(sensu\.|sensu|auct\.|auct)\b.*$"""
+    val taxonConcepts2 = """(?x)\s+
+                       (\(?s\.\s?s\.|
+                       \(?s\.\s?l\.|
+                       \(?s\.\s?str\.|
+                       \(?s\.\s?lat\.|
+                      sec\.|sec|near)\b.*$"""
+    val taxonConcepts3 = """(?i)(,\s*|\s+)(pro parte|p\.\s?p\.)\s*$"""
+    val nomenConcepts  = """(?i)(,\s*|\s+)(\(?nomen|\(?nom\.|\(?comb\.).*$"""
+    val lastWordJunk  = """(?ix)(,\s*|\s+)
+                    (spp\.|spp|var\.|
+                     var|von|van|ined\.|
+                     ined|sensu|new|non|nec|
+                     nudum|cf\.|cf|sp\.|sp|
+                     ssp\.|ssp|subsp|subgen|hybrid|hort\.|hort)\??\s*$"""
+    substitute(input, List(notes, taxonConcepts1,
+      taxonConcepts2, taxonConcepts3, nomenConcepts, lastWordJunk))
+
+  }
+
+  @annotation.tailrec
+  def substitute(input: String, regexes: List[String]): String = {
+    if (regexes == List()) input
+    else substitute(input.replaceFirst(regexes.head, ""), regexes.tail)
   }
 
   private def parserSpaces(input: String): String = {

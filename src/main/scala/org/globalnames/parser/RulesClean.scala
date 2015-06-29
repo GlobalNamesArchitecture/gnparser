@@ -39,24 +39,9 @@ trait RulesClean extends Parser {
   }
 
   def hybridFormula: Rule1[Node] = rule {
-    hybridFormula1 | hybridFormula2
-  }
-
-  def hybridFormula1: Rule1[Node] = rule {
-    sciName2 ~ space ~ multChar ~ (species | sciName2).? ~>
-    ((n1: Node, n2: Option[Node]) =>
-        n2 match {
-          case Some(x) =>
-            Node(normalized = s"${n1.normalized} × ${x.normalized}",
-              canonical = s"${n1.canonical} × ${x.canonical}", hybrid = true)
-          case None =>
-            Node(normalized = s"${n1.normalized} ×",
-              canonical = s"${n1.canonical} ×", hybrid = true)
-    })
-  }
-
-  def hybridFormula2: Rule1[Node] = rule {
-    sciName2 ~ space ~ hybridChar ~ ( space ~ (species | sciName2)).? ~>
+    sciName2 ~ space ~
+    ((multChar ~ softSpace) | (CharPredicate("xX") ~ space)) ~
+    (subspecies | species | sciName2).? ~>
     ((n1: Node, n2: Option[Node]) =>
         n2 match {
           case Some(x) =>
@@ -123,6 +108,13 @@ trait RulesClean extends Parser {
 
   def name: Rule1[Node] = rule {
     binomial | uninomialAuth | uninomial
+  }
+
+  def subspecies: Rule1[Node] = rule {
+    species ~ space ~ (multinomial | multinomial1) ~>
+    ((s: Node, m: Node) =>
+        Node(normalized = s"${s.normalized} ${m.normalized}",
+          canonical = s"${s.canonical} ${m.canonical}"))
   }
 
   def multinomial: Rule1[Node] = rule {
@@ -330,7 +322,7 @@ trait RulesClean extends Parser {
 
   def authCharLower = rule {
     CharPredicate.LowerAlpha |
-    CharPredicate("àáâãäåæçèéêëìíîïðñòóôõöøùúûüýÿāăąćĉčďđ") |
+    CharPredicate("àáâãäåæçèéêëìíîïðñòóóôõöøùúûüýÿāăąćĉčďđ") |
     CharPredicate("ēĕėęěğīĭİıĺľłńņňŏőœŕřśşšţťũūŭůűźżžſǎǔǧșțȳ")
   }
 

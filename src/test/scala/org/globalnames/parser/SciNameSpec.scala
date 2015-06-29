@@ -14,7 +14,7 @@ class SciNameSpec extends Specification {
 
   def notComment(line: String): Boolean = {
     if (line.trim == "__END__") fileEnd = true
-    !fileEnd && line.length > 1 && !("#\r\n\f\t " contains line.charAt(0))
+    !fileEnd && line.trim.length > 1 && !("#\r\n\f\t" contains line.charAt(0))
   }
 
   for (line <- lines if notComment(line)) {
