@@ -383,14 +383,15 @@ Sputnik virophage 3|{"scientificName":{"id":"b206bb35-01bf-59a7-8dad-bc8f99ca0a2
 
 # prioni is not prion
 Fakus prioni|{"scientificName":{"id":"f2561b5b-37ed-592d-9c12-4ef96d09f554", "parsed":true, "parser_version":"test_version", "parser_run":1, "verbatim":"Fakus prioni", "normalized":"Fakus prioni", "canonical":"Fakus prioni", "hybrid":false, "virus": false, "virus": false,  "details":[{"genus":{"string":"Fakus"}, "species":{"string":"prioni"}}],  "positions":{"0":["genus", 5], "6":["species", 12]}}}
-__END__
-#should not parse non-virus names containing RNA
-ssRNA|{"scientificName":{"id":"10d5f30c-e51b-54ed-be43-c0ac1656a88a", "parsed":false, "parser_version":"test_version", "verbatim":"ssRNA"}}
-Alpha proteobacterium RNA12|{"scientificName":{"id":"c2826f30-f6f3-543f-80cf-646adf374a59", "parsed":false, "parser_version":"test_version", "verbatim":"Alpha proteobacterium RNA12"}}
-Ustilaginoidea virens RNA virus|{"scientificName":{"id":"61fff10f-7f16-5f42-b642-ba0195abccb8", "parsed":false, "parser_version":"test_version", "verbatim":"Ustilaginoidea virens RNA virus", "virus":true}}
-Candida albicans RNA_CTR0-3|{"scientificName":{"id":"0182d44b-5d8b-501d-8f5c-4ef44dff8db4", "parsed":false, "parser_version":"test_version", "verbatim":"Candida albicans RNA_CTR0-3"}}
-Calathus (Lindrothius) KURNAKOV 1961|{"scientificName":{"id":"aa113505-61a1-58fe-92f3-8fd511dcfd61", "parsed":true, "parser_version":"test_version", "verbatim":"Calathus (Lindrothius) KURNAKOV 1961", "normalized":"Calathus (Lindrothius) Kurnakov 1961", "canonical":"Calathus", "hybrid":false, "virus": false, "virus": false,  "details":[{"uninomial":{"string":"Calathus", "infragenus":{"string":"Lindrothius"}, "authorship":"KURNAKOV 1961", "basionymAuthorTeam":{"authorTeam":"KURNAKOV", "author":["Kurnakov"], "year":"1961"}}}], "parser_run":1, "positions":{"0":["uninomial", 8], "10":["infragenus", 21], "23":["author_word", 31], "32":["year", 36]}}}
 
+#should not parse non-virus names containing RNA
+ssRNA|{"scientificName":{"id":"10d5f30c-e51b-54ed-be43-c0ac1656a88a", "parsed":false, "parser_version":"test_version", "parser_run": -1, "verbatim":"ssRNA","normalized": null, "canonical": null, "hybrid": false, "virus":false}}
+Alpha proteobacterium RNA12|{"scientificName":{"id":"c2826f30-f6f3-543f-80cf-646adf374a59", "parsed":false, "parser_version":"test_version", "parser_run": -1, "verbatim":"Alpha proteobacterium RNA12", "normalized": null, "canonical": null, "hybrid": false, "virus":false}}
+Ustilaginoidea virens RNA virus|{"scientificName":{"id":"61fff10f-7f16-5f42-b642-ba0195abccb8", "parsed":false, "parser_version":"test_version", "parser_run": -1, "verbatim":"Ustilaginoidea virens RNA virus", "normalized": null, "canonical": null, "hybrid": false, "virus":true}}
+Candida albicans RNA_CTR0-3|{"scientificName":{"id":"0182d44b-5d8b-501d-8f5c-4ef44dff8db4", "parsed":false, "parser_version":"test_version", "parser_run": -1, "verbatim":"Candida albicans RNA_CTR0-3", "normalized": null, "canonical": null, "hybrid": false, "virus":false}}
+Calathus (Lindrothius) KURNAKOV 1961|{"scientificName":{"id":"aa113505-61a1-58fe-92f3-8fd511dcfd61", "parsed":true, "parser_version":"test_version", "parser_run":1, "verbatim":"Calathus (Lindrothius) KURNAKOV 1961", "normalized":"Calathus (Lindrothius) Kurnakov 1961", "canonical":"Calathus", "hybrid":false, "virus": false, "virus": false,  "details":[{"uninomial":{"string":"Calathus", "infragenus":{"string":"Lindrothius"}, "authorship":"KURNAKOV 1961", "basionymAuthorTeam":{"authorTeam":"KURNAKOV", "author":["Kurnakov"], "year":"1961"}}}], "positions":{"0":["uninomial", 8], "10":["infragenus", 21], "23":["author_word", 31], "32":["year", 36]}}}
+
+__END__
 #double parenthesis
 Eichornia crassipes ( (Martius) ) Solms-Laub.|{"scientificName":{"id":"95b90189-29d1-51ca-a1fa-0fb1c19a1fa1", "parsed":true, "parser_version":"test_version", "parser_run":2,"verbatim":"Eichornia crassipes ( (Martius) ) Solms-Laub.","normalized":"Eichornia crassipes (Martius) Solms-Laub.","canonical":"Eichornia crassipes", "hybrid":false, "virus": false, "virus": false, "details":[{"genus":{"string":"Eichornia"},"species":{"string":"crassipes","authorship":"( (Martius) ) Solms-Laub.","combinationAuthorTeam":{"authorTeam":"Solms-Laub.","author":["Solms-Laub."]},"basionymAuthorTeam":{"authorTeam":"Martius","author":["Martius"]}}}],"positions":{"0":["genus",9],"10":["species",19],"23":["author_word",30],"34":["author_word",45]}}}
 
