@@ -20,6 +20,15 @@ trait RulesRelaxed extends RulesClean {
     space ~ oneOrMore(CharPredicate(Printable)|'щ')
   }
 
+  override def basionymAuthorship: Rule1[String] = rule {
+    basionymAuthorship1 | basionymAuthorship2
+  }
+
+  def basionymAuthorship2: Rule1[String] = rule {
+    '(' ~ space ~ '(' ~ space ~ authorship1 ~ space ~ ')' ~ space ~ ')' ~>
+    ((auth: String) => s"($auth)")
+  }
+
   override def year: Rule1[String] = rule {
     yearRange | yearApprox | yearWithParens | yearWithPage |
     yearWithDot | yearWithChar | yearNumber

@@ -84,6 +84,10 @@ trait RulesClean extends Parser {
   }
 
   def basionymAuthorship: Rule1[String] = rule {
+    basionymAuthorship1
+  }
+
+  def basionymAuthorship1: Rule1[String] = rule {
     '(' ~ space ~ authorship1 ~ space ~ ')' ~>
     ((auth: String) => s"($auth)")
   }
@@ -289,10 +293,14 @@ trait RulesClean extends Parser {
   }
 
   def author: Rule1[String] = rule {
-    unknownAuthor | author1
+    unknownAuthor | author1 | author2
   }
 
   def author1: Rule1[String] = rule {
+    author2 ~ space ~ filius ~> ((au: String) => s"$au f.")
+  }
+
+  def author2: Rule1[String] = rule {
     oneOrMore(softSpace ~ authorWord) ~>
       ((au: Seq[String]) => au.map(_.trim).mkString(" "))
   }
@@ -337,8 +345,8 @@ trait RulesClean extends Parser {
       ((au1: String, au2: String) => s"$au1-$au2" )
   }
 
-  def authorPost: Rule1[String] = rule {
-    capture("f."|"filius")
+  def filius = rule {
+    "f." | "filius"
   }
 
   def authorPre: Rule1[String] = rule {
