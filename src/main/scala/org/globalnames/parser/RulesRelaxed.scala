@@ -1,7 +1,7 @@
 package org.globalnames.parser
 
 import org.parboiled2._
-import CharPredicate.{Digit, Printable}
+import CharPredicate.{Digit, Printable, Alpha}
 
 trait RulesRelaxed extends RulesClean {
   override def sciName: Rule1[SciName] = rule {
@@ -18,6 +18,27 @@ trait RulesRelaxed extends RulesClean {
 
   def garbage = rule {
     space ~ oneOrMore(CharPredicate(Printable)|'щ')
+  }
+
+  override def year: Rule1[String] = rule {
+    yearRange | yearApprox | yearWithParens | yearWithPage |
+    yearWithDot | yearWithChar | yearNumber
+  }
+
+  def yearRange: Rule1[String] = rule {
+    yearNumber ~ '-' ~ 3.times(Digit) ~ ("?" | Digit) ~ Alpha.?
+  }
+
+  def yearWithDot: Rule1[String] = rule {
+    yearNumber ~ '.'
+  }
+
+  def yearApprox: Rule1[String] = rule {
+    '[' ~ softSpace ~ yearNumber ~ softSpace ~ ']'
+  }
+
+  def yearWithPage: Rule1[String] = rule {
+    yearNumber ~ ':' ~ softSpace ~ oneOrMore(Digit)
   }
 
   val az = "abcdefghijklmnopqrstuvwxyz'ëæœſ-àâåãäáçčéèíìïňññóòôøõöúùüŕřŗššşž"

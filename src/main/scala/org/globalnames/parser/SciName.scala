@@ -8,6 +8,7 @@ import org.parboiled2._
 import scala.collection._
 import scala.util.{Success, Failure, Try}
 import org.apache.commons.lang.StringEscapeUtils
+import scala.util.matching.Regex
 
 case class SciName(
   verbatim: String,
@@ -37,25 +38,32 @@ case class SciName(
     ("verbatim" -> verbatim) ~
     ("normalized" -> normalized.getOrElse(null)) ~
     ("canonical" -> canonical.getOrElse(null)) ~
-    ("hybrid" -> isHybrid)
+    ("hybrid" -> isHybrid) ~
+    ("virus" -> isVirus)
   )
 }
 
 object SciName {
   def fromString(input: String): SciName = {
-    val (parserInput, parserRun) = preprocess(input)
-    println(s"***'$parserInput': '$input'")
-    val parserClean = new ParserClean(parserInput)
-    val resClean = parserClean.sciName.run()
-    resClean match {
-      case Success(_) => processParsed(input, parserClean, resClean)
-      case Failure(_) => {
-        val parserRelaxed = new ParserRelaxed(parserInput)
-        val resRelaxed = parserRelaxed.sciName.run()
-        processParsed(input, parserRelaxed, resRelaxed)
-      }
+    val isVirus = detectVirus(input)
+    if (isVirus || noParse(input)) SciName(input, isVirus = isVirus)
+    else {
+      val (parserInput, parserRun) = preprocess(input)
+      parse(input, parserInput, parserRun)
     }
   }
+
+  private def detectVirus(input: String): Boolean = {
+    val vir1 = """\sICTV\s*$""".r
+    val vir2 = """(?ix)\b(virus|viruses|particle|particles|
+                          phage|phages|viroid|viroids|virophage|
+                          prion|prions|NPV)\b""".r
+    val vir3 = """[A-Z]?[a-z]+virus\b""".r
+    val vir4 = """\b[A-Za-z]*(satellite[s]?|NPV)\b""".r
+    !(List(vir1, vir2, vir3, vir4).foldLeft(true){ (b: Boolean, r: Regex) =>
+      (r.findFirstIn(input) == None) && b })
+  }
+
 
   def processParsed(input: String,
     parser: Parser,
@@ -71,6 +79,30 @@ object SciName {
         SciName(input)
       }
       case _ => SciName(input)
+    }
+  }
+
+  private def noParse(input: String): Boolean = {
+    val incertaeSedis1 = """(?i).*incertae\s+sedis.*""".r
+    val incertaeSedis2 = """(?i)inc\.\s*sed\.""".r
+    val rna = """[^A-Z]RNA[^A-Z]*""".r
+    if (List(incertaeSedis1.findFirstIn(input),
+      incertaeSedis2.findFirstIn(input),
+      rna.findFirstIn(input)) == List(None, None, None)) false
+    else true
+  }
+
+  private def parse(input: String, parserInput: String,
+    parserRun: Int): SciName = {
+    val parserClean = new ParserClean(parserInput)
+    val resClean = parserClean.sciName.run()
+    resClean match {
+      case Success(_) => processParsed(input, parserClean, resClean)
+      case Failure(_) => {
+        val parserRelaxed = new ParserRelaxed(parserInput)
+        val resRelaxed = parserRelaxed.sciName.run()
+        processParsed(input, parserRelaxed, resRelaxed)
+      }
     }
   }
 
