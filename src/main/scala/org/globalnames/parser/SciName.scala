@@ -146,7 +146,7 @@ object SciName {
   }
 
   private def parserSpaces(input: String): String = {
-    val res1 = input.replaceAll("""([^\sщ])([&\(\),])""", "$1щ$2")
-    res1.replaceAll("""([&\.\)\(,])([^\sщ])""", "$1щ$2")
+    val res1 = input.replaceAll("""([^\sщ])([&\(\)\[\],])""", "$1щ$2")
+    res1.replaceAll("""([&\.\)\(\[\],])([^\sщ])""", "$1щ$2")
   }
 }

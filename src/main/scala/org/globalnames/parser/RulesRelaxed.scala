@@ -35,7 +35,7 @@ trait RulesRelaxed extends RulesClean {
   }
 
   def yearRange: Rule1[String] = rule {
-    yearNumber ~ '-' ~ 3.times(Digit) ~ ("?" | Digit) ~ Alpha.?
+    yearNumber ~ '-' ~ oneOrMore(Digit) ~ zeroOrMore("?" | Alpha)
   }
 
   def yearWithDot: Rule1[String] = rule {
@@ -43,7 +43,8 @@ trait RulesRelaxed extends RulesClean {
   }
 
   def yearApprox: Rule1[String] = rule {
-    '[' ~ softSpace ~ yearNumber ~ softSpace ~ ']'
+    '[' ~ space ~ yearNumber ~ space ~ ']' ~>
+     ((y: String) => s"($y)")
   }
 
   def yearWithPage: Rule1[String] = rule {
