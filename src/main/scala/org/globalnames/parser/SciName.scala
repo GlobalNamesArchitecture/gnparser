@@ -49,6 +49,7 @@ object SciName {
     if (isVirus || noParse(input)) SciName(input, isVirus = isVirus)
     else {
       val (parserInput, parserRun) = preprocess(input)
+      println("***" + parserInput)
       parse(input, parserInput, parserRun)
     }
   }
@@ -109,10 +110,8 @@ object SciName {
   private def preprocess(input: String): (String, Int) = {
     var parserRun = 1
     val unescaped = StringEscapeUtils.unescapeHtml(input)
-    val unquoted = unescaped.replaceAllLiterally("\"", "")
-    val unsensu = unquoted.replaceFirst("""\s+(sec\.|sensu\.).*$""", "")
-    val unjunk = removeJunk(unsensu)
-    if (unescaped != input || unquoted != unescaped) parserRun = 2
+    val unjunk = removeJunk(unescaped)
+    if (unjunk != input) parserRun = 2
     (parserSpaces(unjunk), parserRun)
   }
 
@@ -146,7 +145,7 @@ object SciName {
   }
 
   private def parserSpaces(input: String): String = {
-    val res1 = input.replaceAll("""([^\sщ])([&\(\)\[\],])""", "$1щ$2")
-    res1.replaceAll("""([&\.\)\(\[\],])([^\sщ])""", "$1щ$2")
+    val res1 = input.replaceAll("""([^\sщ])([&\(\)\[\],×])""", "$1щ$2")
+    res1.replaceAll("""([&\.\)\(\[\],×])([^\sщ])""", "$1щ$2")
   }
 }

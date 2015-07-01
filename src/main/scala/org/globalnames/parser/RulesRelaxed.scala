@@ -11,13 +11,14 @@ trait RulesRelaxed extends RulesClean {
         normalized =  Some(x.normalized),
         canonical = Some(x.canonical),
         isParsed = true,
+        isHybrid = x.hybrid,
         parserRun = 2
       )
     )
   }
 
   def garbage = rule {
-    space ~ oneOrMore(CharPredicate(Printable)|'щ')
+    space ~ oneOrMore(ANY)
   }
 
   override def basionymAuthorship: Rule1[String] = rule {
@@ -48,7 +49,7 @@ trait RulesRelaxed extends RulesClean {
   }
 
   def yearWithPage: Rule1[String] = rule {
-    yearNumber ~ ':' ~ softSpace ~ oneOrMore(Digit)
+    yearNumber ~ ':' ~ space ~ oneOrMore(Digit)
   }
 
   val az = "abcdefghijklmnopqrstuvwxyz'ëæœſ-àâåãäáçčéèíìïňññóòôøõöúùüŕřŗššşž"

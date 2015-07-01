@@ -40,7 +40,7 @@ trait RulesClean extends Parser {
 
   def hybridFormula: Rule1[Node] = rule {
     sciName2 ~ space ~
-    ((multChar ~ softSpace) | (CharPredicate("xX") ~ space)) ~
+    ((multChar ~ space) | (CharPredicate("xX") ~ space)) ~
     (subspecies | species | sciName2).? ~>
     ((n1: Node, n2: Option[Node]) =>
         n2 match {
@@ -142,16 +142,11 @@ trait RulesClean extends Parser {
   }
 
   def multinomial3: Rule1[Node] = rule {
-    rank ~ (space ~ word).? ~>
-    ((r: String, i: Option[String]) => {
-      i match {
-        case Some(x) =>
-          Node(normalized = s"$r ${Util.norm(x)}",
-               canonical = s"${Util.norm(x)}")
-        case None =>
-          Node(normalized = "", canonical = "")
-      }
-    })
+    rank ~ space ~ word ~>
+    ((r: String, i: String) =>
+       Node(normalized = s"$r ${Util.norm(i)}",
+             canonical = s"${Util.norm(i)}")
+    )
   }
 
   def multinomial4: Rule1[Node] = rule {
@@ -250,13 +245,13 @@ trait RulesClean extends Parser {
   }
 
   def approxName1: Rule1[Node] = rule {
-    uninomial ~ space ~ approximation ~ zeroOrMore(Printable|"щ") ~>
+    uninomial ~ space ~ approximation ~ space ~ zeroOrMore(Printable|"щ") ~>
       ((g: Node, _: String) => g)
   }
 
   def approxName2: Rule1[Node] = rule {
     uninomial ~ space ~ word ~ space ~
-    approximation ~ zeroOrMore(Printable|"щ") ~>
+    approximation ~ space ~ zeroOrMore(Printable|"щ") ~>
       ((g: Node, s: String, _: String) =>
           Node(normalized = s"${g.normalized} ${Util.norm(s)}",
                canonical = s"${g.canonical} ${Util.norm(s)}"))
