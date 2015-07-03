@@ -23,7 +23,7 @@ trait RulesClean extends Parser {
   }
 
   def sciName2: Rule1[Node] = rule {
-    sciName3 | sciName4
+    uninomialCombo | sciName3 | sciName4
   }
 
   def sciName3: Rule1[Node] = rule {
@@ -214,6 +214,13 @@ trait RulesClean extends Parser {
       "aff." | "aff" | "monst." | "?")
   }
 
+  def rankUninomial: Rule1[String] = rule {
+    capture("sect." |"sect" |"subsect." |"subsect" |"trib." |
+     "trib" |"subtrib." |"subtrib" |"ser." |"ser" |"subgen." |
+     "subgen" |"fam." |"fam" |"subfam." |"subfam" |"supertrib." |
+     "supertrib")
+  }
+
   def rank: Rule1[String] = rule {
     capture("morph." | "f.sp." | "B" | "ssp." | "ssp" | "mut." | "nat" |
      "nothosubsp." | "convar." | "pseudovar." | "sect." | "ser." | "var." |
@@ -228,6 +235,32 @@ trait RulesClean extends Parser {
     "(" ~ space ~ uninomial ~ space ~ ")" ~>
     ((x: Node) =>
         Node(normalized = s"(${x.normalized})", canonical = ""))
+  }
+
+  def uninomialCombo: Rule1[Node] = rule {
+    uninomialCombo1 | uninomialCombo2 | uninomialCombo3
+  }
+
+  def uninomialCombo1: Rule1[Node] = rule {
+    (uninomialCombo2 | uninomialCombo3) ~ space ~ authorship ~>
+    ((uc: Node, au: String) =>
+        Node(normalized = s"${uc.normalized} $au",
+          canonical = s"${uc.canonical}"))
+  }
+
+  def uninomialCombo2: Rule1[Node] = rule {
+    uninomial ~ space ~ authorship ~ space ~ rankUninomial ~
+    space ~ uninomial ~>
+    ((u1: Node, au: String, r: String, u2: Node) =>
+        Node(normalized = s"${u1.normalized} $au $r ${u2.normalized}",
+          canonical = s"${u2.canonical}"))
+  }
+
+  def uninomialCombo3: Rule1[Node] = rule {
+    uninomial ~ space ~ rankUninomial ~ space ~ uninomial ~>
+    ((u1: Node, r: String, u2: Node) =>
+        Node(normalized = s"${u1.normalized} $r ${u2.normalized}",
+          canonical = s"${u2.canonical}"))
   }
 
   def uninomial: Rule1[Node] = rule {
@@ -288,7 +321,7 @@ trait RulesClean extends Parser {
   }
 
   def author: Rule1[String] = rule {
-    unknownAuthor | author1 | author2
+    author1 | author2 | unknownAuthor
   }
 
   def author1: Rule1[String] = rule {
@@ -296,13 +329,16 @@ trait RulesClean extends Parser {
   }
 
   def author2: Rule1[String] = rule {
-    oneOrMore(softSpace ~ authorWord) ~>
-      ((au: Seq[String]) => au.map(_.trim).mkString(" "))
+    oneOrMore(authorWord).separatedBy(space) ~>
+      ((au: Seq[String]) => au.mkString(" "))
   }
 
   def unknownAuthor: Rule1[String] = rule {
-    capture("?" | "auct." | "auct" | "anon." | "anon" | "ht." | "ht" |
-      "hort." | "hort")
+    capture("?" | "Яauct." | "Яauct" | "Яanon." | "Яanon" | "Яht." | "Яht" |
+      "Яhort." | "Яhort") ~>
+    ((a: String) => {
+      if (a == "?") "?" else a.substring(1)
+    })
   }
 
   def authorWord: Rule1[String] = rule {

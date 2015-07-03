@@ -112,7 +112,8 @@ object SciName {
     val unescaped = StringEscapeUtils.unescapeHtml(input)
     val unjunk = removeJunk(unescaped)
     if (unjunk != input) parserRun = 2
-    (parserSpaces(unjunk), parserRun)
+    val anons = prependAnonAuthors(unjunk)
+    (parserSpaces(anons), parserRun)
   }
 
   private def removeJunk(input: String): String = {
@@ -142,6 +143,11 @@ object SciName {
   def substitute(input: String, regexes: List[String]): String = {
     if (regexes == List()) input
     else substitute(input.replaceFirst(regexes.head, ""), regexes.tail)
+  }
+
+  private def prependAnonAuthors(input: String): String = {
+    val anon = """\b(auct|anon|ht|hort)\b"""
+    input.replaceAll(anon, "Я$1")
   }
 
   private def parserSpaces(input: String): String = {
