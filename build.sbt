@@ -6,7 +6,8 @@ lazy val root = (project in file(".")).
   enablePlugins(BuildInfoPlugin).
   settings(
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "org.globalnames.parser"
+    buildInfoPackage := "org.globalnames.parser",
+    test in assembly := {}
   )
 
 libraryDependencies ++= Seq(
