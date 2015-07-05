@@ -22,6 +22,22 @@ git clone https://github.com/GlobalNamesArchitecture/gnparser.git
 cd gnparser
 sbt test
 ```
+Use on a local machine
+----------------------
+
+First run
+
+```
+sbt publish-local
+```
+It will create package at `$HOME/.ivy2/local/org.globalnames`
+
+You can use the package on the same machine by adding to your sbt file
+
+```
+libraryDependencies += "org.globalnames" %% "gnparser" % "0.1.0-SNAPSHOT"
+```
+
 Create Executable jar
 ---------------------
 
