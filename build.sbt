@@ -1,3 +1,4 @@
+organization := "org.globalnames"
 name := "GnParser"
 version := "0.1.0-SNAPSHOT"
 scalaVersion := "2.11.6"
