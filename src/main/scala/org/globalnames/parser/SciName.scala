@@ -49,7 +49,6 @@ object SciName {
     if (isVirus || noParse(input)) SciName(input, isVirus = isVirus)
     else {
       val (parserInput, parserRun) = preprocess(input)
-      println("***" + parserInput)
       parse(input, parserInput, parserRun)
     }
   }
@@ -73,7 +72,7 @@ object SciName {
       case Success(res: SciName) => res.copy(input)
       case Failure(err: ParseError) => {
         println(parser.formatError(err))
-          SciName(input)
+        SciName(input)
       }
       case Failure(err) => {
         println(err)
