@@ -3,9 +3,10 @@ package org.globalnames.parser
 import collection.mutable.{Buffer}
 
 object Util {
-  def normAuth(input: String): String = {
-    if (input.length < 3 && input.takeRight(1) == ".") input
-    else input.toLowerCase.capitalize
+  def normAuthWord(input: String): String = {
+    if (input.matches("""[\p{Lu}]{3,}"""))
+      input.split("-").map(_.toLowerCase.capitalize).mkString("-")
+    else input
   }
 
   def norm(input: String): String = {

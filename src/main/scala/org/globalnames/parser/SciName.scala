@@ -112,7 +112,8 @@ object SciName {
     val unjunk = removeJunk(unescaped)
     if (unjunk != input) parserRun = 2
     val anons = prependAnonAuthors(unjunk)
-    (parserSpaces(anons), parserRun)
+    val normHybrids = normalizeHybridChar(anons)
+    (parserSpaces(normHybrids), parserRun)
   }
 
   private def removeJunk(input: String): String = {
@@ -147,6 +148,11 @@ object SciName {
   private def prependAnonAuthors(input: String): String = {
     val anon = """\b(auct|anon|ht|hort)\b"""
     input.replaceAll(anon, "Я$1")
+  }
+
+  private def normalizeHybridChar(input: String): String = {
+    input.replaceAll(" [Xx] ", " × ")
+      .replaceAll("""^\s*[Xx]\s*([\p{Lu}])""", "× $1")
   }
 
   private def parserSpaces(input: String): String = {

@@ -40,7 +40,7 @@ class ParserClean(val input: ParserInput) extends Parser {
 
   def hybridFormula: Rule1[Node] = rule {
     sciName2 ~ space ~
-    ((multChar ~ space) | (CharPredicate("xX") ~ space)) ~
+    hybridChar ~ space ~
     (subspecies | species | sciName2).? ~>
     ((n1: Node, n2: Option[Node]) =>
         n2 match {
@@ -249,8 +249,7 @@ class ParserClean(val input: ParserInput) extends Parser {
   }
 
   def uninomialCombo2: Rule1[Node] = rule {
-    uninomial ~ space ~ authorship ~ space ~ rankUninomial ~
-    space ~ uninomial ~>
+    uninomial ~ space ~ authorship ~ space ~ rankUninomial ~ space ~ uninomial ~>
     ((u1: Node, au: String, r: String, u2: Node) =>
         Node(normalized = s"${u1.normalized} $au $r ${u2.normalized}",
           canonical = s"${u2.canonical}"))
@@ -342,38 +341,29 @@ class ParserClean(val input: ParserInput) extends Parser {
   }
 
   def authorWord: Rule1[String] = rule {
-    authorWord1 | authorWord2 | authorWord4 | authorWord3 | authorPre
+    authorWord1 | authorWord2 | authorPre
   }
 
   def authorWord1: Rule1[String] = rule {
-    capture("Xu" |  "Xue" | "Xing")
-  }
-
-  def authorWord2: Rule1[String] = rule {
     capture("arg." | "et al.{?}" | "et al." | "et al")
   }
 
-  def authorWord3: Rule1[String] = rule {
+  def authorWord2: Rule1[String] = rule {
     capture(authCharUpper ~ zeroOrMore(authCharUpper | authCharLower)
       ~ '.'.?) ~>
-      ((w: String) => Util.normAuth(w))
+      ((w: String) => Util.normAuthWord(w))
   }
 
   def authCharLower = rule {
     CharPredicate.LowerAlpha |
     CharPredicate("àáâãäåæçèéêëìíîïðñòóóôõöøùúûüýÿāăąćĉčďđ") |
-    CharPredicate("ēĕėęěğīĭİıĺľłńņňŏőœŕřśşšţťũūŭůűźżžſǎǔǧșțȳ")
+    CharPredicate("-ēĕėęěğīĭİıĺľłńņňŏőœŕřśşšţťũūŭůűźżžſǎǔǧșțȳ")
   }
 
   def authCharUpper = rule {
-    CharPredicate("ABCDEFGHIJKLMNOPQRSTUVWYZ") |
+    CharPredicate("ABCDEFGHIJKLMNOPQRSTUVWXYZ") |
     CharPredicate("ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝ") |
     CharPredicate("ĆČĎİĶĹĺĽľŁłŅŌŐŒŘŚŜŞŠŸŹŻŽƒǾȘȚ")
-  }
-
-  def authorWord4: Rule1[String] = rule {
-    authorWord3 ~ "-" ~ authorWord3 ~>
-      ((au1: String, au2: String) => s"$au1-$au2" )
   }
 
   def filius = rule {
@@ -403,11 +393,7 @@ class ParserClean(val input: ParserInput) extends Parser {
     capture(lowerChar ~ oneOrMore(lowerChar))
   }
 
-  def hybridChar = rule {
-    "x" | "X" | multChar
-  }
-
-  def multChar = rule { "×" | "*" }
+  def hybridChar = rule { "×" | "*" }
 
   def upperChar = rule {
     CharPredicate("ABCDEFGHIJKLMNOPQRSTUVWXYZËÆŒ")
