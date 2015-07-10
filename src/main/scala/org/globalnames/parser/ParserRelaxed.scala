@@ -1,8 +1,7 @@
 package org.globalnames.parser
 
-
 import org.parboiled2._
-import CharPredicate.{Digit, Printable, Alpha}
+import CharPredicate.{Digit, Alpha, LowerAlpha}
 
 class ParserRelaxed(override val input: ParserInput) extends
   ParserClean(input) {
@@ -54,9 +53,5 @@ class ParserRelaxed(override val input: ParserInput) extends
     (yearWithChar | yearNumber) ~ space ~ ':' ~ space ~ oneOrMore(Digit)
   }
 
-  val az = "abcdefghijklmnopqrstuvwxyz'ëæœſàâåãäáçčéèíìïňññóòôøõöúùüŕřŗššşž"
-
-  override def lowerChar = rule {
-    CharPredicate(az)
-  }
+  override val lowerChar = CharPredicate(LowerAlpha ++ "'ëæœſàâåãäáçčéèíìïňññóòôøõöúùüŕřŗššşž")
 }

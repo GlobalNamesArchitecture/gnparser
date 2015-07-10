@@ -2,7 +2,7 @@ package org.globalnames.parser
 
 import org.parboiled2._
 import scala.collection.immutable.Seq
-import CharPredicate.{Digit, Printable, Alpha}
+import CharPredicate.{Digit, Printable, Alpha, LowerAlpha, UpperAlpha}
 
 class ParserClean(val input: ParserInput) extends Parser {
   def sciName: Rule1[SciName] = rule {
@@ -348,17 +348,10 @@ class ParserClean(val input: ParserInput) extends Parser {
       ((w: String) => Util.normAuthWord(w))
   }
 
-  def authCharLower = rule {
-    CharPredicate.LowerAlpha |
-    CharPredicate("àáâãäåæçèéêëìíîïðñòóóôõöøùúûüýÿāăąćĉčďđ") |
-    CharPredicate("'-ēĕėęěğīĭİıĺľłńņňŏőœŕřśşšţťũūŭůűźżžſǎǔǧșțȳß")
-  }
+  val authCharLower = CharPredicate(LowerAlpha ++
+    "àáâãäåæçèéêëìíîïðñòóóôõöøùúûüýÿāăąćĉčďđ'-ēĕėęěğīĭİıĺľłńņňŏőœŕřśşšţťũūŭůűźżžſǎǔǧșțȳß")
 
-  def authCharUpper = rule {
-    CharPredicate("ABCDEFGHIJKLMNOPQRSTUVWXYZ") |
-    CharPredicate("ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝ") |
-    CharPredicate("ĆČĎİĶĹĺĽľŁłŅŌŐŒŘŚŜŞŠŸŹŻŽƒǾȘȚ�")
-  }
+  val authCharUpper = CharPredicate(UpperAlpha ++ "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝĆČĎİĶĹĺĽľŁłŅŌŐŒŘŚŜŞŠŸŹŻŽƒǾȘȚ�")
 
   def filius = rule {
     "f." | "filius"
@@ -405,15 +398,11 @@ class ParserClean(val input: ParserInput) extends Parser {
     word1 ~ "-" ~ word1 ~> ((s1: String, s2: String) => s"$s1-$s2")
   }
 
-  def hybridChar = rule { "×" | "*" }
+  val hybridChar = CharPredicate("×*")
 
-  def upperChar = rule {
-    CharPredicate("ABCDEFGHIJKLMNOPQRSTUVWXYZËÆŒ")
-  }
+  val upperChar = CharPredicate(UpperAlpha ++ "ËÆŒ")
 
-  def lowerChar = rule {
-    CharPredicate("abcdefghijklmnopqrstuvwxyz'ëæœſ")
-  }
+  val lowerChar = CharPredicate(LowerAlpha ++ "'ëæœſ")
 
   def year: Rule1[String] = rule {
     yearWithParens | yearWithChar | yearNumber
@@ -424,7 +413,7 @@ class ParserClean(val input: ParserInput) extends Parser {
   }
 
   def yearWithChar: Rule1[String] = rule {
-    yearNumber ~ CharPredicate(Alpha)
+    yearNumber ~ Alpha
   }
 
   def yearNumber: Rule1[String] = rule {
@@ -440,7 +429,5 @@ class ParserClean(val input: ParserInput) extends Parser {
     oneOrMore(spaceChars)
   }
 
-  def spaceChars = rule {
-    CharPredicate("　  \t\r\n\fщ_")
-  }
+  def spaceChars = CharPredicate("　  \t\r\n\fщ_")
 }
