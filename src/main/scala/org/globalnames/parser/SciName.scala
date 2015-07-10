@@ -71,11 +71,11 @@ object SciName {
     result match {
       case Success(res: SciName) => res.copy(input)
       case Failure(err: ParseError) => {
-        println(parser.formatError(err))
+        //println(parser.formatError(err))
         SciName(input)
       }
       case Failure(err) => {
-        println(err)
+        //println(err)
         SciName(input)
       }
       case _ => SciName(input)

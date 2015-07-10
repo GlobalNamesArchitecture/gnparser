@@ -57,7 +57,10 @@ object GnParser {
       Try(Source.fromFile(input)) match {
         case Failure(e) => println(s"No such file: $input")
         case Success(f) => {
+          var count = 0
           for (line <- f.getLines) {
+            count += 1
+            if (count % 10000 == 0) println(s"Parsed $count lines")
             val parsed = SciName.fromString(line.trim).toJson
             writer.write(parsed + "\n")
           }
