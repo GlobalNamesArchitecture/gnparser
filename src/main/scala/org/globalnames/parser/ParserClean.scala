@@ -349,7 +349,7 @@ class ParserClean(val input: ParserInput) extends Parser {
   }
 
   def authorWord2: Rule1[String] = rule {
-    capture(authCharUpper ~ zeroOrMore(authCharUpper | authCharLower)
+    capture(("d'").? ~ authCharUpper ~ zeroOrMore(authCharUpper | authCharLower)
       ~ '.'.?) ~>
       ((w: String) => Util.normAuthWord(w))
   }
@@ -357,13 +357,13 @@ class ParserClean(val input: ParserInput) extends Parser {
   def authCharLower = rule {
     CharPredicate.LowerAlpha |
     CharPredicate("àáâãäåæçèéêëìíîïðñòóóôõöøùúûüýÿāăąćĉčďđ") |
-    CharPredicate("-ēĕėęěğīĭİıĺľłńņňŏőœŕřśşšţťũūŭůűźżžſǎǔǧșțȳ")
+    CharPredicate("'-ēĕėęěğīĭİıĺľłńņňŏőœŕřśşšţťũūŭůűźżžſǎǔǧșțȳß")
   }
 
   def authCharUpper = rule {
     CharPredicate("ABCDEFGHIJKLMNOPQRSTUVWXYZ") |
     CharPredicate("ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝ") |
-    CharPredicate("ĆČĎİĶĹĺĽľŁłŅŌŐŒŘŚŜŞŠŸŹŻŽƒǾȘȚ")
+    CharPredicate("ĆČĎİĶĹĺĽľŁłŅŌŐŒŘŚŜŞŠŸŹŻŽƒǾȘȚ�")
   }
 
   def filius = rule {
@@ -371,9 +371,10 @@ class ParserClean(val input: ParserInput) extends Parser {
   }
 
   def authorPre: Rule1[String] = rule {
-    capture("ab" | "af" | "bis" | "da" | "der" | "des" |
-            "den" | "della" | "dela" | "de" | "di" | "du" |
-            "la" | "ter" | "van" | "von")
+    capture("жab" | "жaf" | "жbis" | "жda" | "жder" | "жdes" |
+            "жden" | "жdella" | "жdela" | "жde" | "жdi" | "жdu" |
+            "жla" | "жter" | "жvan" | "жvon") ~>
+    ((a: String) => a.substring(1))
   }
 
   def abbrGenus: Rule1[String] = rule {
