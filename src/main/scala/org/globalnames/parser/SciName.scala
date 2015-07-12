@@ -152,7 +152,7 @@ object SciName {
   }
 
   private def prependAuthorPre(input: String): String = {
-    val authPre = """(?x)([^�])\b(ab|af|bis|da|der|des|den|della|dela|
+    val authPre = """(?x)([^�-])\b(ab|af|bis|da|der|des|den|della|dela|
       de|di|du|la|ter|van|von)\b"""
     val prefix = """\b(d'\p{Lu})"""
     input.replaceAll(authPre, "$1ж$2").replaceAll(prefix, "ж$1")
@@ -164,7 +164,7 @@ object SciName {
   }
 
   private def parserSpaces(input: String): String = {
-    val res1 = input.replaceAll("""([^\sщ])([&\(\)\[\],×])""", "$1щ$2")
-    res1.replaceAll("""([&\.\)\(\[\],×])([^\sщ])""", "$1щ$2")
+    val res1 = input.replaceAll("""([^\sщ])([:&\(\)\[\],×])""", "$1щ$2")
+    res1.replaceAll("""([:&\.\)\(\[\],×])([^\sщ])""", "$1щ$2")
   }
 }

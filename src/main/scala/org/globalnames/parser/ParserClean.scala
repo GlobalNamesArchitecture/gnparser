@@ -145,7 +145,7 @@ class ParserClean(val input: ParserInput) extends Parser {
   def species1: Rule1[Node] = rule {
     word ~>
     ((s: String) =>
-        Node(normalized = s"${Util.norm(s)}", canonical = s"${Util.norm(s)}"))
+        Node(normalized = s"$s", canonical = s"$s"))
   }
 
   def species2: Rule1[Node] = rule {
@@ -214,8 +214,8 @@ class ParserClean(val input: ParserInput) extends Parser {
   }
 
   def uninomial: Rule1[Node] = rule {
-    (abbrGenus | capWord | twoLetterGenera) ~> ((x: String) =>
-      Node(normalized = Util.norm(x), canonical = Util.norm(x)))
+    (abbrGenus | capWord | twoLetterGenera) ~> ((u: String) =>
+      Node(normalized = u, canonical = u))
   }
 
   def uninomialAuth: Rule1[Node] = rule {
@@ -376,7 +376,16 @@ class ParserClean(val input: ParserInput) extends Parser {
   }
 
   def capWord: Rule1[String] = rule {
-    capture(upperChar ~ lowerChar ~ oneOrMore(lowerChar) ~ '?'.?)
+    capWord2 | capWord1
+  }
+
+  def capWord1: Rule1[String] = rule {
+    capture(upperChar ~ lowerChar ~ oneOrMore(lowerChar) ~ '?'.?) ~>
+    ((w: String) => Util.norm(w))
+  }
+
+  def capWord2: Rule1[String] = rule {
+    capWord1 ~ "-" ~ word1 ~> ((w1: String, w2: String) => s"$w1-$w2")
   }
 
   def twoLetterGenera: Rule1[String] = rule {
@@ -385,7 +394,15 @@ class ParserClean(val input: ParserInput) extends Parser {
   }
 
   def word: Rule1[String] = rule {
-    capture(lowerChar ~ oneOrMore(lowerChar))
+    word2 | word1
+  }
+
+  def word1: Rule1[String] = rule {
+    capture(lowerChar ~ oneOrMore(lowerChar)) ~> ((s: String) => Util.norm(s))
+  }
+
+  def word2: Rule1[String] = rule {
+    word1 ~ "-" ~ word1 ~> ((s1: String, s2: String) => s"$s1-$s2")
   }
 
   def hybridChar = rule { "×" | "*" }
@@ -424,6 +441,6 @@ class ParserClean(val input: ParserInput) extends Parser {
   }
 
   def spaceChars = rule {
-    CharPredicate(" \t\r\n\f_щ")
+    CharPredicate("  \t\r\n\fщ_")
   }
 }

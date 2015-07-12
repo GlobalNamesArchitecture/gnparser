@@ -83,6 +83,11 @@ class ParserCleanSpec extends Specification {
       val res = parseName("Rhynchonellidae жd'Orbigny 1847")
       res.normalized === Some("Rhynchonellidae d'Orbigny 1847")
     }
+    "Byssochlamys fulva Olliver & G. Smith" in {
+      // NO_BREAK_SPACE in the name
+      val res = parseName("Byssochlamys fulva Olliver & G. Smith")
+      res.normalized === Some("Byssochlamys fulva Olliver & G. Smith")
+    }
   }
   "ParserClean does not parse" >> {
     "whateva" in {
