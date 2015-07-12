@@ -60,56 +60,6 @@ class ParserClean(val input: ParserInput) extends Parser {
         canonical = s"× ${n.canonical}", hybrid = true))
   }
 
-  def authorship: Rule1[String] = rule {
-    combinedAuthorship | basionymYearMisformed |
-    basionymAuthorship | authorship1
-  }
-  def combinedAuthorship: Rule1[String] = rule {
-    combinedAuthorship1 | combinedAuthorship2
-  }
-
-  def combinedAuthorship1: Rule1[String] = rule {
-    basionymAuthorship ~ space ~ authorEx ~ space ~ authorship1 ~>
-    ((bauth: String,ex: String, auth: String) => s"$bauth ex $auth")
-  }
-
-  def combinedAuthorship2: Rule1[String] = rule {
-    basionymAuthorship ~ space ~ authorship1 ~>
-    ((bauth: String, auth: String) => s"$bauth $auth")
-  }
-
-  def basionymYearMisformed: Rule1[String] = rule {
-    '(' ~ space ~ authors ~ space ~ ')' ~ (space ~ ',').? ~ space ~ year ~>
-    ((a: String, y: String) => s"($a $y)")
-  }
-
-  def basionymAuthorship: Rule1[String] = rule {
-    basionymAuthorship1
-  }
-
-  def basionymAuthorship1: Rule1[String] = rule {
-    '(' ~ space ~ authorship1 ~ space ~ ')' ~>
-    ((auth: String) => s"($auth)")
-  }
-
-  def authorship1: Rule1[String] = rule {
-    authorsYear | authors
-  }
-
-  def authorsYear: Rule1[String] = rule {
-    authorsYear1 | authorsYear2
-  }
-
-  def authorsYear1: Rule1[String] = rule {
-    authors ~ space ~ ',' ~ space ~ year ~>
-    ((a: String, y: String) => s"$a $y".toString)
-  }
-
-  def authorsYear2: Rule1[String] = rule {
-    authors ~ space ~ year ~>
-    ((a: String, y: String) => s"$a $y".toString)
-  }
-
   def name: Rule1[Node] = rule {
     binomial | uninomialAuth | uninomial
   }
@@ -249,7 +199,8 @@ class ParserClean(val input: ParserInput) extends Parser {
   }
 
   def uninomialCombo2: Rule1[Node] = rule {
-    uninomial ~ space ~ authorship ~ space ~ rankUninomial ~ space ~ uninomial ~>
+    uninomial ~ space ~ authorship ~ space ~ rankUninomial ~
+      space ~ uninomial ~>
     ((u1: Node, au: String, r: String, u2: Node) =>
         Node(normalized = s"${u1.normalized} $au $r ${u2.normalized}",
           canonical = s"${u2.canonical}"))
@@ -289,6 +240,49 @@ class ParserClean(val input: ParserInput) extends Parser {
                canonical = s"${g.canonical} ${Util.norm(s)}"))
   }
 
+  def authorship: Rule1[String] = rule {
+    combinedAuthorship | basionymYearMisformed |
+    basionymAuthorship | authorship1
+  }
+
+  def combinedAuthorship: Rule1[String] = rule {
+    combinedAuthorship1 | combinedAuthorship2
+  }
+
+  def combinedAuthorship1: Rule1[String] = rule {
+    basionymAuthorship ~ space ~ authorEx ~ space ~ authorship1 ~>
+    ((bauth: String,ex: String, auth: String) => s"$bauth ex $auth")
+  }
+
+  def combinedAuthorship2: Rule1[String] = rule {
+    basionymAuthorship ~ space ~ authorship1 ~>
+    ((bauth: String, auth: String) => s"$bauth $auth")
+  }
+
+  def basionymYearMisformed: Rule1[String] = rule {
+    '(' ~ space ~ authors ~ space ~ ')' ~ (space ~ ',').? ~ space ~ year ~>
+    ((a: String, y: String) => s"($a $y)")
+  }
+
+  def basionymAuthorship: Rule1[String] = rule {
+    basionymAuthorship1
+  }
+
+  def basionymAuthorship1: Rule1[String] = rule {
+    '(' ~ space ~ authorship1 ~ space ~ ')' ~>
+    ((auth: String) => s"($auth)")
+  }
+
+  def authorship1: Rule1[String] = rule {
+    authorsYear | authors
+  }
+
+  def authorsYear: Rule1[String] = rule {
+    authors ~ space ~ (',' ~ space).? ~ year ~>
+    ((a: String, y: String) => s"$a $y".toString)
+  }
+
+
   def authors: Rule1[String] = rule {
     authors1 | author
   }
@@ -312,7 +306,7 @@ class ParserClean(val input: ParserInput) extends Parser {
   }
 
   def authorAnd: Rule1[String] = rule {
-    ("&amp;" | "and" | "&" | "et") ~ push("&")
+    ("and" | "&" | "et") ~ push("&")
   }
 
   def authorComma: Rule1[String] = rule {
@@ -349,7 +343,7 @@ class ParserClean(val input: ParserInput) extends Parser {
   }
 
   def authorWord2: Rule1[String] = rule {
-    capture(("d'").? ~ authCharUpper ~ zeroOrMore(authCharUpper | authCharLower)
+    capture("жd'".? ~ authCharUpper ~ zeroOrMore(authCharUpper | authCharLower)
       ~ '.'.?) ~>
       ((w: String) => Util.normAuthWord(w))
   }
@@ -373,7 +367,7 @@ class ParserClean(val input: ParserInput) extends Parser {
   def authorPre: Rule1[String] = rule {
     capture("жab" | "жaf" | "жbis" | "жda" | "жder" | "жdes" |
             "жden" | "жdella" | "жdela" | "жde" | "жdi" | "жdu" |
-            "жla" | "жter" | "жvan" | "жvon") ~>
+            "жla" | "жter" | "жvan" | "жvon" | "жd'") ~>
     ((a: String) => a.substring(1))
   }
 

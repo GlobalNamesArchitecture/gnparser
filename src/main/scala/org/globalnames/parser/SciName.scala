@@ -71,7 +71,7 @@ object SciName {
     result match {
       case Success(res: SciName) => res.copy(input)
       case Failure(err: ParseError) => {
-        //println(parser.formatError(err))
+        println(parser.formatError(err))
         SciName(input)
       }
       case Failure(err) => {
@@ -154,7 +154,8 @@ object SciName {
   private def prependAuthorPre(input: String): String = {
     val authPre = """(?x)\b(ab|af|bis|da|der|des|den|della|dela|
       de|di|du|la|ter|van|von)\b"""
-    input.replaceAll(authPre, "ж$1")
+    val prefix = """\b(d'\p{Lu})"""
+    input.replaceAll(authPre, "ж$1").replaceAll(prefix, "ж$1")
   }
 
   private def normalizeHybridChar(input: String): String = {
