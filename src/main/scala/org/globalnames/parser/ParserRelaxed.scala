@@ -51,7 +51,7 @@ class ParserRelaxed(override val input: ParserInput) extends
   }
 
   def yearWithPage: Rule1[String] = rule {
-    yearNumber ~ ':' ~ space ~ oneOrMore(Digit)
+    (yearWithChar | yearNumber) ~ ':' ~ space ~ oneOrMore(Digit)
   }
 
   val az = "abcdefghijklmnopqrstuvwxyz'ëæœſ-àâåãäáçčéèíìïňññóòôøõöúùüŕřŗššşž"

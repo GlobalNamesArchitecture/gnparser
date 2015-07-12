@@ -152,10 +152,10 @@ object SciName {
   }
 
   private def prependAuthorPre(input: String): String = {
-    val authPre = """(?x)\b(ab|af|bis|da|der|des|den|della|dela|
+    val authPre = """(?x)([^�])\b(ab|af|bis|da|der|des|den|della|dela|
       de|di|du|la|ter|van|von)\b"""
     val prefix = """\b(d'\p{Lu})"""
-    input.replaceAll(authPre, "ж$1").replaceAll(prefix, "ж$1")
+    input.replaceAll(authPre, "$1ж$2").replaceAll(prefix, "ж$1")
   }
 
   private def normalizeHybridChar(input: String): String = {
