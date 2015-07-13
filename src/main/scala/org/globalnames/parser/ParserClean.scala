@@ -441,6 +441,6 @@ class ParserClean(val input: ParserInput) extends Parser {
   }
 
   def spaceChars = rule {
-    CharPredicate("  \t\r\n\fщ_")
+    CharPredicate("　  \t\r\n\fщ_")
   }
 }
