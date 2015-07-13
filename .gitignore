@@ -5,6 +5,8 @@ src_managed/
 test-output/
 target/
 .history
+.sbtserver
+.sbtserver/
 
 # IntelliJ
 .idea/
