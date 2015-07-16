@@ -44,6 +44,9 @@ case class SciName(
 }
 
 object SciName {
+  private val parserRelaxed = new ParserRelaxed()
+  private val parserClean = new ParserClean()
+
   def fromString(input: String): SciName = {
     val isVirus = detectVirus(input)
     if (isVirus || noParse(input)) SciName(input, isVirus = isVirus)
@@ -71,7 +74,7 @@ object SciName {
     result match {
       case Success(res: SciName) => res.copy(input)
       case Failure(err: ParseError) => {
-        println(parser.formatError(err))
+        println(err.format(input))
         SciName(input)
       }
       case Failure(err) => {
@@ -92,15 +95,12 @@ object SciName {
     else true
   }
 
-  private def parse(input: String, parserInput: String,
-    parserRun: Int): SciName = {
-    val parserClean = new ParserClean(parserInput)
-    val resClean = parserClean.sciName.run()
+  private def parse(input: String, parserInput: String, parserRun: Int): SciName = {
+    val resClean =  parserClean.sciName.run(parserInput)
     resClean match {
       case Success(_) => processParsed(input, parserClean, resClean)
       case Failure(_) => {
-        val parserRelaxed = new ParserRelaxed(parserInput)
-        val resRelaxed = parserRelaxed.sciName.run()
+        val resRelaxed = parserRelaxed.sciName.run(parserInput)
         processParsed(input, parserRelaxed, resRelaxed)
       }
     }

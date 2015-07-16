@@ -1,9 +1,10 @@
 package org.globalnames.parser
 
 import org.specs2.mutable.Specification
-import scala.util.{Success, Failure}
 
 class ParserRelaxedSpec extends Specification {
+  val parser = new ParserRelaxed()
+
   "ParserClean parses" >> {
     "Still parses Homo sapiens" in {
        val res = parse("Homo sapiens")
@@ -22,8 +23,7 @@ class ParserRelaxedSpec extends Specification {
     }
   }
   def parse(input: String): SciName = {
-    val parser = new ParserRelaxed(input)
-    val result = parser.sciName.run()
+    val result = parser.sciName.run(input)
     SciName(input)
     SciName.processParsed(input, parser, result)
   }
