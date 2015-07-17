@@ -15,7 +15,9 @@ class ParserClean extends SimpleParser {
         canonical = Some(x.canonical),
         isParsed = true,
         isHybrid = x.hybrid,
-        parserRun = 1
+        parserRun = 1,
+        details = x.details,
+        pos = x.pos
       )
     )
   }
@@ -216,6 +218,7 @@ class ParserClean extends SimpleParser {
   val uninomial: Rule1[Node] = rule {
     (abbrGenus | capWord | twoLetterGenera) ~> ((u: String) =>
       Node(normalized = u, canonical = u,
+        details = Some(Vector(Name(uninomial = Uninomial(string = u)))),
         pos = calcPos(None, state.cursor, "uninomial")))
   }
 

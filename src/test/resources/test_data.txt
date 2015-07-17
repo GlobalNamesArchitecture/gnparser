@@ -5,7 +5,7 @@
 ####
 
 #uninomial<
-Pseudocercospora|{"scientificName":{"id":"9c1167ca-79e7-53de-b4c3-fcdb68410527", "parsed":true, "parser_version":"test_version", "parser_run":1,"verbatim":"Pseudocercospora","normalized":"Pseudocercospora","canonical":"Pseudocercospora", "hybrid":false, "virus": false, "details":[{"uninomial":{"string":"Pseudocercospora"}}],"positions":{"0":["uninomial",16]}}}
+Pseudocercospora|{"scientificName":{"id":"9c1167ca-79e7-53de-b4c3-fcdb68410527", "parsed":true, "parser_version":"test_version", "parser_run":1,"verbatim":"Pseudocercospora","normalized":"Pseudocercospora","canonical":"Pseudocercospora", "hybrid":false, "virus": false, "details":[{"uninomial":{"string":"Pseudocercospora"}}],"positions":{"0":["uninomial","16"]}}}
 #>
 
 __END__

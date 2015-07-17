@@ -18,12 +18,30 @@ case class SciName(
   isVirus: Boolean = false,
   isHybrid: Boolean = false,
   parserRun: Int = -1,
-  parserVersion: String = BuildInfo.version
+  parserVersion: String = BuildInfo.version,
+  details: Option[Vector[Name]] = None,
+  pos: Option[Vector[Tuple3[Int, Int, String]]] = None
 ) {
 
   def id: String = {
     val uuid = UUID.nameUUIDFromString(verbatim, gn, "SHA1").toString
     s"${uuid.substring(0, 14)}5${uuid.substring(15, uuid.length)}"
+  }
+
+  def posPrepare = {
+    pos match {
+      case None => null
+      case Some(p) => p.map { t => (t._1.toString -> Seq(t._3, t._2.toString))}.toMap
+    }
+  }
+
+  def detailsPrepare = {
+    details match {
+      case None => null
+      case Some(d) => {
+        d.map { n => n.prepare }
+      }
+    }
   }
 
   def toJson: String = compact(render(toMap))
@@ -39,7 +57,9 @@ case class SciName(
     ("normalized" -> normalized.getOrElse(null)) ~
     ("canonical" -> canonical.getOrElse(null)) ~
     ("hybrid" -> isHybrid) ~
-    ("virus" -> isVirus)
+    ("virus" -> isVirus) ~
+    ("details" -> detailsPrepare) ~
+    ("positions" -> posPrepare)
   )
 }
 
