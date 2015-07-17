@@ -112,8 +112,7 @@ object SciName {
     val unjunk = removeJunk(unescaped)
     if (unjunk != input) parserRun = 2
     val authPre = prependAuthorPre(unjunk)
-    val anons = prependAnonAuthors(authPre)
-    val normHybrids = normalizeHybridChar(anons)
+    val normHybrids = normalizeHybridChar(authPre)
     (parserSpaces(normHybrids), parserRun)
   }
 
@@ -137,18 +136,12 @@ object SciName {
                      ssp\.|ssp|subsp|subgen|hybrid|hort\.|hort)\??\s*$"""
     substitute(input, List(notes, taxonConcepts1,
       taxonConcepts2, taxonConcepts3, nomenConcepts, lastWordJunk))
-
   }
 
   @annotation.tailrec
   def substitute(input: String, regexes: List[String]): String = {
     if (regexes == List()) input
     else substitute(input.replaceFirst(regexes.head, ""), regexes.tail)
-  }
-
-  private def prependAnonAuthors(input: String): String = {
-    val anon = """\b(auct|anon|ht|hort)\b"""
-    input.replaceAll(anon, "Я$1")
   }
 
   private def prependAuthorPre(input: String): String = {
