@@ -3,7 +3,8 @@ package org.globalnames.parser
 import org.parboiled2.SimpleParser
 import scala.collection.immutable.Seq
 import org.parboiled2.CharPredicate
-import org.parboiled2.CharPredicate.{Digit, Printable, Alpha, LowerAlpha, UpperAlpha}
+import org.parboiled2.CharPredicate.{Digit, Printable, Alpha, LowerAlpha,
+                                     UpperAlpha}
 
 class ParserClean extends SimpleParser {
   val sciName: Rule1[SciName] = rule {
@@ -214,7 +215,8 @@ class ParserClean extends SimpleParser {
 
   val uninomial: Rule1[Node] = rule {
     (abbrGenus | capWord | twoLetterGenera) ~> ((u: String) =>
-      Node(normalized = u, canonical = u))
+      Node(normalized = u, canonical = u,
+        pos = calcPos(None, state.cursor, "uninomial")))
   }
 
   val uninomialAuth: Rule1[Node] = rule {
