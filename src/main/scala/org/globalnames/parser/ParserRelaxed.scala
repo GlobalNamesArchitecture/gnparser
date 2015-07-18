@@ -22,15 +22,6 @@ class ParserRelaxed extends ParserClean {
     space ~ oneOrMore(ANY)
   }
 
-  override val basionymAuthorship: Rule1[String] = rule {
-    basionymAuthorship1 | basionymAuthorship2
-  }
-
-  val basionymAuthorship2: Rule1[String] = rule {
-    '(' ~ space ~ '(' ~ space ~ authorship1 ~ space ~ ')' ~ space ~ ')' ~>
-    ((auth: String) => s"($auth)")
-  }
-
   override val year: Rule1[Year] = rule {
     yearRange | yearApprox | yearWithParens | yearWithPage |
     yearWithDot | yearWithChar | yearNumber
