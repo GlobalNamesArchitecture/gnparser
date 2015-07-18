@@ -328,11 +328,8 @@ class ParserClean extends SimpleParser {
   }
 
   val unknownAuthor: Rule1[String] = rule {
-    capture("?" | "Яauct." | "Яauct" | "Яanon." | "Яanon" | "Яht." | "Яht" |
-      "Яhort." | "Яhort") ~>
-    ((a: String) => {
-      if (a == "?") "?" else a.substring(1)
-    })
+    capture("?" |
+            (("auct." | "auct" | "anon." | "anon" | "ht." | "ht" | "hort." | "hort") ~ &(spaceChars | EOI)))
   }
 
   val authorWord: Rule1[String] = rule {
@@ -418,8 +415,7 @@ class ParserClean extends SimpleParser {
   }
 
   val yearNumber: Rule1[String] = rule {
-    capture(CharPredicate("12") ~
-      CharPredicate("0789") ~ Digit ~ (Digit|'?') ~ '?'.?)
+    capture(CharPredicate("12") ~ CharPredicate("0789") ~ Digit ~ (Digit|'?') ~ '?'.?)
   }
 
   val softSpace = rule {
