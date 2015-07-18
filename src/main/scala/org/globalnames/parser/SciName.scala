@@ -58,8 +58,8 @@ case class SciName(
     ("canonical" -> canonical.getOrElse(null)) ~
     ("hybrid" -> isHybrid) ~
     ("virus" -> isVirus) ~
-    ("details" -> detailsPrepare) ~
-    ("positions" -> posPrepare)
+    ("details" -> detailsPrepare) //~
+    //("positions" -> posPrepare)
   )
 }
 
