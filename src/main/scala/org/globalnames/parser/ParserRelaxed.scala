@@ -31,26 +31,28 @@ class ParserRelaxed extends ParserClean {
     ((auth: String) => s"($auth)")
   }
 
-  override val year: Rule1[String] = rule {
+  override val year: Rule1[Year] = rule {
     yearRange | yearApprox | yearWithParens | yearWithPage |
     yearWithDot | yearWithChar | yearNumber
   }
 
-  val yearRange: Rule1[String] = rule {
-    yearNumber ~ '-' ~ oneOrMore(Digit) ~ zeroOrMore("?" | Alpha)
+  val yearRange: Rule1[Year] = rule {
+    yearNumber ~ '-' ~ oneOrMore(Digit) ~ zeroOrMore("?" | Alpha) ~>
+    ((y: Year) => y.copy(quality = 3))
   }
 
-  val yearWithDot: Rule1[String] = rule {
-    yearNumber ~ '.'
+  val yearWithDot: Rule1[Year] = rule {
+    yearNumber ~ '.' ~> ((y: Year) => y.copy(quality = 3))
   }
 
-  val yearApprox: Rule1[String] = rule {
+  val yearApprox: Rule1[Year] = rule {
     '[' ~ space ~ yearNumber ~ space ~ ']' ~>
-     ((y: String) => s"($y)")
+     ((y: Year) => y.copy(quality = 3))
   }
 
-  val yearWithPage: Rule1[String] = rule {
-    (yearWithChar | yearNumber) ~ space ~ ':' ~ space ~ oneOrMore(Digit)
+  val yearWithPage: Rule1[Year] = rule {
+    (yearWithChar | yearNumber) ~ space ~ ':' ~ space ~ oneOrMore(Digit) ~>
+    ((y: Year) => y.copy(quality = 3))
   }
 
   override val lowerChar = CharPredicate(LowerAlpha ++ "'ëæœſàâåãäáçčéèíìïňññóòôøõöúùüŕřŗššşž")
