@@ -265,7 +265,7 @@ class ParserClean extends SimpleParser {
 
   val basionymYearMisformed: Rule1[String] = rule {
     '(' ~ space ~ authors ~ space ~ ')' ~ (space ~ ',').? ~ space ~ year ~>
-    ((a: String, y: String) => s"($a $y)")
+    ((a: String, y: Year) => s"($a ${y.str})")
   }
 
   val basionymAuthorship1: Rule1[String] = rule {
@@ -281,7 +281,7 @@ class ParserClean extends SimpleParser {
 
   val authorsYear: Rule1[String] = rule {
     authors ~ space ~ (',' ~ space).? ~ year ~>
-    ((a: String, y: String) => s"$a $y".toString)
+    ((a: String, y: Year) => s"$a ${y.str}")
   }
 
 
@@ -403,20 +403,23 @@ class ParserClean extends SimpleParser {
 
   val lowerChar = CharPredicate(LowerAlpha ++ "'ëæœſ")
 
-  val year: Rule1[String] = rule {
+  val year: Rule1[Year] = rule {
     yearWithParens | yearWithChar | yearNumber
   }
 
-  val yearWithParens: Rule1[String] = rule {
-    '(' ~ space ~ (yearWithChar | yearNumber) ~ space ~ ')'
+  val yearWithParens: Rule1[Year] = rule {
+    '(' ~ space ~ (yearWithChar | yearNumber) ~ space ~ ')' ~>
+    ((y: Year) => y.copy(quality = 2))
   }
 
-  val yearWithChar: Rule1[String] = rule {
-    yearNumber ~ Alpha
+  val yearWithChar: Rule1[Year] = rule {
+    yearNumber ~ Alpha ~> ((y: Year) => y.copy(quality = 2))
   }
 
-  val yearNumber: Rule1[String] = rule {
-    capture(CharPredicate("12") ~ CharPredicate("0789") ~ Digit ~ (Digit|'?') ~ '?'.?)
+  val yearNumber: Rule1[Year] = rule {
+    capture(CharPredicate("12") ~ CharPredicate("0789") ~ Digit
+      ~ (Digit|'?') ~ '?'.?) ~>
+      ((y: String) => if (y.last == '?') Year(y, 3) else Year(y))
   }
 
   val softSpace = rule {

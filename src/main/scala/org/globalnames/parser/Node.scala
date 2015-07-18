@@ -30,3 +30,4 @@ case class Name(
 case class Uninomial(string: String) extends Details
 case class Species(string: String) extends Details
 case class Infraspecies(string: String) extends Details
+case class Year(str: String, quality:  Int = 1)
