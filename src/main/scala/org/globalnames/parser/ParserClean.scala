@@ -4,160 +4,92 @@ import org.parboiled2.SimpleParser
 import scala.collection.immutable.Seq
 import org.parboiled2.CharPredicate
 import org.parboiled2.CharPredicate.{Digit, Printable, Alpha, LowerAlpha,
-                                     UpperAlpha}
+                                     UpperAlpha, ANY}
 
 class ParserClean extends SimpleParser {
-  val sciName: Rule1[SciName] = rule {
-    softSpace ~ sciName1 ~ softSpace ~ EOI ~> ((x: Node) =>
-      SciName(
-        verbatim = state.input.sliceString(0, state.input.length),
-        normalized =  Some(x.normalized),
-        canonical = Some(x.canonical),
-        isParsed = true,
-        isHybrid = x.hybrid,
-        parserRun = 1,
-        details = x.details,
-        pos = x.pos
-      )
-    )
+  val sciName: Rule1[NamesGroup] = rule {
+    softSpace ~ sciName1 ~ softSpace ~ EOI ~>
+    ((n: NamesGroup) => n)
   }
 
   val sciName1: Rule1[Node] = rule {
    hybridFormula | namedHybrid | approxName | sciName2
   }
 
-  val sciName2: Rule1[Node] = rule {
-    uninomialCombo | sciName3 | sciName4
+  val sciName2: Rule1[NamesGroup] = rule {
+    name ~> ((n: Name) => NamesGroup(Seq(n)))
   }
 
-  val sciName3: Rule1[Node] = rule {
-    sciName4 ~ space ~ (multinomial | multinomial1) ~>
-    ((n: Node, m: Node) => {
-      Node(normalized = s"${n.normalized} ${m.normalized}".trim,
-           canonical = s"${n.canonical} ${m.canonical}".trim)
-    })
+  val hybridFormula: Rule1[NamesGroup] = rule {
+    hybridFormula1 | hybridFormula2
   }
 
-  val name: Rule1[Node] = rule {
-    binomial | uninomialAuth | uninomial
+  val hybridFormula1: Rule1[NamesGroup] = rule {
+    name ~ space ~ hybridChar ~ space ~
+    species ~ (space ~ infraspeciesGroup).? ~>
+    ((n: Name, s: Species, i: Option[InfraspeciesGroup]) =>
+      NamesGroup(
+        name = Seq(n, Name(uninomial = n.uninomial, species = Some(s),
+                    infraspecies = i)),
+        hybrid = true,
+        quality = 3))
   }
 
-  val sciName4: Rule1[Node] = name
-
-  val hybridFormula: Rule1[Node] = rule {
-    sciName2 ~ space ~
-    hybridChar ~ space ~
-    (subspecies | species | sciName2).? ~>
-    ((n1: Node, n2: Option[Node]) =>
-        n2 match {
-          case Some(x) =>
-            Node(normalized = s"${n1.normalized} × ${x.normalized}",
-              canonical = s"${n1.canonical} × ${x.canonical}", hybrid = true)
-          case None =>
-            Node(normalized = s"${n1.normalized} ×",
-              canonical = s"${n1.canonical} ×", hybrid = true)
-    })
-  }
-
-  val namedHybrid: Rule1[Node] = rule {
-    hybridChar ~ softSpace ~ sciName2 ~>
-    ((n: Node) =>
-      Node(normalized = s"× ${n.normalized}",
-        canonical = s"× ${n.canonical}", hybrid = true))
-  }
-
-  val subspecies: Rule1[Node] = rule {
-    species ~ space ~ (multinomial | multinomial1) ~>
-    ((s: Node, m: Node) =>
-        Node(normalized = s"${s.normalized} ${m.normalized}",
-          canonical = s"${s.canonical} ${m.canonical}"))
-  }
-
-  val multinomial: Rule1[Node] = rule {
-    multinomial1 ~ space ~ (multinomial | multinomial1) ~>
-    ((m1: Node, m2: Node) => {
-      Node(normalized = s"${m1.normalized} ${m2.normalized}",
-           canonical = s"${m1.canonical} ${m2.canonical}")
-    })
-  }
-
-  val multinomial1: Rule1[Node] = rule {
-    multinomial2 | multinomial3 | multinomial4
-  }
-
-  val multinomial2: Rule1[Node] = rule {
-    (multinomial3 | multinomial4) ~ space ~ authorship ~>
-    ((m: Node, a: String) => {
-      Node(normalized = s"${m.normalized} $a",
-           canonical = s"${m.canonical}")
-    })
-  }
-
-  val multinomial3: Rule1[Node] = rule {
-    rank ~ space ~ word ~>
-    ((r: String, i: String) =>
-       Node(normalized = s"$r ${Util.norm(i)}",
-             canonical = s"${Util.norm(i)}")
-    )
-  }
-
-  val multinomial4: Rule1[Node] = rule {
-    word ~>
-    ((i: String) => {
-      Node(normalized = s"${Util.norm(i)}",
-           canonical = s"${Util.norm(i)}")
-    })
-  }
-
-  val binomial: Rule1[Node] = rule {
-    binomial1 | binomial2 | binomial3
-  }
-
-  val binomial1: Rule1[Node] = rule {
-    uninomial ~ space ~ comparison ~ (space ~ species).? ~>
-    ((g: Node, _: String, s: Option[Node]) => {
-      s match {
-        case Some(x) =>
-          Node(normalized = s"${g.normalized} cf. ${x.normalized}",
-               canonical = s"${g.canonical} ${x.canonical}")
-        case None => g
+  val hybridFormula2: Rule1[NamesGroup] = rule {
+    name ~ space ~ hybridChar ~ (space ~ name).? ~>
+    ((n1: Name, n2: Option[Name]) =>
+      n2 match {
+        case None => NamesGroup(name = Seq(n1), hybrid = true, quality = 3)
+        case Some(n) => NamesGroup(name = Seq(n1,n), hybrid = true)
       }
-    })
-  }
-
-  val binomial2: Rule1[Node] = rule {
-    uninomial ~ space ~ subGenus ~ space ~ species ~>
-    ((g: Node, sg: Node, s: Node) => {
-      Node(normalized = s"${g.normalized} ${sg.normalized} ${s.normalized}",
-           canonical = s"${g.canonical} ${s.canonical}")
-    })
-  }
-
-  val binomial3: Rule1[Node] = rule {
-    uninomial ~ space ~ species ~> ((w1: Node, w2: Node) =>
-      Node(normalized = s"${w1.normalized} ${w2.normalized}",
-           canonical = s"${w1.canonical} ${w2.canonical}")
     )
   }
 
-  val species: Rule1[Node] = rule {
-    species2 | species1
+  val namedHybrid: Rule1[NamesGroup] = rule {
+    hybridChar ~ softSpace ~ name ~>
+    ((n: Name) => NamesGroup(Seq(n), hybrid = true))
   }
 
-  val species1: Rule1[Node] = rule {
-    word ~>
-    ((s: String) =>
-        Node(normalized = s"$s", canonical = s"$s"))
+  val name: Rule1[Name] = rule {
+    name1 | name2 | name3
   }
 
-  val species2: Rule1[Node] = rule {
-    species1 ~ space ~ authorship ~>
-    ((s: Node, a: String) =>
-        Node(normalized = s"${s.normalized} $a", canonical = s.normalized))
+  val name1: Rule[Name] = rule {
+    uninomialCombo | uninomial ~> ((u: Uninomial) => Name(u))
+  }
+
+  val name2: Rule1[Name] = rule {
+    uninomialWord ~ space ~ comparison ~ (space ~ species).? ~>
+    ((u: Uninomial, s: Option[Species]) =>
+      Name(uninomial = u, species = s, comparison = Some("cf."), quality = 3))
+  }
+
+  val name3: Rule1[Name] = rule {
+    uninomialWord ~ space ~ subGenus.? ~ space ~
+    species ~ space ~ infraspeciesGroup.? ~>
+    ((g: Uninomial, sg: Option[SubGenus], s: Species,
+      ig: Option[InfraspeciesGroup]) => Name(g, sg, s, ig))
+  }
+
+  val infraspeciesGroup: Rule1[InfraspeciesGroup] = rule {
+    oneOrMore(infraspecies).separatedBy(space) ~>
+    ((inf: Seq[Infraspecies]) => InfraspeciesGroup(inf))
+  }
+
+  val infraspecies: Rule1[Infraspecies] = rule {
+    (rank ~ space).? ~ word ~ (space ~ authorship).? ~>
+    ((r: Option[String], w: String, a: Option[Authorship]) =>
+        Infraspecies(w, r, a))
+  }
+
+  val species: Rule1[Species] = rule {
+    word ~ (space ~ authorship).? ~>
+    ((s: String, a: Option[Authorship]) =>
+      Species(s, a))
   }
 
   val comparison: Rule1[String] = rule {
-    capture("cf." | "cf")
+    "cf" ~ ".".? ~ push("cf.")
   }
 
   val approximation: Rule1[String] = rule {
@@ -167,170 +99,168 @@ class ParserClean extends SimpleParser {
   }
 
   val rankUninomial: Rule1[String] = rule {
-    capture("sect." |"sect" |"subsect." |"subsect" |"trib." |
-     "trib" |"subtrib." |"subtrib" |"ser." |"ser" |"subgen." |
-     "subgen" |"fam." |"fam" |"subfam." |"subfam" |"supertrib." |
-     "supertrib")
+    capture("sect" | "subsect" | "trib" | "subtrib" | "ser" | "subgen" |
+      "fam" | "subfam" | "supertrib") ~ ".".? ~>
+    ((r: String) => s"$r.")
   }
 
   val rank: Rule1[String] = rule {
-    capture("morph." | "f.sp." | "B" | "ssp." | "ssp" | "mut." | "nat" |
-     "nothosubsp." | "convar." | "pseudovar." | "sect." | "ser." | "var." |
-     "subvar." |  "[var.]"  | "var" | "subsp." | "subsp" | "subf." |
-     "race" | "forma." | "forma" | "fma." | "fma" | "form." |
-     "form" | "fo." | "fo" | "f." | "α" | "ββ" | "β" | "γ" | "δ" |
+    rankForma | rankVar | rankSsp | rankOther
+  }
+
+  val rankOther: Rule1[String] = rule {
+    capture("morph." | "f.sp." | "B" | "mut." | "nat" |
+     "nothosubsp." | "convar." | "pseudovar." | "sect." | "ser." |
+     "subvar." | "subf." | "race" | "α" | "ββ" | "β" | "γ" | "δ" |
      "ε" | "φ" | "θ" | "μ" | "a." | "b." | "c." | "d." | "e." | "g." |
      "k." | "****" | "**" | "*")
   }
 
-  val subGenus: Rule1[Node] = rule {
-    "(" ~ space ~ uninomial ~ space ~ ")" ~>
-    ((x: Node) =>
-        Node(normalized = s"(${x.normalized})", canonical = ""))
+  val rankVar: Rule[String] = rule {
+    ("[var.]"  | ("var" ~ ".".?)) ~ push("var.")
   }
 
-  val uninomialCombo: Rule1[Node] = rule {
-    uninomialCombo1 | uninomialCombo2 | uninomialCombo3
+  val rankForma: Rule[String] = rule {
+    ("forma"  | "fma" | "form" | "fo" | "f") ~ ".".? ~ push("f.")
   }
 
-  val uninomialCombo1: Rule1[Node] = rule {
-    (uninomialCombo2 | uninomialCombo3) ~ space ~ authorship ~>
-    ((uc: Node, au: String) =>
-        Node(normalized = s"${uc.normalized} $au",
-          canonical = s"${uc.canonical}"))
+  val rankSsp: Rule[String] = rule {
+    ("ssp" | "subsp") ~ ".".? ~ push("ssp.")
   }
 
-  val uninomialCombo2: Rule1[Node] = rule {
-    uninomial ~ space ~ authorship ~ space ~ rankUninomial ~
-      space ~ uninomial ~>
-    ((u1: Node, au: String, r: String, u2: Node) =>
-        Node(normalized = s"${u1.normalized} $au $r ${u2.normalized}",
-          canonical = s"${u2.canonical}"))
+  val subGenus: Rule1[SubGenus] = rule {
+    "(" ~ space ~ uninomialWord ~ space ~ ")" ~>
+    ((u: Uninomial) =>
+      if (u.str.size < 2 || u.str.last == '.') SubGenus(u, 3)
+      else SubGenus(u))
   }
 
-  val uninomialCombo3: Rule1[Node] = rule {
+  val uninomialCombo: Rule1[Uninomial] = rule {
     uninomial ~ space ~ rankUninomial ~ space ~ uninomial ~>
-    ((u1: Node, r: String, u2: Node) =>
-        Node(normalized = s"${u1.normalized} $r ${u2.normalized}",
-          canonical = s"${u2.canonical}"))
+    ((u1: Uninomial, r: String, u2: Uninomial) =>
+      u2.copy(rank = Some(r), parent = u1))
   }
 
-  val uninomial: Rule1[Node] = rule {
-    (abbrGenus | capWord | twoLetterGenera) ~> ((u: String) =>
-      Node(normalized = u, canonical = u,
-        details = Some(Vector(Name(uninomial = Uninomial(string = u)))),
-        pos = calcPos(None, state.cursor, "uninomial")))
+  val uninomial: Rule1[Uninomial] = rule {
+    uninomialWord ~ space ~ authorship.? ~>
+    ((u: Uninomial, a: Option[authorship]) => u.copy(authorship = a))
   }
 
-  val uninomialAuth: Rule1[Node] = rule {
-    uninomial ~ space ~ authorship ~> ((u: Node, a: String) =>
-      Node(normalized = s"${u.normalized} $a", canonical = u.canonical))
+  val uninomialWord: Rule1[Uninomial] = rule {
+    (abbrGenus | capWord | twoLetterGenera) ~> Uninomial
   }
 
-  val approxName: Rule1[Node] = rule {
-    approxName1 | approxName2
+  val approxName: Rule1[NamesGroup] = rule {
+    approxName1 | approxName2 ~>
+    ((n: Name) =>
+     NamesGroup(name = Seq(n), quality = 3))
   }
 
-  val approxName1: Rule1[Node] = rule {
-    uninomial ~ space ~ approximation ~ space ~ zeroOrMore(Printable|"щ") ~>
-      ((g: Node, _: String) => g)
+  val approxName1: Rule1[Name] = rule {
+    uninomial ~ space ~ approximation ~ space ~ anyChars ~>
+      ((u: Uninomial, appr: String, ignored: String) =>
+          Name(uninomial = g, approximation = Some(appr),
+               ignored = Some(ignored), quality = 3))
   }
 
-  val approxName2: Rule1[Node] = rule {
+  val approxName2: Rule1[Name] = rule {
     uninomial ~ space ~ word ~ space ~
-    approximation ~ space ~ zeroOrMore(Printable|"щ") ~>
-      ((g: Node, s: String, _: String) =>
-          Node(normalized = s"${g.normalized} ${Util.norm(s)}",
-               canonical = s"${g.canonical} ${Util.norm(s)}"))
+      approximation ~ space ~ anyChars ~>
+      ((u: Uninomial, s: String, appr: String, ign: String) =>
+        Name(uninomial = u,
+             species = Some(s),
+             approximation = Some(appr),
+             ignored = Some(ign), quality = 3))
   }
 
-  val authorship: Rule1[String] = rule {
+  val authorship: Rule1[Authorship] = rule {
     combinedAuthorship | basionymYearMisformed |
     basionymAuthorship | authorship1
   }
 
-  val combinedAuthorship: Rule1[String] = rule {
+  val combinedAuthorship: Rule1[Authorship] = rule {
     combinedAuthorship1 | combinedAuthorship2
   }
 
-  val combinedAuthorship1: Rule1[String] = rule {
-    basionymAuthorship ~ space ~ authorEx ~ space ~ authorship1 ~>
-    ((bauth: String,ex: String, auth: String) => s"$bauth ex $auth")
+  val combinedAuthorship1: Rule1[Authorship] = rule {
+    basionymAuthorship ~ authorEx ~ authorship1 ~>
+    ((bau: Authorship, exau: Authorship) =>
+        bau.copy(authors = bau.authors.copy(
+          authorsEx = Some(exau.authors.authors)), quality = 3))
   }
 
-  val combinedAuthorship2: Rule1[String] = rule {
+  val combinedAuthorship2: Rule1[Authorship] = rule {
     basionymAuthorship ~ space ~ authorship1 ~>
-    ((bauth: String, auth: String) => s"$bauth $auth")
+    ((bau: Authorship, cau: Authorship) =>
+        bau.copy(combination = Some(cau.authors), quality = 1))
   }
 
-  val basionymYearMisformed: Rule1[String] = rule {
-    '(' ~ space ~ authors ~ space ~ ')' ~ (space ~ ',').? ~ space ~ year ~>
-    ((a: String, y: Year) => s"($a ${y.str})")
+  val basionymYearMisformed: Rule1[Authorship] = rule {
+    '(' ~ space ~ authorsGroup ~ space ~ ')' ~ (space ~ ',').? ~ space ~ year ~>
+    ((a: AuthorsGroup, y: Year) => Authorship(authors = a.copy(year = Some(y)),
+                                              quality = 3))
   }
 
-  val basionymAuthorship1: Rule1[String] = rule {
+  val basionymAuthorship: Rule1[Authorship] = rule {
+    basionymAuthorship1 | basionymAuthorship2
+  }
+
+  val basionymAuthorship1: Rule1[Authorship] = rule {
     '(' ~ space ~ authorship1 ~ space ~ ')' ~>
-      ((auth: String) => s"($auth)")
+    ((a: Authorship) => a.copy(quality = 2))
   }
 
-  val basionymAuthorship: Rule1[String] = basionymAuthorship1
-
-  val authorship1: Rule1[String] = rule {
-    authorsYear | authors
+  val basionymAuthorship2: Rule1[Authorship] = rule {
+    '(' ~ space ~ '(' ~ space ~ authorship1 ~ space ~ ')' ~ space ~ ')' ~>
+    ((a: Authorship) => a.copy(quality = 3))
   }
 
-  val authorsYear: Rule1[String] = rule {
-    authors ~ space ~ (',' ~ space).? ~ year ~>
-    ((a: String, y: Year) => s"$a ${y.str}")
+  val authorship1: Rule1[Authorship] = rule {
+    (authorsYear | authorsGroup) ~>
+    ((a: AuthorsGroup) => Authorship(a))
   }
 
-
-  val authors: Rule1[String] = rule {
-    authors1 | author
+  val authorsYear: Rule1[AuthorsGroup] = rule {
+    authorsGroup ~ space ~ (',' ~ space).? ~ year ~>
+    ((a: AuthorsGroup, y: Year) => a.copy(year = Some(y)))
   }
 
-  val authors1: Rule1[String] = rule {
-    author ~ space ~ authorSep ~ space ~ (authors | author) ~>
-    ((au1: String, sep: String, au2: String) => {
-        sep match {
-          case "," => s"$au1, $au2"
-          case x => s"$au1 $x $au2"
-        }
-      })
+  val authorsGroup: Rule1[AuthorsGroup] = rule {
+    authorsTeam ~ (authorEx ~ authorsTeam).? ~>
+    ((a: AuthorsTeam, exAu: Option[AuthorsTeam]) =>
+      AuthorsGroup(a, exAu))
   }
 
-  val authorSep: Rule1[String] = rule {
-    authorComma | authorAnd | authorEx
+  val authorsTeam: Rule1[AuthorsTeam] = rule {
+    oneOrMore(author).separatedBy(authorSep) ~> AuthorsTeam
   }
 
-  val authorEx: Rule1[String] = rule {
-    ("ex" | "in") ~ push("ex")
+  val authorSep = rule {
+    space ~ ("," | "&" | "and" | "et") ~ space
   }
 
-  val authorAnd: Rule1[String] = rule {
-    ("and" | "&" | "et") ~ push("&")
+  val authorEx = rule {
+    space ~ ("ex" | "in") ~ space
   }
 
-  val authorComma: Rule1[String] = rule {
-    capture(",")
-  }
-
-  val author: Rule1[String] = rule {
+  val author: Rule1[Author] = rule {
     author1 | author2 | unknownAuthor
   }
 
-  val author1: Rule1[String] = rule {
-    author2 ~ space ~ filius ~> ((au: String) => s"$au f.")
+  val author1: Rule1[Author] = rule {
+    author2 ~ space ~ filius ~> ((au: Author) => Author(s"$au f."))
   }
 
-  val author2: Rule1[String] = rule {
+  val author2: Rule1[Author] = rule {
     oneOrMore(authorWord).separatedBy(space) ~>
-      ((au: Seq[String]) => au.mkString(" "))
+      ((au: Seq[String]) => Author(au.mkString(" ")))
   }
 
-  val unknownAuthor: Rule1[String] = rule {
+  val unknownAuthor: Rule1[Author] = rule {
     capture("?" |
-            (("auct." | "auct" | "anon." | "anon" | "ht." | "ht" | "hort." | "hort") ~ &(spaceChars | EOI)))
+            (("auct." | "auct" | "anon." | "anon" | "ht." | "ht" | "hort." |
+              "hort") ~ &(spaceChars | EOI))) ~>
+    ((a: String) => Author(a, 3, true))
   }
 
   val authorWord: Rule1[String] = rule {
@@ -367,22 +297,25 @@ class ParserClean extends SimpleParser {
     capture(upperChar ~ lowerChar.? ~ lowerChar.? ~ '.')
   }
 
-  val capWord: Rule1[String] = rule {
+  val capWord: Rule1[UninomialWord] = rule {
     capWord2 | capWord1
   }
 
-  val capWord1: Rule1[String] = rule {
+  val capWord1: Rule1[UninomialWord] = rule {
     capture(upperChar ~ lowerChar ~ oneOrMore(lowerChar) ~ '?'.?) ~>
-    ((w: String) => Util.norm(w))
+    ((w: String) => if (w.last == '?') UninomialWord(w, 3)
+                    else UninomialWord(w))
   }
 
-  val capWord2: Rule1[String] = rule {
-    capWord1 ~ "-" ~ word1 ~> ((w1: String, w2: String) => s"$w1-$w2")
+  val capWord2: Rule1[UninomialWord] = rule {
+    capWord1 ~ "-" ~ word1 ~>
+    ((w1: UninomialWord, w2: String) => w1.copy(s"${w1.str}-$w2"))
   }
 
-  val twoLetterGenera: Rule1[String] = rule {
+  val twoLetterGenera: Rule1[UninomialWord] = rule {
     capture("Ca" | "Ea" | "Ge" | "Ia" | "Io" | "Io" | "Ix" | "Lo" | "Oa" |
-      "Ra" | "Ty" | "Ua" | "Aa" | "Ja" | "Zu" | "La" | "Qu" | "As" | "Ba")
+      "Ra" | "Ty" | "Ua" | "Aa" | "Ja" | "Zu" | "La" | "Qu" | "As" | "Ba") ~>
+    ((w: String) => UninomialWord(w))
   }
 
   val word: Rule1[String] = rule {
@@ -397,11 +330,13 @@ class ParserClean extends SimpleParser {
     word1 ~ "-" ~ word1 ~> ((s1: String, s2: String) => s"$s1-$s2")
   }
 
-  val hybridChar = CharPredicate("×*")
+  val hybridChar = CharPredicate("×")
 
   val upperChar = CharPredicate(UpperAlpha ++ "ËÆŒ")
 
   val lowerChar = CharPredicate(LowerAlpha ++ "'ëæœſ")
+
+  val anyChars = rule { capture(zeroOrMore(ANY)) }
 
   val year: Rule1[Year] = rule {
     yearWithParens | yearWithChar | yearNumber
