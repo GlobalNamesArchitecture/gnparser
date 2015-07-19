@@ -28,3 +28,4 @@ out/
 
 # Other
 *.pyc
+output.json
