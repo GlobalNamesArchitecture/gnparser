@@ -35,9 +35,11 @@ class ParserClean extends SimpleParser {
     })
   }
 
-  val sciName4: Rule1[Node] = rule {
-    name
+  val name: Rule1[Node] = rule {
+    binomial | uninomialAuth | uninomial
   }
+
+  val sciName4: Rule1[Node] = name
 
   val hybridFormula: Rule1[Node] = rule {
     sciName2 ~ space ~
@@ -59,10 +61,6 @@ class ParserClean extends SimpleParser {
     ((n: Node) =>
       Node(normalized = s"× ${n.normalized}",
         canonical = s"× ${n.canonical}", hybrid = true))
-  }
-
-  val name: Rule1[Node] = rule {
-    binomial | uninomialAuth | uninomial
   }
 
   val subspecies: Rule1[Node] = rule {
@@ -265,14 +263,12 @@ class ParserClean extends SimpleParser {
     ((a: String, y: String) => s"($a $y)")
   }
 
-  val basionymAuthorship: Rule1[String] = rule {
-    basionymAuthorship1
-  }
-
   val basionymAuthorship1: Rule1[String] = rule {
     '(' ~ space ~ authorship1 ~ space ~ ')' ~>
-    ((auth: String) => s"($auth)")
+      ((auth: String) => s"($auth)")
   }
+
+  val basionymAuthorship: Rule1[String] = basionymAuthorship1
 
   val authorship1: Rule1[String] = rule {
     authorsYear | authors
@@ -311,7 +307,7 @@ class ParserClean extends SimpleParser {
   }
 
   val authorComma: Rule1[String] = rule {
-    "," ~ push(",")
+    capture(",")
   }
 
   val author: Rule1[String] = rule {
