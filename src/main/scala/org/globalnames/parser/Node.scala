@@ -33,17 +33,17 @@ case class Name(
 
 case class Uninomial(
   str: String,
-  authorship: Option[Authorship],
+  authorship: Option[Authorship] = None,
   rank: Option[String] = None,
   parent: Option[Uninomial] = None,
   quality: Int = 1) extends Details
 
-case class Subgenus(
-  subgenus: Uninomial,
-  quality: Int = 1) extends Details
-
 case class UninomialWord(
   str: String,
+  quality: Int = 1) extends Details
+
+case class SubGenus(
+  subgenus: UninomialWord,
   quality: Int = 1) extends Details
 
 case class Species(
