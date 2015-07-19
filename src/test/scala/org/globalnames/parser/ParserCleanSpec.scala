@@ -2,13 +2,20 @@ package org.globalnames.parser
 
 import org.specs2.mutable.Specification
 
-// class ParserCleanSpec extends Specification {
-//   val parser = new ParserClean()
-//
-//   "ParserClean parses" >> {
-//     "Homo sapiens" in {
-//       val res = parseName("   Homo   sapiens Linneaus    1758   ")
-//       res.verbatim === "   Homo   sapiens Linneaus    1758   "
+class ParserCleanSpec extends Specification {
+  val parser = new ParserClean()
+
+  "ParserClean parses" >> {
+    "Homo sapiens" in {
+      val res = parseName("   Homo   sapiens Linneaus    1758   ")
+      res.verbatim === "   Homo   sapiens Linneaus    1758   "
+    }
+  }
+  def parseName(input: String): SciName = {
+    val result = parser.sciName.run(input)
+    SciName.processParsed(input, parser, result)
+  }
+}
 //       res.normalized === Some("Homo sapiens Linneaus 1758")
 //       res.canonical === Some("Homo sapiens")
 //       res.isParsed must beTrue
@@ -98,8 +105,3 @@ import org.specs2.mutable.Specification
 //     }
 //   }
 //
-//   def parseName(input: String): SciName = {
-//     val result = parser.sciName.run(input)
-//     SciName.processParsed(input, parser, result)
-//   }
-// }

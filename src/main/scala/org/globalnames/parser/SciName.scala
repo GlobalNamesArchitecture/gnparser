@@ -11,37 +11,19 @@ import org.apache.commons.lang.StringEscapeUtils
 import scala.util.matching.Regex
 
 case class SciName(
-  verbatim: String,
-  normalized: Option[String] = None,
-  canonical: Option[String] = None,
-  isParsed: Boolean = false,
+  verbatim: String = "",
+  ast: Option[NamesGroup] = None,
   isVirus: Boolean = false,
   isHybrid: Boolean = false,
-  parserRun: Int = -1,
-  parserVersion: String = BuildInfo.version,
-  details: Option[Vector[Name]] = None,
-  pos: Option[Vector[Tuple3[Int, Int, String]]] = None
+  isParsed: Boolean = false,
+  canonical: Option[String] = None,
+  normalized: Option[String] = None
 ) {
+  val parserVersion: String = BuildInfo.version
 
   def id: String = {
     val uuid = UUID.nameUUIDFromString(verbatim, gn, "SHA1").toString
     s"${uuid.substring(0, 14)}5${uuid.substring(15, uuid.length)}"
-  }
-
-  def posPrepare = {
-    pos match {
-      case None => null
-      case Some(p) => p.map { t => (t._1.toString -> Seq(t._3, t._2.toString))}.toMap
-    }
-  }
-
-  def detailsPrepare = {
-    details match {
-      case None => null
-      case Some(d) => {
-        d.map { n => n.prepare }
-      }
-    }
   }
 
   def toJson: String = compact(render(toMap))
@@ -52,27 +34,23 @@ case class SciName(
     ("id" -> id) ~
     ("parsed" -> isParsed) ~
     ("parser_version" -> parserVersion) ~
-    ("parser_run" -> parserRun) ~
     ("verbatim" -> verbatim) ~
     ("normalized" -> normalized.getOrElse(null)) ~
     ("canonical" -> canonical.getOrElse(null)) ~
     ("hybrid" -> isHybrid) ~
-    ("virus" -> isVirus) ~
-    ("details" -> detailsPrepare) //~
-    //("positions" -> posPrepare)
+    ("virus" -> isVirus)
   )
 }
 
 object SciName {
-  private val parserRelaxed = new ParserRelaxed()
   private val parserClean = new ParserClean()
 
   def fromString(input: String): SciName = {
     val isVirus = detectVirus(input)
     if (isVirus || noParse(input)) SciName(input, isVirus = isVirus)
     else {
-      val (parserInput, parserRun) = preprocess(input)
-      parse(input, parserInput, parserRun)
+      val parserInput = preprocess(input)
+      parse(input, parserInput)
     }
   }
 
@@ -88,9 +66,8 @@ object SciName {
   }
 
 
-  def processParsed(input: String,
-    parser: Parser,
-    result: Try[SciName]): SciName = {
+  def processParsed(input: String, parser: Parser,
+                    result: Try[SciName]): SciName = {
     result match {
       case Success(res: SciName) => res.copy(input)
       case Failure(err: ParseError) => {
@@ -115,25 +92,17 @@ object SciName {
     else true
   }
 
-  private def parse(input: String, parserInput: String, parserRun: Int): SciName = {
-    val resClean =  parserClean.sciName.run(parserInput)
-    resClean match {
-      case Success(_) => processParsed(input, parserClean, resClean)
-      case Failure(_) => {
-        val resRelaxed = parserRelaxed.sciName.run(parserInput)
-        processParsed(input, parserRelaxed, resRelaxed)
-      }
-    }
+  private def parse(input: String, parserInput: String): SciName = {
+    val res =  parserClean.sciName.run(parserInput)
+    processParsed(input, parserClean, res)
   }
 
-  private def preprocess(input: String): (String, Int) = {
-    var parserRun = 1
+  private def preprocess(input: String): String = {
     val unescaped = StringEscapeUtils.unescapeHtml(input)
     val unjunk = removeJunk(unescaped)
-    if (unjunk != input) parserRun = 2
     val authPre = prependAuthorPre(unjunk)
     val normHybrids = normalizeHybridChar(authPre)
-    (parserSpaces(normHybrids), parserRun)
+    parserSpaces(normHybrids)
   }
 
   private def removeJunk(input: String): String = {
