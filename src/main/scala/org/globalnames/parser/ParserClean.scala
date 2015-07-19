@@ -13,7 +13,7 @@ class ParserClean extends SimpleParser {
   }
 
   val sciName1: Rule1[NamesGroup] = rule {
-   hybridFormula | namedHybrid | sciName2 //approxName | sciName2
+   hybridFormula | namedHybrid | approxName | sciName2
   }
 
   val sciName2: Rule1[NamesGroup] = rule {
@@ -201,29 +201,29 @@ class ParserClean extends SimpleParser {
 
   val anyChars: Rule1[String] = rule { capture(zeroOrMore(ANY)) }
 
-  // val approxName: Rule1[NamesGroup] = rule {
-  //   approxName1 | approxName2 ~>
-  //   ((n: Name) =>
-  //    NamesGroup(name = Seq(n), quality = 3))
-  // }
+  val approxName: Rule1[NamesGroup] = rule {
+    (approxName1 | approxName2) ~>
+    ((n: Name) =>
+     NamesGroup(name = Seq(n), quality = 3))
+  }
 
-  // val approxName1: Rule1[Name] = rule {
-  //   uninomial ~ space ~ approximation ~ space ~ anyChars ~>
-  //     ((u: Uninomial, appr: String, ign: String) =>
-  //         Name(uninomial = g, approximation = Some(appr),
-  //              ignored = Some(ign), quality = 3))
-  // }
-  //
-  // val approxName2: Rule1[Name] = rule {
-  //   (uninomial ~ space ~ word ~ space ~ approximation ~ space ~ anyChars) ~>
-  //     ((u: Uninomial, s: String, appr: String, ign: String) =>
-  //       Name(uninomial = u,
-  //            species = Some(Species(s)),
-  //            approximation = Some(appr),
-  //            ignored = Some(ign),
-  //            quality = 3)
-  //     )
-  // }
+  val approxName1: Rule1[Name] = rule {
+    uninomial ~ space ~ approximation ~ space ~ anyChars ~>
+      ((u: Uninomial, appr: String, ign: String) =>
+          Name(uninomial = u, approximation = Some(appr),
+               ignored = Some(ign), quality = 3))
+  }
+
+  val approxName2: Rule1[Name] = rule {
+    (uninomial ~ space ~ word ~ space ~ approximation ~ space ~ anyChars) ~>
+      ((u: Uninomial, s: String, appr: String, ign: String) =>
+        Name(uninomial = u,
+             species = Some(Species(s)),
+             approximation = Some(appr),
+             ignored = Some(ign),
+             quality = 3)
+      )
+  }
 
   val authorship: Rule1[Authorship] = rule {
     combinedAuthorship | basionymYearMisformed |
