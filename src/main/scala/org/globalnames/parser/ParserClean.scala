@@ -197,7 +197,8 @@ class ParserClean extends SimpleParser {
 
   val upperChar = CharPredicate(UpperAlpha ++ "ËÆŒ")
 
-  val lowerChar = CharPredicate(LowerAlpha ++ "'ëæœſ")
+  val lowerChar = CharPredicate(LowerAlpha ++
+    "ëæœſàâåãäáçčéèíìïňññóòôøõöúùüŕřŗššşž")
 
   val anyChars: Rule1[String] = rule { capture(zeroOrMore(ANY)) }
 
@@ -347,7 +348,27 @@ class ParserClean extends SimpleParser {
   }
 
   val year: Rule1[Year] = rule {
-    yearWithParens | yearWithChar | yearNumber
+    yearRange | yearApprox | yearWithParens | yearWithPage |
+    yearWithDot | yearWithChar | yearNumber
+  }
+
+  val yearRange: Rule1[Year] = rule {
+    yearNumber ~ '-' ~ oneOrMore(Digit) ~ zeroOrMore("?" | Alpha) ~>
+    ((y: Year) => y.copy(quality = 3))
+  }
+
+  val yearWithDot: Rule1[Year] = rule {
+    yearNumber ~ '.' ~> ((y: Year) => y.copy(quality = 3))
+  }
+
+  val yearApprox: Rule1[Year] = rule {
+    '[' ~ space ~ yearNumber ~ space ~ ']' ~>
+     ((y: Year) => y.copy(quality = 3))
+  }
+
+  val yearWithPage: Rule1[Year] = rule {
+    (yearWithChar | yearNumber) ~ space ~ ':' ~ space ~ oneOrMore(Digit) ~>
+    ((y: Year) => y.copy(quality = 3))
   }
 
   val yearWithParens: Rule1[Year] = rule {
