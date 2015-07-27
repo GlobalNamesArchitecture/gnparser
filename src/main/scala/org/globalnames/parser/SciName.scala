@@ -13,13 +13,17 @@ import scala.util.matching.Regex
 case class SciName(
   verbatim: String = "",
   ast: Option[NamesGroup] = None,
-  isVirus: Boolean = false,
-  isHybrid: Boolean = false,
-  isParsed: Boolean = false,
-  canonical: Option[String] = None,
-  normalized: Option[String] = None
+  isVirus: Boolean = false
 ) {
-  val parserVersion: String = BuildInfo.version
+
+  lazy val node: Node = ast match {
+    case _ => Node()
+  }
+
+  def isHybrid: Boolean = node.isHybrid
+  def isParsed: Boolean = node.isParsed
+  def canonical: Option[String] = node.canonical
+  def normalized: Option[String] = node.normalized
 
   def id: String = {
     val uuid = UUID.nameUUIDFromString(verbatim, gn, "SHA1").toString
@@ -33,7 +37,7 @@ case class SciName(
   private val toMap = ("scientificName" ->
     ("id" -> id) ~
     ("parsed" -> isParsed) ~
-    ("parser_version" -> parserVersion) ~
+    ("parser_version" -> SciName.parserVersion) ~
     ("verbatim" -> verbatim) ~
     ("normalized" -> normalized.getOrElse(null)) ~
     ("canonical" -> canonical.getOrElse(null)) ~
@@ -44,6 +48,8 @@ case class SciName(
 
 object SciName {
   private val parserClean = new ParserClean()
+
+  val parserVersion: String = BuildInfo.version
 
   def fromString(input: String): SciName = {
     val isVirus = detectVirus(input)

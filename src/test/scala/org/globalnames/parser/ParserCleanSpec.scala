@@ -7,8 +7,8 @@ class ParserCleanSpec extends Specification {
 
   "ParserClean parses" >> {
     "Homo" in {
-      val res = parseName("Homo Linneaus & Derek 1758")
-      res.verbatim === "Homo Linneaus & Derek 1758"
+      val res = parseName("Homo Linneaeus & Kunz 1758")
+      res.verbatim === "Homo Linneaeus & Kunz 1758"
       res.ast.get.getClass.toString ===
         "class org.globalnames.parser.NamesGroup"
     }

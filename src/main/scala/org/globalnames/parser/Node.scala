@@ -6,15 +6,13 @@ import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods._
 
 case class Node(
-  normalized: String = "",
-  canonical: String = "",
-  hybrid: Boolean = false,
-  parser_run: Int = 1,
-  details: Option[Vector[Name]] = None,
-  pos: Option[Vector[Tuple3[Int, Int, String]]] = None
+  isParsed: Boolean = false,
+  isHybrid: Boolean = false,
+  normalized: Option[String] = None,
+  canonical: Option[String] = None
 )
 
-trait Details
+sealed trait Details
 
 case class NamesGroup(
   name: Seq[Name],
