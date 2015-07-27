@@ -8,12 +8,12 @@ import org.parboiled2.CharPredicate.{Digit, Printable, Alpha, LowerAlpha,
 
 class ParserClean extends SimpleParser {
   val sciName: Rule1[SciName] = rule {
-    softSpace ~ sciName1 ~ softSpace ~ EOI ~>
-    ((n: NamesGroup) => SciName(ast = Some(n)))
+    softSpace ~ sciName1 ~ (space ~ anyChars).? ~ EOI ~>
+    ((n: NamesGroup, g: Option[String]) => SciName(ast = Some(n)))
   }
 
   val sciName1: Rule1[NamesGroup] = rule {
-   hybridFormula | namedHybrid | approxName | sciName2
+    hybridFormula | namedHybrid | approxName | sciName2
   }
 
   val sciName2: Rule1[NamesGroup] = rule {
@@ -29,8 +29,7 @@ class ParserClean extends SimpleParser {
     species ~ (space ~ infraspeciesGroup).? ~>
     ((n: Name, s: Species, i: Option[InfraspeciesGroup]) =>
       NamesGroup(
-        name = Vector(n, Name(uninomial = n.uninomial, species = Some(s),
-                    infraspecies = i)),
+        name = Vector(n, Name(uninomial = n.uninomial, species = Some(s), infraspecies = i)),
         hybrid = true,
         quality = 3))
   }
@@ -39,8 +38,8 @@ class ParserClean extends SimpleParser {
     name ~ space ~ hybridChar ~ (space ~ name).? ~>
     ((n1: Name, n2: Option[Name]) =>
       n2 match {
-        case None => NamesGroup(name = Vector(n1), hybrid = true, quality = 3)
-        case Some(n) => NamesGroup(name = Vector(n1,n), hybrid = true)
+        case None    => NamesGroup(name = Vector(n1), hybrid = true, quality = 3)
+        case Some(n) => NamesGroup(name = Vector(n1, n), hybrid = true)
       }
     )
   }
@@ -51,7 +50,7 @@ class ParserClean extends SimpleParser {
   }
 
   val name: Rule1[Name] = rule {
-    name1 | name2 | name3
+    name2 | name3 | name1
   }
 
   val name1: Rule1[Name] = rule {
@@ -60,19 +59,20 @@ class ParserClean extends SimpleParser {
 
   val name2: Rule1[Name] = rule {
     uninomialWord ~ space ~ comparison ~ (space ~ species).? ~>
-    ((u: UninomialWord, comp: String, s: Option[Species]) =>
+    ((u: UninomialWord, s: Option[Species]) =>
       Name(uninomial = Uninomial(u.str, quality = u.quality),
-           species = s, comparison = Some(comp), quality = 3))
+           species = s, comparison = Some("cf."), quality = 3))
   }
 
   val name3: Rule1[Name] = rule {
-    uninomialWord ~ space ~ subGenus.? ~ space ~
-    species ~ space ~ infraspeciesGroup.? ~>
-    ((u: UninomialWord, sg: Option[SubGenus], s: Species,
-      ig: Option[InfraspeciesGroup]) =>
-      Name(uninomial = Uninomial(str = u.str, quality = u.quality),
-           species = Some(s),
-           infraspecies = ig))
+    uninomialWord ~ (space ~ subGenus).? ~ space ~
+    species ~ (space ~ infraspeciesGroup).? ~>
+    ((uninomialWord: UninomialWord, maybeSubGenus: Option[SubGenus], species: Species,
+      maybeInfraspeciesGroup: Option[InfraspeciesGroup]) =>
+      Name(uninomial = Uninomial(str = uninomialWord.str, quality = uninomialWord.quality),
+           maybeSubGenus,
+           species = Some(species),
+           infraspecies = maybeInfraspeciesGroup))
   }
 
   val infraspeciesGroup: Rule1[InfraspeciesGroup] = rule {
@@ -92,8 +92,8 @@ class ParserClean extends SimpleParser {
       Species(s, a))
   }
 
-  val comparison: Rule1[String] = rule {
-    "cf" ~ ".".? ~ push("cf.")
+  val comparison = rule {
+    "cf" ~ ".".?
   }
 
   val approximation: Rule1[String] = rule {
@@ -103,9 +103,8 @@ class ParserClean extends SimpleParser {
   }
 
   val rankUninomial: Rule1[String] = rule {
-    capture("sect" | "subsect" | "trib" | "subtrib" | "ser" | "subgen" |
-      "fam" | "subfam" | "supertrib") ~ ".".? ~>
-    ((r: String) => s"$r.")
+    capture(("sect" | "subsect" | "trib" | "subtrib" | "ser" | "subgen" |
+      "fam" | "subfam" | "supertrib") ~ ".".?)
   }
 
   val rank: Rule1[String] = rule {
@@ -193,12 +192,11 @@ class ParserClean extends SimpleParser {
     word1 ~ "-" ~ word1 ~> ((s1: String, s2: String) => s"$s1-$s2")
   }
 
-  val hybridChar = CharPredicate("×")
+  val hybridChar = '×'
 
   val upperChar = CharPredicate(UpperAlpha ++ "ËÆŒ")
 
-  val lowerChar = CharPredicate(LowerAlpha ++
-    "ëæœſàâåãäáçčéèíìïňññóòôøõöúùüŕřŗššşž")
+  val lowerChar = CharPredicate(LowerAlpha ++ "ëæœſàâåãäáçčéèíìïňññóòôøõöúùüŕřŗššşž'")
 
   val anyChars: Rule1[String] = rule { capture(zeroOrMore(ANY)) }
 
@@ -302,7 +300,7 @@ class ParserClean extends SimpleParser {
   }
 
   val author1: Rule1[Author] = rule {
-    author2 ~ space ~ filius ~> ((au: Author) => Author(s"$au f."))
+    author2 ~ space ~ filius ~> ((au: Author) => au.copy(filius = true))
   }
 
   val author2: Rule1[Author] = rule {
@@ -314,7 +312,7 @@ class ParserClean extends SimpleParser {
     capture("?" |
             (("auct." | "auct" | "anon." | "anon" | "ht." | "ht" | "hort." |
               "hort") ~ &(spaceChars | EOI))) ~>
-    ((a: String) => Author(a, true, 3))
+    ((auth: String) => Author(auth, anon = true, quality = 3))
   }
 
   val authorWord: Rule1[String] = rule {

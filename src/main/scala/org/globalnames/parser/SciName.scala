@@ -16,9 +16,7 @@ case class SciName(
   isVirus: Boolean = false
 ) {
 
-  lazy val node: Node = ast match {
-    case _ => Node()
-  }
+  lazy val node: Node = Node()
 
   val id: String = {
     val gn = UUID.fromString("90181196-fecf-5082-a4c1-411d4f314cda")

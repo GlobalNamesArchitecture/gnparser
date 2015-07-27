@@ -6,11 +6,12 @@ import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods._
 
 case class Node(
-  isParsed: Boolean = false,
   isHybrid: Boolean = false,
   normalized: Option[String] = None,
   canonical: Option[String] = None
-)
+){
+  val isParsed = canonical.isDefined
+}
 
 sealed trait Details
 
@@ -66,6 +67,7 @@ case class Year(
 case class Author(
   str: String,
   anon: Boolean = false,
+  filius: Boolean = false,
   quality: Int = 1) extends Details
 
 case class AuthorsTeam(
