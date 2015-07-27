@@ -146,7 +146,7 @@ class ParserClean extends SimpleParser {
   }
 
   val uninomial: Rule1[Uninomial] = rule {
-    (uninomialWord ~ space ~ authorship.?) ~>
+    uninomialWord ~ (space ~ authorship).? ~>
     ((u: UninomialWord, a: Option[Authorship]) =>
         Uninomial(u.str, authorship = a))
   }
