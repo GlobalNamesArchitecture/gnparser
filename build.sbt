@@ -25,3 +25,5 @@ resolvers ++= Seq(
 )
 
 scalacOptions in Test ++= Seq("-Yrangepos")
+
+initialCommands in console := """import org.globalnames.parser._"""
