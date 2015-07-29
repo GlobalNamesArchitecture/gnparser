@@ -1,9 +1,9 @@
 package org.globalnames.parser
 
+import java.io.{File, PrintWriter}
+
 import scala.io.Source
-import java.io.{FileNotFoundException, IOException, PrintWriter, File}
-import scala.util.{Try, Success, Failure}
-import org.parboiled2._
+import scala.util.{Failure, Success, Try}
 
 object GnParser {
   val usage = """
@@ -60,7 +60,7 @@ object GnParser {
           f.getLines.zipWithIndex.foreach {
             case (line, i) => {
               if ((i + 1) % 10000 == 0) println(s"Parsed ${i + 1} lines")
-              val parsed = SciName.fromString(line.trim).toJson
+              val parsed = SciName.fromString(line.trim).renderCompactJson
               writer.write(parsed + "\n")
             }
           }
@@ -82,7 +82,7 @@ object GnParser {
         startFileParse(input, output)
       }
       case o if o.contains('name) =>
-        println(SciName.fromString(o('name)).toJson)
+        println(SciName.fromString(o('name)).renderCompactJson)
     }
   }
 }
