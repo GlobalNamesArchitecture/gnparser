@@ -17,7 +17,7 @@ class ParserClean extends SimpleParser {
   }
 
   val sciName2: Rule1[NamesGroup] = rule {
-    name ~> ((n: Name) => NamesGroup(Seq(n)))
+    name ~> ((n: Name) => NamesGroup(Vector(n)))
   }
 
   val hybridFormula: Rule1[NamesGroup] = rule {
@@ -29,7 +29,7 @@ class ParserClean extends SimpleParser {
     species ~ (space ~ infraspeciesGroup).? ~>
     ((n: Name, s: Species, i: Option[InfraspeciesGroup]) =>
       NamesGroup(
-        name = Seq(n, Name(uninomial = n.uninomial, species = Some(s),
+        name = Vector(n, Name(uninomial = n.uninomial, species = Some(s),
                     infraspecies = i)),
         hybrid = true,
         quality = 3))
@@ -39,15 +39,15 @@ class ParserClean extends SimpleParser {
     name ~ space ~ hybridChar ~ (space ~ name).? ~>
     ((n1: Name, n2: Option[Name]) =>
       n2 match {
-        case None => NamesGroup(name = Seq(n1), hybrid = true, quality = 3)
-        case Some(n) => NamesGroup(name = Seq(n1,n), hybrid = true)
+        case None => NamesGroup(name = Vector(n1), hybrid = true, quality = 3)
+        case Some(n) => NamesGroup(name = Vector(n1,n), hybrid = true)
       }
     )
   }
 
   val namedHybrid: Rule1[NamesGroup] = rule {
     hybridChar ~ softSpace ~ name ~>
-    ((n: Name) => NamesGroup(Seq(n), hybrid = true))
+    ((n: Name) => NamesGroup(Vector(n), hybrid = true))
   }
 
   val name: Rule1[Name] = rule {
@@ -205,7 +205,7 @@ class ParserClean extends SimpleParser {
   val approxName: Rule1[NamesGroup] = rule {
     (approxName1 | approxName2) ~>
     ((n: Name) =>
-     NamesGroup(name = Seq(n), quality = 3))
+     NamesGroup(name = Vector(n), quality = 3))
   }
 
   val approxName1: Rule1[Name] = rule {
