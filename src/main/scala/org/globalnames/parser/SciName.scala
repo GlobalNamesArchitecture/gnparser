@@ -1,14 +1,14 @@
 package org.globalnames.parser
 
-import org.json4s._
+import org.apache.commons.id.uuid.UUID
+import org.apache.commons.lang.StringEscapeUtils
+import org.json4s.JValue
 import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods._
-import org.apache.commons.id.uuid.UUID
 import org.parboiled2._
-import scala.collection._
-import scala.util.{Success, Failure, Try}
-import org.apache.commons.lang.StringEscapeUtils
+
 import scala.util.matching.Regex
+import scala.util.{Failure, Success, Try}
 
 case class SciName(
   verbatim: String = "",
@@ -20,30 +20,23 @@ case class SciName(
     case _ => Node()
   }
 
-  def isHybrid: Boolean = node.isHybrid
-  def isParsed: Boolean = node.isParsed
-  def canonical: Option[String] = node.canonical
-  def normalized: Option[String] = node.normalized
-
-  def id: String = {
+  val id: String = {
+    val gn = UUID.fromString("90181196-fecf-5082-a4c1-411d4f314cda")
     val uuid = UUID.nameUUIDFromString(verbatim, gn, "SHA1").toString
     s"${uuid.substring(0, 14)}5${uuid.substring(15, uuid.length)}"
   }
 
-  def toJson: String = compact(render(toMap))
-
-  private val gn = UUID.fromString("90181196-fecf-5082-a4c1-411d4f314cda")
-
-  private val toMap = ("scientificName" ->
+  val json: JValue = render("scientificName" ->
     ("id" -> id) ~
-    ("parsed" -> isParsed) ~
-    ("parser_version" -> SciName.parserVersion) ~
-    ("verbatim" -> verbatim) ~
-    ("normalized" -> normalized.getOrElse(null)) ~
-    ("canonical" -> canonical.getOrElse(null)) ~
-    ("hybrid" -> isHybrid) ~
-    ("virus" -> isVirus)
-  )
+      ("parsed" -> node.isParsed) ~
+      ("parser_version" -> SciName.parserVersion) ~
+      ("verbatim" -> verbatim) ~
+      ("normalized" -> node.normalized.orNull) ~
+      ("canonical" -> node.canonical.orNull) ~
+      ("hybrid" -> node.isHybrid) ~
+      ("virus" -> isVirus))
+
+  val renderCompactJson: String = compact(json)
 }
 
 object SciName {
