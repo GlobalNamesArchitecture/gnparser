@@ -2,22 +2,23 @@ package org.globalnames.parser
 
 import org.specs2.mutable.Specification
 
-class ParserCleanSpec extends Specification {
-  val parser = new ParserClean()
-
-  "ParserClean parses" >> {
-    "Homo" in {
-      val res = parseName("Homo Linneaeus & Kunz 1758")
-      res.verbatim === "Homo Linneaeus & Kunz 1758"
-      res.ast.get.getClass.toString ===
-        "class org.globalnames.parser.NamesGroup"
-    }
-  }
-  def parseName(input: String): SciName = {
-    val result = parser.sciName.run(input)
-    SciName.processParsed(input, parser, result)
-  }
-}
+// class ParserCleanSpec extends Specification {
+//   val parser = new ParserClean()
+//   val name = "Poaceae subtrib. Scolochloinae Soreng"
+//
+//   "ParserClean parses" >> {
+//     s"$name" in {
+//       val res = parseName(name)
+//       res.verbatim === name
+//       res.ast.get.getClass.toString ===
+//         "class org.globalnames.parser.NamesGroup"
+//     }
+//   }
+//   def parseName(input: String): SciName = {
+//     val result = parser.sciName.run(input)
+//     SciName.processParsed(input, parser, result)
+//   }
+// }
 //       res.normalized === Some("Homo sapiens Linneaus 1758")
 //       res.canonical === Some("Homo sapiens")
 //       res.isParsed must beTrue
