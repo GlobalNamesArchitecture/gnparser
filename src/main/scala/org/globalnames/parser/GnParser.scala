@@ -1,9 +1,11 @@
-package org.globalnames.parser
+package org.globalnames
+package parser
 
 import java.io.{File, PrintWriter}
 
 import scala.io.Source
 import scala.util.{Failure, Success, Try}
+import parser.{ScientificNameParser => SNP}
 
 object GnParser {
   val usage = """
@@ -60,7 +62,7 @@ object GnParser {
           f.getLines.zipWithIndex.foreach {
             case (line, i) => {
               if ((i + 1) % 10000 == 0) println(s"Parsed ${i + 1} lines")
-              val parsed = SciName.fromString(line.trim).renderCompactJson
+              val parsed = SNP.renderCompactJson(SNP.fromString(line.trim))
               writer.write(parsed + "\n")
             }
           }
@@ -82,7 +84,7 @@ object GnParser {
         startFileParse(input, output)
       }
       case o if o.contains('name) =>
-        println(SciName.fromString(o('name)).renderCompactJson)
+        println(SNP.renderCompactJson(SNP.fromString(o('name))))
     }
   }
 }

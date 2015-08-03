@@ -16,6 +16,7 @@ libraryDependencies ++= Seq(
   "org.littleshoot" % "littleshoot-commons-id" % "1.0.3",
   "commons-lang" % "commons-lang" % "2.6",
   "org.globalnames" %% "parboiled" % "2.2.0-cca58cba7126660158f6aa45f1cb4e1bdb8ddfe6-SNAPSHOT",
+  "org.scalaz" %% "scalaz-core" % "7.1.3",
   "org.specs2" %% "specs2-core" % "3.6.3" % "test"
 )
 
