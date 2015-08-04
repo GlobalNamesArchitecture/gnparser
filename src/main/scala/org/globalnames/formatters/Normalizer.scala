@@ -56,8 +56,8 @@ object Normalizer {
       ag.year.flatMap(format).map(" " + _)
   }
 
-  def format(as: Authorship): Option[String] = as match {
-    case Authorship(authors, Some(comb), _) => format(authors).map("(" + _ + ") ") |+| format(comb)
-    case Authorship(authors, None, _) => format(authors)
+  def format(as: Authorship): Option[String] = {
+    format(as.authors).map { x => if (as.basionym) "(" + x + ")" else x } |+|
+      as.combination.flatMap(format).map(" " + _)
   }
 }

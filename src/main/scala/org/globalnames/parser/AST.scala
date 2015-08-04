@@ -76,4 +76,5 @@ case class AuthorsGroup(
 case class Authorship(
   authors: AuthorsGroup,
   combination: Option[AuthorsGroup] = None,
+  basionym: Boolean = false,
   quality: Int = 1)
