@@ -243,7 +243,7 @@ class ParserClean extends SimpleParser {
   val combinedAuthorship2: Rule1[Authorship] = rule {
     basionymAuthorship ~ space ~ authorship1 ~>
     ((bau: Authorship, cau: Authorship) =>
-        bau.copy(combination = Some(cau.authors), quality = 1))
+        bau.copy(combination = Some(cau.authors), basionym = true, quality = 1))
   }
 
   val basionymYearMisformed: Rule1[Authorship] = rule {
