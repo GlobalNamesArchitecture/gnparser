@@ -1,7 +1,7 @@
 package org.globalnames.parser
 
-import org.apache.commons.id.uuid.UUID
 import org.apache.commons.lang.StringEscapeUtils
+import org.globalnames.ops.ScientificNameOps
 import org.json4s.JValue
 import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods._
@@ -10,41 +10,29 @@ import org.parboiled2._
 import scala.util.matching.Regex
 import scala.util.{Failure, Success, Try}
 
-case class SciName(
-  verbatim: String = "",
-  ast: Option[NamesGroup] = None,
-  isVirus: Boolean = false
-) {
-
-  lazy val node: Node = Node()
-
-  val id: String = {
-    val gn = UUID.fromString("90181196-fecf-5082-a4c1-411d4f314cda")
-    val uuid = UUID.nameUUIDFromString(verbatim, gn, "SHA1").toString
-    s"${uuid.substring(0, 14)}5${uuid.substring(15, uuid.length)}"
-  }
-
-  val json: JValue = render("scientificName" ->
-    ("id" -> id) ~
-      ("parsed" -> node.isParsed) ~
-      ("parser_version" -> SciName.parserVersion) ~
-      ("verbatim" -> verbatim) ~
-      ("normalized" -> node.normalized.orNull) ~
-      ("canonical" -> node.canonical.orNull) ~
-      ("hybrid" -> node.isHybrid) ~
-      ("virus" -> isVirus))
-
-  val renderCompactJson: String = compact(json)
-}
-
-object SciName {
+abstract class ScientificNameParser {
   private val parserClean = new ParserClean()
 
-  val parserVersion: String = BuildInfo.version
+  val version: String
 
-  def fromString(input: String): SciName = {
+  def json(scientificName: ScientificName): JValue = {
+    val canonical = scientificName.canonical
+
+    render("scientificName" -> ("id" -> scientificName.id) ~
+      ("parsed" -> canonical.isDefined) ~
+      ("parser_version" -> version) ~
+      ("verbatim" -> scientificName.verbatim) ~
+      ("normalized" -> scientificName.normal) ~
+      ("canonical" -> canonical) ~
+      ("hybrid" -> scientificName.isHybrid) ~
+      ("virus" -> scientificName.isVirus))
+  }
+
+  def renderCompactJson(scientificName: ScientificName): String = compact(json(scientificName))
+
+  def fromString(input: String): ScientificName = {
     val isVirus = detectVirus(input)
-    if (isVirus || noParse(input)) SciName(input, isVirus = isVirus)
+    if (isVirus || noParse(input)) ScientificName(input, isVirus = isVirus)
     else {
       val parserInput = preprocess(input)
       parse(input, parserInput)
@@ -64,18 +52,18 @@ object SciName {
 
 
   def processParsed(input: String, parser: Parser,
-                    result: Try[SciName]): SciName = {
+                    result: Try[ScientificName]): ScientificName = {
     result match {
-      case Success(res: SciName) => res.copy(input)
+      case Success(res: ScientificName) => res.copy(input)
       case Failure(err: ParseError) => {
         println(err.format(input))
-        SciName(input)
+        ScientificName(input)
       }
       case Failure(err) => {
         //println(err)
-        SciName(input)
+        ScientificName(input)
       }
-      case _ => SciName(input)
+      case _ => ScientificName(input)
     }
   }
 
@@ -89,7 +77,7 @@ object SciName {
     else true
   }
 
-  private def parse(input: String, parserInput: String): SciName = {
+  private def parse(input: String, parserInput: String): ScientificName = {
     val res =  parserClean.sciName.run(parserInput)
     processParsed(input, parserClean, res)
   }
@@ -125,7 +113,7 @@ object SciName {
   }
 
   @annotation.tailrec
-  def substitute(input: String, regexes: List[String]): String = {
+  private def substitute(input: String, regexes: List[String]): String = {
     if (regexes == List()) input
     else substitute(input.replaceFirst(regexes.head, ""), regexes.tail)
   }
@@ -146,4 +134,8 @@ object SciName {
     val res1 = input.replaceAll("""([^\sщ])([:&\(\)\[\],×])""", "$1щ$2")
     res1.replaceAll("""([:&\.\)\(\[\],×])([^\sщ])""", "$1щ$2")
   }
+}
+
+object ScientificNameParser extends ScientificNameParser {
+  val version = BuildInfo.version
 }

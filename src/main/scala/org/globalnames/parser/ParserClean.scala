@@ -7,9 +7,9 @@ import org.parboiled2.CharPredicate.{Digit, Printable, Alpha, LowerAlpha,
                                      UpperAlpha}
 
 class ParserClean extends SimpleParser {
-  val sciName: Rule1[SciName] = rule {
+  val sciName: Rule1[ScientificName] = rule {
     softSpace ~ sciName1 ~ (space ~ anyChars).? ~ EOI ~>
-    ((n: NamesGroup, g: Option[String]) => SciName(ast = Some(n)))
+    ((n: NamesGroup, g: Option[String]) => ScientificName(namesGroup = Some(n)))
   }
 
   val sciName1: Rule1[NamesGroup] = rule {

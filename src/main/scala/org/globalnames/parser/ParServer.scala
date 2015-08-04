@@ -1,8 +1,10 @@
-package org.globalnames.parser
+package org.globalnames
+package parser
 
+import java.io.{BufferedOutputStream, BufferedReader, InputStreamReader, PrintStream}
 import java.net.ServerSocket
-import java.io.{BufferedReader, PrintStream, BufferedOutputStream}
-import java.io.{InputStreamReader}
+
+import parser.{ScientificNameParser => SNP}
 
 case class ParServer(port: Int = 4334) {
   def run(): Unit = {
@@ -10,12 +12,12 @@ case class ParServer(port: Int = 4334) {
     var line: String = ""
     val server = new ServerSocket(port)
     val sock = server.accept()
-    val input = new BufferedReader(new InputStreamReader(sock.getInputStream()))
+    val input = new BufferedReader(new InputStreamReader(sock.getInputStream))
     val output = new PrintStream(new BufferedOutputStream(sock.getOutputStream))
     while (true) {
       line = input.readLine.trim
-      output.println(SciName.fromString(line).json)
-      output.flush
+      output.println(SNP.renderCompactJson(SNP.fromString(line)))
+      output.flush()
     }
   }
 }
