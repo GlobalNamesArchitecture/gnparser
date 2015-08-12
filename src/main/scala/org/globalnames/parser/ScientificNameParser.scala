@@ -25,7 +25,8 @@ abstract class ScientificNameParser {
       ("normalized" -> scientificName.normal) ~
       ("canonical" -> canonical) ~
       ("hybrid" -> scientificName.isHybrid) ~
-      ("virus" -> scientificName.isVirus))
+      ("virus" -> scientificName.isVirus) ~
+      ("details" -> scientificName.details))
   }
 
   def renderCompactJson(scientificName: ScientificName): String = compact(json(scientificName))

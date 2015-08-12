@@ -57,7 +57,7 @@ object Normalizer {
   }
 
   def format(as: Authorship): Option[String] = {
-    format(as.authors).map { x => if (as.basionym) "(" + x + ")" else x } |+|
+    format(as.authors).map { x => if (as.inparenthesis) "(" + x + ")" else x } |+|
       as.combination.flatMap(format).map(" " + _)
   }
 }
