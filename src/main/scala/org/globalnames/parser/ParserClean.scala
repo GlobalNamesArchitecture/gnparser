@@ -29,7 +29,7 @@ class ParserClean extends SimpleParser {
     species ~ (space ~ infraspeciesGroup).? ~>
     ((n: Name, s: Species, i: Option[InfraspeciesGroup]) =>
       NamesGroup(
-        name = Vector(n, Name(uninomial = n.uninomial, species = Some(s), infraspecies = i)),
+        name = Vector(n, Name(uninomial = Uninomial(""), species = Some(s), infraspecies = i)),
         hybrid = true,
         quality = 3))
   }
@@ -310,8 +310,8 @@ class ParserClean extends SimpleParser {
 
   val unknownAuthor: Rule1[Author] = rule {
     capture("?" |
-            (("auct." | "auct" | "anon." | "anon" | "ht." | "ht" | "hort." |
-              "hort") ~ &(spaceChars | EOI))) ~>
+            (("auct" | "anon" | "ht" | "hort") ~ '.'.? ~
+             &(spaceChars | EOI))) ~>
     ((auth: String) => Author(auth, anon = true, quality = 3))
   }
 
