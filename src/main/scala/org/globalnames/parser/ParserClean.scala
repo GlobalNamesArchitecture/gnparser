@@ -243,13 +243,13 @@ class ParserClean extends SimpleParser {
   val combinedAuthorship2: Rule1[Authorship] = rule {
     basionymAuthorship ~ space ~ authorship1 ~>
     ((bau: Authorship, cau: Authorship) =>
-        bau.copy(combination = Some(cau.authors), basionym = true, quality = 1))
+        bau.copy(combination = Some(cau.authors), basionymParsed = true, quality = 1))
   }
 
   val basionymYearMisformed: Rule1[Authorship] = rule {
     '(' ~ space ~ authorsGroup ~ space ~ ')' ~ (space ~ ',').? ~ space ~ year ~>
-    ((a: AuthorsGroup, y: Year) => Authorship(authors = a.copy(year = Some(y)),
-                                              quality = 3))
+    ((a: AuthorsGroup, y: Year) => Authorship(authors = a.copy(year = Some(y)), inparenthesis = true,
+                                              basionymParsed = true, quality = 3))
   }
 
   val basionymAuthorship: Rule1[Authorship] = rule {
@@ -258,12 +258,12 @@ class ParserClean extends SimpleParser {
 
   val basionymAuthorship1: Rule1[Authorship] = rule {
     '(' ~ space ~ authorship1 ~ space ~ ')' ~>
-    ((a: Authorship) => a.copy(quality = 2))
+    ((a: Authorship) => a.copy(basionymParsed = true, inparenthesis = true, quality = 2))
   }
 
   val basionymAuthorship2: Rule1[Authorship] = rule {
     '(' ~ space ~ '(' ~ space ~ authorship1 ~ space ~ ')' ~ space ~ ')' ~>
-    ((a: Authorship) => a.copy(quality = 3))
+    ((a: Authorship) => a.copy(basionymParsed = true, inparenthesis = true, quality = 3))
   }
 
   val authorship1: Rule1[Authorship] = rule {

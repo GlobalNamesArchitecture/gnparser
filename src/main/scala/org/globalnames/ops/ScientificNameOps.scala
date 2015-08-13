@@ -1,8 +1,9 @@
 package org.globalnames
 
 import org.apache.commons.id.uuid.UUID
-import org.globalnames.formatters.{Canonizer, Normalizer}
+import org.globalnames.formatters.{Canonizer, Details, Normalizer}
 import org.globalnames.parser.ScientificName
+import org.json4s.{JNothing, JValue}
 
 package object ops {
 
@@ -15,6 +16,7 @@ package object ops {
 
     def canonical: Option[String] = Canonizer.format(underlying)
     def normal: Option[String] = Normalizer.format(underlying)
+    def details: JValue = Details.format(underlying).removeField { case (_, v) => v == JNothing }
   }
 
 }

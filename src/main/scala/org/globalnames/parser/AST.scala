@@ -1,5 +1,8 @@
 package org.globalnames.parser
 
+import scalaz.{Name => _, _}
+import Scalaz._
+
 case class ScientificName(
   verbatim: String = "",
   namesGroup: Option[NamesGroup] = None,
@@ -21,7 +24,10 @@ case class Name(
   comparison: Option[String] = None,
   approximation: Option[String] = None,
   ignored: Option[String] = None,
-  quality: Int = 1)
+  quality: Int = 1) {
+
+  val genus: Boolean = species.isDefined || approximation.isDefined
+}
 
 case class Uninomial(
   str: String,
@@ -76,5 +82,9 @@ case class AuthorsGroup(
 case class Authorship(
   authors: AuthorsGroup,
   combination: Option[AuthorsGroup] = None,
-  basionym: Boolean = false,
-  quality: Int = 1)
+  inparenthesis: Boolean = false,
+  private val basionymParsed: Boolean = false,
+  quality: Int = 1) {
+
+  val basionym: Option[AuthorsGroup] = (basionymParsed || combination.isEmpty).option(authors)
+}
