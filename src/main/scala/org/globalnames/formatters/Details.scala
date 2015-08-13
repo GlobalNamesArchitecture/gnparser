@@ -18,7 +18,7 @@ object Details {
 
   def format(nm: Name): JValue = {
     val typ = if (nm.genus) "genus" else "uninomial"
-    val ignoredObj = nm.ignored.map { ign => JObject("ignored" -> JObject("string" -> JString(ign))) }
+    val ignoredObj = nm.ignored.map { ign => JObject("ignored" -> JObject("string" -> JString(Util.removeIntroducedSpaces(ign)))) }
                        .getOrElse(JObject())
 
     (typ -> format(nm.uninomial)) ~
@@ -46,14 +46,18 @@ object Details {
   def format(y: Year): JValue = JString(y.str)
 
   def format(as: Authorship): JObject = {
-    def formatAuthor(a: Author): String = if (a.filius) a.str + " f." else a.str
+    def formatAuthor(a: Author): String = a match {
+      case auth if (auth.filius) => auth.str + " f."
+      case auth if (auth.anon) => "unknown"
+      case _ => a.str
+    }
     def formatAuthorsTeam(at: AuthorsTeam): JObject =
       "author" -> at.authors.map(x => JString(formatAuthor(x))).toList
     def formatAuthorsGroup(ag: AuthorsGroup): JObject =
       formatAuthorsTeam(ag.authors) ~
         ("year" -> ag.year.map(format)) ~
         ("exAuthorTeam" -> ag.authorsEx.map(formatAuthorsTeam))
-    
+
     ("authorship" -> Normalizer.format(as)) ~
       ("basionymAuthorTeam" -> as.basionym.map(formatAuthorsGroup)) ~
       ("combinationAuthorTeam" -> as.combination.map(formatAuthorsGroup))
