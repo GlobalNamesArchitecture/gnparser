@@ -45,22 +45,15 @@ object Details {
 
   def format(y: Year): JValue = JString(y.str)
 
-  def formatAuthor(a: Author) = if (a.filius) a.str + " f." else a.str
-  def formatAuthorsTeam(at: AuthorsTeam): JObject = {
-    val authorsTeamStr = {
-      val auth +: auths = at.authors
-      if (auths.isEmpty) formatAuthor(auth)
-      else formatAuthor(auth) + auths.dropRight(1).map(formatAuthor).mkString(", ") + " & " + formatAuthor(auths.last)
-    }
-    ("authorTeam" -> authorsTeamStr) ~
-      ("author" -> JArray(at.authors.map(x => JString(formatAuthor(x))).toList))
-  }
-  def formatAuthorsGroup(ag: AuthorsGroup): JObject =
-    formatAuthorsTeam(ag.authors) ~
-      ("year" -> ag.year.map(format)) ~
-      ("exAuthorTeam" -> ag.authorsEx.map(formatAuthorsTeam))
-
   def format(as: Authorship): JObject = {
+    def formatAuthor(a: Author): String = if (a.filius) a.str + " f." else a.str
+    def formatAuthorsTeam(at: AuthorsTeam): JObject =
+      "author" -> at.authors.map(x => JString(formatAuthor(x))).toList
+    def formatAuthorsGroup(ag: AuthorsGroup): JObject =
+      formatAuthorsTeam(ag.authors) ~
+        ("year" -> ag.year.map(format)) ~
+        ("exAuthorTeam" -> ag.authorsEx.map(formatAuthorsTeam))
+    
     ("authorship" -> Normalizer.format(as)) ~
       ("basionymAuthorTeam" -> as.basionym.map(formatAuthorsGroup)) ~
       ("combinationAuthorTeam" -> as.combination.map(formatAuthorsGroup))
