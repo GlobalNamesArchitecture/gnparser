@@ -5,7 +5,6 @@ import org.json4s.JsonDSL._
 import org.json4s.{JArray, JNothing, JObject, JString, JValue}
 
 import scalaz.Scalaz._
-import scalaz.{Name => _, _}
 
 object Details {
   def format(scientificName: ScientificName): JValue = scientificName match {
@@ -39,11 +38,12 @@ object Details {
     ("string" -> Util.norm(sp.str)) ~ sp.authorship.map(format).getOrElse(JObject())
 
   def format(is: Infraspecies): JValue =
-    ("string" -> JString(Util.norm(is.str))) ~ ("rank" -> is.rank.getOrElse("n/a")) ~ is.authorship.map(format).getOrElse(JObject())
+    ("string" -> Util.norm(is.str)) ~ ("rank" -> is.rank.getOrElse("n/a")) ~
+      is.authorship.map(format).getOrElse(JObject())
 
-  def format(isg: InfraspeciesGroup): JValue = JArray(isg.group.map(format).toList)
+  def format(isg: InfraspeciesGroup): JValue = isg.group.map(format).toList
 
-  def format(y: Year): JValue = JString(y.str)
+  def format(y: Year): JValue = y.str
 
   def format(as: Authorship): JObject = {
     def formatAuthor(a: Author): String = if (a.filius) a.str + " f." else a.str
