@@ -310,8 +310,8 @@ class ParserClean extends SimpleParser {
 
   val unknownAuthor: Rule1[Author] = rule {
     capture("?" |
-            (("auct." | "auct" | "anon." | "anon" | "ht." | "ht" | "hort." |
-              "hort") ~ &(spaceChars | EOI))) ~>
+            (("auct" | "anon" | "ht" | "hort") ~ '.'.? ~
+             &(spaceChars | EOI))) ~>
     ((auth: String) => Author(auth, anon = true, quality = 3))
   }
 
