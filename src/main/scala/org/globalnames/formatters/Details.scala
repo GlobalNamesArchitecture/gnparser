@@ -2,7 +2,7 @@ package org.globalnames.formatters
 
 import org.globalnames.parser._
 import org.json4s.JsonDSL._
-import org.json4s.{JArray, JNothing, JObject, JString, JValue}
+import org.json4s.{JNothing, JObject, JString, JValue}
 
 import scalaz.Scalaz._
 
@@ -12,8 +12,7 @@ object Details {
     case ScientificName(_, Some(ng), _) => format(ng)
   }
 
-  def format(namesGroup: NamesGroup): JValue =
-    JArray(namesGroup.name.map(format).toList)
+  def format(namesGroup: NamesGroup): JValue = namesGroup.name.map(format).toList
 
   def format(nm: Name): JValue = {
     val typ = if (nm.genus) "genus" else "uninomial"
