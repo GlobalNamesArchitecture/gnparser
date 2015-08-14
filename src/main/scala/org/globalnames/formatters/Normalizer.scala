@@ -11,8 +11,11 @@ object Normalizer {
   }
 
   def format(namesGroup: NamesGroup): Option[String] = namesGroup match {
-    case NamesGroup(Seq(name), _, _) => format(name)
-    case NamesGroup(names, _, _) => names.map(format).toVector.sequence.map { _.mkString(" x ") }
+    case NamesGroup(Seq(name), _, _) => {
+      val hybrid = if(namesGroup.hybrid) Some("× ") else None
+      hybrid |+| format(name)
+    }
+    case NamesGroup(names, _, _) => names.map(format).toVector.sequence.map { _.mkString(" × ") }
   }
 
   def format(nm: Name): Option[String] = {
