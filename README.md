@@ -1,8 +1,8 @@
-[![Stories in Ready](https://badge.waffle.io/GlobalNamesArchitecture/gnparser.png?label=ready&title=Ready)](https://waffle.io/GlobalNamesArchitecture/gnparser)
 Global Names Parser
 ===================
 
 [![Continuous Integration Status][ci_svg]][ci_link]
+[![Stories in Ready][waffle_svg]][waffle]
 
 Port of Biodiversity gem (a scientific names parser written in ruby)
 
@@ -91,3 +91,5 @@ Released under [MIT license][license]
 
 [ci_svg]: https://secure.travis-ci.org/GlobalNamesArchitecture/gnparser.svg
 [ci_link]: http://travis-ci.org/GlobalNamesArchitecture/gnparser
+[waffle_svg]: https://badge.waffle.io/GlobalNamesArchitecture/gnparser.svg?label=ready&title=Issues
+[waffle]: https://waffle.io/GlobalNamesArchitecture/gnparser
