@@ -17,7 +17,7 @@ object Details {
 
   def format(nm: Name): JValue = {
     val typ = if (nm.genus) "genus" else "uninomial"
-    val ignoredObj = nm.ignored.map { ign => JObject("ignored" -> JObject("string" -> JString(Util.removeIntroducedSpaces(ign)))) }
+    val ignoredObj = nm.ignored.map { ign => JObject("ignored" -> JObject("string" -> JString(ign))) }
                        .getOrElse(JObject())
 
     (typ -> format(nm.uninomial)) ~

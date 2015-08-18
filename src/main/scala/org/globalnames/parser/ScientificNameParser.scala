@@ -86,8 +86,7 @@ abstract class ScientificNameParser {
   private def preprocess(input: String): String = {
     val unescaped = StringEscapeUtils.unescapeHtml(input)
     val unjunk = removeJunk(unescaped)
-    val normHybrids = normalizeHybridChar(unjunk)
-    parserSpaces(normHybrids)
+    normalizeHybridChar(unjunk)
   }
 
   private def removeJunk(input: String): String = {
