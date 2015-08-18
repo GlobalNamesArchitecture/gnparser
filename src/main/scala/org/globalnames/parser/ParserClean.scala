@@ -87,7 +87,7 @@ class ParserClean extends SimpleParser {
   }
 
   val species: Rule1[Species] = rule {
-    word ~ (space ~ authorship).? ~>
+    word ~ (space ~ authorship).? ~ &(spaceChars | EOI) ~>
     ((s: String, a: Option[Authorship]) =>
       Species(s, a))
   }
@@ -324,9 +324,8 @@ class ParserClean extends SimpleParser {
   }
 
   val authorWord2: Rule1[String] = rule {
-    capture("жd'".? ~ authCharUpper ~ zeroOrMore(authCharUpper | authCharLower)
-      ~ '.'.?) ~>
-      ((w: String) => Util.normAuthWord(w))
+    capture("d'".? ~ authCharUpper ~ zeroOrMore(authCharUpper | authCharLower) ~ '.'.?) ~>
+      ((w: String) => { Util.normAuthWord(w) })
   }
 
   val authCharLower = CharPredicate(LowerAlpha ++
@@ -339,10 +338,9 @@ class ParserClean extends SimpleParser {
   }
 
   val authorPre: Rule1[String] = rule {
-    capture("жab" | "жaf" | "жbis" | "жda" | "жder" | "жdes" |
-            "жden" | "жdella" | "жdela" | "жde" | "жdi" | "жdu" |
-            "жla" | "жter" | "жvan" | "жvon" | "жd'") ~>
-    ((a: String) => a.substring(1))
+    capture("ab" | "af" | "bis" | "da" | "der" | "des" |
+            "den" | "della" | "dela" | "de" | "di" | "du" |
+            "la" | "ter" | "van" | "von" | "d'") ~ &(spaceChars | EOI)
   }
 
   val year: Rule1[Year] = rule {

@@ -10,7 +10,7 @@ object Util {
   def normAuthWord(input: String): String = {
     if (input.matches("""[\p{Lu}]{3,}"""))
       input.split("-").map(_.toLowerCase.capitalize).mkString("-")
-    else input.replaceFirst("ж", "")
+    else input
   }
 
   def norm(input: String): String = {
