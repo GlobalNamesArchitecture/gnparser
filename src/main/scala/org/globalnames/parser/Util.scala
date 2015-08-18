@@ -4,7 +4,7 @@ import collection.mutable.{Buffer}
 
 object Util {
   def normAuthWord(input: String): String = {
-    if (input.matches("""[\p{Lu}]{3,}"""))
+    if (input.matches("""[\p{Lu}]{3,}[\p{Lu}-]*"""))
       input.split("-").map(_.toLowerCase.capitalize).mkString("-")
     else input
   }

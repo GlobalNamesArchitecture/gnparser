@@ -342,6 +342,10 @@ Coeloglossum viride (L.) Hartman x Dactylorhiza majalis (Rchb. f.) P.F. Hunt & S
 #
 ####
 
+# authoship in upper case<
+Lecanora strobilinoides GIRALT & GÓMEZ-BOLEA|{"scientificName":{"id":"f2bfaa25-c25f-5a31-90c6-a19bd4dc23f4","parsed":true,"parser_version":"test_version","verbatim":"Lecanora strobilinoides GIRALT & GÓMEZ-BOLEA","normalized":"Lecanora strobilinoides Giralt & Gómez-Bolea","canonical":"Lecanora strobilinoides","hybrid":false,"virus":false,"details":[{"genus":{"string":"Lecanora"},"species":{"string":"strobilinoides","authorship":"Giralt & Gómez-Bolea","basionymAuthorTeam":{"author":["Giralt","Gómez-Bolea"]}}}]}}
+#>
+
 # names with "-" <
 Abryna regis-petri Paiva, 1860|{"scientificName":{"id":"27ad601d-bb92-515b-9c45-1faa55cdf7f3","parsed":true,"parser_version":"test_version","verbatim":"Abryna regis-petri Paiva, 1860","normalized":"Abryna regis-petri Paiva 1860","canonical":"Abryna regis-petri","hybrid":false,"virus":false,"details":[{"genus":{"string":"Abryna"},"species":{"string":"regis-petri","authorship":"Paiva 1860","basionymAuthorTeam":{"author":["Paiva"],"year":"1860"}}}]}}
 #Abryna- regis|{"scientificName":{"id":"9ff9c1fa-068e-5296-8c39-66e1c58f0660","parsed":false,"parser_version":"test_version","parser_run":-1,"verbatim":"Abryna- regis","normalized":null,"canonical":null,"hybrid":false,"virus":false}}
