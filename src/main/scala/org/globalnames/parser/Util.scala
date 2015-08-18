@@ -3,14 +3,10 @@ package org.globalnames.parser
 import collection.mutable.{Buffer}
 
 object Util {
-  def removeIntroducedSpaces(input: String): String = {
-    input.replaceAllLiterally("щ", "")
-  }
-
   def normAuthWord(input: String): String = {
     if (input.matches("""[\p{Lu}]{3,}"""))
       input.split("-").map(_.toLowerCase.capitalize).mkString("-")
-    else input.replaceFirst("ж", "")
+    else input
   }
 
   def norm(input: String): String = {
