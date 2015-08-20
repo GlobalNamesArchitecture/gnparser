@@ -28,4 +28,7 @@ resolvers ++= Seq(
 
 scalacOptions in Test ++= Seq("-Yrangepos")
 
-initialCommands in console := """import org.globalnames.parser._"""
+initialCommands in console :=
+  """import org.globalnames.parser.{ScientificNameParser => SNP, _}
+    |import scala.util.{Failure, Success, Try}
+    |import org.parboiled2._""".stripMargin
