@@ -6,6 +6,7 @@ import org.json4s.JValue
 import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods._
 import org.parboiled2._
+import shapeless._
 
 import scala.util.matching.Regex
 import scala.util.{Failure, Success, Try}
@@ -14,6 +15,13 @@ abstract class ScientificNameParser {
   private val parserClean = new ParserClean()
 
   val version: String
+
+  private final val virusPatterns =
+    """\sICTV\s*$""".r :: """[A-Z]?[a-z]+virus\b""".r ::
+    """(?ix)\b(virus|viruses|particle|particles|
+               phage|phages|viroid|viroids|virophage|
+               prion|prions|NPV)\b""".r ::
+    """\b[A-Za-z]*(satellite[s]?|NPV)\b""".r :: HNil
 
   def json(scientificName: ScientificName): JValue = {
     val canonical = scientificName.canonical
@@ -32,7 +40,7 @@ abstract class ScientificNameParser {
   def renderCompactJson(scientificName: ScientificName): String = compact(json(scientificName))
 
   def fromString(input: String): ScientificName = {
-    val isVirus = detectVirus(input)
+    val isVirus = checkVirus(input)
     if (isVirus || noParse(input)) ScientificName(input, isVirus = isVirus)
     else {
       val parserInput = preprocess(input)
@@ -40,17 +48,13 @@ abstract class ScientificNameParser {
     }
   }
 
-  private def detectVirus(input: String): Boolean = {
-    val vir1 = """\sICTV\s*$""".r
-    val vir2 = """(?ix)\b(virus|viruses|particle|particles|
-                          phage|phages|viroid|viroids|virophage|
-                          prion|prions|NPV)\b""".r
-    val vir3 = """[A-Z]?[a-z]+virus\b""".r
-    val vir4 = """\b[A-Za-z]*(satellite[s]?|NPV)\b""".r
-    !(List(vir1, vir2, vir3, vir4).foldLeft(true){ (b: Boolean, r: Regex) =>
-      (r.findFirstIn(input) == None) && b })
+  private def checkVirus(input: String): Boolean = {
+    object PatternMatch extends Poly2 {
+      implicit def default =
+        at[Boolean, Regex]{ _ && _.findFirstIn(input).isEmpty }
+    }
+    !virusPatterns.foldLeft(true)(PatternMatch)
   }
-
 
   def processParsed(input: String, parser: Parser,
                     result: Try[ScientificName]): ScientificName = {
