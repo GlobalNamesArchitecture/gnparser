@@ -124,7 +124,7 @@ class ParserClean extends SimpleParser {
 
   val rankForma: Rule1[String] = rule {
     ("forma"  | "fma" | "form" | "fo" | "f") ~ (&(spaceCharsEOI) | '.') ~
-      push ("f.")
+      push ("form")
   }
 
   val rankSsp: Rule1[String] = rule {
