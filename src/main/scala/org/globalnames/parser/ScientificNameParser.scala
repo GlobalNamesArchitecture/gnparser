@@ -23,6 +23,35 @@ abstract class ScientificNameParser {
                prion|prions|NPV)\b""".r ::
     """\b[A-Za-z]*(satellite[s]?|NPV)\b""".r :: HNil
 
+  private final val junkPatterns = {
+    val notes = """(?ix)\s+(species\s+group|
+                   species\s+complex|group|author)\b.*$"""
+    val taxonConcepts1 = """(?i)\s+(sensu\.|sensu|auct\.|auct)\b.*$"""
+    val taxonConcepts2 = """(?x)\s+
+                       (\(?s\.\s?s\.|
+                       \(?s\.\s?l\.|
+                       \(?s\.\s?str\.|
+                       \(?s\.\s?lat\.|
+                      sec\.|sec|near)\b.*$"""
+    val taxonConcepts3 = """(?i)(,\s*|\s+)(pro parte|p\.\s?p\.)\s*$"""
+    val nomenConcepts  = """(?i)(,\s*|\s+)(\(?nomen|\(?nom\.|\(?comb\.).*$"""
+    val lastWordJunk  = """(?ix)(,\s*|\s+)
+                    (spp\.|spp|var\.|
+                     var|von|van|ined\.|
+                     ined|sensu|new|non|nec|
+                     nudum|cf\.|cf|sp\.|sp|
+                     ssp\.|ssp|subsp|subgen|hybrid|hort\.|hort)\??\s*$"""
+    notes :: taxonConcepts1 :: taxonConcepts2 :: taxonConcepts3 ::
+      nomenConcepts :: lastWordJunk :: HNil
+  }
+
+  private final val noParsePatterns = {
+    val incertaeSedis1 = """(?i).*incertae\s+sedis.*""".r
+    val incertaeSedis2 = """(?i)inc\.\s*sed\.""".r
+    val rna = """[^A-Z]RNA[^A-Z]*""".r
+    incertaeSedis1 :: incertaeSedis2 :: rna :: HNil
+  }
+
   def json(scientificName: ScientificName): JValue = {
     val canonical = scientificName.canonical
 
@@ -73,13 +102,11 @@ abstract class ScientificNameParser {
   }
 
   private def noParse(input: String): Boolean = {
-    val incertaeSedis1 = """(?i).*incertae\s+sedis.*""".r
-    val incertaeSedis2 = """(?i)inc\.\s*sed\.""".r
-    val rna = """[^A-Z]RNA[^A-Z]*""".r
-    if (List(incertaeSedis1.findFirstIn(input),
-      incertaeSedis2.findFirstIn(input),
-      rna.findFirstIn(input)) == List(None, None, None)) false
-    else true
+    object NoneMatches extends Poly2 {
+      implicit def default =
+        at[Boolean, Regex]{ _ && _.findFirstIn(input).isEmpty }
+    }
+    !noParsePatterns.foldLeft(true)(NoneMatches)
   }
 
   private def parse(input: String, parserInput: String): ScientificName = {
@@ -94,31 +121,10 @@ abstract class ScientificNameParser {
   }
 
   private def removeJunk(input: String): String = {
-    val notes = """(?ix)\s+(species\s+group|
-                   species\s+complex|group|author)\b.*$"""
-    val taxonConcepts1 = """(?i)\s+(sensu\.|sensu|auct\.|auct)\b.*$"""
-    val taxonConcepts2 = """(?x)\s+
-                       (\(?s\.\s?s\.|
-                       \(?s\.\s?l\.|
-                       \(?s\.\s?str\.|
-                       \(?s\.\s?lat\.|
-                      sec\.|sec|near)\b.*$"""
-    val taxonConcepts3 = """(?i)(,\s*|\s+)(pro parte|p\.\s?p\.)\s*$"""
-    val nomenConcepts  = """(?i)(,\s*|\s+)(\(?nomen|\(?nom\.|\(?comb\.).*$"""
-    val lastWordJunk  = """(?ix)(,\s*|\s+)
-                    (spp\.|spp|var\.|
-                     var|von|van|ined\.|
-                     ined|sensu|new|non|nec|
-                     nudum|cf\.|cf|sp\.|sp|
-                     ssp\.|ssp|subsp|subgen|hybrid|hort\.|hort)\??\s*$"""
-    substitute(input, List(notes, taxonConcepts1,
-      taxonConcepts2, taxonConcepts3, nomenConcepts, lastWordJunk))
-  }
-
-  @annotation.tailrec
-  private def substitute(input: String, regexes: List[String]): String = {
-    if (regexes == List()) input
-    else substitute(input.replaceFirst(regexes.head, ""), regexes.tail)
+    object Subst extends Poly2 {
+      implicit def default = at[String, String]{ _.replaceFirst(_, "") }
+    }
+    junkPatterns.foldLeft(input)(Subst)
   }
 
   private def normalizeHybridChar(input: String): String = {
