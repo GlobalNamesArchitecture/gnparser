@@ -1,6 +1,5 @@
 package org.globalnames.parser
 
-import org.apache.commons.lang.StringEscapeUtils
 import org.globalnames.ops.ScientificNameOps
 import org.json4s.JValue
 import org.json4s.JsonDSL._
@@ -43,7 +42,8 @@ abstract class ScientificNameParser {
     val isVirus = checkVirus(input)
     if (isVirus || noParse(input)) ScientificName(input, isVirus = isVirus)
     else {
-      val parserInput = preprocess(input)
+      val UNESCAPE_HTML4 = new TrackingPositionsUnescapeHtml4Translator
+      val parserInput = preprocess(input, UNESCAPE_HTML4)
       parse(input, parserInput)
     }
   }
@@ -87,8 +87,10 @@ abstract class ScientificNameParser {
     processParsed(input, parserClean, res)
   }
 
-  private def preprocess(input: String): String = {
-    val unescaped = StringEscapeUtils.unescapeHtml(input)
+  private def preprocess(input: String,
+    translator: TrackingPositionsUnescapeHtml4Translator): String = {
+
+    val unescaped = translator.translate(input)
     val unjunk = removeJunk(unescaped)
     normalizeHybridChar(unjunk)
   }
