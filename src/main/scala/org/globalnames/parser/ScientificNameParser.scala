@@ -45,6 +45,13 @@ abstract class ScientificNameParser {
       nomenConcepts :: lastWordJunk :: HNil
   }
 
+  private final val noParsePatterns = {
+    val incertaeSedis1 = """(?i).*incertae\s+sedis.*""".r
+    val incertaeSedis2 = """(?i)inc\.\s*sed\.""".r
+    val rna = """[^A-Z]RNA[^A-Z]*""".r
+    incertaeSedis1 :: incertaeSedis2 :: rna :: HNil
+  }
+
   def json(scientificName: ScientificName): JValue = {
     val canonical = scientificName.canonical
 
@@ -95,13 +102,11 @@ abstract class ScientificNameParser {
   }
 
   private def noParse(input: String): Boolean = {
-    val incertaeSedis1 = """(?i).*incertae\s+sedis.*""".r
-    val incertaeSedis2 = """(?i)inc\.\s*sed\.""".r
-    val rna = """[^A-Z]RNA[^A-Z]*""".r
-    if (List(incertaeSedis1.findFirstIn(input),
-      incertaeSedis2.findFirstIn(input),
-      rna.findFirstIn(input)) == List(None, None, None)) false
-    else true
+    object NoneMatches extends Poly2 {
+      implicit def default =
+        at[Boolean, Regex]{ _ && _.findFirstIn(input).isEmpty }
+    }
+    !noParsePatterns.foldLeft(true)(NoneMatches)
   }
 
   private def parse(input: String, parserInput: String): ScientificName = {
