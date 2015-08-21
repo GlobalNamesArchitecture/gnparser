@@ -23,6 +23,28 @@ abstract class ScientificNameParser {
                prion|prions|NPV)\b""".r ::
     """\b[A-Za-z]*(satellite[s]?|NPV)\b""".r :: HNil
 
+  private final val junkPatterns = {
+    val notes = """(?ix)\s+(species\s+group|
+                   species\s+complex|group|author)\b.*$"""
+    val taxonConcepts1 = """(?i)\s+(sensu\.|sensu|auct\.|auct)\b.*$"""
+    val taxonConcepts2 = """(?x)\s+
+                       (\(?s\.\s?s\.|
+                       \(?s\.\s?l\.|
+                       \(?s\.\s?str\.|
+                       \(?s\.\s?lat\.|
+                      sec\.|sec|near)\b.*$"""
+    val taxonConcepts3 = """(?i)(,\s*|\s+)(pro parte|p\.\s?p\.)\s*$"""
+    val nomenConcepts  = """(?i)(,\s*|\s+)(\(?nomen|\(?nom\.|\(?comb\.).*$"""
+    val lastWordJunk  = """(?ix)(,\s*|\s+)
+                    (spp\.|spp|var\.|
+                     var|von|van|ined\.|
+                     ined|sensu|new|non|nec|
+                     nudum|cf\.|cf|sp\.|sp|
+                     ssp\.|ssp|subsp|subgen|hybrid|hort\.|hort)\??\s*$"""
+    notes :: taxonConcepts1 :: taxonConcepts2 :: taxonConcepts3 ::
+      nomenConcepts :: lastWordJunk :: HNil
+  }
+
   def json(scientificName: ScientificName): JValue = {
     val canonical = scientificName.canonical
 
@@ -94,31 +116,10 @@ abstract class ScientificNameParser {
   }
 
   private def removeJunk(input: String): String = {
-    val notes = """(?ix)\s+(species\s+group|
-                   species\s+complex|group|author)\b.*$"""
-    val taxonConcepts1 = """(?i)\s+(sensu\.|sensu|auct\.|auct)\b.*$"""
-    val taxonConcepts2 = """(?x)\s+
-                       (\(?s\.\s?s\.|
-                       \(?s\.\s?l\.|
-                       \(?s\.\s?str\.|
-                       \(?s\.\s?lat\.|
-                      sec\.|sec|near)\b.*$"""
-    val taxonConcepts3 = """(?i)(,\s*|\s+)(pro parte|p\.\s?p\.)\s*$"""
-    val nomenConcepts  = """(?i)(,\s*|\s+)(\(?nomen|\(?nom\.|\(?comb\.).*$"""
-    val lastWordJunk  = """(?ix)(,\s*|\s+)
-                    (spp\.|spp|var\.|
-                     var|von|van|ined\.|
-                     ined|sensu|new|non|nec|
-                     nudum|cf\.|cf|sp\.|sp|
-                     ssp\.|ssp|subsp|subgen|hybrid|hort\.|hort)\??\s*$"""
-    substitute(input, List(notes, taxonConcepts1,
-      taxonConcepts2, taxonConcepts3, nomenConcepts, lastWordJunk))
-  }
-
-  @annotation.tailrec
-  private def substitute(input: String, regexes: List[String]): String = {
-    if (regexes == List()) input
-    else substitute(input.replaceFirst(regexes.head, ""), regexes.tail)
+    object Subst extends Poly2 {
+      implicit def default = at[String, String]{ _.replaceFirst(_, "") }
+    }
+    junkPatterns.foldLeft(input)(Subst)
   }
 
   private def normalizeHybridChar(input: String): String = {
