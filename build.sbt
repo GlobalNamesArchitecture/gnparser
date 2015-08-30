@@ -15,7 +15,7 @@ libraryDependencies ++= Seq(
   "org.json4s" %% "json4s-jackson" % "3.2.11",
   "org.littleshoot" % "littleshoot-commons-id" % "1.0.3",
   "org.apache.commons" % "commons-lang3" % "3.4",
-  "org.globalnames" %% "parboiled" % "2.2.0-cca58cba7126660158f6aa45f1cb4e1bdb8ddfe6-SNAPSHOT",
+  "org.globalnames" %% "parboiled" % "2.2.0-2015.08.13-800a44ec7ee3565eab727996bcc7ccdcf69bced6-SNAPSHOT",
   "com.chuusai"     %% "shapeless" % "2.2.3",
   "org.scalaz" %% "scalaz-core" % "7.1.3",
   "org.specs2" %% "specs2-core" % "3.6.3" % "test"

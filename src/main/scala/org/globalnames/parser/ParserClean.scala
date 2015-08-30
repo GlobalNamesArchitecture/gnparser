@@ -1,10 +1,9 @@
 package org.globalnames.parser
 
-import org.parboiled2.SimpleParser
+import org.parboiled2.CharPredicate.{Alpha, Digit, LowerAlpha, UpperAlpha}
+import org.parboiled2.{CapturePos, CharPredicate, SimpleParser}
+
 import scala.collection.immutable.Seq
-import org.parboiled2.CharPredicate
-import org.parboiled2.CharPredicate.{Digit, Printable, Alpha, LowerAlpha,
-                                     UpperAlpha}
 
 class ParserClean extends SimpleParser {
   val sciName: Rule1[ScientificName] = rule {
@@ -372,13 +371,17 @@ class ParserClean extends SimpleParser {
   }
 
   val yearWithChar: Rule1[Year] = rule {
-    yearNumber ~ Alpha ~> ((y: Year) => y.copy(quality = 2))
+    yearNumber ~ capturePos(Alpha) ~> { (y: Year, pos: CapturePos) =>
+      y.copy(alpha = Some(pos), quality = 2)
+    }
   }
 
   val yearNumber: Rule1[Year] = rule {
-    capture(CharPredicate("12") ~ CharPredicate("0789") ~ Digit
-      ~ (Digit|'?') ~ '?'.?) ~>
-      ((y: String) => if (y.last == '?') Year(y, 3) else Year(y))
+    capturePos(CharPredicate("12") ~ CharPredicate("0789") ~ Digit ~
+      (Digit|'?') ~ '?'.?) ~> { (yPos: CapturePos) =>
+        if (state.input.charAt(yPos.end - 1) == '?') Year(yPos, quality = 3)
+        else Year(yPos)
+    }
   }
 
   val softSpace = rule {
