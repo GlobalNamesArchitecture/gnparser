@@ -28,7 +28,7 @@ abstract class ScientificNameParser {
     render("scientificName" -> ("id" -> scientificName.id) ~
       ("parsed" -> canonical.isDefined) ~
       ("parser_version" -> version) ~
-      ("verbatim" -> scientificName.verbatim) ~
+      ("verbatim" -> scientificName.input.verbatim) ~
       ("normalized" -> scientificName.normal) ~
       ("canonical" -> canonical) ~
       ("hybrid" -> scientificName.isHybrid) ~
@@ -40,11 +40,12 @@ abstract class ScientificNameParser {
 
   def fromString(input: String): ScientificName = {
     val isVirus = checkVirus(input)
-    if (isVirus || noParse(input)) ScientificName(input, isVirus = isVirus)
-    else {
-      val UNESCAPE_HTML4 = new TrackingPositionsUnescapeHtml4Translator
-      val parserInput = preprocess(input, UNESCAPE_HTML4)
-      parse(input, parserInput)
+    val inputString = InputString(input)
+    if (isVirus || noParse(input)) {
+      ScientificName(inputString, isVirus = isVirus)
+    } else {
+      val res =  parserClean.sciName.run(inputString.unescaped)
+      processParsed(inputString, parserClean, res)
     }
   }
 
@@ -56,18 +57,16 @@ abstract class ScientificNameParser {
     !virusPatterns.foldLeft(true)(PatternMatch)
   }
 
-  def processParsed(input: String, parser: Parser,
+  def processParsed(input: InputString, parser: Parser,
                     result: Try[ScientificName]): ScientificName = {
     result match {
       case Success(res: ScientificName) => res.copy(input)
-      case Failure(err: ParseError) => {
-        println(err.format(input))
+      case Failure(err: ParseError) =>
+        println(err.format(input.verbatim))
         ScientificName(input)
-      }
-      case Failure(err) => {
+      case Failure(err) =>
         //println(err)
         ScientificName(input)
-      }
       case _ => ScientificName(input)
     }
   }
@@ -81,21 +80,18 @@ abstract class ScientificNameParser {
       rna.findFirstIn(input)) == List(None, None, None)) false
     else true
   }
+}
 
-  private def parse(input: String, parserInput: String): ScientificName = {
-    val res =  parserClean.sciName.run(parserInput)
-    processParsed(input, parserClean, res)
+object ScientificNameParser extends ScientificNameParser {
+  val version = BuildInfo.version
+
+  @annotation.tailrec
+  private def substitute(input: String, regexes: List[String]): String = {
+    if (regexes == List()) input
+    else substitute(input.replaceFirst(regexes.head, ""), regexes.tail)
   }
 
-  private def preprocess(input: String,
-    translator: TrackingPositionsUnescapeHtml4Translator): String = {
-
-    val unescaped = translator.translate(input)
-    val unjunk = removeJunk(unescaped)
-    normalizeHybridChar(unjunk)
-  }
-
-  private def removeJunk(input: String): String = {
+  def removeJunk(input: String): String = {
     val notes = """(?ix)\s+(species\s+group|
                    species\s+complex|group|author)\b.*$"""
     val taxonConcepts1 = """(?i)\s+(sensu\.|sensu|auct\.|auct)\b.*$"""
@@ -117,18 +113,8 @@ abstract class ScientificNameParser {
       taxonConcepts2, taxonConcepts3, nomenConcepts, lastWordJunk))
   }
 
-  @annotation.tailrec
-  private def substitute(input: String, regexes: List[String]): String = {
-    if (regexes == List()) input
-    else substitute(input.replaceFirst(regexes.head, ""), regexes.tail)
-  }
-
-  private def normalizeHybridChar(input: String): String = {
+  def normalizeHybridChar(input: String): String = {
     input.replaceAll(" [Xx] ", " × ")
       .replaceAll("""^\s*[Xx]\s*([\p{Lu}])""", "× $1")
   }
-}
-
-object ScientificNameParser extends ScientificNameParser {
-  val version = BuildInfo.version
 }

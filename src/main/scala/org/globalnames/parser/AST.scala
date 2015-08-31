@@ -2,9 +2,23 @@ package org.globalnames.parser
 
 import scalaz.{Name => _, _}
 import Scalaz._
+import org.parboiled2.CapturePos
+
+trait AstNode {
+  val pos: CapturePos
+}
+
+case class InputString(verbatim: String = "") {
+  private lazy val UNESCAPE_HTML4 = new TrackingPositionsUnescapeHtml4Translator
+  lazy val unescaped: String = {
+    val unescaped = UNESCAPE_HTML4.translate(verbatim)
+    val unjunk = ScientificNameParser.removeJunk(unescaped)
+    ScientificNameParser.normalizeHybridChar(unjunk)
+  }
+}
 
 case class ScientificName(
-  verbatim: String = "",
+  input: InputString = InputString(),
   namesGroup: Option[NamesGroup] = None,
   isVirus: Boolean = false) {
 
@@ -60,8 +74,9 @@ case class InfraspeciesGroup(
   quality: Int = 1)
 
 case class Year(
-  str: String,
-  quality:  Int = 1)
+  pos: CapturePos,
+  alpha: Option[CapturePos] = None,
+  quality: Int = 1) extends AstNode
 
 case class Author(
   str: String,
