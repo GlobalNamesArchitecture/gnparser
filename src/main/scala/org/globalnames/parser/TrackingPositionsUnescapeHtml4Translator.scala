@@ -11,7 +11,7 @@ class TrackingPositionsUnescapeHtml4Translator extends AggregateTranslator {
     List(EntityArrays.BASIC_UNESCAPE,
          EntityArrays.ISO8859_1_UNESCAPE,
          EntityArrays.HTML40_EXTENDED_UNESCAPE()).map { strss =>
-    new LookupTranslator(strss.map { _.map { _.asInstanceOf[CharSequence] }}: _*)
+    new LookupTranslator(strss.asInstanceOf[Array[Array[CharSequence]]]: _*)
   } :+ new NumericEntityUnescaper
 
   private final val positions = ArrayBuffer.fill(1)(0)
