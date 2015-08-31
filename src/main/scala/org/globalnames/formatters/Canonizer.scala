@@ -28,25 +28,6 @@ object Canonizer {
     def formatInfraspeciesGroup(isg: InfraspeciesGroup): Option[String] =
       isg.group.map(formatInfraspecies).toVector.sequence.map { _.mkString(" ") }
 
-    def formatYear(y: Year): Option[String] =
-      scientificName.input.verbatim.substring(y.pos.start, y.pos.end - 1).some
-
-    def formatAuthor(a: Author): Option[String] = a.str.some |+| a.filius.option(" f.")
-
-    def formatAuthorsTeam(at: AuthorsTeam): Option[String] = at match {
-      case AuthorsTeam(Vector(auth), _) => formatAuthor(auth)
-      case AuthorsTeam(auths, _) =>
-        auths.dropRight(1).map(formatAuthor).toVector.sequence.map { _.mkString(", ") } |+|
-        formatAuthor(auths.last).map(" & " + _)
-    }
-
-    def formatAuthorsGroup(ag: AuthorsGroup): Option[String] = formatAuthorsTeam(ag.authors)
-
-    def formatAuthorship(as: Authorship): Option[String] = {
-      formatAuthorsGroup(as.authors).map { x => if (as.inparenthesis) "(" + x + ")" else x } |+|
-        as.combination.flatMap(formatAuthorsGroup).map(" " + _)
-    }
-
     scientificName.namesGroup.flatMap(formatNamesGroup)
   }
 }
