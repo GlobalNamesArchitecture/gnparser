@@ -4,7 +4,8 @@ import org.globalnames.parser._
 import scalaz.{Name => _, _}
 import Scalaz._
 
-trait Normalizer { parsedResult: ScientificNameParser.Result =>
+trait Normalizer { parsedResult: ScientificNameParser.Result
+                     with Canonizer =>
 
   def normalized: Option[String] = {
     def normalizedNamesGroup(namesGroup: NamesGroup): Option[String] = {
@@ -23,19 +24,24 @@ trait Normalizer { parsedResult: ScientificNameParser.Result =>
         nm.infraspecies.flatMap(normalizedInfraspeciesGroup).map(" " + _)
     }
 
-    def normalizedUninomial(u: Uninomial): Option[String] =
-      Util.norm(u.str).some |+| u.authorship.flatMap(normalizedAuthorship).map(" " + _)
+    def normalizedUninomial(u: Uninomial): Option[String] = {
+      canonizedUninomial(u).some |+|
+        u.authorship.flatMap(normalizedAuthorship).map(" " + _)
+    }
 
-    def normalizedUninomialWord(uw: UninomialWord): Option[String] = uw.str.some
+    def normalizedUninomialWord(uw: UninomialWord): Option[String] =
+      parsedResult.input.substring(uw.pos).some
 
     def normalizedSubGenus(sg: SubGenus): Option[String] = normalizedUninomialWord(sg.subgenus)
 
-    def normalizedSpecies(sp: Species): Option[String] =
-      Util.norm(sp.str).some |+| sp.authorship.flatMap(normalizedAuthorship).map(" " + _)
+    def normalizedSpecies(sp: Species): Option[String] = {
+      Util.norm(input.substring(sp.pos)).some |+|
+        sp.authorship.flatMap(normalizedAuthorship).map(" " + _)
+    }
 
     def normalizedInfraspecies(is: Infraspecies): Option[String] = {
       is.rank.map(_ + " ") |+|
-        Util.norm(is.str).some |+|
+        Util.norm(input.substring(is.pos)).some |+|
         is.authorship.flatMap(normalizedAuthorship).map(" " + _)
     }
 
@@ -46,7 +52,7 @@ trait Normalizer { parsedResult: ScientificNameParser.Result =>
   }
 
   def normalizedYear(y: Year): Option[String] =
-    parsedResult.input.unescaped.substring(y.pos.start, y.pos.end).some
+    parsedResult.input.substring(y.pos).some
 
   def normalizedAuthorship(as: Authorship): Option[String] = {
     def normalizedAuthor(a: Author): Option[String] = a.str.some |+| a.filius.option(" f.")

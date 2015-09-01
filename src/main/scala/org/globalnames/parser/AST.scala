@@ -35,30 +35,30 @@ case class Name(
 }
 
 case class Uninomial(
-  str: String,
+  pos: CapturePos,
   authorship: Option[Authorship] = None,
   rank: Option[String] = None,
   parent: Option[Uninomial] = None,
-  quality: Int = 1)
+  quality: Int = 1) extends AstNode
 
 case class UninomialWord(
-  str: String,
-  quality: Int = 1)
+  pos: CapturePos,
+  quality: Int = 1) extends AstNode
 
 case class SubGenus(
   subgenus: UninomialWord,
   quality: Int = 1)
 
 case class Species(
-  str: String,
+  pos: CapturePos,
   authorship: Option[Authorship] = None,
-  quality: Int = 1)
+  quality: Int = 1) extends AstNode
 
 case class Infraspecies(
-  str: String,
+  pos: CapturePos,
   rank: Option[String] = None,
   authorship: Option[Authorship],
-  quality: Int = 1)
+  quality: Int = 1) extends AstNode
 
 case class InfraspeciesGroup(
   group: Seq[Infraspecies],

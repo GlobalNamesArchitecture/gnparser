@@ -98,6 +98,9 @@ object ScientificNameParser extends ScientificNameParser {
       val uuid = UUID.nameUUIDFromString(verbatim, gn, "SHA1").toString
       s"${uuid.substring(0, 14)}5${uuid.substring(15, uuid.length)}"
     }
+
+    def substring(pos: CapturePos): String =
+      unescaped.substring(pos.start, pos.end)
   }
 
   @annotation.tailrec

@@ -6,7 +6,8 @@ import org.json4s.{JObject, JString, JValue}
 
 import scalaz.Scalaz._
 
-trait Details { parsedResult: ScientificNameParser.Result with Normalizer =>
+trait Details { parsedResult: ScientificNameParser.Result
+                  with Normalizer with Canonizer =>
 
   def detailed: JValue = {
     def detailedNamesGroup(namesGroup: NamesGroup): JValue = namesGroup.name.map(detailedName)
@@ -26,19 +27,21 @@ trait Details { parsedResult: ScientificNameParser.Result with Normalizer =>
     }
 
     def detailedUninomial(u: Uninomial): JValue =
-      ("string" -> Util.norm(u.str)) ~
+      ("string" -> canonizedUninomial(u)) ~
         u.authorship.map(detailedAuthorship).getOrElse(JObject())
 
     def detailedSubGenus(sg: SubGenus): JValue =
-      "string" -> Util.norm(sg.subgenus.str)
+      "string" -> Util.norm(input.substring(sg.subgenus.pos))
 
     def detailedSpecies(sp: Species): JValue =
-      ("string" -> Util.norm(sp.str)) ~
+      ("string" -> Util.norm(input.substring(sp.pos))) ~
         sp.authorship.map(detailedAuthorship).getOrElse(JObject())
 
-    def detailedInfraspecies(is: Infraspecies): JValue =
-      ("string" -> Util.norm(is.str)) ~ ("rank" -> is.rank.getOrElse("n/a")) ~
+    def detailedInfraspecies(is: Infraspecies): JValue = {
+      ("string" -> Util.norm(input.substring(is.pos))) ~
+        ("rank" -> is.rank.getOrElse("n/a")) ~
         is.authorship.map(detailedAuthorship).getOrElse(JObject())
+    }
 
     def detailedInfraspeciesGroup(isg: InfraspeciesGroup): JValue =
       isg.group.map(detailedInfraspecies)
