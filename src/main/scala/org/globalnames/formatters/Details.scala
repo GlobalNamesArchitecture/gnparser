@@ -28,6 +28,7 @@ trait Details { parsedResult: ScientificNameParser.Result
 
     def detailedUninomial(u: Uninomial): JValue =
       ("string" -> canonizedUninomial(u)) ~
+        detailedPos(u.pos.start, u.pos.end) ~
         u.authorship.map(detailedAuthorship).getOrElse(JObject())
 
     def detailedSubGenus(sg: SubGenus): JValue =
