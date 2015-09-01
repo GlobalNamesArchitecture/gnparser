@@ -28,7 +28,8 @@ class ParserClean extends SimpleParser {
     species ~ (space ~ infraspeciesGroup).? ~>
     ((n: Name, s: Species, i: Option[InfraspeciesGroup]) =>
       NamesGroup(
-        name = Vector(n, Name(uninomial = Uninomial(""), species = Some(s), infraspecies = i)),
+        name = Vector(n, Name(uninomial = Uninomial(CapturePos(0, 1)),
+                              species = Some(s), infraspecies = i)),
         hybrid = true,
         quality = 3))
   }
@@ -59,7 +60,7 @@ class ParserClean extends SimpleParser {
   val name2: Rule1[Name] = rule {
     uninomialWord ~ space ~ comparison ~ (space ~ species).? ~>
     ((u: UninomialWord, s: Option[Species]) =>
-      Name(uninomial = Uninomial(u.str, quality = u.quality),
+      Name(uninomial = Uninomial(u.pos, quality = u.quality),
            species = s, comparison = Some("cf."), quality = 3))
   }
 
@@ -68,7 +69,7 @@ class ParserClean extends SimpleParser {
     species ~ (space ~ infraspeciesGroup).? ~>
     ((uninomialWord: UninomialWord, maybeSubGenus: Option[SubGenus], species: Species,
       maybeInfraspeciesGroup: Option[InfraspeciesGroup]) =>
-      Name(uninomial = Uninomial(str = uninomialWord.str, quality = uninomialWord.quality),
+      Name(Uninomial(uninomialWord.pos, quality = uninomialWord.quality),
            maybeSubGenus,
            species = Some(species),
            infraspecies = maybeInfraspeciesGroup))
@@ -81,14 +82,12 @@ class ParserClean extends SimpleParser {
 
   val infraspecies: Rule1[Infraspecies] = rule {
     (rank ~ softSpace).? ~ word ~ (space ~ authorship).? ~>
-    ((r: Option[String], w: String, a: Option[Authorship]) =>
-        Infraspecies(w, r, a))
+    ((r: Option[String], w: CapturePos, a: Option[Authorship]) => Infraspecies(w, r, a))
   }
 
   val species: Rule1[Species] = rule {
     word ~ (softSpace ~ authorship).? ~ &(spaceCharsEOI ++ "(,:") ~>
-    ((s: String, a: Option[Authorship]) =>
-      Species(s, a))
+      ((s: CapturePos, a: Option[Authorship]) => Species(s, a))
   }
 
   val comparison = rule {
@@ -131,10 +130,12 @@ class ParserClean extends SimpleParser {
   }
 
   val subGenus: Rule1[SubGenus] = rule {
-    '(' ~ softSpace ~ uninomialWord ~ softSpace ~ ')' ~>
-    ((u: UninomialWord) =>
-      if (u.str.size < 2 || u.str.last == '.') SubGenus(u, 3)
-      else SubGenus(u))
+    '(' ~ softSpace ~ uninomialWord ~ softSpace ~ ')' ~> { (u: UninomialWord) =>
+      val size = u.pos.end - u.pos.start
+      val lastCh = state.input.charAt(u.pos.end - 1)
+      if (size < 2 || lastCh == '.') SubGenus(u, 3)
+      else SubGenus(u)
+    }
   }
 
   val uninomialCombo: Rule1[Uninomial] = rule {
@@ -145,8 +146,7 @@ class ParserClean extends SimpleParser {
 
   val uninomial: Rule1[Uninomial] = rule {
     uninomialWord ~ (space ~ authorship).? ~>
-    ((u: UninomialWord, a: Option[Authorship]) =>
-        Uninomial(u.str, authorship = a))
+    ((u: UninomialWord, authorship: Option[Authorship]) => Uninomial(u.pos, authorship))
   }
 
   val uninomialWord: Rule1[UninomialWord] = rule {
@@ -154,8 +154,8 @@ class ParserClean extends SimpleParser {
   }
 
   val abbrGenus: Rule1[UninomialWord] = rule {
-    capture(upperChar ~ lowerChar.? ~ lowerChar.? ~ '.') ~>
-    ((w: String) => UninomialWord(w, 3))
+    capturePos(upperChar ~ lowerChar.? ~ lowerChar.? ~ '.') ~>
+      ((wp: CapturePos) => UninomialWord(wp, 3))
   }
 
   val capWord: Rule1[UninomialWord] = rule {
@@ -163,32 +163,38 @@ class ParserClean extends SimpleParser {
   }
 
   val capWord1: Rule1[UninomialWord] = rule {
-    capture(upperChar ~ lowerChar ~ oneOrMore(lowerChar) ~ '?'.?) ~>
-    ((w: String) => if (w.last == '?') UninomialWord(w, 3)
-                    else UninomialWord(w))
+    capturePos(upperChar ~ lowerChar ~ oneOrMore(lowerChar) ~ '?'.?) ~> {
+      (p: CapturePos) =>
+        if (state.input.charAt(p.end - 1) == '?') UninomialWord(p, 3)
+        else UninomialWord(p)
+    }
   }
 
   val capWord2: Rule1[UninomialWord] = rule {
-    capWord1 ~ '-' ~ word1 ~ &(spaceCharsEOI ++ '(') ~>
-    ((w1: UninomialWord, w2: String) => w1.copy(s"${w1.str}-$w2"))
+    capWord1 ~ '-' ~ word1 ~ &(spaceCharsEOI ++ '(') ~> {
+      (uw: UninomialWord, wPos: CapturePos) =>
+        uw.copy(pos = CapturePos(uw.pos.start, wPos.end))
+    }
   }
 
   val twoLetterGenera: Rule1[UninomialWord] = rule {
-    capture("Ca" | "Ea" | "Ge" | "Ia" | "Io" | "Io" | "Ix" | "Lo" | "Oa" |
+    capturePos("Ca" | "Ea" | "Ge" | "Ia" | "Io" | "Io" | "Ix" | "Lo" | "Oa" |
       "Ra" | "Ty" | "Ua" | "Aa" | "Ja" | "Zu" | "La" | "Qu" | "As" | "Ba") ~>
-    ((w: String) => UninomialWord(w))
+    ((p: CapturePos) => UninomialWord(p))
   }
 
-  val word: Rule1[String] = rule {
+  val word: Rule1[CapturePos] = rule {
     (word2 | word1) ~ &(spaceCharsEOI ++ '(')
   }
 
-  val word1: Rule1[String] = rule {
-    capture(lowerChar ~ oneOrMore(lowerChar))
+  val word1: Rule1[CapturePos] = rule {
+    capturePos(lowerChar ~ oneOrMore(lowerChar))
   }
 
-  val word2: Rule1[String] = rule {
-    word1 ~ '-' ~ word1 ~> ((s1: String, s2: String) => s"$s1-$s2")
+  val word2: Rule1[CapturePos] = rule {
+    word1 ~ '-' ~ word1 ~> {
+      (p1: CapturePos, p2: CapturePos) => CapturePos(p1.start, p2.end)
+    }
   }
 
   val hybridChar = '×'
@@ -214,7 +220,7 @@ class ParserClean extends SimpleParser {
 
   val approxName2: Rule1[Name] = rule {
     (uninomial ~ space ~ word ~ space ~ approximation ~ space ~ anyChars) ~>
-      ((u: Uninomial, s: String, appr: String, ign: String) =>
+      ((u: Uninomial, s: CapturePos, appr: String, ign: String) =>
         Name(uninomial = u,
              species = Some(Species(s)),
              approximation = Some(appr),

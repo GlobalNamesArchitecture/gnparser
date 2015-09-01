@@ -15,20 +15,23 @@ trait Canonizer { parsedResult: ScientificNameParser.Result =>
     }
 
     def canonizedName(nm: Name): Option[String] = {
-      canonizedUninomial(nm.uninomial) |+|
+      canonizedUninomial(nm.uninomial).some |+|
         nm.species.flatMap(canonizedSpecies).map(" " + _) |+|
         nm.infraspecies.flatMap(canonizedInfraspeciesGroup).map(" " + _)
     }
 
-    def canonizedUninomial(u: Uninomial): Option[String] = Util.norm(u.str).some
+    def canonizedSpecies(sp: Species): Option[String] =
+      Util.norm(input.substring(sp.pos)).some
 
-    def canonizedSpecies(sp: Species): Option[String] = Util.norm(sp.str).some
-
-    def canonizedInfraspecies(is: Infraspecies): Option[String] = Util.norm(is.str).some
+    def canonizedInfraspecies(is: Infraspecies): Option[String] =
+      Util.norm(input.substring(is.pos)).some
 
     def canonizedInfraspeciesGroup(isg: InfraspeciesGroup): Option[String] =
       isg.group.map(canonizedInfraspecies).toVector.sequence.map { _.mkString(" ") }
 
     parsedResult.scientificName.namesGroup.flatMap(canonizedNamesGroup)
   }
+
+  def canonizedUninomial(uninomial: Uninomial): String =
+    Util.norm(parsedResult.input.substring(uninomial.pos))
 }
