@@ -28,7 +28,6 @@ trait Details { parsedResult: ScientificNameParser.Result
 
     def detailedUninomial(u: Uninomial): JValue =
       ("string" -> canonizedUninomial(u)) ~
-        detailedPos(u.pos.start, u.pos.end) ~
         u.authorship.map(detailedAuthorship).getOrElse(JObject())
 
     def detailedSubGenus(sg: SubGenus): JValue =
@@ -48,18 +47,10 @@ trait Details { parsedResult: ScientificNameParser.Result
       isg.group.map(detailedInfraspecies)
 
     def detailedYear(y: Year): JValue =
-      ("str" -> parsedResult.normalizedYear(y)) ~
-        detailedPos(y.pos.start, y.alpha.getOrElse(y.pos).end)
-
-    def detailedPos(start: Int, end: Int): JObject =
-      "pos" -> (("start" -> start) ~ ("end" -> end))
+      "str" -> parsedResult.normalizedYear(y).some
 
     def detailedAuthorship(as: Authorship): JObject = {
-      def detailedAuthor(a: Author): String = {
-        if (a.filius) a.str + " f."
-        else if (a.anon) "unknown"
-        else a.str
-      }
+      def detailedAuthor(a: Author): String = normalizedAuthor(a)
       def detailedAuthorsTeam(at: AuthorsTeam): JObject =
         "author" -> at.authors.map(detailedAuthor)
       def detailedAuthorsGroup(ag: AuthorsGroup): JObject =

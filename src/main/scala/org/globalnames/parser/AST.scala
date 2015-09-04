@@ -3,7 +3,6 @@ package org.globalnames.parser
 import org.parboiled2.CapturePos
 
 import scalaz.Scalaz._
-import scalaz.{Name => _}
 
 trait AstNode {
   val pos: CapturePos
@@ -47,7 +46,10 @@ case class UninomialWord(
 
 case class SubGenus(
   subgenus: UninomialWord,
-  quality: Int = 1)
+  quality: Int = 1) extends AstNode {
+
+  val pos = subgenus.pos
+}
 
 case class Species(
   pos: CapturePos,
@@ -70,10 +72,13 @@ case class Year(
   quality: Int = 1) extends AstNode
 
 case class Author(
-  str: String,
+  words: Seq[CapturePos],
   anon: Boolean = false,
   filius: Boolean = false,
-  quality: Int = 1)
+  quality: Int = 1) extends AstNode {
+
+  val pos = CapturePos(words.head.start, words.last.end)
+}
 
 case class AuthorsTeam(
   authors: Seq[Author],

@@ -20,7 +20,7 @@ class ScientificNameParserSpec extends Specification {
     val parsed = scientificNameParser.fromString(inputStr)
 
     val json = parse(expectedJsonStr)
-                .removeField { case (n, v) => n == "positions" || n == "surrogate" }
+                .removeField { case (n, v) => n == "surrogate" }
     val jsonParsed = scientificNameParser.json(parsed).removeField { case (_, v) => v == JNothing }
     val jsonDiff = {
       val Diff(changed, added, deleted) = jsonParsed.diff(json)

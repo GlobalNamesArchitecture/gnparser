@@ -51,23 +51,33 @@ trait Normalizer { parsedResult: ScientificNameParser.Result
     parsedResult.scientificName.namesGroup.flatMap { normalizedNamesGroup }
   }
 
-  def normalizedYear(y: Year): Option[String] =
-    parsedResult.input.substring(y.pos).some
+  def normalizedYear(y: Year): String =
+    parsedResult.input.substring(y.pos)
+
+  def normalizedAuthor(a: Author): String = {
+    if (a.anon) "unknown"
+    else {
+      val authorStr =
+        a.words
+          .map(p => Util.normAuthWord(parsedResult.input.substring(p)))
+          .mkString(" ")
+      authorStr + (if (a.filius) " f." else "")
+    }
+  }
 
   def normalizedAuthorship(as: Authorship): Option[String] = {
-    def normalizedAuthor(a: Author): Option[String] = a.str.some |+| a.filius.option(" f.")
-
     def normalizedAuthorsTeam(at: AuthorsTeam): Option[String] = at match {
-      case AuthorsTeam(Vector(auth), _) => normalizedAuthor(auth)
+      case AuthorsTeam(Vector(auth), _) => normalizedAuthor(auth).some
       case AuthorsTeam(auths, _) =>
-        auths.dropRight(1).map(normalizedAuthor).toVector.sequence.map { _.mkString(", ") } |+|
-        normalizedAuthor(auths.last).map(" & " + _)
+        val authsStr = auths.dropRight(1).map(normalizedAuthor).mkString(", ") +
+                       " & " + normalizedAuthor(auths.last)
+        authsStr.some
     }
 
     def normalizedAuthorsGroup(ag: AuthorsGroup): Option[String] = {
       normalizedAuthorsTeam(ag.authors) |+|
         ag.authorsEx.flatMap(normalizedAuthorsTeam).map(" ex " + _) |+|
-        ag.year.flatMap(normalizedYear).map(" " + _)
+        ag.year.map(normalizedYear).map(" " + _)
     }
 
     normalizedAuthorsGroup(as.authors).map { x => if (as.inparenthesis) "(" + x + ")" else x } |+|

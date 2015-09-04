@@ -1,8 +1,8 @@
 package org.globalnames.parser
 
 import org.apache.commons.id.uuid.UUID
-import org.globalnames.formatters.{Canonizer, Details, Normalizer}
-import org.json4s.JValue
+import org.globalnames.formatters.{Canonizer, Details, Normalizer, Positions}
+import org.json4s.JsonAST.{JField, JObject, JValue}
 import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods._
 import org.parboiled2._
@@ -25,6 +25,10 @@ abstract class ScientificNameParser {
 
   def json(parserResult: Result): JValue = {
     val canonical = parserResult.canonized
+    val positionsJson =
+      JObject(parserResult.positioned.map { position =>
+        JField(position.nodeName, Seq(position.start, position.end))
+      }: _*)
 
     render("scientificName" -> ("id" -> parserResult.input.id) ~
       ("parsed" -> canonical.isDefined) ~
@@ -34,7 +38,8 @@ abstract class ScientificNameParser {
       ("canonical" -> canonical) ~
       ("hybrid" -> parserResult.scientificName.isHybrid) ~
       ("virus" -> parserResult.scientificName.isVirus) ~
-      ("details" -> parserResult.detailed))
+      ("details" -> parserResult.detailed) ~
+      ("positions" -> positionsJson))
   }
 
   def renderCompactJson(parserResult: Result): String =
@@ -83,7 +88,7 @@ object ScientificNameParser extends ScientificNameParser {
   private[ScientificNameParser] final val parserClean = new ParserClean()
 
   case class Result(input: Input, scientificName: ScientificName)
-    extends Details with Normalizer with Canonizer
+    extends Details with Positions with Normalizer with Canonizer
 
   case class Input(verbatim: String) {
     private lazy val UNESCAPE_HTML4 = new TrackingPositionsUnescapeHtml4Translator
