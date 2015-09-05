@@ -130,11 +130,12 @@ class ParserClean extends SimpleParser {
   }
 
   val subGenus: Rule1[SubGenus] = rule {
-    '(' ~ softSpace ~ uninomialWord ~ softSpace ~ ')' ~> { (u: UninomialWord) =>
-      val size = u.pos.end - u.pos.start
-      val lastCh = state.input.charAt(u.pos.end - 1)
-      if (size < 2 || lastCh == '.') SubGenus(u, 3)
-      else SubGenus(u)
+    '(' ~ softSpace ~ uninomialWord ~ softSpace ~ ')' ~> {
+      (u: UninomialWord) =>
+        val size = u.pos.end - u.pos.start
+        val lastCh = state.input.charAt(u.pos.end - 1)
+        if (size < 2 || lastCh == '.') SubGenus(u, 3)
+        else SubGenus(u)
     }
   }
 
@@ -310,26 +311,25 @@ class ParserClean extends SimpleParser {
 
   val author2: Rule1[Author] = rule {
     oneOrMore(authorWord).separatedBy(softSpace) ~>
-      ((au: Seq[String]) => Author(au.mkString(" ")))
+      ((au: Seq[CapturePos]) => Author(au))
   }
 
   val unknownAuthor: Rule1[Author] = rule {
-    capture("?" |
+    capturePos("?" |
             (("auct" | "anon" | "ht" | "hort") ~ (&(spaceCharsEOI) | '.'))) ~>
-    ((auth: String) => Author(auth, anon = true, quality = 3))
+    ((auth: CapturePos) => Author(Seq(auth), anon = true, quality = 3))
   }
 
-  val authorWord: Rule1[String] = rule {
+  val authorWord: Rule1[CapturePos] = rule {
     authorWord1 | authorWord2 | authorPre
   }
 
-  val authorWord1: Rule1[String] = rule {
-    capture("arg." | "et al.{?}" | "et al." | "et al")
+  val authorWord1: Rule1[CapturePos] = rule {
+    capturePos("arg." | "et al.{?}" | "et al." | "et al")
   }
 
-  val authorWord2: Rule1[String] = rule {
-    capture("d'".? ~ authCharUpper ~ zeroOrMore(authCharUpper | authCharLower) ~ '.'.?) ~>
-      ((w: String) => { Util.normAuthWord(w) })
+  val authorWord2: Rule1[CapturePos] = rule {
+    capturePos("d'".? ~ authCharUpper ~ zeroOrMore(authCharUpper | authCharLower) ~ '.'.?)
   }
 
   val authCharLower = CharPredicate(LowerAlpha ++
@@ -341,8 +341,8 @@ class ParserClean extends SimpleParser {
     "f." | "filius"
   }
 
-  val authorPre: Rule1[String] = rule {
-    capture("ab" | "af" | "bis" | "da" | "der" | "des" |
+  val authorPre: Rule1[CapturePos] = rule {
+    capturePos("ab" | "af" | "bis" | "da" | "der" | "des" |
             "den" | "della" | "dela" | "de" | "di" | "du" |
             "la" | "ter" | "van" | "von" | "d'") ~ &(spaceCharsEOI)
   }
