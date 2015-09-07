@@ -15,13 +15,19 @@ trait Positions { parsedResult: ScientificNameParser.Result =>
     def positionedName(nm: Name): Vector[Position] = {
       val typ = if (nm.genus) "genus" else "uninomial"
       val positions =
-        Vector(positionedComparison(nm.comparison)).flatten ++
+        Vector(positionedApproximation(nm.approximation),
+               positionedSubGenus(nm.subgenus),
+               positionedComparison(nm.comparison)).flatten ++
           positionedUninomial(typ, nm.uninomial) ++
-          nm.subgenus.map(positionedSubGenus).toVector ++
           ~nm.species.map(positionedSpecies) ++
           ~nm.infraspecies.map(positionedInfraspeciesGroup)
       positions.sortBy(_.start)
     }
+
+    def positionedApproximation(approximation: Option[Approximation]): Option[Position] =
+      approximation.map { app =>
+        Position("annotation_identification", app.pos.start, app.pos.end)
+      }
 
     def positionedComparison(comparison: Option[Comparison]): Option[Position] =
       comparison.map { c =>
@@ -36,8 +42,10 @@ trait Positions { parsedResult: ScientificNameParser.Result =>
              positionedRank(u.rank)).flatten ++
         ~u.authorship.map(positionedAuthorship)
 
-    def positionedSubGenus(sg: SubGenus): Position =
-      Position("infragenus", sg.pos.start, sg.pos.end)
+    def positionedSubGenus(subGenus: Option[SubGenus]): Option[Position] =
+      subGenus.map { sg =>
+        Position("infragenus", sg.pos.start, sg.pos.end)
+      }
 
     def positionedSpecies(sp: Species): Vector[Position] =
       Position("species", sp.pos.start, sp.pos.end) +:

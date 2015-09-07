@@ -94,9 +94,10 @@ class ParserClean extends SimpleParser {
     capturePos("cf" ~ '.'.?) ~> ((p: CapturePos) => Comparison(p))
   }
 
-  val approximation: Rule1[String] = rule {
-    capture("sp.nr." | "sp. nr." | "sp.aff." | "sp. aff." | "monst." | "?" |
-      (("spp" | "nr" | "sp" | "aff" | "species") ~ (&(spaceCharsEOI) | '.')))
+  val approximation: Rule1[Approximation] = rule {
+    capturePos("sp.nr." | "sp. nr." | "sp.aff." | "sp. aff." | "monst." | "?" |
+      (("spp" | "nr" | "sp" | "aff" | "species") ~ (&(spaceCharsEOI) | '.'))) ~>
+      ((p: CapturePos) => Approximation(p))
   }
 
   val rankUninomial: Rule1[Rank] = rule {
@@ -218,14 +219,14 @@ class ParserClean extends SimpleParser {
 
   val approxName1: Rule1[Name] = rule {
     uninomial ~ space ~ approximation ~ softSpace ~ anyChars ~>
-      ((u: Uninomial, appr: String, ign: String) =>
+      ((u: Uninomial, appr: Approximation, ign: String) =>
           Name(uninomial = u, approximation = Some(appr),
                ignored = Some(ign), quality = 3))
   }
 
   val approxName2: Rule1[Name] = rule {
     (uninomial ~ space ~ word ~ space ~ approximation ~ space ~ anyChars) ~>
-      ((u: Uninomial, s: CapturePos, appr: String, ign: String) =>
+      ((u: Uninomial, s: CapturePos, appr: Approximation, ign: String) =>
         Name(uninomial = u,
              species = Some(Species(s)),
              approximation = Some(appr),

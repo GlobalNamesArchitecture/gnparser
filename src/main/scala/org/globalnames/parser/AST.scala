@@ -26,7 +26,7 @@ case class Name(
   species: Option[Species] = None,
   infraspecies: Option[InfraspeciesGroup] = None,
   comparison: Option[Comparison] = None,
-  approximation: Option[String] = None,
+  approximation: Option[Approximation] = None,
   ignored: Option[String] = None,
   quality: Int = 1) {
 
@@ -34,6 +34,8 @@ case class Name(
 }
 
 case class Comparison(pos: CapturePos) extends AstNode
+
+case class Approximation(pos: CapturePos) extends AstNode
 
 case class Rank(
   pos: CapturePos,

@@ -23,7 +23,8 @@ trait Details { parsedResult: ScientificNameParser.Result
         ("infragenus" -> nm.subgenus.map(detailedSubGenus)) ~
         ("infraspecies" -> nm.infraspecies.map(detailedInfraspeciesGroup)) ~
         ("annotation_identification" ->
-          (nm.approximation |+| nm.comparison.map { c => input.substring(c.pos) })) ~
+          (nm.approximation.map { appr => input.substring(appr.pos) } |+|
+            nm.comparison.map { c => input.substring(c.pos) })) ~
         ignoredObj
     }
 
