@@ -19,7 +19,7 @@ trait Normalizer { parsedResult: ScientificNameParser.Result
     def normalizedName(nm: Name): Option[String] = {
       normalizedUninomial(nm.uninomial) |+|
         nm.subgenus.flatMap(normalizedSubGenus).map(" (" + _ + ")") |+|
-        nm.comparison.map(" " + _) |+|
+        nm.comparison.map { c => " " + input.substring(c.pos) } |+|
         nm.species.flatMap(normalizedSpecies).map(" " + _) |+|
         nm.infraspecies.flatMap(normalizedInfraspeciesGroup).map(" " + _)
     }

@@ -15,12 +15,18 @@ trait Positions { parsedResult: ScientificNameParser.Result =>
     def positionedName(nm: Name): Vector[Position] = {
       val typ = if (nm.genus) "genus" else "uninomial"
       val positions =
-        positionedUninomial(typ, nm.uninomial) ++
+        Vector(positionedComparison(nm.comparison)).flatten ++
+          positionedUninomial(typ, nm.uninomial) ++
           nm.subgenus.map(positionedSubGenus).toVector ++
           ~nm.species.map(positionedSpecies) ++
           ~nm.infraspecies.map(positionedInfraspeciesGroup)
       positions.sortBy(_.start)
     }
+
+    def positionedComparison(comparison: Option[Comparison]): Option[Position] =
+      comparison.map { c =>
+        Position("annotation_identification", c.pos.start, c.pos.end)
+      }
 
     def positionedRank(rank: Option[Rank]): Option[Position] =
       rank.map { r => Position("infraspecific_type", r.pos.start, r.pos.end) }

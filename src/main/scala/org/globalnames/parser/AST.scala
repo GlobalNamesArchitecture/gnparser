@@ -25,13 +25,15 @@ case class Name(
   subgenus: Option[SubGenus] = None,
   species: Option[Species] = None,
   infraspecies: Option[InfraspeciesGroup] = None,
-  comparison: Option[String] = None,
+  comparison: Option[Comparison] = None,
   approximation: Option[String] = None,
   ignored: Option[String] = None,
   quality: Int = 1) {
 
   val genus: Boolean = species.isDefined || approximation.isDefined
 }
+
+case class Comparison(pos: CapturePos) extends AstNode
 
 case class Rank(
   pos: CapturePos,

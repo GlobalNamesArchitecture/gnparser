@@ -59,9 +59,9 @@ class ParserClean extends SimpleParser {
 
   val name2: Rule1[Name] = rule {
     uninomialWord ~ space ~ comparison ~ (space ~ species).? ~>
-    ((u: UninomialWord, s: Option[Species]) =>
+    ((u: UninomialWord, c: Comparison, s: Option[Species]) =>
       Name(uninomial = Uninomial(u.pos, quality = u.quality),
-           species = s, comparison = Some("cf."), quality = 3))
+           species = s, comparison = Some(c), quality = 3))
   }
 
   val name3: Rule1[Name] = rule {
@@ -90,8 +90,8 @@ class ParserClean extends SimpleParser {
       ((s: CapturePos, a: Option[Authorship]) => Species(s, a))
   }
 
-  val comparison = rule {
-    "cf" ~ '.'.?
+  val comparison: Rule1[Comparison] = rule {
+    capturePos("cf" ~ '.'.?) ~> ((p: CapturePos) => Comparison(p))
   }
 
   val approximation: Rule1[String] = rule {
