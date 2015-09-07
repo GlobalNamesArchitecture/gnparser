@@ -10,18 +10,17 @@ trait Positions { parsedResult: ScientificNameParser.Result =>
 
   def positioned: Seq[Position] = {
     def positionedNamesGroup(namesGroup: NamesGroup): Vector[Position] =
-      namesGroup.name.flatMap(positionedName).toVector
+      namesGroup.name.flatMap(positionedName)
+                .toVector.sortBy(_.start)
 
     def positionedName(nm: Name): Vector[Position] = {
       val typ = if (nm.genus) "genus" else "uninomial"
-      val positions =
-        Vector(positionedApproximation(nm.approximation),
-               positionedSubGenus(nm.subgenus),
-               positionedComparison(nm.comparison)).flatten ++
-          positionedUninomial(typ, nm.uninomial) ++
-          ~nm.species.map(positionedSpecies) ++
-          ~nm.infraspecies.map(positionedInfraspeciesGroup)
-      positions.sortBy(_.start)
+      Vector(positionedApproximation(nm.approximation),
+             positionedSubGenus(nm.subgenus),
+             positionedComparison(nm.comparison)).flatten ++
+        positionedUninomial(typ, nm.uninomial) ++
+        ~nm.species.map(positionedSpecies) ++
+        ~nm.infraspecies.map(positionedInfraspeciesGroup)
     }
 
     def positionedApproximation(approximation: Option[Approximation]): Option[Position] =
