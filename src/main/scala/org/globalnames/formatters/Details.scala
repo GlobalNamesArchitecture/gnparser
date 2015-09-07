@@ -39,7 +39,7 @@ trait Details { parsedResult: ScientificNameParser.Result
 
     def detailedInfraspecies(is: Infraspecies): JValue = {
       ("string" -> Util.norm(input.substring(is.pos))) ~
-        ("rank" -> is.rank.getOrElse("n/a")) ~
+        ("rank" -> is.rank.map(_.typ).getOrElse("n/a")) ~
         is.authorship.map(detailedAuthorship).getOrElse(JObject())
     }
 

@@ -33,10 +33,14 @@ case class Name(
   val genus: Boolean = species.isDefined || approximation.isDefined
 }
 
+case class Rank(
+  pos: CapturePos,
+  typ: String) extends AstNode
+
 case class Uninomial(
   pos: CapturePos,
   authorship: Option[Authorship] = None,
-  rank: Option[String] = None,
+  rank: Option[Rank] = None,
   parent: Option[Uninomial] = None,
   quality: Int = 1) extends AstNode
 
@@ -58,7 +62,7 @@ case class Species(
 
 case class Infraspecies(
   pos: CapturePos,
-  rank: Option[String] = None,
+  rank: Option[Rank] = None,
   authorship: Option[Authorship],
   quality: Int = 1) extends AstNode
 

@@ -40,7 +40,7 @@ trait Normalizer { parsedResult: ScientificNameParser.Result
     }
 
     def normalizedInfraspecies(is: Infraspecies): Option[String] = {
-      is.rank.map(_ + " ") |+|
+      is.rank.map(_.typ + " ") |+|
         Util.norm(input.substring(is.pos)).some |+|
         is.authorship.flatMap(normalizedAuthorship).map(" " + _)
     }

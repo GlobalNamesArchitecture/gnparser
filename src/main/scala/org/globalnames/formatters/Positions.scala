@@ -22,8 +22,12 @@ trait Positions { parsedResult: ScientificNameParser.Result =>
       positions.sortBy(_.start)
     }
 
+    def positionedRank(rank: Option[Rank]): Option[Position] =
+      rank.map { r => Position("infraspecific_type", r.pos.start, r.pos.end) }
+
     def positionedUninomial(typ: String, u: Uninomial): Vector[Position] =
-      Position(typ, u.pos.start, u.pos.end) +:
+      Vector(Position(typ, u.pos.start, u.pos.end).some,
+             positionedRank(u.rank)).flatten ++
         ~u.authorship.map(positionedAuthorship)
 
     def positionedSubGenus(sg: SubGenus): Position =
@@ -34,7 +38,8 @@ trait Positions { parsedResult: ScientificNameParser.Result =>
         ~sp.authorship.map(positionedAuthorship)
 
     def positionedInfraspecies(is: Infraspecies): Vector[Position] =
-      Position("infraspecies", is.pos.start, is.pos.end) +:
+      Vector(Position("infraspecies", is.pos.start, is.pos.end).some,
+             positionedRank(is.rank)).flatten ++
         ~is.authorship.map(positionedAuthorship)
 
     def positionedInfraspeciesGroup(isg: InfraspeciesGroup): Vector[Position] =
