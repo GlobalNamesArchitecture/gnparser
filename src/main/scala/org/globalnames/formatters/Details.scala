@@ -22,7 +22,9 @@ trait Details { parsedResult: ScientificNameParser.Result
         ("species" -> nm.species.map(detailedSpecies)) ~
         ("infragenus" -> nm.subgenus.map(detailedSubGenus)) ~
         ("infraspecies" -> nm.infraspecies.map(detailedInfraspeciesGroup)) ~
-        ("annotation_identification" -> (nm.approximation |+| nm.comparison)) ~
+        ("annotation_identification" ->
+          (nm.approximation.map { appr => input.substring(appr.pos) } |+|
+            nm.comparison.map { c => input.substring(c.pos) })) ~
         ignoredObj
     }
 
@@ -39,7 +41,7 @@ trait Details { parsedResult: ScientificNameParser.Result
 
     def detailedInfraspecies(is: Infraspecies): JValue = {
       ("string" -> Util.norm(input.substring(is.pos))) ~
-        ("rank" -> is.rank.getOrElse("n/a")) ~
+        ("rank" -> is.rank.map(_.typ).getOrElse("n/a")) ~
         is.authorship.map(detailedAuthorship).getOrElse(JObject())
     }
 

@@ -10,31 +10,49 @@ trait Positions { parsedResult: ScientificNameParser.Result =>
 
   def positioned: Seq[Position] = {
     def positionedNamesGroup(namesGroup: NamesGroup): Vector[Position] =
-      namesGroup.name.flatMap(positionedName).toVector
+      namesGroup.name.flatMap(positionedName)
+                .toVector.sortBy(_.start)
 
     def positionedName(nm: Name): Vector[Position] = {
       val typ = if (nm.genus) "genus" else "uninomial"
-      val positions =
+      Vector(positionedApproximation(nm.approximation),
+             positionedSubGenus(nm.subgenus),
+             positionedComparison(nm.comparison)).flatten ++
         positionedUninomial(typ, nm.uninomial) ++
-          nm.subgenus.map(positionedSubGenus).toVector ++
-          ~nm.species.map(positionedSpecies) ++
-          ~nm.infraspecies.map(positionedInfraspeciesGroup)
-      positions.sortBy(_.start)
+        ~nm.species.map(positionedSpecies) ++
+        ~nm.infraspecies.map(positionedInfraspeciesGroup)
     }
 
+    def positionedApproximation(approximation: Option[Approximation]): Option[Position] =
+      approximation.map { app =>
+        Position("annotation_identification", app.pos.start, app.pos.end)
+      }
+
+    def positionedComparison(comparison: Option[Comparison]): Option[Position] =
+      comparison.map { c =>
+        Position("annotation_identification", c.pos.start, c.pos.end)
+      }
+
+    def positionedRank(rank: Option[Rank]): Option[Position] =
+      rank.map { r => Position("infraspecific_type", r.pos.start, r.pos.end) }
+
     def positionedUninomial(typ: String, u: Uninomial): Vector[Position] =
-      Position(typ, u.pos.start, u.pos.end) +:
+      Vector(Position(typ, u.pos.start, u.pos.end).some,
+             positionedRank(u.rank)).flatten ++
         ~u.authorship.map(positionedAuthorship)
 
-    def positionedSubGenus(sg: SubGenus): Position =
-      Position("infragenus", sg.pos.start, sg.pos.end)
+    def positionedSubGenus(subGenus: Option[SubGenus]): Option[Position] =
+      subGenus.map { sg =>
+        Position("infragenus", sg.pos.start, sg.pos.end)
+      }
 
     def positionedSpecies(sp: Species): Vector[Position] =
       Position("species", sp.pos.start, sp.pos.end) +:
         ~sp.authorship.map(positionedAuthorship)
 
     def positionedInfraspecies(is: Infraspecies): Vector[Position] =
-      Position("infraspecies", is.pos.start, is.pos.end) +:
+      Vector(Position("infraspecies", is.pos.start, is.pos.end).some,
+             positionedRank(is.rank)).flatten ++
         ~is.authorship.map(positionedAuthorship)
 
     def positionedInfraspeciesGroup(isg: InfraspeciesGroup): Vector[Position] =
@@ -45,7 +63,8 @@ trait Positions { parsedResult: ScientificNameParser.Result =>
 
     def positionedAuthorship(as: Authorship): Vector[Position] = {
       def positionedAuthor(a: Author): Vector[Position] =
-        a.words.map(p => Position("author_word", p.start, p.end)).toVector
+        a.words.map(p => Position("author_word", p.start, p.end)).toVector ++
+          a.filius.map { f => Position("author_word_filius", f.start, f.end) }.toVector
       def positionedAuthorsTeam(at: AuthorsTeam): Vector[Position] =
         at.authors.flatMap(positionedAuthor).toVector
       def positionedAuthorsGroup(ag: AuthorsGroup): Vector[Position] =

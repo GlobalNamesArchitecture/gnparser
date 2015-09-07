@@ -25,18 +25,26 @@ case class Name(
   subgenus: Option[SubGenus] = None,
   species: Option[Species] = None,
   infraspecies: Option[InfraspeciesGroup] = None,
-  comparison: Option[String] = None,
-  approximation: Option[String] = None,
+  comparison: Option[Comparison] = None,
+  approximation: Option[Approximation] = None,
   ignored: Option[String] = None,
   quality: Int = 1) {
 
   val genus: Boolean = species.isDefined || approximation.isDefined
 }
 
+case class Comparison(pos: CapturePos) extends AstNode
+
+case class Approximation(pos: CapturePos) extends AstNode
+
+case class Rank(
+  pos: CapturePos,
+  typ: String) extends AstNode
+
 case class Uninomial(
   pos: CapturePos,
   authorship: Option[Authorship] = None,
-  rank: Option[String] = None,
+  rank: Option[Rank] = None,
   parent: Option[Uninomial] = None,
   quality: Int = 1) extends AstNode
 
@@ -58,7 +66,7 @@ case class Species(
 
 case class Infraspecies(
   pos: CapturePos,
-  rank: Option[String] = None,
+  rank: Option[Rank] = None,
   authorship: Option[Authorship],
   quality: Int = 1) extends AstNode
 
@@ -74,10 +82,13 @@ case class Year(
 case class Author(
   words: Seq[CapturePos],
   anon: Boolean = false,
-  filius: Boolean = false,
+  filius: Option[CapturePos] = None,
   quality: Int = 1) extends AstNode {
 
-  val pos = CapturePos(words.head.start, words.last.end)
+  val pos = {
+    val end = filius.getOrElse(words.last).end
+    CapturePos(words.head.start, end)
+  }
 }
 
 case class AuthorsTeam(

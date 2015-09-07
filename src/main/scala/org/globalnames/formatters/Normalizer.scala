@@ -19,7 +19,7 @@ trait Normalizer { parsedResult: ScientificNameParser.Result
     def normalizedName(nm: Name): Option[String] = {
       normalizedUninomial(nm.uninomial) |+|
         nm.subgenus.flatMap(normalizedSubGenus).map(" (" + _ + ")") |+|
-        nm.comparison.map(" " + _) |+|
+        nm.comparison.map { c => " " + input.substring(c.pos) } |+|
         nm.species.flatMap(normalizedSpecies).map(" " + _) |+|
         nm.infraspecies.flatMap(normalizedInfraspeciesGroup).map(" " + _)
     }
@@ -40,7 +40,7 @@ trait Normalizer { parsedResult: ScientificNameParser.Result
     }
 
     def normalizedInfraspecies(is: Infraspecies): Option[String] = {
-      is.rank.map(_ + " ") |+|
+      is.rank.map(_.typ + " ") |+|
         Util.norm(input.substring(is.pos)).some |+|
         is.authorship.flatMap(normalizedAuthorship).map(" " + _)
     }
@@ -61,7 +61,7 @@ trait Normalizer { parsedResult: ScientificNameParser.Result
         a.words
           .map(p => Util.normAuthWord(parsedResult.input.substring(p)))
           .mkString(" ")
-      authorStr + (if (a.filius) " f." else "")
+      (authorStr.some |+| a.filius.map(_ => " f.")).orZero
     }
   }
 

@@ -2,7 +2,7 @@ package org.globalnames.parser
 
 import org.apache.commons.id.uuid.UUID
 import org.globalnames.formatters.{Canonizer, Details, Normalizer, Positions}
-import org.json4s.JsonAST.{JField, JObject, JValue}
+import org.json4s.JsonAST.{JArray, JField, JObject, JValue}
 import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods._
 import org.parboiled2._
@@ -25,10 +25,10 @@ abstract class ScientificNameParser {
 
   def json(parserResult: Result): JValue = {
     val canonical = parserResult.canonized
-    val positionsJson =
-      JObject(parserResult.positioned.map { position =>
-        JField(position.nodeName, Seq(position.start, position.end))
-      }: _*)
+    val positionsJson: JArray =
+      parserResult.positioned.map { position =>
+        JArray(List(position.nodeName, position.start, position.end))
+      }
 
     render("scientificName" -> ("id" -> parserResult.input.id) ~
       ("parsed" -> canonical.isDefined) ~

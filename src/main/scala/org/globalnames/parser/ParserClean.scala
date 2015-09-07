@@ -3,7 +3,7 @@ package org.globalnames.parser
 import org.parboiled2.CharPredicate.{Alpha, Digit, LowerAlpha, UpperAlpha}
 import org.parboiled2.{CapturePos, CharPredicate, SimpleParser}
 
-import scala.collection.immutable.Seq
+import scalaz.Scalaz._
 
 class ParserClean extends SimpleParser {
   val sciName: Rule1[ScientificName] = rule {
@@ -59,9 +59,9 @@ class ParserClean extends SimpleParser {
 
   val name2: Rule1[Name] = rule {
     uninomialWord ~ space ~ comparison ~ (space ~ species).? ~>
-    ((u: UninomialWord, s: Option[Species]) =>
+    ((u: UninomialWord, c: Comparison, s: Option[Species]) =>
       Name(uninomial = Uninomial(u.pos, quality = u.quality),
-           species = s, comparison = Some("cf."), quality = 3))
+           species = s, comparison = Some(c), quality = 3))
   }
 
   val name3: Rule1[Name] = rule {
@@ -82,7 +82,7 @@ class ParserClean extends SimpleParser {
 
   val infraspecies: Rule1[Infraspecies] = rule {
     (rank ~ softSpace).? ~ word ~ (space ~ authorship).? ~>
-    ((r: Option[String], w: CapturePos, a: Option[Authorship]) => Infraspecies(w, r, a))
+    ((r: Option[Rank], w: CapturePos, a: Option[Authorship]) => Infraspecies(w, r, a))
   }
 
   val species: Rule1[Species] = rule {
@@ -90,43 +90,48 @@ class ParserClean extends SimpleParser {
       ((s: CapturePos, a: Option[Authorship]) => Species(s, a))
   }
 
-  val comparison = rule {
-    "cf" ~ '.'.?
+  val comparison: Rule1[Comparison] = rule {
+    capturePos("cf" ~ '.'.?) ~> ((p: CapturePos) => Comparison(p))
   }
 
-  val approximation: Rule1[String] = rule {
-    capture("sp.nr." | "sp. nr." | "sp.aff." | "sp. aff." | "monst." | "?" |
-      (("spp" | "nr" | "sp" | "aff" | "species") ~ (&(spaceCharsEOI) | '.')))
+  val approximation: Rule1[Approximation] = rule {
+    capturePos("sp.nr." | "sp. nr." | "sp.aff." | "sp. aff." | "monst." | "?" |
+      (("spp" | "nr" | "sp" | "aff" | "species") ~ (&(spaceCharsEOI) | '.'))) ~>
+      ((p: CapturePos) => Approximation(p))
   }
 
-  val rankUninomial: Rule1[String] = rule {
-    capture(("sect" | "subsect" | "trib" | "subtrib" | "ser" | "subgen" |
-      "fam" | "subfam" | "supertrib") ~ '.'.?)
+  val rankUninomial: Rule1[Rank] = rule {
+    capturePos(("sect" | "subsect" | "trib" | "subtrib" | "ser" | "subgen" |
+      "fam" | "subfam" | "supertrib") ~ '.'.?) ~>
+      ((p: CapturePos) => Rank(p, state.input.sliceString(p.start, p.end)))
   }
 
-  val rank: Rule1[String] = rule {
+  val rank: Rule1[Rank] = rule {
     rankForma | rankVar | rankSsp | rankOther
   }
 
-  val rankOther: Rule1[String] = rule {
-    capture("morph." | "f.sp." | "B" | "mut." | "nat" |
+  val rankOther: Rule1[Rank] = rule {
+    capturePos("morph." | "f.sp." | "B" | "mut." | "nat" |
      "nothosubsp." | "convar." | "pseudovar." | "sect." | "ser." |
      "subvar." | "subf." | "race" | "α" | "ββ" | "β" | "γ" | "δ" |
      "ε" | "φ" | "θ" | "μ" | "a." | "b." | "c." | "d." | "e." | "g." |
-     "k." | "****" | "**" | "*") ~ &(spaceCharsEOI)
+     "k." | "****" | "**" | "*") ~ &(spaceCharsEOI) ~>
+      ((p: CapturePos) => Rank(p, state.input.sliceString(p.start, p.end)))
   }
 
-  val rankVar: Rule1[String] = rule {
-    ("[var.]"  | ("var" ~ (&(spaceCharsEOI) | '.'))) ~ push("var.")
+  val rankVar: Rule1[Rank] = rule {
+    capturePos("[var.]" | ("var" ~ (&(spaceCharsEOI) | '.'))) ~>
+      ((p: CapturePos) => Rank(p, "var."))
   }
 
-  val rankForma: Rule1[String] = rule {
-    ("forma"  | "fma" | "form" | "fo" | "f") ~ (&(spaceCharsEOI) | '.') ~
-      push ("form")
+  val rankForma: Rule1[Rank] = rule {
+    capturePos(("forma"  | "fma" | "form" | "fo" | "f") ~
+      (&(spaceCharsEOI) | '.')) ~> ((p: CapturePos) => Rank(p, "form"))
   }
 
-  val rankSsp: Rule1[String] = rule {
-    ("ssp" | "subsp") ~ (&(spaceCharsEOI) | '.') ~ push("ssp.")
+  val rankSsp: Rule1[Rank] = rule {
+    capturePos(("ssp" | "subsp") ~ (&(spaceCharsEOI) | '.')) ~>
+      ((p: CapturePos) => Rank(p, "ssp."))
   }
 
   val subGenus: Rule1[SubGenus] = rule {
@@ -141,7 +146,7 @@ class ParserClean extends SimpleParser {
 
   val uninomialCombo: Rule1[Uninomial] = rule {
     (uninomial ~ softSpace ~ rankUninomial ~ softSpace ~ uninomial) ~>
-    ((u1: Uninomial, r: String, u2: Uninomial) =>
+    ((u1: Uninomial, r: Rank, u2: Uninomial) =>
       u2.copy(rank = Some(r), parent = Some(u1)))
   }
 
@@ -214,14 +219,14 @@ class ParserClean extends SimpleParser {
 
   val approxName1: Rule1[Name] = rule {
     uninomial ~ space ~ approximation ~ softSpace ~ anyChars ~>
-      ((u: Uninomial, appr: String, ign: String) =>
+      ((u: Uninomial, appr: Approximation, ign: String) =>
           Name(uninomial = u, approximation = Some(appr),
                ignored = Some(ign), quality = 3))
   }
 
   val approxName2: Rule1[Name] = rule {
     (uninomial ~ space ~ word ~ space ~ approximation ~ space ~ anyChars) ~>
-      ((u: Uninomial, s: CapturePos, appr: String, ign: String) =>
+      ((u: Uninomial, s: CapturePos, appr: Approximation, ign: String) =>
         Name(uninomial = u,
              species = Some(Species(s)),
              approximation = Some(appr),
@@ -306,7 +311,9 @@ class ParserClean extends SimpleParser {
   }
 
   val author1: Rule1[Author] = rule {
-    author2 ~ softSpace ~ filius ~> ((au: Author) => au.copy(filius = true))
+    author2 ~ softSpace ~ filius ~> { (au: Author, filiusPos: CapturePos) =>
+      au.copy(filius = filiusPos.some)
+    }
   }
 
   val author2: Rule1[Author] = rule {
@@ -337,8 +344,8 @@ class ParserClean extends SimpleParser {
 
   val authCharUpper = CharPredicate(UpperAlpha ++ "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝĆČĎİĶĹĺĽľŁłŅŌŐŒŘŚŜŞŠŸŹŻŽƒǾȘȚ�")
 
-  val filius = rule {
-    "f." | "filius"
+  val filius: Rule1[CapturePos] = rule {
+    capturePos("f." | "filius")
   }
 
   val authorPre: Rule1[CapturePos] = rule {
