@@ -52,7 +52,7 @@ trait Normalizer { parsedResult: ScientificNameParser.Result
   }
 
   def normalizedYear(y: Year): String =
-    parsedResult.input.substring(y.pos)
+    parsedResult.input.substring(y.digitsPos)
 
   def normalizedAuthor(a: Author): String = {
     if (a.anon) "unknown"

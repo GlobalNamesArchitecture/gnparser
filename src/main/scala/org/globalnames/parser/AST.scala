@@ -75,9 +75,12 @@ case class InfraspeciesGroup(
   quality: Int = 1)
 
 case class Year(
-  pos: CapturePos,
+  digitsPos: CapturePos,
   alpha: Option[CapturePos] = None,
-  quality: Int = 1) extends AstNode
+  quality: Int = 1) extends AstNode {
+
+  val pos = CapturePos(digitsPos.start, alpha.getOrElse(digitsPos).end)
+}
 
 case class Author(
   words: Seq[CapturePos],

@@ -59,7 +59,7 @@ trait Positions { parsedResult: ScientificNameParser.Result =>
       isg.group.flatMap(positionedInfraspecies).toVector
 
     def positionedYear(y: Year) =
-      Position("year", y.pos.start, y.alpha.getOrElse(y.pos).end)
+      Position("year", y.pos.start, y.pos.end)
 
     def positionedAuthorship(as: Authorship): Vector[Position] = {
       def positionedAuthor(a: Author): Vector[Position] =
