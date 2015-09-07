@@ -63,7 +63,8 @@ trait Positions { parsedResult: ScientificNameParser.Result =>
 
     def positionedAuthorship(as: Authorship): Vector[Position] = {
       def positionedAuthor(a: Author): Vector[Position] =
-        a.words.map(p => Position("author_word", p.start, p.end)).toVector
+        a.words.map(p => Position("author_word", p.start, p.end)).toVector ++
+          a.filius.map { f => Position("author_word_filius", f.start, f.end) }.toVector
       def positionedAuthorsTeam(at: AuthorsTeam): Vector[Position] =
         at.authors.flatMap(positionedAuthor).toVector
       def positionedAuthorsGroup(ag: AuthorsGroup): Vector[Position] =

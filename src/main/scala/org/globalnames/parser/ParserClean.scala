@@ -3,7 +3,7 @@ package org.globalnames.parser
 import org.parboiled2.CharPredicate.{Alpha, Digit, LowerAlpha, UpperAlpha}
 import org.parboiled2.{CapturePos, CharPredicate, SimpleParser}
 
-import scala.collection.immutable.Seq
+import scalaz.Scalaz._
 
 class ParserClean extends SimpleParser {
   val sciName: Rule1[ScientificName] = rule {
@@ -311,7 +311,9 @@ class ParserClean extends SimpleParser {
   }
 
   val author1: Rule1[Author] = rule {
-    author2 ~ softSpace ~ filius ~> ((au: Author) => au.copy(filius = true))
+    author2 ~ softSpace ~ filius ~> { (au: Author, filiusPos: CapturePos) =>
+      au.copy(filius = filiusPos.some)
+    }
   }
 
   val author2: Rule1[Author] = rule {
@@ -342,8 +344,8 @@ class ParserClean extends SimpleParser {
 
   val authCharUpper = CharPredicate(UpperAlpha ++ "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝĆČĎİĶĹĺĽľŁłŅŌŐŒŘŚŜŞŠŸŹŻŽƒǾȘȚ�")
 
-  val filius = rule {
-    "f." | "filius"
+  val filius: Rule1[CapturePos] = rule {
+    capturePos("f." | "filius")
   }
 
   val authorPre: Rule1[CapturePos] = rule {

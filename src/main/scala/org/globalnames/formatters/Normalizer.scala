@@ -61,7 +61,7 @@ trait Normalizer { parsedResult: ScientificNameParser.Result
         a.words
           .map(p => Util.normAuthWord(parsedResult.input.substring(p)))
           .mkString(" ")
-      authorStr + (if (a.filius) " f." else "")
+      (authorStr.some |+| a.filius.map(_ => " f.")).orZero
     }
   }
 

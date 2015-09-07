@@ -82,10 +82,13 @@ case class Year(
 case class Author(
   words: Seq[CapturePos],
   anon: Boolean = false,
-  filius: Boolean = false,
+  filius: Option[CapturePos] = None,
   quality: Int = 1) extends AstNode {
 
-  val pos = CapturePos(words.head.start, words.last.end)
+  val pos = {
+    val end = filius.getOrElse(words.last).end
+    CapturePos(words.head.start, end)
+  }
 }
 
 case class AuthorsTeam(
