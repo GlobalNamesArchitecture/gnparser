@@ -34,7 +34,7 @@ trait Positions { parsedResult: ScientificNameParser.Result =>
       }
 
     def positionedRank(rank: Option[Rank]): Option[Position] =
-      rank.map { r => Position("infraspecific_type", r.pos.start, r.pos.end) }
+      rank.map { r => Position("infraspecific_rank", r.pos.start, r.pos.end) }
 
     def positionedUninomial(typ: String, u: Uninomial): Vector[Position] =
       Vector(Position(typ, u.pos.start, u.pos.end).some,
