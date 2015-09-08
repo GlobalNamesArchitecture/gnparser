@@ -11,7 +11,7 @@ trait Normalizer { parsedResult: ScientificNameParser.Result
     def normalizedNamesGroup(namesGroup: NamesGroup): Option[String] = {
       val name = namesGroup.name
       if (name.size == 1)
-        namesGroup.hybrid.option("× ") |+| normalizedName(name.head)
+        namesGroup.hybrid.map { _ => "× " } |+| normalizedName(name.head)
       else
         name.map(normalizedName).toVector.sequence.map { _.mkString(" × ") }
     }

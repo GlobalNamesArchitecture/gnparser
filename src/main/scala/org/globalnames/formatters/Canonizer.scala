@@ -9,7 +9,7 @@ trait Canonizer { parsedResult: ScientificNameParser.Result =>
   def canonized: Option[String] = {
     def canonizedNamesGroup(namesGroup: NamesGroup): Option[String] = namesGroup match {
       case NamesGroup(Seq(name), _, _) =>
-        namesGroup.hybrid.option("× ") |+| canonizedName(name)
+        namesGroup.hybrid.map { _ => "× " } |+| canonizedName(name)
       case NamesGroup(names, _, _)     =>
         names.map(canonizedName).toVector.sequence.map { _.mkString(" × ") }
     }

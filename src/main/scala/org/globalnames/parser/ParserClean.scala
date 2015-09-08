@@ -26,27 +26,27 @@ class ParserClean extends SimpleParser {
   val hybridFormula1: Rule1[NamesGroup] = rule {
     name ~ space ~ hybridChar ~ space ~
     species ~ (space ~ infraspeciesGroup).? ~>
-    ((n: Name, s: Species, i: Option[InfraspeciesGroup]) =>
+    ((n: Name, hc: HybridChar, s: Species, i: Option[InfraspeciesGroup]) =>
       NamesGroup(
         name = Vector(n, Name(uninomial = Uninomial(CapturePos(0, 1)),
                               species = Some(s), infraspecies = i)),
-        hybrid = true,
+        hybrid = hc.some,
         quality = 3))
   }
 
   val hybridFormula2: Rule1[NamesGroup] = rule {
     name ~ space ~ hybridChar ~ (space ~ name).? ~>
-    ((n1: Name, n2: Option[Name]) =>
+    ((n1: Name, hc: HybridChar, n2: Option[Name]) =>
       n2 match {
-        case None    => NamesGroup(name = Vector(n1), hybrid = true, quality = 3)
-        case Some(n) => NamesGroup(name = Vector(n1, n), hybrid = true)
+        case None    => NamesGroup(name = Vector(n1), hybrid = hc.some, quality = 3)
+        case Some(n) => NamesGroup(name = Vector(n1, n), hybrid = hc.some)
       }
     )
   }
 
   val namedHybrid: Rule1[NamesGroup] = rule {
     hybridChar ~ softSpace ~ name ~>
-    ((n: Name) => NamesGroup(Vector(n), hybrid = true))
+    ((hc: HybridChar, n: Name) => NamesGroup(Vector(n), hybrid = hc.some))
   }
 
   val name: Rule1[Name] = rule {
@@ -203,7 +203,7 @@ class ParserClean extends SimpleParser {
     }
   }
 
-  val hybridChar = '×'
+  val hybridChar: Rule1[HybridChar] = rule { capturePos('×') ~> HybridChar }
 
   val upperChar = CharPredicate(UpperAlpha ++ "ËÆŒ")
 

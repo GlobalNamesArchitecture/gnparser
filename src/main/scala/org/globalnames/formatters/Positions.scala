@@ -9,9 +9,11 @@ trait Positions { parsedResult: ScientificNameParser.Result =>
   import Positions.Position
 
   def positioned: Seq[Position] = {
-    def positionedNamesGroup(namesGroup: NamesGroup): Vector[Position] =
-      namesGroup.name.flatMap(positionedName)
-                .toVector.sortBy(_.start)
+    def positionedNamesGroup(namesGroup: NamesGroup): Vector[Position] = {
+      val positions = positionedHybridChar(namesGroup.hybrid).toVector ++
+                      namesGroup.name.flatMap(positionedName).toVector
+      positions.sortBy(_.start)
+    }
 
     def positionedName(nm: Name): Vector[Position] = {
       val typ = if (nm.genus) "genus" else "uninomial"
@@ -22,6 +24,11 @@ trait Positions { parsedResult: ScientificNameParser.Result =>
         ~nm.species.map(positionedSpecies) ++
         ~nm.infraspecies.map(positionedInfraspeciesGroup)
     }
+
+    def positionedHybridChar(hybridChar: Option[HybridChar]): Option[Position] =
+      hybridChar.map { hc =>
+        Position("hybrid_char", hc.pos.start, hc.pos.end)
+      }
 
     def positionedApproximation(approximation: Option[Approximation]): Option[Position] =
       approximation.map { app =>
