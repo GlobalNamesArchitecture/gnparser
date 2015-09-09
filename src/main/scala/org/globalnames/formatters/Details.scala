@@ -30,6 +30,7 @@ trait Details { parsedResult: ScientificNameParser.Result
 
     def detailedUninomial(u: Uninomial): JValue =
       ("string" -> canonizedUninomial(u)) ~
+        ("rank" -> u.rank.map { _.typ }) ~
         ("parent" -> u.parent.map { canonizedUninomial }) ~
         u.authorship.map(detailedAuthorship).getOrElse(JObject())
 
