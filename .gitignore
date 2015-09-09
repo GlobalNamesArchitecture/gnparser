@@ -26,6 +26,9 @@ out/
 # Mac
 .DS_Store
 
+# Vim
+tags
+
 # Other
 *.pyc
 output.json
