@@ -12,12 +12,12 @@ case class ScientificName(
   namesGroup: Option[NamesGroup] = None,
   isVirus: Boolean = false) {
 
-  val isHybrid = namesGroup.map { ng => ng.name.size > 1 || ng.hybrid }
+  val isHybrid = namesGroup.map { ng => ng.name.size > 1 || ng.hybrid.isDefined }
 }
 
 case class NamesGroup(
   name: Seq[Name],
-  hybrid: Boolean = false,
+  hybrid: Option[HybridChar] = None,
   quality: Int = 1)
 
 case class Name(
@@ -32,6 +32,8 @@ case class Name(
 
   val genus: Boolean = species.isDefined || approximation.isDefined
 }
+
+case class HybridChar(pos: CapturePos) extends AstNode
 
 case class Comparison(pos: CapturePos) extends AstNode
 

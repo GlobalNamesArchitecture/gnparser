@@ -94,8 +94,7 @@ object ScientificNameParser extends ScientificNameParser {
     private lazy val UNESCAPE_HTML4 = new TrackingPositionsUnescapeHtml4Translator
     lazy val unescaped: String = {
       val unescaped = UNESCAPE_HTML4.translate(verbatim)
-      val unjunk = ScientificNameParser.removeJunk(unescaped)
-      ScientificNameParser.normalizeHybridChar(unjunk)
+      normalizeHybridChar(removeJunk(unescaped))
     }
 
     val id: String = {
@@ -137,7 +136,6 @@ object ScientificNameParser extends ScientificNameParser {
   }
 
   def normalizeHybridChar(input: String): String = {
-    input.replaceAll(" [Xx] ", " × ")
-      .replaceAll("""^\s*[Xx]\s*([\p{Lu}])""", "× $1")
+    input.replaceAll("""(^)[Xx](\p{Lu})|(\b)[Xx](\b)""", "$1×$2")
   }
 }
