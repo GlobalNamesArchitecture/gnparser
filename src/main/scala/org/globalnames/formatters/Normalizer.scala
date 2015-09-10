@@ -25,8 +25,9 @@ trait Normalizer { parsedResult: ScientificNameParser.Result
     }
 
     def normalizedUninomial(u: Uninomial): Option[String] = {
-      canonizedUninomial(u).some |+|
-        u.authorship.flatMap(normalizedAuthorship).map(" " + _)
+      u.parent.map { canonizedUninomial(_) + " " } |+|
+        u.rank.map { _.typ + " " } |+| canonizedUninomial(u).some |+|
+        u.authorship.flatMap(normalizedAuthorship).map { " " + _ }
     }
 
     def normalizedUninomialWord(uw: UninomialWord): Option[String] =
