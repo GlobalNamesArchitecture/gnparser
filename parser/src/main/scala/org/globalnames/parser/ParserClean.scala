@@ -145,6 +145,17 @@ class ParserClean extends SimpleParser {
   }
 
   val uninomialCombo: Rule1[Uninomial] = rule {
+    uninomialCombo1 | uninomialCombo2
+  }
+
+  val uninomialCombo1: Rule1[Uninomial] = rule {
+    uninomialWord ~ softSpace ~ subGenus ~ softSpace ~ authorship.? ~>
+    ((uw: UninomialWord,  sg: SubGenus, a: Option[Authorship]) =>
+      Uninomial(sg.pos, a, Some(Rank(CapturePos.empty, typ = "subgen.")),
+        Some(Uninomial(uw.pos))))
+  }
+
+  val uninomialCombo2: Rule1[Uninomial] = rule {
     (uninomial ~ softSpace ~ rankUninomial ~ softSpace ~ uninomial) ~>
     ((u1: Uninomial, r: Rank, u2: Uninomial) =>
       u2.copy(rank = Some(r), parent = Some(u1)))
