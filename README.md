@@ -24,6 +24,24 @@ git clone https://github.com/GlobalNamesArchitecture/gnparser.git
 cd gnparser
 sbt test
 ```
+### Windows OS and UUID v5 Encoding Issue
+
+Strings with characters outside of the ASCII range generate erroneous UUIDs v5
+on systems with non-UTF-8 encodings.
+
+The reason is that calculation of UUID v5 converts a string to bytes first. 
+The bytes are created using the system's default encoding. On Windows OS 
+default encoding is usually Cp1251 (but not UTF-8). 
+
+On Unix-like systems the default encoding more often then not is UTF-8 and ID
+is calculated correctly.
+
+To enforce UTF-8 encoding launch `sbt` with
+
+```
+JAVA_OPTS="-Dfile.encoding=UTF8" sbt
+```
+
 Use on a local machine
 ----------------------
 
