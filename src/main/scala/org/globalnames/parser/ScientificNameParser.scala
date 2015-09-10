@@ -27,7 +27,9 @@ abstract class ScientificNameParser {
     val canonical = parserResult.canonized
     val positionsJson: JArray =
       parserResult.positioned.map { position =>
-        JArray(List(position.nodeName, position.start, position.end))
+        JArray(List(position.nodeName,
+                    parserResult.input.verbatimPosAt(position.start),
+                    parserResult.input.verbatimPosAt(position.end)))
       }
 
     render("scientificName" -> ("id" -> parserResult.input.id) ~
@@ -105,6 +107,8 @@ object ScientificNameParser extends ScientificNameParser {
 
     def substring(pos: CapturePos): String =
       unescaped.substring(pos.start, pos.end)
+
+    def verbatimPosAt(pos: Int): Int = UNESCAPE_HTML4.at(pos)
   }
 
   @annotation.tailrec

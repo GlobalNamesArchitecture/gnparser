@@ -27,5 +27,5 @@ class TrackingPositionsUnescapeHtml4Translator extends AggregateTranslator {
     consumed
   }
 
-  def at(pos: Int) = if (identity) pos else positions(pos)
+  def at(pos: Int): Int = if (identity) pos else positions(pos)
 }
