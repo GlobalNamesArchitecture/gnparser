@@ -67,8 +67,10 @@ trait Positions { parsedResult: ScientificNameParser.Result =>
     def positionedInfraspeciesGroup(isg: InfraspeciesGroup): Vector[Position] =
       isg.group.flatMap(positionedInfraspecies).toVector
 
-    def positionedYear(y: Year) =
-      Position("year", y.pos.start, y.pos.end)
+    def positionedYear(y: Year) = {
+      val yearNodeName = if (y.approximate) "approximate_year" else "year"
+      Position(yearNodeName, y.pos.start, y.pos.end)
+    }
 
     def positionedAuthorship(as: Authorship): Vector[Position] = {
       def positionedAuthor(a: Author): Vector[Position] =

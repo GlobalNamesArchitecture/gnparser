@@ -52,8 +52,10 @@ trait Normalizer { parsedResult: ScientificNameParser.Result
     parsedResult.scientificName.namesGroup.flatMap { normalizedNamesGroup }
   }
 
-  def normalizedYear(y: Year): String =
-    parsedResult.input.substring(y.digitsPos)
+  def normalizedYear(y: Year): String = {
+    val yearStr = parsedResult.input.substring(y.digitsPos)
+    if (y.approximate) "(" + yearStr + ")" else yearStr
+  }
 
   def normalizedAuthor(a: Author): String = {
     if (a.anon) "unknown"

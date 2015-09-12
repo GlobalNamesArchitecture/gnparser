@@ -372,7 +372,7 @@ class ParserClean extends SimpleParser {
 
   val yearRange: Rule1[Year] = rule {
     yearNumber ~ '-' ~ oneOrMore(Digit) ~ zeroOrMore(Alpha ++ "?") ~>
-    ((y: Year) => y.copy(quality = 3))
+    ((y: Year) => y.copy(approximate = true, quality = 3))
   }
 
   val yearWithDot: Rule1[Year] = rule {
@@ -381,7 +381,7 @@ class ParserClean extends SimpleParser {
 
   val yearApprox: Rule1[Year] = rule {
     '[' ~ softSpace ~ yearNumber ~ softSpace ~ ']' ~>
-     ((y: Year) => y.copy(quality = 3))
+      ((y: Year) => y.copy(approximate = true, quality = 3))
   }
 
   val yearWithPage: Rule1[Year] = rule {
@@ -391,19 +391,20 @@ class ParserClean extends SimpleParser {
 
   val yearWithParens: Rule1[Year] = rule {
     '(' ~ softSpace ~ (yearWithChar | yearNumber) ~ softSpace ~ ')' ~>
-    ((y: Year) => y.copy(quality = 2))
+    ((y: Year) => y.copy(approximate = true, quality = 2))
   }
 
   val yearWithChar: Rule1[Year] = rule {
     yearNumber ~ capturePos(Alpha) ~> { (y: Year, pos: CapturePos) =>
-      y.copy(alpha = Some(pos), quality = 2)
+      y.copy(alpha = pos.some, quality = 2)
     }
   }
 
   val yearNumber: Rule1[Year] = rule {
     capturePos(CharPredicate("12") ~ CharPredicate("0789") ~ Digit ~
       (Digit|'?') ~ '?'.?) ~> { (yPos: CapturePos) =>
-        if (state.input.charAt(yPos.end - 1) == '?') Year(yPos, quality = 3)
+        if (state.input.charAt(yPos.end - 1) == '?')
+          Year(yPos, approximate = true, quality = 3)
         else Year(yPos)
     }
   }

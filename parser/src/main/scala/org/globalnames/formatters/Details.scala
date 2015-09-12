@@ -51,7 +51,8 @@ trait Details { parsedResult: ScientificNameParser.Result
       isg.group.map(detailedInfraspecies)
 
     def detailedYear(y: Year): JValue =
-      "str" -> parsedResult.normalizedYear(y).some
+      ("str" -> parsedResult.input.substring(y.digitsPos)) ~
+        ("approximate" -> y.approximate)
 
     def detailedAuthorship(as: Authorship): JObject = {
       def detailedAuthor(a: Author): String = normalizedAuthor(a)
