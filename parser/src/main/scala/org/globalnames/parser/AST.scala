@@ -79,6 +79,7 @@ case class InfraspeciesGroup(
 case class Year(
   digitsPos: CapturePos,
   alpha: Option[CapturePos] = None,
+  approximate: Boolean = false,
   quality: Int = 1) extends AstNode {
 
   val pos = CapturePos(digitsPos.start, alpha.getOrElse(digitsPos).end)
