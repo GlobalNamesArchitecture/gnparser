@@ -41,7 +41,8 @@ trait Positions { parsedResult: ScientificNameParser.Result =>
       }
 
     def positionedRank(rank: Option[Rank]): Option[Position] =
-      rank.map { r => Position("rank", r.pos.start, r.pos.end) }
+      for (r <- rank; p <- r.pos.isDefined.option(r.pos))
+        yield Position("rank", p.start, p.end)
 
     def positionedUninomial(typ: String, u: Uninomial): Vector[Position] =
       Vector(Position(typ, u.pos.start, u.pos.end).some,
