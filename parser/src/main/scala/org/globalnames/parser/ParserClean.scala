@@ -8,7 +8,7 @@ import scalaz.Scalaz._
 class ParserClean extends SimpleParser {
   val sciName: Rule1[ScientificName] = rule {
     softSpace ~ sciName1 ~ anyChars ~ EOI ~>
-      ((n: NamesGroup, g: String) => ScientificName(namesGroup = Some(n)))
+      ((n: NamesGroup, g: String) => ScientificName(namesGroup = n.some))
   }
 
   val sciName1: Rule1[NamesGroup] = rule {
@@ -29,7 +29,7 @@ class ParserClean extends SimpleParser {
     ((n: Name, hc: HybridChar, s: Species, i: Option[InfraspeciesGroup]) =>
       NamesGroup(
         name = Vector(n, Name(uninomial = Uninomial(CapturePos(0, 1)),
-                              species = Some(s), infraspecies = i)),
+                              species = s.some, infraspecies = i)),
         hybrid = hc.some,
         quality = 3))
   }
@@ -61,7 +61,7 @@ class ParserClean extends SimpleParser {
     uninomialWord ~ space ~ comparison ~ (space ~ species).? ~>
     ((u: UninomialWord, c: Comparison, s: Option[Species]) =>
       Name(uninomial = Uninomial(u.pos, quality = u.quality),
-           species = s, comparison = Some(c), quality = 3))
+           species = s, comparison = c.some, quality = 3))
   }
 
   val name3: Rule1[Name] = rule {
@@ -71,7 +71,7 @@ class ParserClean extends SimpleParser {
       maybeInfraspeciesGroup: Option[InfraspeciesGroup]) =>
       Name(Uninomial(uninomialWord.pos, quality = uninomialWord.quality),
            maybeSubGenus,
-           species = Some(species),
+           species = species.some,
            infraspecies = maybeInfraspeciesGroup))
   }
 
@@ -150,15 +150,15 @@ class ParserClean extends SimpleParser {
 
   val uninomialCombo1: Rule1[Uninomial] = rule {
     uninomialWord ~ softSpace ~ subGenus ~ softSpace ~ authorship.? ~>
-    ((uw: UninomialWord,  sg: SubGenus, a: Option[Authorship]) =>
-      Uninomial(sg.pos, a, Some(Rank(CapturePos.empty, typ = "subgen.")),
-        Some(Uninomial(uw.pos))))
+    ((uw: UninomialWord, sg: SubGenus, a: Option[Authorship]) =>
+      Uninomial(sg.pos, a, Rank(CapturePos.empty, typ = "subgen.").some,
+                Uninomial(uw.pos).some))
   }
 
   val uninomialCombo2: Rule1[Uninomial] = rule {
     (uninomial ~ softSpace ~ rankUninomial ~ softSpace ~ uninomial) ~>
     ((u1: Uninomial, r: Rank, u2: Uninomial) =>
-      u2.copy(rank = Some(r), parent = Some(u1)))
+      u2.copy(rank = r.some, parent = u1.some))
   }
 
   val uninomial: Rule1[Uninomial] = rule {
@@ -231,17 +231,17 @@ class ParserClean extends SimpleParser {
   val approxName1: Rule1[Name] = rule {
     uninomial ~ space ~ approximation ~ softSpace ~ anyChars ~>
       ((u: Uninomial, appr: Approximation, ign: String) =>
-          Name(uninomial = u, approximation = Some(appr),
-               ignored = Some(ign), quality = 3))
+          Name(uninomial = u, approximation = appr.some,
+               ignored = ign.some, quality = 3))
   }
 
   val approxName2: Rule1[Name] = rule {
     (uninomial ~ space ~ word ~ space ~ approximation ~ space ~ anyChars) ~>
       ((u: Uninomial, s: CapturePos, appr: Approximation, ign: String) =>
         Name(uninomial = u,
-             species = Some(Species(s)),
-             approximation = Some(appr),
-             ignored = Some(ign),
+             species = Species(s).some,
+             approximation = appr.some,
+             ignored = ign.some,
              quality = 3)
       )
   }
@@ -259,18 +259,18 @@ class ParserClean extends SimpleParser {
     basionymAuthorship ~ authorEx ~ authorship1 ~>
     ((bau: Authorship, exau: Authorship) =>
         bau.copy(authors = bau.authors.copy(
-          authorsEx = Some(exau.authors.authors)), quality = 3))
+          authorsEx = exau.authors.authors.some), quality = 3))
   }
 
   val combinedAuthorship2: Rule1[Authorship] = rule {
     basionymAuthorship ~ softSpace ~ authorship1 ~>
     ((bau: Authorship, cau: Authorship) =>
-        bau.copy(combination = Some(cau.authors), basionymParsed = true, quality = 1))
+      bau.copy(combination = cau.authors.some, basionymParsed = true, quality = 1))
   }
 
   val basionymYearMisformed: Rule1[Authorship] = rule {
     '(' ~ softSpace ~ authorsGroup ~ softSpace ~ ')' ~ (softSpace ~ ',').? ~ softSpace ~ year ~>
-    ((a: AuthorsGroup, y: Year) => Authorship(authors = a.copy(year = Some(y)), inparenthesis = true,
+    ((a: AuthorsGroup, y: Year) => Authorship(authors = a.copy(year = y.some), inparenthesis = true,
                                               basionymParsed = true, quality = 3))
   }
 
@@ -295,7 +295,7 @@ class ParserClean extends SimpleParser {
 
   val authorsYear: Rule1[AuthorsGroup] = rule {
     authorsGroup ~ softSpace ~ (',' ~ softSpace).? ~ year ~>
-    ((a: AuthorsGroup, y: Year) => a.copy(year = Some(y)))
+    ((a: AuthorsGroup, y: Year) => a.copy(year = y.some))
   }
 
   val authorsGroup: Rule1[AuthorsGroup] = rule {
