@@ -21,10 +21,10 @@ trait Canonizer { parsedResult: ScientificNameParser.Result =>
     }
 
     def canonizedSpecies(sp: Species): Option[String] =
-      Util.norm(input.substring(sp.pos)).some
+      Util.norm(stringOf(sp)).some
 
     def canonizedInfraspecies(is: Infraspecies): Option[String] =
-      Util.norm(input.substring(is.pos)).some
+      Util.norm(stringOf(is)).some
 
     def canonizedInfraspeciesGroup(isg: InfraspeciesGroup): Option[String] =
       isg.group.map(canonizedInfraspecies).toVector.sequence.map { _.mkString(" ") }
@@ -33,5 +33,5 @@ trait Canonizer { parsedResult: ScientificNameParser.Result =>
   }
 
   def canonizedUninomial(uninomial: Uninomial): String =
-    Util.norm(parsedResult.input.substring(uninomial.pos))
+    Util.norm(stringOf(uninomial))
 }

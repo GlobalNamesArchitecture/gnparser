@@ -23,15 +23,15 @@ trait Details { parsedResult: ScientificNameParser.Result
         ("infragenus" -> nm.subgenus.map(detailedSubGenus)) ~
         ("infraspecies" -> nm.infraspecies.map(detailedInfraspeciesGroup)) ~
         ("annotation_identification" ->
-          (nm.approximation.map { appr => input.substring(appr.pos) } |+|
-            nm.comparison.map { c => input.substring(c.pos) })) ~
+          (nm.approximation.map { stringOf } |+|
+            nm.comparison.map { stringOf })) ~
         ignoredObj
     }
 
     def detailedUninomial(u: Uninomial): JValue = {
       val rankStr =
         u.rank
-         .map { r => r.typ.getOrElse(parsedResult.input.substring(r.pos)) }
+         .map { r => r.typ.getOrElse(stringOf(r)) }
       ("string" -> canonizedUninomial(u)) ~
         ("rank" -> rankStr) ~
         ("parent" -> u.parent.map { canonizedUninomial }) ~
@@ -39,18 +39,18 @@ trait Details { parsedResult: ScientificNameParser.Result
     }
 
     def detailedSubGenus(sg: SubGenus): JValue =
-      "string" -> Util.norm(input.substring(sg.subgenus.pos))
+      "string" -> Util.norm(stringOf(sg.subgenus))
 
     def detailedSpecies(sp: Species): JValue =
-      ("string" -> Util.norm(input.substring(sp.pos))) ~
+      ("string" -> Util.norm(stringOf(sp))) ~
         sp.authorship.map(detailedAuthorship).getOrElse(JObject())
 
     def detailedInfraspecies(is: Infraspecies): JValue = {
       val rankStr =
         is.rank
-          .map { r => r.typ.getOrElse(parsedResult.input.substring(r.pos)) }
+          .map { r => r.typ.getOrElse(stringOf(r)) }
           .getOrElse("n/a")
-      ("string" -> Util.norm(input.substring(is.pos))) ~
+      ("string" -> Util.norm(stringOf(is))) ~
         ("rank" -> rankStr) ~
         is.authorship.map(detailedAuthorship).getOrElse(JObject())
     }
@@ -59,7 +59,7 @@ trait Details { parsedResult: ScientificNameParser.Result
       isg.group.map(detailedInfraspecies)
 
     def detailedYear(y: Year): JValue =
-      ("str" -> parsedResult.input.substring(y.digitsPos)) ~
+      ("str" -> stringOf(y)) ~
         ("approximate" -> y.approximate)
 
     def detailedAuthorship(as: Authorship): JObject = {

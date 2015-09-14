@@ -90,7 +90,11 @@ object ScientificNameParser extends ScientificNameParser {
   private[ScientificNameParser] final val parserClean = new ParserClean()
 
   case class Result(input: Input, scientificName: ScientificName)
-    extends Details with Positions with Normalizer with Canonizer
+    extends Details with Positions with Normalizer with Canonizer {
+
+    def stringOf(astNode: AstNode): String =
+      input.unescaped.substring(astNode.pos.start, astNode.pos.end)
+  }
 
   case class Input(verbatim: String) {
     private lazy val UNESCAPE_HTML4 = new TrackingPositionsUnescapeHtml4Translator
@@ -104,9 +108,6 @@ object ScientificNameParser extends ScientificNameParser {
       val uuid = UUID.nameUUIDFromString(verbatim, gn, "SHA1").toString
       s"${uuid.substring(0, 14)}5${uuid.substring(15, uuid.length)}"
     }
-
-    def substring(pos: CapturePos): String =
-      unescaped.substring(pos.start, pos.end)
 
     def verbatimPosAt(pos: Int): Int = UNESCAPE_HTML4.at(pos)
   }

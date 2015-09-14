@@ -322,32 +322,33 @@ class ParserClean extends SimpleParser {
   }
 
   val author1: Rule1[Author] = rule {
-    author2 ~ softSpace ~ filius ~> { (au: Author, filiusPos: CapturePos) =>
-      au.copy(filius = filiusPos.some)
+    author2 ~ softSpace ~ filius ~> { (au: Author, filius: AuthorWord) =>
+      au.copy(filius = filius.some)
     }
   }
 
   val author2: Rule1[Author] = rule {
     oneOrMore(authorWord).separatedBy(softSpace) ~>
-      ((au: Seq[CapturePos]) => Author(au))
+      ((au: Seq[AuthorWord]) => Author(au))
   }
 
   val unknownAuthor: Rule1[Author] = rule {
     capturePos("?" |
             (("auct" | "anon" | "ht" | "hort") ~ (&(spaceCharsEOI) | '.'))) ~>
-    ((auth: CapturePos) => Author(Seq(auth), anon = true, quality = 3))
+    ((auth: CapturePos) => Author(Seq(AuthorWord(auth)), anon = true, quality = 3))
   }
 
-  val authorWord: Rule1[CapturePos] = rule {
+  val authorWord: Rule1[AuthorWord] = rule {
     authorWord1 | authorWord2 | authorPre
   }
 
-  val authorWord1: Rule1[CapturePos] = rule {
-    capturePos("arg." | "et al.{?}" | "et al." | "et al")
+  val authorWord1: Rule1[AuthorWord] = rule {
+    capturePos("arg." | "et al.{?}" | "et al." | "et al") ~> AuthorWord
   }
 
-  val authorWord2: Rule1[CapturePos] = rule {
-    capturePos("d'".? ~ authCharUpper ~ zeroOrMore(authCharUpper | authCharLower) ~ '.'.?)
+  val authorWord2: Rule1[AuthorWord] = rule {
+    capturePos("d'".? ~ authCharUpper ~
+      zeroOrMore(authCharUpper | authCharLower) ~ '.'.?) ~> AuthorWord
   }
 
   val authCharLower = CharPredicate(LowerAlpha ++
@@ -355,14 +356,14 @@ class ParserClean extends SimpleParser {
 
   val authCharUpper = CharPredicate(UpperAlpha ++ "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝĆČĎİĶĹĺĽľŁłŅŌŐŒŘŚŜŞŠŸŹŻŽƒǾȘȚ�")
 
-  val filius: Rule1[CapturePos] = rule {
-    capturePos("f." | "filius")
+  val filius: Rule1[AuthorWord] = rule {
+    capturePos("f." | "filius") ~> AuthorWord
   }
 
-  val authorPre: Rule1[CapturePos] = rule {
+  val authorPre: Rule1[AuthorWord] = rule {
     capturePos("ab" | "af" | "bis" | "da" | "der" | "des" |
             "den" | "della" | "dela" | "de" | "di" | "du" |
-            "la" | "ter" | "van" | "von" | "d'") ~ &(spaceCharsEOI)
+            "la" | "ter" | "van" | "von" | "d'") ~ &(spaceCharsEOI) ~> AuthorWord
   }
 
   val year: Rule1[Year] = rule {
