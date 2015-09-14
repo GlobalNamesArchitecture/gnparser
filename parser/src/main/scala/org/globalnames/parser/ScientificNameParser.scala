@@ -2,7 +2,7 @@ package org.globalnames.parser
 
 import org.apache.commons.id.uuid.UUID
 import org.globalnames.formatters.{Canonizer, Details, Normalizer, Positions}
-import org.json4s.JsonAST.{JArray, JField, JObject, JValue}
+import org.json4s.JsonAST.{JArray, JValue}
 import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods._
 import org.parboiled2._
@@ -12,7 +12,7 @@ import scala.util.matching.Regex
 import scala.util.{Failure, Success}
 
 abstract class ScientificNameParser {
-  import ScientificNameParser.{Input, Result, parserClean}
+  import ScientificNameParser.{Input, Result}
 
   val version: String
 
@@ -53,7 +53,7 @@ abstract class ScientificNameParser {
     if (isVirus || noParse(input)) {
       Result(inputString, ScientificName(isVirus = isVirus))
     } else {
-      parserClean.sciName.run(inputString.unescaped) match {
+      Parser.sciName.run(inputString.unescaped) match {
         case Success(sn: ScientificName) => Result(inputString, sn)
         case Failure(err: ParseError) =>
           println(err.format(inputString.verbatim))
@@ -87,10 +87,12 @@ abstract class ScientificNameParser {
 object ScientificNameParser extends ScientificNameParser {
   final val version = BuildInfo.version
 
-  private[ScientificNameParser] final val parserClean = new ParserClean()
-
   case class Result(input: Input, scientificName: ScientificName)
-    extends Details with Positions with Normalizer with Canonizer
+    extends Details with Positions with Normalizer with Canonizer {
+
+    def stringOf(astNode: AstNode): String =
+      input.unescaped.substring(astNode.pos.start, astNode.pos.end)
+  }
 
   case class Input(verbatim: String) {
     private lazy val UNESCAPE_HTML4 = new TrackingPositionsUnescapeHtml4Translator
@@ -104,9 +106,6 @@ object ScientificNameParser extends ScientificNameParser {
       val uuid = UUID.nameUUIDFromString(verbatim, gn, "SHA1").toString
       s"${uuid.substring(0, 14)}5${uuid.substring(15, uuid.length)}"
     }
-
-    def substring(pos: CapturePos): String =
-      unescaped.substring(pos.start, pos.end)
 
     def verbatimPosAt(pos: Int): Int = UNESCAPE_HTML4.at(pos)
   }

@@ -41,7 +41,7 @@ case class Approximation(pos: CapturePos) extends AstNode
 
 case class Rank(
   pos: CapturePos,
-  typ: String) extends AstNode
+  typ: Option[String] = None) extends AstNode
 
 case class Uninomial(
   pos: CapturePos,
@@ -77,23 +77,22 @@ case class InfraspeciesGroup(
   quality: Int = 1)
 
 case class Year(
-  digitsPos: CapturePos,
+  pos: CapturePos,
   alpha: Option[CapturePos] = None,
   approximate: Boolean = false,
-  quality: Int = 1) extends AstNode {
+  quality: Int = 1) extends AstNode
 
-  val pos = CapturePos(digitsPos.start, alpha.getOrElse(digitsPos).end)
-}
+case class AuthorWord(pos: CapturePos) extends AstNode
 
 case class Author(
-  words: Seq[CapturePos],
+  words: Seq[AuthorWord],
   anon: Boolean = false,
-  filius: Option[CapturePos] = None,
+  filius: Option[AuthorWord] = None,
   quality: Int = 1) extends AstNode {
 
   val pos = {
-    val end = filius.getOrElse(words.last).end
-    CapturePos(words.head.start, end)
+    val end = filius.getOrElse(words.last).pos.end
+    CapturePos(words.head.pos.start, end)
   }
 }
 

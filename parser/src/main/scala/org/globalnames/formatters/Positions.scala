@@ -69,13 +69,13 @@ trait Positions { parsedResult: ScientificNameParser.Result =>
 
     def positionedYear(y: Year) = {
       val yearNodeName = if (y.approximate) "approximate_year" else "year"
-      Position(yearNodeName, y.pos.start, y.pos.end)
+      Position(yearNodeName, y.pos.start, y.alpha.getOrElse(y.pos).end)
     }
 
     def positionedAuthorship(as: Authorship): Vector[Position] = {
       def positionedAuthor(a: Author): Vector[Position] =
-        a.words.map(p => Position("author_word", p.start, p.end)).toVector ++
-          a.filius.map { f => Position("author_word_filius", f.start, f.end) }.toVector
+        a.words.map{ w => Position("author_word", w.pos.start, w.pos.end)}.toVector ++
+          a.filius.map{ f => Position("author_word_filius", f.pos.start, f.pos.end) }.toVector
       def positionedAuthorsTeam(at: AuthorsTeam): Vector[Position] =
         at.authors.flatMap(positionedAuthor).toVector
       def positionedAuthorsGroup(ag: AuthorsGroup): Vector[Position] =

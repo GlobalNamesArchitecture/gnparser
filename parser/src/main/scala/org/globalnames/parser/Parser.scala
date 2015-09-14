@@ -5,10 +5,11 @@ import org.parboiled2.{CapturePos, CharPredicate, SimpleParser}
 
 import scalaz.Scalaz._
 
-class ParserClean extends SimpleParser {
+object Parser extends SimpleParser {
+
   val sciName: Rule1[ScientificName] = rule {
     softSpace ~ sciName1 ~ anyChars ~ EOI ~>
-      ((n: NamesGroup, g: String) => ScientificName(namesGroup = Some(n)))
+      ((n: NamesGroup, g: String) => ScientificName(namesGroup = n.some))
   }
 
   val sciName1: Rule1[NamesGroup] = rule {
@@ -29,7 +30,7 @@ class ParserClean extends SimpleParser {
     ((n: Name, hc: HybridChar, s: Species, i: Option[InfraspeciesGroup]) =>
       NamesGroup(
         name = Vector(n, Name(uninomial = Uninomial(CapturePos(0, 1)),
-                              species = Some(s), infraspecies = i)),
+                              species = s.some, infraspecies = i)),
         hybrid = hc.some,
         quality = 3))
   }
@@ -61,7 +62,7 @@ class ParserClean extends SimpleParser {
     uninomialWord ~ space ~ comparison ~ (space ~ species).? ~>
     ((u: UninomialWord, c: Comparison, s: Option[Species]) =>
       Name(uninomial = Uninomial(u.pos, quality = u.quality),
-           species = s, comparison = Some(c), quality = 3))
+           species = s, comparison = c.some, quality = 3))
   }
 
   val name3: Rule1[Name] = rule {
@@ -71,7 +72,7 @@ class ParserClean extends SimpleParser {
       maybeInfraspeciesGroup: Option[InfraspeciesGroup]) =>
       Name(Uninomial(uninomialWord.pos, quality = uninomialWord.quality),
            maybeSubGenus,
-           species = Some(species),
+           species = species.some,
            infraspecies = maybeInfraspeciesGroup))
   }
 
@@ -103,7 +104,7 @@ class ParserClean extends SimpleParser {
   val rankUninomial: Rule1[Rank] = rule {
     capturePos(("sect" | "subsect" | "trib" | "subtrib" | "ser" | "subgen" |
       "fam" | "subfam" | "supertrib") ~ '.'.?) ~>
-      ((p: CapturePos) => Rank(p, state.input.sliceString(p.start, p.end)))
+      ((p: CapturePos) => Rank(p))
   }
 
   val rank: Rule1[Rank] = rule {
@@ -116,22 +117,22 @@ class ParserClean extends SimpleParser {
      "subvar." | "subf." | "race" | "α" | "ββ" | "β" | "γ" | "δ" |
      "ε" | "φ" | "θ" | "μ" | "a." | "b." | "c." | "d." | "e." | "g." |
      "k." | "****" | "**" | "*") ~ &(spaceCharsEOI) ~>
-      ((p: CapturePos) => Rank(p, state.input.sliceString(p.start, p.end)))
+      ((p: CapturePos) => Rank(p))
   }
 
   val rankVar: Rule1[Rank] = rule {
     capturePos("[var.]" | ("var" ~ (&(spaceCharsEOI) | '.'))) ~>
-      ((p: CapturePos) => Rank(p, "var."))
+      ((p: CapturePos) => Rank(p, "var.".some))
   }
 
   val rankForma: Rule1[Rank] = rule {
     capturePos(("forma"  | "fma" | "form" | "fo" | "f") ~
-      (&(spaceCharsEOI) | '.')) ~> ((p: CapturePos) => Rank(p, "form"))
+      (&(spaceCharsEOI) | '.')) ~> ((p: CapturePos) => Rank(p, "form".some))
   }
 
   val rankSsp: Rule1[Rank] = rule {
     capturePos(("ssp" | "subsp") ~ (&(spaceCharsEOI) | '.')) ~>
-      ((p: CapturePos) => Rank(p, "ssp."))
+      ((p: CapturePos) => Rank(p, "ssp.".some))
   }
 
   val subGenus: Rule1[SubGenus] = rule {
@@ -150,15 +151,15 @@ class ParserClean extends SimpleParser {
 
   val uninomialCombo1: Rule1[Uninomial] = rule {
     uninomialWord ~ softSpace ~ subGenus ~ softSpace ~ authorship.? ~>
-    ((uw: UninomialWord,  sg: SubGenus, a: Option[Authorship]) =>
-      Uninomial(sg.pos, a, Some(Rank(CapturePos.empty, typ = "subgen.")),
-        Some(Uninomial(uw.pos))))
+    ((uw: UninomialWord, sg: SubGenus, a: Option[Authorship]) =>
+      Uninomial(sg.pos, a, Rank(CapturePos.empty, typ = "subgen.".some).some,
+                Uninomial(uw.pos).some))
   }
 
   val uninomialCombo2: Rule1[Uninomial] = rule {
     (uninomial ~ softSpace ~ rankUninomial ~ softSpace ~ uninomial) ~>
     ((u1: Uninomial, r: Rank, u2: Uninomial) =>
-      u2.copy(rank = Some(r), parent = Some(u1)))
+      u2.copy(rank = r.some, parent = u1.some))
   }
 
   val uninomial: Rule1[Uninomial] = rule {
@@ -231,17 +232,17 @@ class ParserClean extends SimpleParser {
   val approxName1: Rule1[Name] = rule {
     uninomial ~ space ~ approximation ~ softSpace ~ anyChars ~>
       ((u: Uninomial, appr: Approximation, ign: String) =>
-          Name(uninomial = u, approximation = Some(appr),
-               ignored = Some(ign), quality = 3))
+          Name(uninomial = u, approximation = appr.some,
+               ignored = ign.some, quality = 3))
   }
 
   val approxName2: Rule1[Name] = rule {
     (uninomial ~ space ~ word ~ space ~ approximation ~ space ~ anyChars) ~>
       ((u: Uninomial, s: CapturePos, appr: Approximation, ign: String) =>
         Name(uninomial = u,
-             species = Some(Species(s)),
-             approximation = Some(appr),
-             ignored = Some(ign),
+             species = Species(s).some,
+             approximation = appr.some,
+             ignored = ign.some,
              quality = 3)
       )
   }
@@ -259,18 +260,18 @@ class ParserClean extends SimpleParser {
     basionymAuthorship ~ authorEx ~ authorship1 ~>
     ((bau: Authorship, exau: Authorship) =>
         bau.copy(authors = bau.authors.copy(
-          authorsEx = Some(exau.authors.authors)), quality = 3))
+          authorsEx = exau.authors.authors.some), quality = 3))
   }
 
   val combinedAuthorship2: Rule1[Authorship] = rule {
     basionymAuthorship ~ softSpace ~ authorship1 ~>
     ((bau: Authorship, cau: Authorship) =>
-        bau.copy(combination = Some(cau.authors), basionymParsed = true, quality = 1))
+      bau.copy(combination = cau.authors.some, basionymParsed = true, quality = 1))
   }
 
   val basionymYearMisformed: Rule1[Authorship] = rule {
     '(' ~ softSpace ~ authorsGroup ~ softSpace ~ ')' ~ (softSpace ~ ',').? ~ softSpace ~ year ~>
-    ((a: AuthorsGroup, y: Year) => Authorship(authors = a.copy(year = Some(y)), inparenthesis = true,
+    ((a: AuthorsGroup, y: Year) => Authorship(authors = a.copy(year = y.some), inparenthesis = true,
                                               basionymParsed = true, quality = 3))
   }
 
@@ -295,7 +296,7 @@ class ParserClean extends SimpleParser {
 
   val authorsYear: Rule1[AuthorsGroup] = rule {
     authorsGroup ~ softSpace ~ (',' ~ softSpace).? ~ year ~>
-    ((a: AuthorsGroup, y: Year) => a.copy(year = Some(y)))
+    ((a: AuthorsGroup, y: Year) => a.copy(year = y.some))
   }
 
   val authorsGroup: Rule1[AuthorsGroup] = rule {
@@ -322,32 +323,33 @@ class ParserClean extends SimpleParser {
   }
 
   val author1: Rule1[Author] = rule {
-    author2 ~ softSpace ~ filius ~> { (au: Author, filiusPos: CapturePos) =>
-      au.copy(filius = filiusPos.some)
+    author2 ~ softSpace ~ filius ~> { (au: Author, filius: AuthorWord) =>
+      au.copy(filius = filius.some)
     }
   }
 
   val author2: Rule1[Author] = rule {
     oneOrMore(authorWord).separatedBy(softSpace) ~>
-      ((au: Seq[CapturePos]) => Author(au))
+      ((au: Seq[AuthorWord]) => Author(au))
   }
 
   val unknownAuthor: Rule1[Author] = rule {
     capturePos("?" |
             (("auct" | "anon" | "ht" | "hort") ~ (&(spaceCharsEOI) | '.'))) ~>
-    ((auth: CapturePos) => Author(Seq(auth), anon = true, quality = 3))
+    ((auth: CapturePos) => Author(Seq(AuthorWord(auth)), anon = true, quality = 3))
   }
 
-  val authorWord: Rule1[CapturePos] = rule {
+  val authorWord: Rule1[AuthorWord] = rule {
     authorWord1 | authorWord2 | authorPre
   }
 
-  val authorWord1: Rule1[CapturePos] = rule {
-    capturePos("arg." | "et al.{?}" | "et al." | "et al")
+  val authorWord1: Rule1[AuthorWord] = rule {
+    capturePos("arg." | "et al.{?}" | "et al." | "et al") ~> AuthorWord
   }
 
-  val authorWord2: Rule1[CapturePos] = rule {
-    capturePos("d'".? ~ authCharUpper ~ zeroOrMore(authCharUpper | authCharLower) ~ '.'.?)
+  val authorWord2: Rule1[AuthorWord] = rule {
+    capturePos("d'".? ~ authCharUpper ~
+      zeroOrMore(authCharUpper | authCharLower) ~ '.'.?) ~> AuthorWord
   }
 
   val authCharLower = CharPredicate(LowerAlpha ++
@@ -355,14 +357,14 @@ class ParserClean extends SimpleParser {
 
   val authCharUpper = CharPredicate(UpperAlpha ++ "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝĆČĎİĶĹĺĽľŁłŅŌŐŒŘŚŜŞŠŸŹŻŽƒǾȘȚ�")
 
-  val filius: Rule1[CapturePos] = rule {
-    capturePos("f." | "filius")
+  val filius: Rule1[AuthorWord] = rule {
+    capturePos("f." | "filius") ~> AuthorWord
   }
 
-  val authorPre: Rule1[CapturePos] = rule {
+  val authorPre: Rule1[AuthorWord] = rule {
     capturePos("ab" | "af" | "bis" | "da" | "der" | "des" |
             "den" | "della" | "dela" | "de" | "di" | "du" |
-            "la" | "ter" | "van" | "von" | "d'") ~ &(spaceCharsEOI)
+            "la" | "ter" | "van" | "von" | "d'") ~ &(spaceCharsEOI) ~> AuthorWord
   }
 
   val year: Rule1[Year] = rule {

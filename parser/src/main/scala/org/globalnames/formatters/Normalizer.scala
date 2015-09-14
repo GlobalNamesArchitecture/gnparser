@@ -19,30 +19,31 @@ trait Normalizer { parsedResult: ScientificNameParser.Result
     def normalizedName(nm: Name): Option[String] = {
       normalizedUninomial(nm.uninomial) |+|
         nm.subgenus.flatMap(normalizedSubGenus).map(" (" + _ + ")") |+|
-        nm.comparison.map { c => " " + input.substring(c.pos) } |+|
+        nm.comparison.map { c => " " + stringOf(c) } |+|
         nm.species.flatMap(normalizedSpecies).map(" " + _) |+|
         nm.infraspecies.flatMap(normalizedInfraspeciesGroup).map(" " + _)
     }
 
     def normalizedUninomial(u: Uninomial): Option[String] = {
       u.parent.map { canonizedUninomial(_) + " " } |+|
-        u.rank.map { _.typ + " " } |+| canonizedUninomial(u).some |+|
+        u.rank.map { r => r.typ.getOrElse(stringOf(r)) + " " } |+|
+        canonizedUninomial(u).some |+|
         u.authorship.flatMap(normalizedAuthorship).map { " " + _ }
     }
 
     def normalizedUninomialWord(uw: UninomialWord): Option[String] =
-      parsedResult.input.substring(uw.pos).some
+      stringOf(uw).some
 
     def normalizedSubGenus(sg: SubGenus): Option[String] = normalizedUninomialWord(sg.subgenus)
 
     def normalizedSpecies(sp: Species): Option[String] = {
-      Util.norm(input.substring(sp.pos)).some |+|
+      Util.norm(stringOf(sp)).some |+|
         sp.authorship.flatMap(normalizedAuthorship).map(" " + _)
     }
 
     def normalizedInfraspecies(is: Infraspecies): Option[String] = {
-      is.rank.map(_.typ + " ") |+|
-        Util.norm(input.substring(is.pos)).some |+|
+      is.rank.map { r => r.typ.getOrElse(stringOf(r)) + " " } |+|
+        Util.norm(stringOf(is)).some |+|
         is.authorship.flatMap(normalizedAuthorship).map(" " + _)
     }
 
@@ -53,8 +54,7 @@ trait Normalizer { parsedResult: ScientificNameParser.Result
   }
 
   def normalizedYear(y: Year): String = {
-    val yearStr = parsedResult.input.substring(y.digitsPos)
-    if (y.approximate) "(" + yearStr + ")" else yearStr
+    if (y.approximate) "(" + stringOf(y) + ")" else stringOf(y)
   }
 
   def normalizedAuthor(a: Author): String = {
@@ -62,7 +62,7 @@ trait Normalizer { parsedResult: ScientificNameParser.Result
     else {
       val authorStr =
         a.words
-          .map(p => Util.normAuthWord(parsedResult.input.substring(p)))
+          .map(p => Util.normAuthWord(stringOf(p)))
           .mkString(" ")
       (authorStr.some |+| a.filius.map(_ => " f.")).orZero
     }
