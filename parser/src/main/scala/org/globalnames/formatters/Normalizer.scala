@@ -26,7 +26,8 @@ trait Normalizer { parsedResult: ScientificNameParser.Result
 
     def normalizedUninomial(u: Uninomial): Option[String] = {
       u.parent.map { canonizedUninomial(_) + " " } |+|
-        u.rank.map { _.typ + " " } |+| canonizedUninomial(u).some |+|
+        u.rank.map { r => r.typ.getOrElse(input.substring(r.pos)) + " " } |+|
+        canonizedUninomial(u).some |+|
         u.authorship.flatMap(normalizedAuthorship).map { " " + _ }
     }
 
@@ -41,7 +42,7 @@ trait Normalizer { parsedResult: ScientificNameParser.Result
     }
 
     def normalizedInfraspecies(is: Infraspecies): Option[String] = {
-      is.rank.map(_.typ + " ") |+|
+      is.rank.map { r => r.typ.getOrElse(input.substring(r.pos)) + " " } |+|
         Util.norm(input.substring(is.pos)).some |+|
         is.authorship.flatMap(normalizedAuthorship).map(" " + _)
     }

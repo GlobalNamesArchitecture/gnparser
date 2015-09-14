@@ -28,11 +28,15 @@ trait Details { parsedResult: ScientificNameParser.Result
         ignoredObj
     }
 
-    def detailedUninomial(u: Uninomial): JValue =
+    def detailedUninomial(u: Uninomial): JValue = {
+      val rankStr =
+        u.rank
+         .map { r => r.typ.getOrElse(parsedResult.input.substring(r.pos)) }
       ("string" -> canonizedUninomial(u)) ~
-        ("rank" -> u.rank.map { _.typ }) ~
+        ("rank" -> rankStr) ~
         ("parent" -> u.parent.map { canonizedUninomial }) ~
         u.authorship.map(detailedAuthorship).getOrElse(JObject())
+    }
 
     def detailedSubGenus(sg: SubGenus): JValue =
       "string" -> Util.norm(input.substring(sg.subgenus.pos))
@@ -42,8 +46,12 @@ trait Details { parsedResult: ScientificNameParser.Result
         sp.authorship.map(detailedAuthorship).getOrElse(JObject())
 
     def detailedInfraspecies(is: Infraspecies): JValue = {
+      val rankStr =
+        is.rank
+          .map { r => r.typ.getOrElse(parsedResult.input.substring(r.pos)) }
+          .getOrElse("n/a")
       ("string" -> Util.norm(input.substring(is.pos))) ~
-        ("rank" -> is.rank.map(_.typ).getOrElse("n/a")) ~
+        ("rank" -> rankStr) ~
         is.authorship.map(detailedAuthorship).getOrElse(JObject())
     }
 

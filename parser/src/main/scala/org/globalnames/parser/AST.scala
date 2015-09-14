@@ -41,7 +41,7 @@ case class Approximation(pos: CapturePos) extends AstNode
 
 case class Rank(
   pos: CapturePos,
-  typ: String) extends AstNode
+  typ: Option[String] = None) extends AstNode
 
 case class Uninomial(
   pos: CapturePos,
