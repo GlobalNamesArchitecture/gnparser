@@ -5,7 +5,8 @@ import org.parboiled2.{CapturePos, CharPredicate, SimpleParser}
 
 import scalaz.Scalaz._
 
-class ParserClean extends SimpleParser {
+object Parser extends SimpleParser {
+
   val sciName: Rule1[ScientificName] = rule {
     softSpace ~ sciName1 ~ anyChars ~ EOI ~>
       ((n: NamesGroup, g: String) => ScientificName(namesGroup = n.some))

@@ -2,7 +2,7 @@ package org.globalnames.parser
 
 import org.apache.commons.id.uuid.UUID
 import org.globalnames.formatters.{Canonizer, Details, Normalizer, Positions}
-import org.json4s.JsonAST.{JArray, JField, JObject, JValue}
+import org.json4s.JsonAST.{JArray, JValue}
 import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods._
 import org.parboiled2._
@@ -12,7 +12,7 @@ import scala.util.matching.Regex
 import scala.util.{Failure, Success}
 
 abstract class ScientificNameParser {
-  import ScientificNameParser.{Input, Result, parserClean}
+  import ScientificNameParser.{Input, Result}
 
   val version: String
 
@@ -53,7 +53,7 @@ abstract class ScientificNameParser {
     if (isVirus || noParse(input)) {
       Result(inputString, ScientificName(isVirus = isVirus))
     } else {
-      parserClean.sciName.run(inputString.unescaped) match {
+      Parser.sciName.run(inputString.unescaped) match {
         case Success(sn: ScientificName) => Result(inputString, sn)
         case Failure(err: ParseError) =>
           println(err.format(inputString.verbatim))
@@ -86,8 +86,6 @@ abstract class ScientificNameParser {
 
 object ScientificNameParser extends ScientificNameParser {
   final val version = BuildInfo.version
-
-  private[ScientificNameParser] final val parserClean = new ParserClean()
 
   case class Result(input: Input, scientificName: ScientificName)
     extends Details with Positions with Normalizer with Canonizer {
