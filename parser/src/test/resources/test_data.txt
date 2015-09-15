@@ -511,7 +511,7 @@ Macrotes cordovaria Guen�e 1857|{"scientificName":{"id":"9217d59c-d1e7-5c79-af
 #>
 
 #names with garbage at the end<
-#Morea (Morea) Burt 2342343242 23424322342 23424234|{"scientificName":{"id":"ca23679f-f3d8-5194-a406-048f970c4020", "parsed":true, "parser_version":"test_version",  "verbatim":"Morea (Morea) Burt 2342343242 23424322342 23424234", "normalized":"Morea (Morea) Burt", "canonical":"Morea", "hybrid":false, "virus": false,  "details":[{"uninomial":{"string":"Morea", "infragenus":{"string":"Morea"}, "authorship":"Burt", "basionymAuthorTeam":{"author":["Burt"]}}}], "positions":{"0":["uninomial", 5], "7":["infragenus", 12], "14":["author_word", 18]}, "surrogate":true}}
+Morea (Morea) Burt 2342343242 23424322342 23424234|{"scientificName":{"id":"ca23679f-f3d8-5194-a406-048f970c4020","parsed":true,"parser_version":"test_version","verbatim":"Morea (Morea) Burt 2342343242 23424322342 23424234","normalized":"Morea subgen. Morea Burt","canonical":"Morea","hybrid":false,"virus":false,"details":[{"uninomial":{"string":"Morea","rank":"subgen.","parent":"Morea","authorship":"Burt","basionymAuthorTeam":{"author":["Burt"]}}}],"positions":[["uninomial",0,5],["uninomial",7,12],["author_word",14,18]]}}
 Nautilus asterizans von|{"scientificName":{"id":"0716f658-c952-5415-b2ad-79a39c2b7b0d","parsed":true,"parser_version":"test_version","verbatim":"Nautilus asterizans von","normalized":"Nautilus asterizans","canonical":"Nautilus asterizans","hybrid":false,"virus":false,"details":[{"genus":{"string":"Nautilus"},"species":{"string":"asterizans"}}],"positions":[["genus",0,8],["species",9,19]]}}
 #>
 
