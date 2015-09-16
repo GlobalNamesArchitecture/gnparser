@@ -45,10 +45,13 @@ trait Positions { parsedResult: ScientificNameParser.Result =>
         yield Position("rank", p.start, p.end)
 
     def positionedUninomial(typ: String, u: Uninomial): Vector[Position] =
-      Vector(Position(typ, u.pos.start, u.pos.end).some,
-             positionedRank(u.rank)).flatten ++
-        u.parent.map { positionedUninomial("uninomial", _) }.orZero ++
-        ~u.authorship.map(positionedAuthorship)
+      if (u.implied) Vector.empty
+      else {
+        Vector(Position(typ, u.pos.start, u.pos.end).some,
+               positionedRank(u.rank)).flatten ++
+          u.parent.map { positionedUninomial("uninomial", _) }.orZero ++
+          ~u.authorship.map(positionedAuthorship)
+      }
 
     def positionedSubGenus(subGenus: Option[SubGenus]): Option[Position] =
       subGenus.map { sg =>

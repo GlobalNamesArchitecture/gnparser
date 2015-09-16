@@ -25,12 +25,13 @@ object Parser extends SimpleParser {
   }
 
   val hybridFormula1: Rule1[NamesGroup] = rule {
-    name ~ space ~ hybridChar ~ space ~
+    name ~ space ~ hybridChar ~ softSpace ~
     species ~ (space ~ infraspeciesGroup).? ~>
     ((n: Name, hc: HybridChar, s: Species, i: Option[InfraspeciesGroup]) =>
       NamesGroup(
-        name = Vector(n, Name(uninomial = Uninomial(CapturePos(0, 1)),
-                              species = s.some, infraspecies = i)),
+        name = Vector(n.copy(genusParsed = true),
+                      Name(uninomial = n.uninomial.copy(implied = true),
+                           species = s.some, infraspecies = i)),
         hybrid = hc.some,
         quality = 3))
   }

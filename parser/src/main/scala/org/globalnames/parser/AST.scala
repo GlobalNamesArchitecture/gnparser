@@ -28,9 +28,10 @@ case class Name(
   comparison: Option[Comparison] = None,
   approximation: Option[Approximation] = None,
   ignored: Option[String] = None,
+  private val genusParsed: Boolean = false,
   quality: Int = 1) {
 
-  val genus: Boolean = species.isDefined || approximation.isDefined
+  val genus: Boolean = genusParsed || species.isDefined || approximation.isDefined
 }
 
 case class HybridChar(pos: CapturePos) extends AstNode
@@ -48,6 +49,7 @@ case class Uninomial(
   authorship: Option[Authorship] = None,
   rank: Option[Rank] = None,
   parent: Option[Uninomial] = None,
+  implied : Boolean = false,
   quality: Int = 1) extends AstNode
 
 case class UninomialWord(
