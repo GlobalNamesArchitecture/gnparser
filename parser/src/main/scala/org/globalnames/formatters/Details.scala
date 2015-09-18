@@ -32,9 +32,9 @@ trait Details { parsedResult: ScientificNameParser.Result
       val rankStr =
         u.rank
          .map { r => r.typ.getOrElse(stringOf(r)) }
-      ("string" -> canonizedUninomial(u)) ~
+      ("string" -> Util.norm(stringOf(u))) ~
         ("rank" -> rankStr) ~
-        ("parent" -> u.parent.map { canonizedUninomial }) ~
+        ("parent" -> u.parent.map { p => Util.norm(stringOf(p)) }) ~
         u.authorship.map(detailedAuthorship).getOrElse(JObject())
     }
 

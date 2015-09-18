@@ -15,9 +15,12 @@ trait Canonizer { parsedResult: ScientificNameParser.Result =>
     }
 
     def canonizedName(nm: Name): Option[String] = {
-      canonizedUninomial(nm.uninomial).some |+|
-        nm.species.flatMap(canonizedSpecies).map(" " + _) |+|
-        nm.infraspecies.flatMap(canonizedInfraspeciesGroup).map(" " + _)
+      val parts =
+        Vector(canonizedUninomial(nm.uninomial),
+               nm.species.flatMap { canonizedSpecies },
+               nm.infraspecies.flatMap { canonizedInfraspeciesGroup })
+      if (parts.isEmpty) None
+      else parts.flatten.mkString(" ").some
     }
 
     def canonizedSpecies(sp: Species): Option[String] =
@@ -32,6 +35,6 @@ trait Canonizer { parsedResult: ScientificNameParser.Result =>
     parsedResult.scientificName.namesGroup.flatMap(canonizedNamesGroup)
   }
 
-  def canonizedUninomial(uninomial: Uninomial): String =
-    Util.norm(stringOf(uninomial))
+  def canonizedUninomial(uninomial: Uninomial): Option[String] =
+    (!uninomial.implied).option { Util.norm(stringOf(uninomial)) }
 }

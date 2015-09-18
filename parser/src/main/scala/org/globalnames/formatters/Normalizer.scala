@@ -17,19 +17,25 @@ trait Normalizer { parsedResult: ScientificNameParser.Result
     }
 
     def normalizedName(nm: Name): Option[String] = {
-      normalizedUninomial(nm.uninomial) |+|
-        nm.subgenus.flatMap(normalizedSubGenus).map(" (" + _ + ")") |+|
-        nm.comparison.map { c => " " + stringOf(c) } |+|
-        nm.species.flatMap(normalizedSpecies).map(" " + _) |+|
-        nm.infraspecies.flatMap(normalizedInfraspeciesGroup).map(" " + _)
+      val parts =
+        Vector(normalizedUninomial(nm.uninomial),
+               nm.subgenus.flatMap { normalizedSubGenus }.map { "(" + _ + ")" },
+               nm.comparison.map { stringOf },
+               nm.species.flatMap { normalizedSpecies },
+               nm.infraspecies.flatMap { normalizedInfraspeciesGroup })
+      if (parts.isEmpty) None
+      else parts.flatten.mkString(" ").some
     }
 
-    def normalizedUninomial(u: Uninomial): Option[String] = {
-      u.parent.map { canonizedUninomial(_) + " " } |+|
-        u.rank.map { r => r.typ.getOrElse(stringOf(r)) + " " } |+|
-        canonizedUninomial(u).some |+|
-        u.authorship.flatMap(normalizedAuthorship).map { " " + _ }
-    }
+    def normalizedUninomial(u: Uninomial): Option[String] =
+      (!u.implied).option {
+        val parts =
+          Vector(u.parent.flatMap { canonizedUninomial },
+            u.rank.map { r => r.typ.getOrElse(stringOf(r)) },
+            canonizedUninomial(u),
+            u.authorship.flatMap { normalizedAuthorship })
+        parts.flatten.mkString(" ")
+      }
 
     def normalizedUninomialWord(uw: UninomialWord): Option[String] =
       stringOf(uw).some
