@@ -7,12 +7,12 @@ import Scalaz._
 trait Canonizer { parsedResult: ScientificNameParser.Result =>
 
   def canonized: Option[String] = {
-    def canonizedNamesGroup(namesGroup: NamesGroup): Option[String] = namesGroup match {
-      case NamesGroup(Seq(name), _, _) =>
-        namesGroup.hybrid.map { _ => "× " } |+| canonizedName(name)
-      case NamesGroup(names, _, _)     =>
-        names.map(canonizedName).toVector.sequence.map { _.mkString(" × ") }
-    }
+    def canonizedNamesGroup(namesGroup: NamesGroup): Option[String] =
+      if (namesGroup.name.size == 1) {
+        namesGroup.hybrid.map { _ => "× " } |+| canonizedName(namesGroup.name.head)
+      } else {
+        namesGroup.name.map(canonizedName).toVector.sequence.map { _.mkString(" × ") }
+      }
 
     def canonizedName(nm: Name): Option[String] = {
       val parts =

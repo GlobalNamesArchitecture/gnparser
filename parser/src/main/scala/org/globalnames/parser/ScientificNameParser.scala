@@ -47,14 +47,27 @@ abstract class ScientificNameParser {
   def renderCompactJson(parserResult: Result): String =
     compact(json(parserResult))
 
-  def fromString(input: String): Result = {
+  def fromString(input: String, showWarnings: Boolean = false): Result = {
     val isVirus = checkVirus(input)
     val inputString = Input(input)
     if (isVirus || noParse(input)) {
       Result(inputString, ScientificName(isVirus = isVirus))
     } else {
-      Parser.sciName.run(inputString.unescaped) match {
-        case Success(sn: ScientificName) => Result(inputString, sn)
+      val ctx = new Parser.Context(new ParserWarnings)
+      Parser.sciName.runWithContext(inputString.unescaped, ctx) match {
+        case Success(sn: ScientificName) =>
+          if (showWarnings) {
+            val warningsStr =
+              ctx.parserWarnings.warnings.sortBy{_.level}
+                .map { w => s"lvl${w.level}: ${w.message}" }.distinct
+            if (warningsStr.nonEmpty) {
+              println("Parser warnings:")
+              warningsStr.foreach { println }
+            } else {
+              println("Parser has no warnings")
+            }
+          }
+          Result(inputString, sn)
         case Failure(err: ParseError) =>
           println(err.format(inputString.verbatim))
           Result(inputString, ScientificName())
