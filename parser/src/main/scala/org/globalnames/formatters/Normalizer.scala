@@ -75,13 +75,15 @@ trait Normalizer { parsedResult: ScientificNameParser.Result
   }
 
   def normalizedAuthorship(as: Authorship): Option[String] = {
-    def normalizedAuthorsTeam(at: AuthorsTeam): Option[String] = at match {
-      case AuthorsTeam(Vector(auth), _) => normalizedAuthor(auth).some
-      case AuthorsTeam(auths, _) =>
-        val authsStr = auths.dropRight(1).map(normalizedAuthor).mkString(", ") +
-                       " & " + normalizedAuthor(auths.last)
+    def normalizedAuthorsTeam(at: AuthorsTeam): Option[String] =
+      if (at.authors.size == 1) {
+        normalizedAuthor(at.authors.head).some
+      } else {
+        val auths = at.authors
+        val authsStr = auths.dropRight(1).map{ normalizedAuthor }.mkString(", ") +
+          " & " + normalizedAuthor(auths.last)
         authsStr.some
-    }
+      }
 
     def normalizedAuthorsGroup(ag: AuthorsGroup): Option[String] = {
       normalizedAuthorsTeam(ag.authors) |+|
