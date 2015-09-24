@@ -45,6 +45,7 @@ abstract class ScientificNameParser {
       ("canonical" -> canonical) ~
       ("canonical_with_ranks" -> parserResult.canonized(showRanks = true)) ~
       ("hybrid" -> parserResult.scientificName.isHybrid) ~
+      ("surrogate" -> parserResult.scientificName.surrogate) ~
       ("garbage" -> garbage) ~
       ("virus" -> parserResult.scientificName.isVirus) ~
       ("details" -> parserResult.detailed) ~
