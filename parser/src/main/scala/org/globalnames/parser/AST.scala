@@ -20,6 +20,11 @@ case class ScientificName(
   garbage: String = "") {
 
   val isHybrid = namesGroup.map { ng => ng.name.size > 1 || ng.hybrid.isDefined }
+  val surrogate: Boolean = {
+    val isBold = garbage.contains("BOLD") || garbage.contains("Bold")
+    val isAppr = namesGroup.map { _.name.exists { _.approximation.isDefined } }
+    isBold || isAppr.getOrElse(false)
+  }
 }
 
 case class NamesGroup(
