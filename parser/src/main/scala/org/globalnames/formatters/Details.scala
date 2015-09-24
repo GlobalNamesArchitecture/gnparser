@@ -1,6 +1,7 @@
 package org.globalnames.formatters
 
 import org.globalnames.parser._
+import org.json4s.JsonAST.JNothing
 import org.json4s.JsonDSL._
 import org.json4s.{JObject, JString, JValue}
 
@@ -13,12 +14,17 @@ trait Details { parsedResult: ScientificNameParser.Result
     def detailedNamesGroup(namesGroup: NamesGroup): JValue = namesGroup.name.map(detailedName)
 
     def detailedName(nm: Name): JValue = {
-      val typ = if (nm.genus) "genus" else "uninomial"
+      val uninomialDetails = {
+        val typ = if (nm.genus) "genus" else "uninomial"
+        typ -> (if (nm.uninomial.implied) JNothing
+                else detailedUninomial(nm.uninomial))
+      }
+
       val ignoredObj = nm.ignored.map {
           ign => JObject("ignored" -> JObject("string" -> JString(ign))) }
         .getOrElse(JObject())
 
-      (typ -> detailedUninomial(nm.uninomial)) ~
+      uninomialDetails ~
         ("species" -> nm.species.map(detailedSpecies)) ~
         ("infragenus" -> nm.subgenus.map(detailedSubGenus)) ~
         ("infraspecies" -> nm.infraspecies.map(detailedInfraspeciesGroup)) ~
