@@ -11,6 +11,9 @@ import shapeless._
 import scala.util.matching.Regex
 import scala.util.{Failure, Success}
 
+import scalaz._
+import Scalaz._
+
 abstract class ScientificNameParser {
   import ScientificNameParser.{Input, Result}
 
@@ -31,6 +34,8 @@ abstract class ScientificNameParser {
                     parserResult.input.verbatimPosAt(position.start),
                     parserResult.input.verbatimPosAt(position.end)))
       }
+    val garbage = if (parserResult.scientificName.garbage.isEmpty) None
+                  else parserResult.scientificName.garbage.some
 
     render("scientificName" -> ("id" -> parserResult.input.id) ~
       ("parsed" -> canonical.isDefined) ~
@@ -40,6 +45,7 @@ abstract class ScientificNameParser {
       ("canonical" -> canonical) ~
       ("canonical_with_ranks" -> parserResult.canonized(showRanks = true)) ~
       ("hybrid" -> parserResult.scientificName.isHybrid) ~
+      ("garbage" -> garbage) ~
       ("virus" -> parserResult.scientificName.isVirus) ~
       ("details" -> parserResult.detailed) ~
       ("positions" -> positionsJson))

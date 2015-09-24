@@ -16,7 +16,8 @@ object AstNode {
 
 case class ScientificName(
   namesGroup: Option[NamesGroup] = None,
-  isVirus: Boolean = false) {
+  isVirus: Boolean = false,
+  garbage: String = "") {
 
   val isHybrid = namesGroup.map { ng => ng.name.size > 1 || ng.hybrid.isDefined }
 }

@@ -11,8 +11,9 @@ object Parser extends org.parboiled2.Parser {
   class Context(val parserWarnings: ParserWarnings)
 
   val sciName: Rule1[ScientificName] = rule {
-    softSpace ~ sciName1 ~ anyChars ~ EOI ~>
-      ((n: NamesGroup, g: String) => ScientificName(namesGroup = n.some))
+    softSpace ~ sciName1 ~ anyChars ~ EOI ~> {(ng: NamesGroup, garbage: String) =>
+      ScientificName(namesGroup = ng.some, garbage = garbage)
+    }
   }
 
   val sciName1: Rule1[NamesGroup] = rule {
@@ -288,8 +289,8 @@ object Parser extends org.parboiled2.Parser {
   }
 
   val authorship: Rule1[Authorship] = rule {
-    combinedAuthorship | basionymYearMisformed |
-    basionymAuthorship | authorship1
+    (combinedAuthorship | basionymYearMisformed |
+     basionymAuthorship | authorship1) ~ &(spaceCharsEOI ++ "(,:")
   }
 
   val combinedAuthorship: Rule1[Authorship] = rule {
@@ -385,9 +386,8 @@ object Parser extends org.parboiled2.Parser {
   }
 
   val author2: Rule1[Author] = rule {
-    oneOrMore(authorWord).separatedBy(softSpace) ~> { (au: Seq[AuthorWord]) =>
-      Author(AstNode.id, au)
-    }
+    oneOrMore(authorWord).separatedBy(softSpace) ~ !(':') ~>
+    { (au: Seq[AuthorWord]) => Author(AstNode.id, au) }
   }
 
   val unknownAuthor: Rule1[Author] = rule {
@@ -511,5 +511,5 @@ object Parser extends org.parboiled2.Parser {
 
   val spaceChars = CharPredicate("　  \t\r\n\f_")
 
-  val spaceCharsEOI = spaceChars ++ EOI
+  val spaceCharsEOI = spaceChars ++ EOI ++ ";"
 }
