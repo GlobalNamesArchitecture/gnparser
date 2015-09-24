@@ -24,7 +24,7 @@ abstract class ScientificNameParser {
     """\b[A-Za-z]*(satellite[s]?|NPV)\b""".r :: HNil
 
   def json(parserResult: Result): JValue = {
-    val canonical = parserResult.canonized
+    val canonical = parserResult.canonized(showRanks = false)
     val positionsJson: JArray =
       parserResult.positioned.map { position =>
         JArray(List(position.nodeName,
@@ -38,6 +38,7 @@ abstract class ScientificNameParser {
       ("verbatim" -> parserResult.input.verbatim) ~
       ("normalized" -> parserResult.normalized) ~
       ("canonical" -> canonical) ~
+      ("canonical_with_ranks" -> parserResult.canonized(showRanks = true)) ~
       ("hybrid" -> parserResult.scientificName.isHybrid) ~
       ("virus" -> parserResult.scientificName.isVirus) ~
       ("details" -> parserResult.detailed) ~

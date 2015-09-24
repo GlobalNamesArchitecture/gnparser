@@ -4,8 +4,7 @@ import org.globalnames.parser._
 import scalaz.{Name => _, _}
 import Scalaz._
 
-trait Normalizer { parsedResult: ScientificNameParser.Result
-                     with Canonizer =>
+trait Normalizer { parsedResult: ScientificNameParser.Result with Canonizer =>
 
   def normalized: Option[String] = {
     def normalizedNamesGroup(namesGroup: NamesGroup): Option[String] = {
@@ -30,10 +29,9 @@ trait Normalizer { parsedResult: ScientificNameParser.Result
     def normalizedUninomial(u: Uninomial): Option[String] =
       (!u.implied).option {
         val parts =
-          Vector(u.parent.flatMap { canonizedUninomial },
-            u.rank.map { r => r.typ.getOrElse(stringOf(r)) },
-            canonizedUninomial(u),
-            u.authorship.flatMap { normalizedAuthorship })
+          Vector(u.parent.flatMap { x => canonizedUninomial(x, showRanks = true) },
+                 canonizedUninomial(u, showRanks = true),
+                 u.authorship.flatMap { normalizedAuthorship })
         parts.flatten.mkString(" ")
       }
 

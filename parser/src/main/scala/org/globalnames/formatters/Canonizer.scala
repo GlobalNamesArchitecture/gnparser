@@ -6,7 +6,7 @@ import Scalaz._
 
 trait Canonizer { parsedResult: ScientificNameParser.Result =>
 
-  def canonized: Option[String] = {
+  def canonized(showRanks: Boolean): Option[String] = {
     def canonizedNamesGroup(namesGroup: NamesGroup): Option[String] =
       if (namesGroup.name.size == 1) {
         namesGroup.hybrid.map { _ => "× " } |+| canonizedName(namesGroup.name.head)
@@ -16,7 +16,7 @@ trait Canonizer { parsedResult: ScientificNameParser.Result =>
 
     def canonizedName(nm: Name): Option[String] = {
       val parts =
-        Vector(canonizedUninomial(nm.uninomial),
+        Vector(canonizedUninomial(nm.uninomial, showRanks),
                nm.species.flatMap { canonizedSpecies },
                nm.infraspecies.flatMap { canonizedInfraspeciesGroup })
       if (parts.isEmpty) None
@@ -26,8 +26,10 @@ trait Canonizer { parsedResult: ScientificNameParser.Result =>
     def canonizedSpecies(sp: Species): Option[String] =
       Util.norm(stringOf(sp)).some
 
-    def canonizedInfraspecies(is: Infraspecies): Option[String] =
-      Util.norm(stringOf(is)).some
+    def canonizedInfraspecies(is: Infraspecies): Option[String] = {
+      is.rank.map { r => r.typ.getOrElse(stringOf(r)) }.map { _ + " " } |+|
+        Util.norm(stringOf(is)).some
+    }
 
     def canonizedInfraspeciesGroup(isg: InfraspeciesGroup): Option[String] =
       isg.group.map(canonizedInfraspecies).toVector.sequence.map { _.mkString(" ") }
@@ -35,6 +37,11 @@ trait Canonizer { parsedResult: ScientificNameParser.Result =>
     parsedResult.scientificName.namesGroup.flatMap(canonizedNamesGroup)
   }
 
-  def canonizedUninomial(uninomial: Uninomial): Option[String] =
-    (!uninomial.implied).option { Util.norm(stringOf(uninomial)) }
+  def canonizedUninomial(uninomial: Uninomial, showRanks: Boolean): Option[String] =
+    (!uninomial.implied).option {
+      Vector(showRanks.option {
+               uninomial.rank.map { r => r.typ.getOrElse(stringOf(r)) }}.join,
+             Util.norm(stringOf(uninomial)).some
+            ).flatten.mkString(" ")
+    }
 }
