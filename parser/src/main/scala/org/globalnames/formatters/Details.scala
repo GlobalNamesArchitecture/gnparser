@@ -11,7 +11,8 @@ trait Details { parsedResult: ScientificNameParser.Result
                   with Normalizer with Canonizer =>
 
   def detailed: JValue = {
-    def detailedNamesGroup(namesGroup: NamesGroup): JValue = namesGroup.name.map(detailedName)
+    def detailedNamesGroup(namesGroup: NamesGroup): JValue =
+      namesGroup.name.map { detailedName }
 
     def detailedName(nm: Name): JValue = {
       val uninomialDetails = {

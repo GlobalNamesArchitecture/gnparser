@@ -15,7 +15,7 @@ class TrackingPositionsUnescapeHtml4Translator extends AggregateTranslator {
   } :+ new NumericEntityUnescaper
 
   private final val positions = ArrayBuffer.fill(1)(0)
-  private final var identity = true
+  var identity: Boolean = true
 
   override def translate(input: CharSequence, index: Int, out: Writer): Int = {
     val consumed = translators.foldLeft(0) { (cnsmed, cst) =>

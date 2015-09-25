@@ -5,6 +5,11 @@ class ParserWarnings {
 
   var warnings = Vector.empty[Warning]
 
+  def worstLevel = {
+    if (warnings.isEmpty) 1
+    else warnings.sortBy { _.level }.last.level
+  }
+
   def add(warning: Warning): Unit = warnings :+= warning
 }
 
