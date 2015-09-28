@@ -23,8 +23,9 @@ case class ScientificName(
   val isHybrid = namesGroup.map { ng => ng.name.size > 1 || ng.hybrid.isDefined }
   val surrogate: Boolean = {
     val isBold = garbage.contains("BOLD") || garbage.contains("Bold")
-    val isAppr = namesGroup.map { _.name.exists { _.approximation.isDefined } }
-    isBold || isAppr.getOrElse(false)
+    val isAnnot = namesGroup.map { _.name.exists { n =>
+      n.approximation .isDefined || n.comparison.isDefined } }
+    isBold || isAnnot.getOrElse(false)
   }
 }
 
