@@ -1,17 +1,21 @@
 package org.globalnames.formatters
 
 import org.globalnames.parser._
+
 import scalaz.{Name => _, _}
 import Scalaz._
 
-trait Canonizer { parsedResult: ScientificNameParser.Result =>
+trait Canonizer {
+  parsedResult: ScientificNameParser.Result =>
 
   def canonized(showRanks: Boolean): Option[String] = {
     def canonizedNamesGroup(namesGroup: NamesGroup): Option[String] =
       if (namesGroup.name.size == 1) {
-        namesGroup.hybrid.map { _ => "× " } |+| canonizedName(namesGroup.name.head)
+        namesGroup.hybrid.map { _ => "× " } |+|
+          canonizedName(namesGroup.name.head)
       } else {
-        namesGroup.name.map(canonizedName).toVector.sequence.map { _.mkString(" × ") }
+        namesGroup.name.map(canonizedName).toVector.sequence
+          .map {_.mkString(" × ") }
       }
 
     def canonizedName(nm: Name): Option[String] = {
@@ -27,21 +31,24 @@ trait Canonizer { parsedResult: ScientificNameParser.Result =>
       Util.norm(stringOf(sp)).some
 
     def canonizedInfraspecies(is: Infraspecies): Option[String] = {
-      is.rank.map { r => r.typ.getOrElse(stringOf(r)) }.map { _ + " " } |+|
-        Util.norm(stringOf(is)).some
+      val rankStrMaybe = is.rank.map { r => r.typ.getOrElse(stringOf(r)) + " " }
+      showRanks.option { rankStrMaybe }.join |+| Util.norm(stringOf(is)).some
     }
 
     def canonizedInfraspeciesGroup(isg: InfraspeciesGroup): Option[String] =
-      isg.group.map(canonizedInfraspecies).toVector.sequence.map { _.mkString(" ") }
-
+      isg.group.map(canonizedInfraspecies)
+         .toVector.sequence.map { _.mkString(" ") }
     parsedResult.scientificName.namesGroup.flatMap(canonizedNamesGroup)
   }
 
-  def canonizedUninomial(uninomial: Uninomial, showRanks: Boolean): Option[String] =
+  def canonizedUninomial(uninomial: Uninomial,
+                         showRanks: Boolean): Option[String] =
     (!uninomial.implied).option {
-      Vector(showRanks.option {
-               uninomial.rank.map { r => r.typ.getOrElse(stringOf(r)) }}.join,
-             Util.norm(stringOf(uninomial)).some
-            ).flatten.mkString(" ")
+      Vector(
+        showRanks.option {
+          uninomial.parent.map { p => Util.norm(stringOf(p)) + " " } |+|
+          uninomial.rank.map { r => r.typ.getOrElse(stringOf(r)) }}.join,
+        Util.norm(stringOf(uninomial)).some
+      ).flatten.mkString(" ")
     }
 }
