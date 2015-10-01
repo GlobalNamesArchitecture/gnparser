@@ -105,8 +105,10 @@ abstract class ScientificNameParser {
   }
 }
 
-object ScientificNameParser extends ScientificNameParser {
-  final val version = BuildInfo.version
+object ScientificNameParser {
+  final val instance = new ScientificNameParser {
+    override final val version: String = BuildInfo.version
+  }
 
   case class Result(input: Input, scientificName: ScientificName)
     extends Details with Positions with Normalizer with Canonizer {

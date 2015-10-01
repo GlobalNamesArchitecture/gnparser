@@ -8,6 +8,10 @@ val commonSettings = Seq(
   description := "Fast and elegant parser for taxonomic scientific names",
   startYear := Some(2008),
   licenses := Seq("MIT" -> new URL("https://github.com/GlobalNamesArchitecture/gnparser/blob/master/LICENSE")),
+  resolvers ++= Seq(
+    "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases",
+    "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
+  ),
   javacOptions ++= Seq(
     "-encoding", "UTF-8",
     "-source", "1.6",
@@ -29,7 +33,7 @@ val noPublishingSettings = Seq(
   publishTo := Some(Resolver.file("Unused transient repository", file("target/unusedrepo"))))
 
 lazy val root = project.in(file("."))
-  .aggregate(parser)
+  .aggregate(parser, exapmles)
   .settings(noPublishingSettings: _*)
 
 lazy val parser = (project in file("./parser"))
@@ -65,3 +69,8 @@ lazy val parser = (project in file("./parser"))
         |import scala.util.{Failure, Success, Try}
         |import org.parboiled2._""".stripMargin
   )
+
+lazy val exapmles = (project in file("./examples"))
+  .dependsOn(parser)
+  .settings(commonSettings: _*)
+  .settings(noPublishingSettings: _*)
