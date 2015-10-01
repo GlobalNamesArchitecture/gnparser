@@ -33,7 +33,7 @@ lazy val root = project.in(file("."))
   .settings(noPublishingSettings: _*)
 
 lazy val parser = (project in file("./parser"))
-  .enablePlugins(BuildInfoPlugin)
+  .enablePlugins(BuildInfoPlugin, JavaAppPackaging)
   .settings(commonSettings: _*)
   .settings(
     name := "global-names-parser",
@@ -59,6 +59,8 @@ lazy val parser = (project in file("./parser"))
     ),
 
     scalacOptions in Test ++= Seq("-Yrangepos"),
+
+    mainClass in Compile := Some("org.globalnames.parser.GnParser"),
 
     initialCommands in console :=
       """import org.globalnames.parser.{ScientificNameParser => SNP, _}
