@@ -4,7 +4,7 @@ package parser
 import java.io.{BufferedOutputStream, BufferedReader, InputStreamReader, PrintStream}
 import java.net.ServerSocket
 
-import parser.{ScientificNameParser => SNP}
+import parser.ScientificNameParser.{instance => scientificNameParser}
 
 case class ParServer(port: Int = 4334) {
   def run(): Unit = {
@@ -16,7 +16,8 @@ case class ParServer(port: Int = 4334) {
     val output = new PrintStream(new BufferedOutputStream(sock.getOutputStream))
     while (true) {
       line = input.readLine.trim
-      output.println(SNP.renderCompactJson(SNP.fromString(line)))
+      output.println(scientificNameParser.renderCompactJson(
+        scientificNameParser.fromString(line)))
       output.flush()
     }
   }

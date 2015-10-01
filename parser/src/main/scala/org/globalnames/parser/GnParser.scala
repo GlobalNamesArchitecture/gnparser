@@ -5,7 +5,7 @@ import java.io.{File, PrintWriter}
 
 import scala.io.Source
 import scala.util.{Failure, Success, Try}
-import parser.{ScientificNameParser => SNP}
+import parser.ScientificNameParser.{instance => scientificNameParser}
 
 object GnParser {
   val usage = """
@@ -62,7 +62,8 @@ object GnParser {
           f.getLines.zipWithIndex.foreach {
             case (line, i) => {
               if ((i + 1) % 10000 == 0) println(s"Parsed ${i + 1} lines")
-              val parsed = SNP.renderCompactJson(SNP.fromString(line.trim))
+              val parsed = scientificNameParser.renderCompactJson(
+                scientificNameParser.fromString(line.trim))
               writer.write(parsed + "\n")
             }
           }
@@ -84,7 +85,8 @@ object GnParser {
         startFileParse(input, output)
       }
       case o if o.contains('name) =>
-        println(SNP.renderCompactJson(SNP.fromString(o('name))))
+        println(scientificNameParser.renderCompactJson(
+          scientificNameParser.fromString(o('name))))
     }
   }
 }
