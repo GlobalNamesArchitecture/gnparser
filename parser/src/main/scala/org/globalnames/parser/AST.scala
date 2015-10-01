@@ -17,6 +17,7 @@ object AstNode {
 case class ScientificName(
   namesGroup: Option[NamesGroup] = None,
   isVirus: Boolean = false,
+  quality: Int = 1,
   garbage: String = "") {
 
   val isHybrid = namesGroup.map { ng => ng.name.size > 1 || ng.hybrid.isDefined }
@@ -81,6 +82,10 @@ case class Uninomial(
   implied: Boolean = false) extends AstNode
 
 case class UninomialWord(
+  id: Int,
+  pos: CapturePos) extends AstNode
+
+case class SpeciesWord(
   id: Int,
   pos: CapturePos) extends AstNode
 

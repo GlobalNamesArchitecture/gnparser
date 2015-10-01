@@ -28,6 +28,7 @@ abstract class ScientificNameParser {
 
   def json(parserResult: Result): JValue = {
     val canonical = parserResult.canonized(showRanks = false)
+    val quality = canonical.map { _ => parserResult.scientificName.quality }
     val positionsJson: JArray =
       parserResult.positioned.map { position =>
         JArray(List(position.nodeName,
@@ -39,6 +40,7 @@ abstract class ScientificNameParser {
 
     render("scientificName" -> ("id" -> parserResult.input.id) ~
       ("parsed" -> canonical.isDefined) ~
+      ("quality" -> quality) ~
       ("parser_version" -> version) ~
       ("verbatim" -> parserResult.input.verbatim) ~
       ("normalized" -> parserResult.normalized) ~
@@ -61,8 +63,9 @@ abstract class ScientificNameParser {
     if (isVirus || noParse(input)) {
       Result(inputString, ScientificName(isVirus = isVirus))
     } else {
-      val ctx = new Parser.Context(new ParserWarnings)
-      Parser.sciName.runWithContext(inputString.unescaped, ctx) match {
+      val input = inputString.unescaped
+      val ctx = new Parser.Context(new ParserWarnings, inputString.preprocessed)
+      Parser.sciName.runWithContext(input, ctx) match {
         case Success(sn: ScientificName) =>
           if (showWarnings) {
             val warningsStr =
@@ -118,10 +121,15 @@ object ScientificNameParser {
   }
 
   case class Input(verbatim: String) {
-    private lazy val UNESCAPE_HTML4 = new TrackingPositionsUnescapeHtml4Translator
-    lazy val unescaped: String = {
+    private lazy val UNESCAPE_HTML4 =
+      new TrackingPositionsUnescapeHtml4Translator
+    lazy val (unescaped, preprocessed): (String, Boolean) = {
       val unescaped = UNESCAPE_HTML4.translate(verbatim)
-      normalizeHybridChar(removeJunk(unescaped))
+      val preprocessed = normalizeHybridChar(removeJunk(unescaped))
+
+      val isPreprocessed =
+        !UNESCAPE_HTML4.identity || unescaped.length != preprocessed.length
+      (preprocessed, isPreprocessed)
     }
 
     val id: String = {
