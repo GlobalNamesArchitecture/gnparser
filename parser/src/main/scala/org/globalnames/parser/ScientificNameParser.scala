@@ -2,6 +2,7 @@ package org.globalnames.parser
 
 import org.apache.commons.id.uuid.UUID
 import org.globalnames.formatters.{Canonizer, Details, Normalizer, Positions}
+import org.globalnames.parser.ParserWarnings.Warning
 import org.json4s.JsonAST.{JArray, JValue}
 import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods._
@@ -29,6 +30,14 @@ abstract class ScientificNameParser {
   def json(parserResult: Result): JValue = {
     val canonical = parserResult.canonized(showRanks = false)
     val quality = canonical.map { _ => parserResult.scientificName.quality }
+    val qualityWarnings: Option[JArray] =
+      if (parserResult.warnings.isEmpty) None
+      else {
+        val warningsJArr: JArray =
+          parserResult.warnings.sorted
+                      .map { w => JArray(List(w.level, w.message)) }.distinct
+        warningsJArr.some
+      }
     val positionsJson: JArray =
       parserResult.positioned.map { position =>
         JArray(List(position.nodeName,
@@ -41,6 +50,7 @@ abstract class ScientificNameParser {
     render("scientificName" -> ("id" -> parserResult.input.id) ~
       ("parsed" -> canonical.isDefined) ~
       ("quality" -> quality) ~
+      ("quality_warnings" -> qualityWarnings) ~
       ("parser_version" -> version) ~
       ("verbatim" -> parserResult.input.verbatim) ~
       ("normalized" -> parserResult.normalized) ~
@@ -61,30 +71,18 @@ abstract class ScientificNameParser {
     val isVirus = checkVirus(input)
     val inputString = Input(input)
     if (isVirus || noParse(input)) {
-      Result(inputString, ScientificName(isVirus = isVirus))
+      Result(inputString, ScientificName(isVirus = isVirus), Vector.empty)
     } else {
       val input = inputString.unescaped
       val ctx = new Parser.Context(new ParserWarnings, inputString.preprocessed)
       Parser.sciName.runWithContext(input, ctx) match {
         case Success(sn: ScientificName) =>
-          if (showWarnings) {
-            val warningsStr =
-              ctx.parserWarnings.warnings.sortBy{_.level}
-                .map { w => s"lvl${w.level}: ${w.message}" }.distinct
-            if (warningsStr.nonEmpty) {
-              println("Parser warnings:")
-              warningsStr.foreach { println }
-            } else {
-              println("Parser has no warnings")
-            }
-          }
-          Result(inputString, sn)
+          Result(inputString, sn, ctx.parserWarnings.warnings)
         case Failure(err: ParseError) =>
           println(err.format(inputString.verbatim))
-          Result(inputString, ScientificName())
+          Result(inputString, ScientificName(), Vector.empty)
         case Failure(err) =>
-          //println(err)
-          Result(inputString, ScientificName())
+          Result(inputString, ScientificName(), Vector.empty)
       }
     }
   }
@@ -113,7 +111,8 @@ object ScientificNameParser {
     override final val version: String = BuildInfo.version
   }
 
-  case class Result(input: Input, scientificName: ScientificName)
+  case class Result(input: Input, scientificName: ScientificName,
+                    warnings: Vector[Warning])
     extends Details with Positions with Normalizer with Canonizer {
 
     def stringOf(astNode: AstNode): String =

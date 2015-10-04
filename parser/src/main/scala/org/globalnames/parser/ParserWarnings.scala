@@ -15,4 +15,11 @@ class ParserWarnings {
 
 object ParserWarnings {
   case class Warning(level: Int, message: String, astNode: AstNode)
+    extends Ordered[Warning] {
+
+    import scala.math.Ordered.orderingToOrdered
+
+    override def compare(that: Warning): Int =
+      (-level, message) compare (-that.level, that.message)
+  }
 }
