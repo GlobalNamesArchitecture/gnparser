@@ -5,9 +5,9 @@ Global Names Parser
 [![Stories in Ready][waffle_ready_svg]][waffle]
 [![Stories in Progress][waffle_progress_svg]][waffle]
 
-Port of Biodiversity gem (a scientific names parser written in ruby)
+Port of Biodiversity gem (a scientific names parser written in ruby) to Scala
 
-Please note that gnparser is at the very early stage of development
+Global Names Parser is approaching the first public release
 
 Requirements
 ------------
@@ -29,9 +29,9 @@ sbt test
 Strings with characters outside of the ASCII range generate erroneous UUIDs v5
 on systems with non-UTF-8 encodings.
 
-The reason is that calculation of UUID v5 converts a string to bytes first. 
-The bytes are created using the system's default encoding. On Windows OS 
-default encoding is usually Cp1251 (but not UTF-8). 
+The reason is that calculation of UUID v5 converts a string to bytes first.
+The bytes are created using the system's default encoding. On Windows OS
+default encoding is usually Cp1251 (but not UTF-8).
 
 On Unix-like systems the default encoding more often then not is UTF-8 and ID
 is calculated correctly.
