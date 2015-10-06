@@ -149,13 +149,12 @@ object ScientificNameParser {
   def removeJunk(input: String): String = {
     val notes = """(?ix)\s+(species\s+group|
                    species\s+complex|group|author)\b.*$"""
-    val taxonConcepts1 = """(?i)\s+(sensu\.|sensu|auct\.|auct)\b.*$"""
-    val taxonConcepts2 = """(?x)\s+
+    val taxonConcepts1 = """(?i)\s+(sensu|auct|sec|near)\.?\b.*$"""
+    val taxonConcepts2 = """(?x)(,\s*|\s+)
                        (\(?s\.\s?s\.|
                        \(?s\.\s?l\.|
                        \(?s\.\s?str\.|
-                       \(?s\.\s?lat\.|
-                      sec\.|sec|near)\b.*$"""
+                       \(?s\.\s?lat\.).*$"""
     val taxonConcepts3 = """(?i)(,\s*|\s+)(pro parte|p\.\s?p\.)\s*$"""
     val nomenConcepts  = """(?i)(,\s*|\s+)(\(?nomen|\(?nom\.|\(?comb\.).*$"""
     val lastWordJunk  = """(?ix)(,\s*|\s+)
