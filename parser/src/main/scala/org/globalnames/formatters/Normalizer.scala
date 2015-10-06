@@ -29,8 +29,7 @@ trait Normalizer { parsedResult: ScientificNameParser.Result with Canonizer =>
     def normalizedUninomial(u: Uninomial): Option[String] =
       (!u.implied).option {
         val parts =
-          Vector(u.parent.flatMap { x => canonizedUninomial(x, showRanks = true) },
-                 canonizedUninomial(u, showRanks = true),
+          Vector(canonizedUninomial(u, showRanks = true),
                  u.authorship.flatMap { normalizedAuthorship })
         parts.flatten.mkString(" ")
       }
@@ -38,7 +37,8 @@ trait Normalizer { parsedResult: ScientificNameParser.Result with Canonizer =>
     def normalizedUninomialWord(uw: UninomialWord): Option[String] =
       stringOf(uw).some
 
-    def normalizedSubGenus(sg: SubGenus): Option[String] = normalizedUninomialWord(sg.subgenus)
+    def normalizedSubGenus(sg: SubGenus): Option[String] =
+      normalizedUninomialWord(sg.subgenus)
 
     def normalizedSpecies(sp: Species): Option[String] = {
       Util.norm(stringOf(sp)).some |+|
