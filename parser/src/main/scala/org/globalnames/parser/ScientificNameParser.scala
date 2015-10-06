@@ -160,10 +160,8 @@ object ScientificNameParser {
     val taxonConcepts3 = """(?i)(,\s*|\s+)(pro parte|p\.\s?p\.)\s*$"""
     val nomenConcepts  = """(?i)(,\s*|\s+)(\(?nomen|\(?nom\.|\(?comb\.).*$"""
     val lastWordJunk  = """(?ix)(,\s*|\s+)
-                    (spp\.|spp|var\.|
-                     var|von|van|ined\.|
-                     ined|sensu|new|non|nec|
-                     nudum|cf\.|cf|sp\.|sp|
+                    (var\.|var|von|van|ined\.|
+                     ined|sensu|new|non|nec|nudum|
                      ssp\.|ssp|subsp|subgen|hybrid|hort\.|hort)\??\s*$"""
     substitute(input, List(notes, taxonConcepts1,
       taxonConcepts2, taxonConcepts3, nomenConcepts, lastWordJunk))
