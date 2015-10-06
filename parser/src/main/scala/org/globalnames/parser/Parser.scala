@@ -549,7 +549,8 @@ object Parser extends org.parboiled2.Parser {
   }
 
   val yearWithPage: Rule1[Year] = rule {
-    (yearWithChar | yearNumber) ~ space ~ ':' ~ space ~ oneOrMore(Digit) ~>
+    (yearWithChar | yearNumber) ~ softSpace ~ ':' ~ softSpace ~
+      oneOrMore(Digit) ~>
     { (y: Year) => {
       ctx.parserWarnings.add(Warning(3, "Year with page info", y))
       y
