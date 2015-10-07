@@ -101,6 +101,25 @@ val parsed: SciName = SciName.fromString("Homo sapiens L.")
 val parsedJson = parsed.toJson
 ```
 
+Running the Examples
+--------------------
+
+All examples are stored at [examples folder][examples-folder]. There are 
+currently examples for Java language.
+
+[examples-folder]: /examples
+
+### Java
+
+Java examples is an SBT subproject that is stored at [java subfolder][examples-folder/java].
+To run it execute the command:
+
+```
+sbt ";project exapmles;run"
+```
+
+[examples-folder/java]: /examples/java
+
 Copyright
 ---------
 
