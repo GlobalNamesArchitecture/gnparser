@@ -72,7 +72,7 @@ lazy val parser = (project in file("./parser"))
         |import org.parboiled2._""".stripMargin
   )
 
-lazy val exapmles = (project in file("./examples"))
+lazy val exapmles = (project in file("./examples/java"))
   .dependsOn(parser)
   .settings(commonSettings: _*)
   .settings(noPublishingSettings: _*)

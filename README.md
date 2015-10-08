@@ -101,6 +101,46 @@ val parsed: SciName = SciName.fromString("Homo sapiens L.")
 val parsedJson = parsed.toJson
 ```
 
+Running the Examples
+--------------------
+
+All examples are stored at [examples folder][examples-folder]. There are 
+currently examples for Java and Jython languages.
+
+[examples-folder]: /examples
+
+### Java
+
+Java examples is an SBT subproject that is stored at [java subfolder][examples-folder/java].
+To run it execute the command:
+
+```
+sbt ";project exapmles;run"
+```
+
+[examples-folder/java]: /examples/java
+
+### Jython
+
+[Jython][jython] is a Python language implementation for Java Virtual Machine.
+There is no SBT subproject for Jython as there is for [Java](#Java). A distribution 
+should be installed locally [according to instruction][jython-installation]. 
+We need GnParser jar that Jython can reference. To create one run `sbt "parser/assembly"`
+command. It would create fat-jar at 
+`parser/target/scala-2.11/global-names-parser-assembly-{VERSION}.jar`. Run the 
+command to execute [Jython script][jython-example] (`$Jython_HOME` should be
+defined, and `VERSION` should be replaced with current version):
+
+```bash
+java -jar $Jython_HOME/jython.jar \
+  -Dpython.path=parser/target/scala-2.11/global-names-parser-assembly-{VERSION}.jar \
+  examples/jython/parser.py
+```
+ 
+[jython]: http://www.jython.org/
+[jython-installation]: https://wiki.python.org/jython/InstallationInstructions
+[jython-example]: examples/jython/parser.py
+
 Copyright
 ---------
 
