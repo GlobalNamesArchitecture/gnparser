@@ -209,7 +209,7 @@ object Parser extends org.parboiled2.Parser {
   }
 
   val uninomialCombo: Rule1[Uninomial] = rule {
-    uninomialCombo1 | uninomialCombo2 ~> { (u: Uninomial) =>
+    (uninomialCombo1 | uninomialCombo2) ~> { (u: Uninomial) =>
       ctx.parserWarnings.add(Warning(2, "Combination of two uninomials", u))
       u
     }
