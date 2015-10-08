@@ -20,6 +20,6 @@ object ParserWarnings {
     import scala.math.Ordered.orderingToOrdered
 
     override def compare(that: Warning): Int =
-      (-level, message) compare (-that.level, that.message)
+      (-level, message).compare((-that.level, that.message))
   }
 }
