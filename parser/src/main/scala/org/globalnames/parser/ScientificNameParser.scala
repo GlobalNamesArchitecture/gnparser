@@ -49,7 +49,7 @@ abstract class ScientificNameParser {
     val garbage = if (parserResult.scientificName.garbage.isEmpty) None
                   else parserResult.scientificName.garbage.some
 
-    render("scientificName" -> ("id" -> parserResult.input.id) ~
+    render("scientific_name" -> ("id" -> parserResult.input.id) ~
       ("parsed" -> parsed) ~
       ("quality" -> quality) ~
       ("quality_warnings" -> qualityWarnings) ~
@@ -57,7 +57,7 @@ abstract class ScientificNameParser {
       ("verbatim" -> parserResult.input.verbatim) ~
       ("normalized" -> parserResult.normalized) ~
       ("canonical" -> canonical) ~
-      ("canonical_with_ranks" -> parserResult.canonized(showRanks = true)) ~
+      ("canonical_extended" -> parserResult.canonized(showRanks = true)) ~
       ("hybrid" -> parserResult.scientificName.isHybrid) ~
       ("surrogate" -> parserResult.scientificName.surrogate) ~
       ("garbage" -> garbage) ~
