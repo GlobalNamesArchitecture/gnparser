@@ -30,6 +30,7 @@ abstract class ScientificNameParser {
   def json(parserResult: Result): JValue = {
     val canonical = parserResult.canonized(showRanks = false)
     val quality = canonical.map { _ => parserResult.scientificName.quality }
+    val parsed = canonical.isDefined
     val qualityWarnings: Option[JArray] =
       if (parserResult.warnings.isEmpty) None
       else {
@@ -38,17 +39,18 @@ abstract class ScientificNameParser {
                       .map { w => JArray(List(w.level, w.message)) }.distinct
         warningsJArr.some
       }
-    val positionsJson: JArray =
+    val positionsJson: Option[JArray] = parsed.option {
       parserResult.positioned.map { position =>
         JArray(List(position.nodeName,
-                    parserResult.input.verbatimPosAt(position.start),
-                    parserResult.input.verbatimPosAt(position.end)))
+          parserResult.input.verbatimPosAt(position.start),
+          parserResult.input.verbatimPosAt(position.end)))
       }
+    }
     val garbage = if (parserResult.scientificName.garbage.isEmpty) None
                   else parserResult.scientificName.garbage.some
 
     render("scientificName" -> ("id" -> parserResult.input.id) ~
-      ("parsed" -> canonical.isDefined) ~
+      ("parsed" -> parsed) ~
       ("quality" -> quality) ~
       ("quality_warnings" -> qualityWarnings) ~
       ("parser_version" -> version) ~
