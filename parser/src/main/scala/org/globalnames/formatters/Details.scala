@@ -79,8 +79,8 @@ trait Details { parsedResult: ScientificNameParser.Result
           ("exAuthorTeam" -> ag.authorsEx.map(detailedAuthorsTeam))
 
       ("authorship" -> parsedResult.normalizedAuthorship(as)) ~
-        ("basionymAuthorTeam" -> as.basionym.map(detailedAuthorsGroup)) ~
-        ("combinationAuthorTeam" -> as.combination.map(detailedAuthorsGroup))
+        ("basionym_author_team" -> as.basionym.map(detailedAuthorsGroup)) ~
+        ("combination_author_team" -> as.combination.map(detailedAuthorsGroup))
     }
 
     parsedResult.scientificName.namesGroup.map(detailedNamesGroup)
