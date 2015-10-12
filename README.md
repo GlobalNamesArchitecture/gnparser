@@ -50,6 +50,7 @@ First run
 ```
 sbt publish-local
 ```
+
 It will create package at `$HOME/.ivy2/local/org.globalnames`
 
 You can use the package on the same machine by adding to your sbt file
@@ -104,10 +105,12 @@ val parsedJson = parsed.toJson
 Running the Examples
 --------------------
 
-All examples are stored at [examples folder][examples-folder]. There are 
-currently examples for Java and Jython languages.
+All examples are stored at [examples folder][examples-folder]. There are
+currently examples for Java, Jython and R languages.
 
-[examples-folder]: /examples
+Jython and R need reference GnParser jar. Run `sbt "parser/assembly"`
+command to create fat-jar at
+`parser/target/scala-2.11/global-names-parser-assembly-{VERSION}.jar`. `VERSION` would be of current GnParser version.
 
 ### Java
 
@@ -118,28 +121,30 @@ To run it execute the command:
 sbt ";project exapmles;run"
 ```
 
-[examples-folder/java]: /examples/java
-
 ### Jython
 
 [Jython][jython] is a Python language implementation for Java Virtual Machine.
-There is no SBT subproject for Jython as there is for [Java](#Java). A distribution 
-should be installed locally [according to instruction][jython-installation]. 
-We need GnParser jar that Jython can reference. To create one run `sbt "parser/assembly"`
-command. It would create fat-jar at 
-`parser/target/scala-2.11/global-names-parser-assembly-{VERSION}.jar`. Run the 
-command to execute [Jython script][jython-example] (`$Jython_HOME` should be
-defined, and `VERSION` should be replaced with current version):
+There is no SBT subproject for Jython as there is for [Java](#Java). A distribution
+should be installed locally [according to instruction][jython-installation].
+Jython needs reference GnParser fat-jar. Run the
+command to execute [Jython script][examples-folder/jython] (`$Jython_HOME` should be
+defined):
 
 ```bash
 java -jar $Jython_HOME/jython.jar \
   -Dpython.path=parser/target/scala-2.11/global-names-parser-assembly-{VERSION}.jar \
   examples/jython/parser.py
 ```
- 
-[jython]: http://www.jython.org/
-[jython-installation]: https://wiki.python.org/jython/InstallationInstructions
-[jython-example]: examples/jython/parser.py
+
+### R
+
+[R is a language and environment][R-env] for statistical computing and graphics.
+[Usage example][examples-folder/R] requires [rJava package][rJava] to be installed.
+Example script can be run with the command:
+
+```
+Rscript examples/R/parser.R
+```
 
 Copyright
 ---------
@@ -147,10 +152,17 @@ Copyright
 Released under [MIT license][license]
 
 [license]: /LICENSE
-
 [ci_svg]: https://secure.travis-ci.org/GlobalNamesArchitecture/gnparser.svg
 [ci_link]: http://travis-ci.org/GlobalNamesArchitecture/gnparser
 [waffle_ready_svg]: https://badge.waffle.io/GlobalNamesArchitecture/gnparser.svg?label=ready&title=Issues%20To%20Do
 [waffle]: https://waffle.io/GlobalNamesArchitecture/gnparser
 [waffle_progress_svg]: https://badge.waffle.io/GlobalNamesArchitecture/gnparser.svg?label=in%20progress&title=In%20Progress
 [waffle]: https://waffle.io/GlobalNamesArchitecture/gnparser
+[R-env]: https://www.r-project.org/about.html
+[rJava]: https://cran.r-project.org/web/packages/rJava/index.html
+[jython]: http://www.jython.org/
+[jython-installation]: https://wiki.python.org/jython/InstallationInstructions
+[examples-folder/jython]: /examples/jython/parser.py
+[examples-folder]: /examples
+[examples-folder/java]: /examples/java
+[examples-folder/R]: /examples/R
