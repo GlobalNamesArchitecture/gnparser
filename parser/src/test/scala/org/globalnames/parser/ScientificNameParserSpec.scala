@@ -19,35 +19,22 @@ class ScientificNameParserSpec extends Specification {
     val Array(inputStr, expectedJsonStr) = line.split('|')
     val parsed = scientificNameParser.fromString(inputStr)
 
-    val json1 = parse(expectedJsonStr)
     val json = parse(expectedJsonStr)
     val jsonParsed = scientificNameParser.json(parsed).removeField { case (_, v) => v == JNothing }
     val jsonDiff = {
       val Diff(changed, added, deleted) = jsonParsed.diff(json)
-
-      val r = json1.mapField {
-        case (x, y) if x == "uninomial" => "uninomial" -> jsonParsed \\ "uninomial"
-        case x => x
-      }
-      val k = s"""Line:
-                 |$line
-          |Fixed:
-          |$inputStr|${compact(r)}
-          |Original:
-          |${pretty(jsonParsed)}
-          |Expected:
-          |${pretty(json)}
-          |Changed:
-          |${pretty(changed)}
-          |Added:
-          |${pretty(added)}
-          |Deleted:
-          |${pretty(deleted)}""".stripMargin
-      if (changed != JNothing || added != JNothing || deleted != JNothing) {
-        println(k)
-        println("")
-      }
-      k
+      s"""Line:
+         |$line
+         |Original:
+         |${pretty(jsonParsed)}
+         |Expected:
+         |${pretty(json)}
+         |Changed:
+         |${pretty(changed)}
+         |Added:
+         |${pretty(added)}
+         |Deleted:
+         |${pretty(deleted)}""".stripMargin
     }
 
     s"parse correctly: '$inputStr'" in {
