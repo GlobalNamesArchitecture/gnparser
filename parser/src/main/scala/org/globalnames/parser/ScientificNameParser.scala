@@ -2,7 +2,6 @@ package org.globalnames.parser
 
 import org.apache.commons.id.uuid.UUID
 import org.globalnames.formatters.{Canonizer, Details, Normalizer, Positions}
-import org.globalnames.parser.ParserWarnings.Warning
 import org.json4s.JsonAST.{JArray, JValue}
 import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods._
@@ -73,18 +72,18 @@ abstract class ScientificNameParser {
     val isVirus = checkVirus(input)
     val inputString = Input(input)
     if (isVirus || noParse(input)) {
-      Result(inputString, ScientificName(isVirus = isVirus), Vector.empty)
+      Result(inputString, ScientificName(isVirus = isVirus))
     } else {
       val input = inputString.unescaped
-      val ctx = new Parser.Context(new ParserWarnings, inputString.preprocessed)
+      val ctx = new Parser.Context(inputString.preprocessed)
       Parser.sciName.runWithContext(input, ctx) match {
-        case Success(sn: ScientificName) =>
-          Result(inputString, sn, ctx.parserWarnings.warnings)
+        case Success(scientificName :: warnings :: HNil) =>
+          Result(inputString, scientificName, warnings)
         case Failure(err: ParseError) =>
           println(err.format(inputString.verbatim))
-          Result(inputString, ScientificName(), Vector.empty)
+          Result(inputString, ScientificName())
         case Failure(err) =>
-          Result(inputString, ScientificName(), Vector.empty)
+          Result(inputString, ScientificName())
       }
     }
   }
@@ -114,7 +113,7 @@ object ScientificNameParser {
   }
 
   case class Result(input: Input, scientificName: ScientificName,
-                    warnings: Vector[Warning])
+                    warnings: Vector[Warning] = Vector.empty)
     extends Details with Positions with Normalizer with Canonizer {
 
     def stringOf(astNode: AstNode): String =
