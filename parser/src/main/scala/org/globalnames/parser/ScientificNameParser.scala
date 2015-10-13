@@ -69,7 +69,7 @@ abstract class ScientificNameParser {
   def renderCompactJson(parserResult: Result): String =
     compact(json(parserResult))
 
-  def fromString(input: String, showWarnings: Boolean = false): Result = {
+  def fromString(input: String): Result = {
     val isVirus = checkVirus(input)
     val inputString = Input(input)
     if (isVirus || noParse(input)) {
