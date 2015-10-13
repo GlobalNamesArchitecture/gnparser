@@ -476,7 +476,6 @@ object Parser extends org.parboiled2.Parser {
     (authorWord1 | authorWord2 | authorPre) ~> {
       (aw: AuthorWord) => {
         val word = state.input.sliceString(aw.pos.start, aw.pos.end)
-        val wordSet = word.toSet - '-'
         if (word.size > 2 &&
           word.forall { ch => ch == '-' || authCharUpperStr.indexOf(ch) >= 0 }) {
           ctx.parserWarnings.add(Warning(2, "Author in upper case", aw))
