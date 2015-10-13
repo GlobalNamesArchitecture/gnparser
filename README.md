@@ -1,9 +1,9 @@
 Global Names Parser
 ===================
 
-[![Continuous Integration Status][ci_svg]][ci_link]
-[![Stories in Ready][waffle_ready_svg]][waffle]
-[![Stories in Progress][waffle_progress_svg]][waffle]
+[![Continuous Integration Status][ci-svg]][ci-link]
+[![Stories in Ready][waffle-ready-svg]][waffle]
+[![Stories in Progress][waffle-progress-svg]][waffle]
 
 Port of Biodiversity gem (a scientific names parser written in ruby) to Scala
 
@@ -138,8 +138,8 @@ java -jar $Jython_HOME/jython.jar \
 
 ### R
 
-[R is a language and environment][R-env] for statistical computing and graphics.
-[Usage example][examples-folder/R] requires [rJava package][rJava] to be installed.
+[R is a language and environment][r-env] for statistical computing and graphics.
+[Usage example][examples-folder/R] requires [rJava package][rjava] to be installed.
 Example script can be run with the command:
 
 ```
@@ -164,19 +164,19 @@ Copyright
 
 Released under [MIT license][license]
 
-[license]: /LICENSE
-[ci_svg]: https://secure.travis-ci.org/GlobalNamesArchitecture/gnparser.svg
-[ci_link]: http://travis-ci.org/GlobalNamesArchitecture/gnparser
-[waffle_ready_svg]: https://badge.waffle.io/GlobalNamesArchitecture/gnparser.svg?label=ready&title=Issues%20To%20Do
-[waffle]: https://waffle.io/GlobalNamesArchitecture/gnparser
-[waffle_progress_svg]: https://badge.waffle.io/GlobalNamesArchitecture/gnparser.svg?label=in%20progress&title=In%20Progress
-[waffle]: https://waffle.io/GlobalNamesArchitecture/gnparser
-[R-env]: https://www.r-project.org/about.html
-[rJava]: https://cran.r-project.org/web/packages/rJava/index.html
-[jython]: http://www.jython.org/
-[jython-installation]: https://wiki.python.org/jython/InstallationInstructions
+[ci-link]: http://travis-ci.org/GlobalNamesArchitecture/gnparser
+[ci-svg]: https://secure.travis-ci.org/GlobalNamesArchitecture/gnparser.svg
+[examples-folder/R]: /examples/R
+[examples-folder/java]: /examples/java
 [examples-folder/jython]: /examples/jython/parser.py
 [examples-folder]: /examples
-[examples-folder/java]: /examples/java
-[examples-folder/R]: /examples/R
 [jruby-installation]: http://jruby.org/getting-started
+[jython-installation]: https://wiki.python.org/jython/InstallationInstructions
+[jython]: http://www.jython.org/
+[license]: /LICENSE
+[r-env]: https://www.r-project.org/about.html
+[rjava]: https://cran.r-project.org/web/packages/rJava/index.html
+[waffle-progress-svg]: https://badge.waffle.io/GlobalNamesArchitecture/gnparser.svg?label=in%20progress&title=In%20Progress
+[waffle-ready-svg]: https://badge.waffle.io/GlobalNamesArchitecture/gnparser.svg?label=ready&title=Issues%20To%20Do
+[waffle]: https://waffle.io/GlobalNamesArchitecture/gnparser
+[waffle]: https://waffle.io/GlobalNamesArchitecture/gnparser
