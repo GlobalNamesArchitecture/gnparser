@@ -106,9 +106,9 @@ Running the Examples
 --------------------
 
 All examples are stored at [examples folder][examples-folder]. There are
-currently examples for Java, Jython and R languages.
+currently examples for Java, Jython, JRuby and R languages.
 
-Jython and R need reference GnParser jar. Run `sbt "parser/assembly"`
+Jython, JRuby and R need reference GnParser jar. Run `sbt "parser/assembly"`
 command to create fat-jar at
 `parser/target/scala-2.11/global-names-parser-assembly-{VERSION}.jar`. `VERSION` would be of current GnParser version.
 
@@ -118,7 +118,7 @@ Java examples is an SBT subproject that is stored at [java subfolder][examples-f
 To run it execute the command:
 
 ```
-sbt ";project exapmles;run"
+sbt ";project examples;run"
 ```
 
 ### Jython
@@ -146,6 +146,19 @@ Example script can be run with the command:
 Rscript examples/R/parser.R
 ```
 
+### JRuby
+
+[JRuby][jruby] is an implementation of Ruby for Java Virtual Machine. A distribution
+should be installed locally [according to instruction][jruby-installation]. Jython
+needs reference GnParser fat-jar. Use the following command from the project root
+directory to run the example code:
+
+```bash
+jruby -J-classpath \
+  parser/target/scala-2.11/global-names-parser-assembly-{VERSION}.jar \
+  examples/jruby/parser.rb
+```
+
 Copyright
 ---------
 
@@ -166,3 +179,4 @@ Released under [MIT license][license]
 [examples-folder]: /examples
 [examples-folder/java]: /examples/java
 [examples-folder/R]: /examples/R
+[jruby-installation]: http://jruby.org/getting-started
