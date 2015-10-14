@@ -49,7 +49,7 @@ lazy val parser = (project in file("./parser"))
 
     libraryDependencies ++= Seq(
       "org.json4s"         %% "json4s-jackson"         % "3.2.11",
-      "org.littleshoot"    %  "littleshoot-commons-id" % "1.0.3",
+      "com.fasterxml.uuid" %  "java-uuid-generator"    % "3.1.3",
       "org.apache.commons" %  "commons-lang3"          % "3.4",
       "org.globalnames"    %% "parboiled"              % "2.2.0-2015.09.11-SNAPSHOT",
       "com.chuusai"        %% "shapeless"              % "2.2.3",
