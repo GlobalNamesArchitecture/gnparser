@@ -1,6 +1,8 @@
 package org.globalnames.parser
 
-import org.apache.commons.id.uuid.UUID
+import java.util.UUID
+
+import com.fasterxml.uuid.{Generators, StringArgGenerator}
 import org.globalnames.formatters.{Canonizer, Details, Normalizer, Positions}
 import org.json4s.JsonAST.{JArray, JValue}
 import org.json4s.JsonDSL._
@@ -108,6 +110,11 @@ abstract class ScientificNameParser {
 }
 
 object ScientificNameParser {
+  private final val uuidGenerator: StringArgGenerator = {
+    val namespace = UUID.fromString("90181196-fecf-5082-a4c1-411d4f314cda")
+    Generators.nameBasedGenerator(namespace)
+  }
+
   final val instance = new ScientificNameParser {
     override final val version: String = BuildInfo.version
   }
@@ -132,11 +139,7 @@ object ScientificNameParser {
       (preprocessed, isPreprocessed)
     }
 
-    val id: String = {
-      val gn = UUID.fromString("90181196-fecf-5082-a4c1-411d4f314cda")
-      val uuid = UUID.nameUUIDFromString(verbatim, gn, "SHA1").toString
-      s"${uuid.substring(0, 14)}5${uuid.substring(15, uuid.length)}"
-    }
+    val id: String = uuidGenerator.generate(verbatim).toString
 
     def verbatimPosAt(pos: Int): Int = UNESCAPE_HTML4.at(pos)
   }
