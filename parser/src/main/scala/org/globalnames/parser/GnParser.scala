@@ -11,13 +11,13 @@ object GnParser {
   val usage = """
     Usage:
       - to run a server (default: --port 4334)
-      parserver --server [--port 1234]
+      gnparse --server [--port 1234]
 
       - to parse names from a file (default output is output.json)
-      parserver --input file_with_names.txt [--output output_file.json]
+      gnparse --input file_with_names.txt [--output output_file.json]
 
       - to parse one name:
-      parserver "Betula alba"
+      gnparse "Parus major Linnaeus, 1758"
   """
 
   def main(args: Array[String]) {
