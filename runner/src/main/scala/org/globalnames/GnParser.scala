@@ -1,11 +1,11 @@
 package org.globalnames
-package parser
 
 import java.io.{File, PrintWriter}
 
+import org.globalnames.parser.ScientificNameParser.{instance => scientificNameParser}
+
 import scala.io.Source
 import scala.util.{Failure, Success, Try}
-import parser.ScientificNameParser.{instance => scientificNameParser}
 
 object GnParser {
   val usage = """

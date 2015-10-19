@@ -1,10 +1,9 @@
 package org.globalnames
-package parser
 
 import java.io.{BufferedOutputStream, BufferedReader, InputStreamReader, PrintStream}
 import java.net.ServerSocket
 
-import parser.ScientificNameParser.{instance => scientificNameParser}
+import org.globalnames.parser.ScientificNameParser.{instance => scientificNameParser}
 
 case class ParServer(port: Int = 4334) {
   def run(): Unit = {

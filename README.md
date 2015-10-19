@@ -25,39 +25,37 @@ cd gnparser
 sbt test
 ```
 
-Use on a local machine
-----------------------
+Local Usage
+-----------
 
-First run
+The project consist of three parts:
+* `parser` contains core routines for parsing input string
+* `examples` contains usage samples for some popular programming languages
+* `runner` contains code required to run `parser` from command line as
+standalone util or TCP/IP server
+
+`sbt publish-local` puts `parser` artifact (`global-names-parser-0.1.0-SNAPSHOT.jar`)
+to local ivy cache (by default it is located at `$HOME/.ivy2/local/org.globalnames`).
+After that you can use `parser` facilities on the same machine by adding
+library dependency:
 
 ```
-sbt publish-local
-```
-
-It will create package at `$HOME/.ivy2/local/org.globalnames`
-
-You can use the package on the same machine by adding to your sbt file
-
-```
-libraryDependencies += "org.globalnames" %% "gnparser" % "0.1.0-SNAPSHOT"
+libraryDependencies += "org.globalnames" %% "global-names-parser" % "0.1.0-SNAPSHOT"
 ```
 
 Create Executable jar
 ---------------------
 
-```
-sbt assembly
-```
+Run `sbt runner/assembly` to create self-contained jar ("fat-jar"). Being located at
+`runner/target/scala-2.11/global-names-parser-runner-assembly-0.1.0-SNAPSHOT.jar`, it
+can be used for running parser against text input or as TCP/IP server.
 
-If all goes well sbt output will tell the path to the jar file
-
-Usage of executable
--------------------
+## Usage of Executable
 
 ### To parse one name
 
 ```
-java -jar GnParser-assembly-x.y.z.jar "Homo sapiens L."
+java -jar global-names-parser-runner-assembly-0.1.0-SNAPSHOT.jar "Homo sapiens L."
 ```
 
 ### To parse names from a file
@@ -65,13 +63,13 @@ java -jar GnParser-assembly-x.y.z.jar "Homo sapiens L."
 File should have one name per line
 
 ```
-java -jar GnParser-assembly-x.y.z.jar --input path_to_file --output out.txt
+java -jar global-names-parser-runner-assembly-0.1.0-SNAPSHOT.jar --input path_to_file --output out.txt
 ```
 
 ### To start socket server
 
 ```
-java -jar GnParser-assembly-x.y.z.jar --server --port 5555
+java -jar global-names-parser-runner-assembly-0.1.0-SNAPSHOT.jar --server --port 5555
 ```
 
 Usage of the library

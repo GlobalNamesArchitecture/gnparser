@@ -33,7 +33,7 @@ val noPublishingSettings = Seq(
   publishTo := Some(Resolver.file("Unused transient repository", file("target/unusedrepo"))))
 
 lazy val root = project.in(file("."))
-  .aggregate(parser, exapmles)
+  .aggregate(parser, exapmles, runner)
   .settings(noPublishingSettings: _*)
 
 lazy val parser = (project in file("./parser"))
@@ -41,7 +41,6 @@ lazy val parser = (project in file("./parser"))
   .settings(commonSettings: _*)
   .settings(
     name := "global-names-parser",
-    version := "0.1.0-SNAPSHOT",
 
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "org.globalnames.parser",
@@ -57,11 +56,6 @@ lazy val parser = (project in file("./parser"))
       "org.specs2"         %% "specs2-core"            % "3.6.3" % "test"
     ),
 
-    resolvers ++= Seq(
-      "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases",
-      "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
-    ),
-
     scalacOptions in Test ++= Seq("-Yrangepos"),
 
     mainClass in Compile := Some("org.globalnames.parser.GnParser"),
@@ -72,7 +66,18 @@ lazy val parser = (project in file("./parser"))
         |import org.parboiled2._""".stripMargin
   )
 
+lazy val runner = (project in file("./runner"))
+  .dependsOn(parser)
+  .settings(commonSettings: _*)
+  .settings(noPublishingSettings: _*)
+  .settings(
+    name := "global-names-parser-runner"
+  )
+
 lazy val exapmles = (project in file("./examples/java"))
   .dependsOn(parser)
   .settings(commonSettings: _*)
   .settings(noPublishingSettings: _*)
+  .settings(
+    name := "global-names-parser-examples"
+  )
