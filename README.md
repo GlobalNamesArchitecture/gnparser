@@ -43,19 +43,20 @@ library dependency:
 libraryDependencies += "org.globalnames" %% "global-names-parser" % "0.1.0-SNAPSHOT"
 ```
 
-Create Executable jar
----------------------
+Using CLI
+---------
 
-Run `sbt runner/assembly` to create self-contained jar ("fat-jar"). Being located at
-`runner/target/scala-2.11/global-names-parser-runner-assembly-0.1.0-SNAPSHOT.jar`, it
-can be used for running parser against text input or as TCP/IP server.
+CLI stands for Command Line Interface. To create one for `runner` project run `sbt stage`.
+It then can be found at `runner/target/universal/stage/bin/gnparse`.
 
 ## Usage of Executable
+
+`gnparse -help` gives detailed help on how to use `gnparse` cli.
 
 ### To parse one name
 
 ```
-java -jar global-names-parser-runner-assembly-0.1.0-SNAPSHOT.jar "Homo sapiens L."
+gnparse "Homo sapiens L."
 ```
 
 ### To parse names from a file
@@ -63,13 +64,13 @@ java -jar global-names-parser-runner-assembly-0.1.0-SNAPSHOT.jar "Homo sapiens L
 File should have one name per line
 
 ```
-java -jar global-names-parser-runner-assembly-0.1.0-SNAPSHOT.jar --input path_to_file --output out.txt
+gnparse --input path_to_file --output out.txt
 ```
 
 ### To start socket server
 
 ```
-java -jar global-names-parser-runner-assembly-0.1.0-SNAPSHOT.jar --server --port 5555
+gnparse --server --port 5555
 ```
 
 Usage of the library
@@ -91,7 +92,7 @@ currently examples for Java, Jython, JRuby and R languages.
 
 Jython, JRuby and R need reference GnParser jar. Run `sbt "parser/assembly"`
 command to create fat-jar at
-`parser/target/scala-2.11/global-names-parser-assembly-{VERSION}.jar`. `VERSION` would be of current GnParser version.
+`parser/target/scala-2.11/global-names-parser-assembly-0.1.0-SNAPSHOT.jar`.
 
 ### Java
 
