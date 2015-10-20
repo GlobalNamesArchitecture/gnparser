@@ -37,7 +37,7 @@ lazy val root = project.in(file("."))
   .settings(noPublishingSettings: _*)
 
 lazy val parser = (project in file("./parser"))
-  .enablePlugins(BuildInfoPlugin, JavaAppPackaging)
+  .enablePlugins(BuildInfoPlugin)
   .settings(commonSettings: _*)
   .settings(
     name := "global-names-parser",
@@ -68,10 +68,15 @@ lazy val parser = (project in file("./parser"))
 
 lazy val runner = (project in file("./runner"))
   .dependsOn(parser)
+  .enablePlugins(JavaAppPackaging)
   .settings(commonSettings: _*)
   .settings(noPublishingSettings: _*)
   .settings(
-    name := "global-names-parser-runner"
+    name := "global-names-parser-runner",
+    executableScriptName := "gnparse",
+    bashScriptExtraDefines := Seq(
+      s"""declare -r script_name="${executableScriptName.value}""""
+    )
   )
 
 lazy val exapmles = (project in file("./examples/java"))
