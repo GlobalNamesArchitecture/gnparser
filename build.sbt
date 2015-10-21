@@ -32,8 +32,20 @@ val noPublishingSettings = Seq(
   publishArtifact := false,
   publishTo := Some(Resolver.file("Unused transient repository", file("target/unusedrepo"))))
 
+/////////////////////// DEPENDENCIES /////////////////////////
+
+val json4s      = "org.json4s"         %% "json4s-jackson"         % "3.2.11"
+val javaUuid    = "com.fasterxml.uuid" %  "java-uuid-generator"    % "3.1.3"
+val lang3       = "org.apache.commons" %  "commons-lang3"          % "3.4"
+val parboiled   = "org.globalnames"    %% "parboiled"              % "2.2.0-2015.09.11-SNAPSHOT"
+val shapeless   = "com.chuusai"        %% "shapeless"              % "2.2.3"
+val scalaz      = "org.scalaz"         %% "scalaz-core"            % "7.1.3"
+val specs2core  = "org.specs2"         %% "specs2-core"            % "3.6.3" % Test
+
+/////////////////////// PROJECTS /////////////////////////
+
 lazy val root = project.in(file("."))
-  .aggregate(parser, exapmles, runner)
+  .aggregate(parser, examples, runner, web)
   .settings(noPublishingSettings: _*)
 
 lazy val parser = (project in file("./parser"))
@@ -46,15 +58,8 @@ lazy val parser = (project in file("./parser"))
     buildInfoPackage := "org.globalnames.parser",
     test in assembly := {},
 
-    libraryDependencies ++= Seq(
-      "org.json4s"         %% "json4s-jackson"         % "3.2.11",
-      "com.fasterxml.uuid" %  "java-uuid-generator"    % "3.1.3",
-      "org.apache.commons" %  "commons-lang3"          % "3.4",
-      "org.globalnames"    %% "parboiled"              % "2.2.0-2015.09.11-SNAPSHOT",
-      "com.chuusai"        %% "shapeless"              % "2.2.3",
-      "org.scalaz"         %% "scalaz-core"            % "7.1.3",
-      "org.specs2"         %% "specs2-core"            % "3.6.3" % "test"
-    ),
+    libraryDependencies ++= Seq(json4s, javaUuid, lang3, parboiled,
+                                shapeless, scalaz, specs2core),
 
     scalacOptions in Test ++= Seq("-Yrangepos"),
 
@@ -79,10 +84,20 @@ lazy val runner = (project in file("./runner"))
     )
   )
 
-lazy val exapmles = (project in file("./examples/java"))
+lazy val examples = (project in file("./examples/java"))
   .dependsOn(parser)
   .settings(commonSettings: _*)
   .settings(noPublishingSettings: _*)
   .settings(
     name := "global-names-parser-examples"
+  )
+
+lazy val web = (project in file("./web"))
+  .dependsOn(parser)
+  .enablePlugins(PlayScala)
+  .settings(commonSettings: _*)
+  .settings(noPublishingSettings: _*)
+  .settings(
+    name := "global-names-parser-web",
+    libraryDependencies ++= Seq(specs2 % Test)
   )

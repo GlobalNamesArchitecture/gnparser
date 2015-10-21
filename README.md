@@ -33,11 +33,12 @@ The project consist of three parts:
 * `examples` contains usage samples for some popular programming languages
 * `runner` contains code required to run `parser` from command line as
 standalone util or TCP/IP server
+* `web` contains web interface to `parser`
 
 `sbt publish-local` puts `parser` artifact (`global-names-parser-0.1.0-SNAPSHOT.jar`)
 to local ivy cache (by default it is located at `$HOME/.ivy2/local/org.globalnames`).
 After that you can use `parser` facilities on the same machine by adding
-library dependency:
+library dependency as follows:
 
 ```
 libraryDependencies += "org.globalnames" %% "global-names-parser" % "0.1.0-SNAPSHOT"
@@ -72,6 +73,17 @@ gnparse --input path_to_file --output out.txt
 ```
 gnparse --server --port 5555
 ```
+
+Running Web Interface
+---------------------
+
+`sbt web/run` runs local web application that listens for HTTP requests on 9000 port.
+
+You can open it in browser at [http://localhost:9000/](http://localhost:9000/).
+
+Web application has also REST API interface as follows:
+* `GET  /api?names=["Aus bus", "Aus bus 1700"]`
+* `POST /api` with request body of JSon array of strings
 
 Usage of the library
 --------------------

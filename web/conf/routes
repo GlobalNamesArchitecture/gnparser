@@ -1,0 +1,4 @@
+GET   /     controllers.Application.index()
+POST  /     controllers.Application.batchHandle()
+GET   /api  controllers.Application.namesGetJson(names: String)
+POST  /api  controllers.Application.namesPostJson()

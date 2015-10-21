@@ -1,0 +1,20 @@
+@import helper._
+
+@(f: Form[String], names: Seq[String] = Seq())(implicit messages: Messages)
+
+<!DOCTYPE html>
+<html>
+    <body>
+
+@form(action = routes.Application.batchHandle()) {
+    @textarea(field = f("names"), args = 'rows -> 5)
+
+    <button type="submit">Search</button>
+}
+
+    <b>result:</b>
+@for(name <- names) {
+    <p>@name</p>
+}
+    </body>
+</html>
