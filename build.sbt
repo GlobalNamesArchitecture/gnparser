@@ -9,8 +9,7 @@ val commonSettings = Seq(
   startYear := Some(2008),
   licenses := Seq("MIT" -> new URL("https://github.com/GlobalNamesArchitecture/gnparser/blob/master/LICENSE")),
   resolvers ++= Seq(
-    "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases",
-    "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
+    "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
   ),
   javacOptions ++= Seq(
     "-encoding", "UTF-8",
@@ -37,7 +36,7 @@ val noPublishingSettings = Seq(
 val json4s      = "org.json4s"         %% "json4s-jackson"         % "3.2.11"
 val javaUuid    = "com.fasterxml.uuid" %  "java-uuid-generator"    % "3.1.3"
 val lang3       = "org.apache.commons" %  "commons-lang3"          % "3.4"
-val parboiled   = "org.globalnames"    %% "parboiled"              % "2.2.0-2015.09.11-SNAPSHOT"
+val parboiled   = "org.globalnames"    %% "parboiled"              % "2.2.1"
 val shapeless   = "com.chuusai"        %% "shapeless"              % "2.2.3"
 val scalaz      = "org.scalaz"         %% "scalaz-core"            % "7.1.3"
 val specs2core  = "org.specs2"         %% "specs2-core"            % "3.6.3" % Test
