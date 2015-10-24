@@ -1,97 +1,33 @@
 @import helper._
 
-@(f: Form[String], requestedNames: String = "",
-  names: Seq[String] = Seq())(implicit messages: Messages)
+@(requestedNames: String = "", names: Seq[String] = Seq(),
+  menu: Seq[views.MenuItem])(implicit messages: Messages)
 
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>GlobalNames Parser</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/screen.css")">
-    <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/parser.css")">
-    <link rel="icon" type="image/x-icon" href="@routes.Assets.versioned("images/favicon.ico")">
-  </head>
-  <body class="wrap">
-    <header role="banner">
-      <nav class="mobile-nav show-on-mobiles">
-        <ul>
-          <li class="current">
-            <a href="/">Parser</a>
-          </li>
-          <li class="">
-            <a href="http://globalnames.org">GN Home</a>
-          </li>
-          <li class="">
-            <a href="http://globalnames.org/apps">Projects</a>
-          </li>
-          <li>
-            <a href="https://github.com/GlobalNamesArchitecture/gnparser"><span class="hide-on-mobiles">View on </span>GitHub</a>
-          </li>
-        </ul>
-      </nav>
-      <div class="grid">
-        <div class="unit one-quarter center-on-mobiles">
-          <div class="logo">
-            <a href="/">
-              <span class="sr-only">GlobalNames</span>
-              <img src="@routes.Assets.versioned("images/gna.svg")" width="80" alt="GNA Logo">
-            </a>
-          </div>
-        </div>
-        <nav class="main-nav unit three-quarters hide-on-mobiles">
-          <ul>
-            <li class="current">
-              <a href="/">Parser</a>
-            </li>
-            <li class="">
-              <a href="http://globalnames.org">GN Home</a>
-            </li>
-            <li class="">
-              <a href="http://globalnames.org/apps">Projects</a>
-            </li>
-            <li>
-              <a href="https://github.com/GlobalNamesArchitecture/gnparser"><span class="hide-on-mobiles">View on </span>GitHub</a>
-            </li>
-          </ul>
-        </nav>
+@layout(title = "GNParser", menu = menu) {
+  <section class="parser">
+    <div class="grid">
+      <div class="unit whole">
+        @form(action = routes.Application.batchHandle()) {
+            <textarea
+              id="names"
+              name="names"
+              placeholder="Place names here one per line"
+              autofocus>@requestedNames</textarea>
+          <button type="submit">Parse</button>
+        }
       </div>
-    </header>
-    <section class="intro">
-      <div class="grid">
-        <div class="unit whole center-on-mobiles">
-          <h1>Global Names Parser</h1>
-          <h4>Scientific Names in Detail</h4>
-        </div>
-      </div>
-    </section>
-    <section class="parser">
+    </div>
+  </section>
+  @if(names.nonEmpty) {
+    <section class="parser results">
       <div class="grid">
         <div class="unit whole">
-          @form(action = routes.Application.batchHandle()) {
-              <textarea
-                id="names"
-                name="names"
-                placeholder="Place names here one per line"
-                autofocus>@requestedNames</textarea>
-            <button type="submit">Parse</button>
+          <h4>Results:</h4>
+          @for(name <- names) {
+            <p>@name</p>
           }
         </div>
       </div>
     </section>
-    @if(names.nonEmpty) {
-      <section class="parser results">
-        <div class="grid">
-          <div class="unit whole">
-            <h4>Results</h4>
-            @for(name <- names) {
-              <hr/>
-              <p>@name</p>
-            }
-          </div>
-        </div>
-      </section>
-    }
-  </body>
-</html>
+  }
+}

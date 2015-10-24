@@ -1,0 +1,70 @@
+@import views.MenuItem
+
+@(title: String, menu: Seq[MenuItem])(content: Html)
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>@title</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" 
+      href="@routes.Assets.versioned("stylesheets/screen.css")">
+    <link rel="stylesheet"
+      href="@routes.Assets.versioned("stylesheets/parser.css")">
+    <link rel="icon" type="image/x-icon"
+      href="@routes.Assets.versioned("images/favicon.ico")">
+  </head>
+  <body class="wrap">
+    <header role="banner">
+      <nav class="mobile-nav show-on-mobiles">
+        <ul>
+          @for(menuItem <- menu) {
+            <li class="@{if (menuItem.current) "current" else ""}">
+              <a href="@menuItem.content.route">@menuItem.content.caption</a>
+            </li>
+          }
+          <li>
+            <a href="https://github.com/GlobalNamesArchitecture/gnparser/blob/master/README.md"><span class="hide-on-mobiles">Doc on </span>GitHub</a>
+          </li>
+          <li>
+            <a href="http://globalnames.org/apps">Projects</a>
+          </li>
+        </ul>
+      </nav>
+      <div class="grid">
+        <div class="unit one-quarter center-on-mobiles">
+          <div class="logo">
+            <a href="@routes.Application.api()">
+              <span class="sr-only">GlobalNames</span>
+              <img src="@routes.Assets.versioned("images/gna.svg")" width="72" alt="GNA Logo">
+            </a>
+          </div>
+        </div>
+        <nav class="main-nav unit three-quarters hide-on-mobiles">
+          <ul>
+            @for(menuItem <- menu) {
+              <li class="@{if (menuItem.current) "current" else ""}">
+                <a href="@menuItem.content.route">@menuItem.content.caption</a>
+              </li>
+            }
+            <li>
+              <a href="https://github.com/GlobalNamesArchitecture/gnparser/blob/master/README.md"><span class="hide-on-mobiles">Doc on </span>GitHub</a>
+            </li>
+            <li>
+              <a href="http://globalnames.org/apps">Projects</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <section class="intro">
+      <div class="grid">
+        <div class="unit whole center-on-mobiles">
+          <h1>Global Names Parser</h1>
+          <h4>Scientific Names in Detail</h4>
+        </div>
+      </div>
+    </section>
+    @content
+  </body>
+</html>

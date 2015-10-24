@@ -34,5 +34,13 @@ class ApplicationSpec extends Specification {
       contentType(index) must beSome.which { _ == "text/html" }
       contentAsString(index) must contain("scientific_name")
     }
+
+    "handle 'GET /doc/api'" in new WithApplication {
+      val request = FakeRequest(GET, "/doc/api")
+      val api = route(request).get
+      status(api) must equalTo(OK)
+      contentType(api) must beSome.which { _ == "text/html" }
+      contentAsString(api) must contain("(API)")
+    }
   }
 }
