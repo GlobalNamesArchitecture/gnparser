@@ -32,7 +32,7 @@ object Application extends Controller {
   }
 
   def batchHandle() = Action(parse.form(searchForm)) { implicit rs =>
-    val res = rs.body.split("\n")
+    val res = rs.body.split("\r\n")
                 .map { name => snp.renderCompactJson(snp.fromString(name)) }
     Ok(views.html.index(searchForm, res))
   }
