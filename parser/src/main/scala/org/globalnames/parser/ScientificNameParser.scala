@@ -3,18 +3,12 @@ package org.globalnames.parser
 import java.util.UUID
 
 import com.fasterxml.uuid.{Generators, StringArgGenerator}
-import org.globalnames.formatters.{Canonizer, Details, Normalizer, Positions}
-import org.json4s.JsonAST.{JArray, JValue}
-import org.json4s.JsonDSL._
-import org.json4s.jackson.JsonMethods._
+import org.globalnames.formatters._
 import org.parboiled2._
 import shapeless._
 
 import scala.util.matching.Regex
 import scala.util.{Failure, Success}
-
-import scalaz._
-import Scalaz._
 
 abstract class ScientificNameParser {
   import ScientificNameParser.{Input, Result}
@@ -28,64 +22,22 @@ abstract class ScientificNameParser {
                prion|prions|NPV)\b""".r ::
     """\b[A-Za-z]*(satellite[s]?|NPV)\b""".r :: HNil
 
-  def json(parserResult: Result): JValue = {
-    val canonical = parserResult.canonized(showRanks = false)
-    val quality = canonical.map { _ => parserResult.scientificName.quality }
-    val parsed = canonical.isDefined
-    val qualityWarnings: Option[JArray] =
-      if (parserResult.warnings.isEmpty) None
-      else {
-        val warningsJArr: JArray =
-          parserResult.warnings.sorted
-                      .map { w => JArray(List(w.level, w.message)) }.distinct
-        warningsJArr.some
-      }
-    val positionsJson: Option[JArray] = parsed.option {
-      parserResult.positioned.map { position =>
-        JArray(List(position.nodeName,
-          parserResult.input.verbatimPosAt(position.start),
-          parserResult.input.verbatimPosAt(position.end)))
-      }
-    }
-    val garbage = if (parserResult.scientificName.garbage.isEmpty) None
-                  else parserResult.scientificName.garbage.some
-
-    render("scientific_name" -> ("id" -> parserResult.input.id) ~
-      ("parsed" -> parsed) ~
-      ("quality" -> quality) ~
-      ("quality_warnings" -> qualityWarnings) ~
-      ("parser_version" -> version) ~
-      ("verbatim" -> parserResult.input.verbatim) ~
-      ("normalized" -> parserResult.normalized) ~
-      ("canonical" -> canonical) ~
-      ("canonical_extended" -> parserResult.canonized(showRanks = true)) ~
-      ("hybrid" -> parserResult.scientificName.isHybrid) ~
-      ("surrogate" -> parserResult.scientificName.surrogate) ~
-      ("garbage" -> garbage) ~
-      ("virus" -> parserResult.scientificName.isVirus) ~
-      ("details" -> parserResult.detailed) ~
-      ("positions" -> positionsJson))
-  }
-
-  def renderCompactJson(parserResult: Result): String =
-    compact(json(parserResult))
-
   def fromString(input: String): Result = {
     val isVirus = checkVirus(input)
     val inputString = Input(input)
     if (isVirus || noParse(input)) {
-      Result(inputString, ScientificName(isVirus = isVirus))
+      Result(inputString, ScientificName(isVirus = isVirus), version)
     } else {
       val input = inputString.unescaped
       val ctx = new Parser.Context(inputString.preprocessed)
       Parser.sciName.runWithContext(input, ctx) match {
         case Success(scientificName :: warnings :: HNil) =>
-          Result(inputString, scientificName, warnings)
+          Result(inputString, scientificName, version, warnings)
         case Failure(err: ParseError) =>
           Console.err.println(err.format(inputString.verbatim))
-          Result(inputString, ScientificName())
+          Result(inputString, ScientificName(), version)
         case Failure(err) =>
-          Result(inputString, ScientificName())
+          Result(inputString, ScientificName(), version)
       }
     }
   }
@@ -120,8 +72,9 @@ object ScientificNameParser {
   }
 
   case class Result(input: Input, scientificName: ScientificName,
-                    warnings: Vector[Warning] = Vector.empty)
-    extends Details with Positions with Normalizer with Canonizer {
+                    version: String, warnings: Vector[Warning] = Vector.empty)
+    extends JsonRenderer with Details with Positions
+       with Normalizer with Canonizer {
 
     def stringOf(astNode: AstNode): String =
       input.unescaped.substring(astNode.pos.start, astNode.pos.end)

@@ -17,10 +17,11 @@ class ScientificNameParserSpec extends Specification {
 
   for (line <- lines.takeWhile { _.trim != "__END__" } if !(line.isEmpty || ("#\r\n\f\t" contains line.charAt(0)))) {
     val Array(inputStr, expectedJsonStr) = line.split('|')
-    val parsed = scientificNameParser.fromString(inputStr)
 
     val json = parse(expectedJsonStr)
-    val jsonParsed = scientificNameParser.json(parsed).removeField { case (_, v) => v == JNothing }
+    val jsonParsed = scientificNameParser.fromString(inputStr).json
+                       .removeField { case (_, v) => v == JNothing }
+
     val jsonDiff = {
       val Diff(changed, added, deleted) = jsonParsed.diff(json)
       s"""Line:

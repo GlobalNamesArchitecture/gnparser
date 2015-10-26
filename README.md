@@ -225,12 +225,8 @@ sbt ";project examples;run"
 
 ### Java
 
-[Java example][example-java] is an SBT subproject. To run it execute the
-command:
-
-```
-sbt ";project examples;run"
-```
+[Java example][example-java] is an SBT subproject. Run `sbt examples/run`
+to execute it.
 
 ### Jython
 

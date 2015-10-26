@@ -15,8 +15,7 @@ case class ParServer(port: Int = 4334) {
     val output = new PrintStream(new BufferedOutputStream(sock.getOutputStream))
     while (true) {
       line = input.readLine.trim
-      output.println(scientificNameParser.renderCompactJson(
-        scientificNameParser.fromString(line)))
+      output.println(scientificNameParser.fromString(line).renderCompactJson)
       output.flush()
     }
   }

@@ -4,7 +4,7 @@ import org.globalnames.parser._
 import scalaz.{Name => _, _}
 import Scalaz._
 
-trait Normalizer { parsedResult: ScientificNameParser.Result with Canonizer =>
+trait Normalizer { parsedResult: ScientificNameParser.Result =>
 
   def normalized: Option[String] = {
     def normalizedNamesGroup(namesGroup: NamesGroup): Option[String] = {

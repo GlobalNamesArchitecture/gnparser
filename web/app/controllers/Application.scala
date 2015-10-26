@@ -18,7 +18,7 @@ object Application extends Controller {
     jsResult match {
       case JsSuccess(ns, _) =>
         val result = ns.map { n =>
-          Json.parse(snp.renderCompactJson(snp.fromString(n)))
+          Json.parse(snp.fromString(n).renderCompactJson)
         }
         Ok(obj(Messages.RESULT  -> Messages.RESULT_OK,
                Messages.DETAILS -> result))
@@ -37,7 +37,7 @@ object Application extends Controller {
         Array.empty[String]
       } else {
         rs.body.split("\r\n")
-          .map { name => snp.renderCompactJson(snp.fromString(name)) }
+          .map { name => snp.fromString(name).renderCompactJson }
       }
     Ok(views.html.index(searchForm, rs.body, res))
   }

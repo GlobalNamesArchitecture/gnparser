@@ -49,8 +49,7 @@ object GnParser {
           f.getLines().zipWithIndex.foreach {
             case (line, i) =>
               if ((i + 1) % 10000 == 0) println(s"Parsed ${i + 1} lines")
-              val parsed = scientificNameParser.renderCompactJson(
-                scientificNameParser.fromString(line.trim))
+              val parsed = scientificNameParser.fromString(line.trim).renderCompactJson
               writer.write(parsed + "\n")
           }
       }
@@ -68,8 +67,7 @@ object GnParser {
         val output = if (o.contains('output)) o('output) else "output.json"
         startFileParse(input, output)
       case o if o.contains('name) =>
-        println(scientificNameParser.renderCompactJson(
-          scientificNameParser.fromString(o('name))))
+        println(scientificNameParser.fromString(o('name)).renderCompactJson)
     }
   }
 }
