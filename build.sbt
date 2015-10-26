@@ -84,7 +84,7 @@ lazy val runner = (project in file("./runner"))
     )
   )
 
-lazy val examples = (project in file("./examples/java"))
+lazy val examples = (project in file("./examples/java-scala"))
   .dependsOn(parser)
   .settings(commonSettings: _*)
   .settings(noPublishingSettings: _*)

@@ -34,7 +34,8 @@ Features
 * Fast, rock solid and elegant
 * Extracts all elements from a name, not only a canonical form
 * Works with very complex scientific names, including hybrids
-* Can be used directly in many languages -- Scala, Java, R, Python, Ruby etc.
+* Can be used directly in any language that can call Java -- Scala,
+Java, R, Python, Ruby etc.
 * Can run as a command line application
 * Can run as a socket server
 * Can be scaled to many CPUs and computers
@@ -212,21 +213,20 @@ To avoid declaring multiple dependencies Jython, JRuby and R need a [reference
 
 ### Scala
 
-TODO: Make Scala example
-
-Scala example is an SBT subproject and is stored at [scala
+[Scala example][example-scala] is an SBT subproject and is stored at [scala
 subfolder][examples-folder/scala]. To run it execute the command:
 
-TODO: Put Scala sbt command
-
 ```
-sbt ";project examples;run"
+sbt 'examples/runMain org.globalnames.parser.examples.ParserScala'
 ```
 
 ### Java
 
-[Java example][example-java] is an SBT subproject. Run `sbt examples/run`
-to execute it.
+[Java example][example-java] is an SBT subproject. To run it execute the command:
+
+```
+sbt 'examples/runMain org.globalnames.parser.examples.ParserJava'
+```
 
 ### Jython
 
@@ -354,9 +354,10 @@ Released under [MIT license][license]
 [dimus]: https://github.com/dimus
 [gnparser-docker]: https://github.com/gn-docker/gnparser
 [example-r]: /examples/R/parser.R
-[example-java]: /examples/java/src/main/java/Parser.java
+[example-java]: /examples/java-scala/src/main/java/org/globalnames/parser/examples/ParserJava.java
 [example-jruby]: /examples/jruby/parser.rb
 [example-jython]: /examples/jython/parser.py
+[example-scala]: /examples/java-scala/src/main/scala/org/globalnames/parser/examples/ParserScala.scala
 [examples-folder]: /examples
 [fat-jar]: #fat-jar
 [git-install]: https://git-scm.com/
