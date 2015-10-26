@@ -2,9 +2,9 @@ import org.globalnames.parser.ScientificNameParser;
 
 public class Parser {
     public static void main(String[] args) {
-        ScientificNameParser.Result result =
-            ScientificNameParser.instance().fromString("Homo sapiens L.");
-        String jsonStr = ScientificNameParser.instance().renderCompactJson(result);
+        String jsonStr = ScientificNameParser.instance()
+                                             .fromString("Homo sapiens L.")
+                                             .renderCompactJson();
         System.out.println(jsonStr);
     }
 }

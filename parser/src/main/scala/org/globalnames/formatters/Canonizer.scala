@@ -5,8 +5,7 @@ import org.globalnames.parser._
 import scalaz.{Name => _, _}
 import Scalaz._
 
-trait Canonizer {
-  parsedResult: ScientificNameParser.Result =>
+trait Canonizer { parsedResult: ScientificNameParser.Result =>
 
   def canonized(showRanks: Boolean): Option[String] = {
     def canonizedNamesGroup(namesGroup: NamesGroup): Option[String] =

@@ -7,8 +7,7 @@ import org.json4s.{JObject, JString, JValue}
 
 import scalaz.Scalaz._
 
-trait Details { parsedResult: ScientificNameParser.Result
-                  with Normalizer with Canonizer =>
+trait Details { parsedResult: ScientificNameParser.Result =>
 
   def detailed: JValue = {
     def detailedNamesGroup(namesGroup: NamesGroup): JValue =
