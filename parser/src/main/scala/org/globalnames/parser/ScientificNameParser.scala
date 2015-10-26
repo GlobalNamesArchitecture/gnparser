@@ -82,7 +82,7 @@ abstract class ScientificNameParser {
         case Success(scientificName :: warnings :: HNil) =>
           Result(inputString, scientificName, warnings)
         case Failure(err: ParseError) =>
-          println(err.format(inputString.verbatim))
+          Console.err.println(err.format(inputString.verbatim))
           Result(inputString, ScientificName())
         case Failure(err) =>
           Result(inputString, ScientificName())
