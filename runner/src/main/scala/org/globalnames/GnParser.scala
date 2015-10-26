@@ -10,7 +10,7 @@ import scala.util.{Failure, Success, Try}
 object GnParser {
   def main(args: Array[String]) {
     if (args.length == 0) {
-      println("No args found. Type -h for help")
+      Console.err.println("No args found. Type -h for help")
       System.exit(0)
     }
 
@@ -31,32 +31,30 @@ object GnParser {
         case string :: Nil =>
           nextOption(map ++ Map('name -> string), list.tail)
         case option :: tail =>
-          println("Unknown option " + option)
+          Console.err.println("Unknown option " + option)
           System.exit(1)
           map
       }
     }
 
     def startServerParse(port: Int) = {
-      ParServer(port).run
+      ParServer(port).run()
     }
 
     def startFileParse(input: String, output: String) = {
       val writer = new PrintWriter(new File(output))
       Try(Source.fromFile(input)) match {
-        case Failure(e) => println(s"No such file: $input")
-        case Success(f) => {
-          f.getLines.zipWithIndex.foreach {
-            case (line, i) => {
+        case Failure(e) => Console.err.println(s"No such file: $input")
+        case Success(f) =>
+          f.getLines().zipWithIndex.foreach {
+            case (line, i) =>
               if ((i + 1) % 10000 == 0) println(s"Parsed ${i + 1} lines")
               val parsed = scientificNameParser.renderCompactJson(
                 scientificNameParser.fromString(line.trim))
               writer.write(parsed + "\n")
-            }
           }
-        }
       }
-      writer.close
+      writer.close()
     }
 
     val options = nextOption(Map(), argList)
