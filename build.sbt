@@ -100,5 +100,6 @@ lazy val web = (project in file("./web"))
   .settings(
     name := "gnparser-web",
     packageName := "gnparser-web",
+    pipelineStages := Seq(rjs, digest, gzip),
     libraryDependencies ++= Seq(specs2 % Test)
   )

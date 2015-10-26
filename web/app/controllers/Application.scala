@@ -12,7 +12,7 @@ import play.api.mvc._
 import ScientificNameParser.{instance => snp}
 
 object Application extends Controller {
-  val searchForm = Form("names" -> nonEmptyText)
+  val searchForm = Form("names" -> text)
 
   private def handleNamesStrings(jsResult: JsResult[Seq[String]]) =
     jsResult match {
@@ -32,9 +32,14 @@ object Application extends Controller {
   }
 
   def batchHandle() = Action(parse.form(searchForm)) { implicit rs =>
-    val res = rs.body.split("\r\n")
-                .map { name => snp.renderCompactJson(snp.fromString(name)) }
-    Ok(views.html.index(searchForm, res))
+    val res =
+      if (rs.body.isEmpty) {
+        Array.empty[String]
+      } else {
+        rs.body.split("\r\n")
+          .map { name => snp.renderCompactJson(snp.fromString(name)) }
+      }
+    Ok(views.html.index(searchForm, rs.body, res))
   }
 
   def namesGetJson(names: String) = Action {
