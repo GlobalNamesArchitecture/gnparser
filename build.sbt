@@ -51,7 +51,7 @@ lazy val parser = (project in file("./parser"))
   .enablePlugins(BuildInfoPlugin)
   .settings(commonSettings: _*)
   .settings(
-    name := "global-names-parser",
+    name := "gnparser",
 
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "org.globalnames.parser",
@@ -76,8 +76,9 @@ lazy val runner = (project in file("./runner"))
   .settings(commonSettings: _*)
   .settings(noPublishingSettings: _*)
   .settings(
-    name := "global-names-parser-runner",
+    name := "gnparser-runner",
     executableScriptName := "gnparse",
+    packageName := "gnparser",
     bashScriptExtraDefines := Seq(
       s"""declare -r script_name="${executableScriptName.value}""""
     )
@@ -88,7 +89,7 @@ lazy val examples = (project in file("./examples/java"))
   .settings(commonSettings: _*)
   .settings(noPublishingSettings: _*)
   .settings(
-    name := "global-names-parser-examples"
+    name := "gnparser-examples"
   )
 
 lazy val web = (project in file("./web"))
@@ -97,6 +98,7 @@ lazy val web = (project in file("./web"))
   .settings(commonSettings: _*)
   .settings(noPublishingSettings: _*)
   .settings(
-    name := "global-names-parser-web",
+    name := "gnparser-web",
+    packageName := "gnparser-web",
     libraryDependencies ++= Seq(specs2 % Test)
   )

@@ -139,7 +139,7 @@ docker pull gnames/gnparser
 
 ### Linux/Mac
 
-```
+```bash
 wget https://github.com/GlobalNamesArchitecture/gnparser/archive/v0.1.0.tar.gz
 tar xvf gnparser-0.1.0.tar.gz
 sudo rm -rf /opt/gnparser
@@ -194,8 +194,11 @@ a program. Such jar would include Scala and all required libraries. Run `sbt ass
 to put it to release packages at
 
 ```
-{PROJECT_ROOT}/runner/target/scala-2.11/global-names-parser-runner-assembly-0.1.0.jar
+{PROJECT_ROOT}/parser/target/scala-2.11/gnparser-assembly-0.1.0-SNAPSHOT.jar
+{PROJECT_ROOT}/runner/target/scala-2.11/gnparser-runner-assembly-0.1.0-SNAPSHOT.jar
 ```
+
+Fat jar for `gnparser` can be found at [current release][gnparse-fatjar].
 
 Usage as a Library
 ------------------
@@ -241,7 +244,7 @@ defined):
 
 ```bash
 java -jar $JYTHON_HOME/jython.jar \
-  -Dpython.path=/opt/gnparser/runner/target/scala-2.11/global-names-parser-runner-assembly-0.1.0.jar \
+  -Dpython.path=/path/to/gnparser-assembly-0.1.0-SNAPSHOT.jar \
   examples/jython/parser.py
 ```
 
@@ -264,8 +267,7 @@ instruction][jruby-installation]. [JRuby example][example-jruby] needs a
 command:
 
 ```bash
-jruby -J-classpath \
-  /opt/gnparser/runner/target/scala-2.11/global-names-parser-runner-assembly-0.1.0.jar \
+jruby -J-classpath /path/to/gnparser-assembly-0.1.0-SNAPSHOT.jar \
   examples/jruby/parser.rb
 ```
 
@@ -307,15 +309,23 @@ telnet localhost 1234
 Usage as a Web Service
 ----------------------
 
-No artifact is shipped with wib service. `gnparser` source code is required for launch.
+To install it on Linux/MacOS run commands as follows:
 
-Start web server with
-
+```bash
+wget https://github.com/GlobalNamesArchitecture/gnparser/archive/gnparser-web-0.1.0-SNAPSHOT.zip
+unzip gnparser-web-0.1.0-SNAPSHOT.zip
+cd gnparser-web-0.1.0-SNAPSHOT
+bin/global-names-parser-web
 ```
-sbt web/run
-```
 
-You can open it in a browser at [http://localhost:9000][localhost]
+To install it on Windows proceed to commands as follows:
+
+1. Download [gnparser-web-0.1.0-SNAPSHOT][gnparse-web-zip]
+2. Unzip it, and then launch CMD at that path
+3. Run `cd gnparser-web-0.1.0-SNAPSHOT`
+4. Run `.\bin\global-names-parser-web.bat`
+
+You can open it in a browser at [http://localhost:9000][localhost].
 
 Web application has also REST API interface as follows:
 
@@ -355,7 +365,9 @@ Released under [MIT license][license]
 [fat-jar]: #fat-jar
 [git-install]: https://git-scm.com/
 [gna]: http://globalnames.org
-[gnparse-zip]: https://github.com/GlobalNamesArchitecture/gnparser/archive/gnparse-0.1.0-SNAPSHOT.zip
+[gnparse-fatjar]: https://github.com/GlobalNamesArchitecture/gnparser/archive/gnparser-assembly-0.1.0-SNAPSHOT.jar
+[gnparse-web-zip]: https://github.com/GlobalNamesArchitecture/gnparser/archive/gnparser-web-0.1.0-SNAPSHOT.zip
+[gnparse-zip]: https://github.com/GlobalNamesArchitecture/gnparser/archive/gnparser-0.1.0-SNAPSHOT.zip
 [jruby]: http://jruby.org/
 [jruby-installation]: http://jruby.org/getting-started
 [json-fields]: /JSON_FIELDS.md
