@@ -33,3 +33,6 @@ tags
 *.pyc
 output.json
 *.log
+
+# Play Framework
+RUNNING_PID
