@@ -1,7 +1,7 @@
 import sbt.Keys._
 
 val commonSettings = Seq(
-  version := "0.1.0-SNAPSHOT",
+  version := "0.1.0",
   scalaVersion := "2.11.7",
   organization := "org.globalnames",
   homepage := Some(new URL("http://globalnames.org/")),
@@ -27,6 +27,32 @@ val commonSettings = Seq(
     "-target:jvm-1.6",
     "-Xlog-reflective-calls"))
 
+val publishingSettings = Seq(
+  publishMavenStyle := true,
+  useGpg := true,
+  publishTo <<= version { v: String =>
+    val nexus = "https://oss.sonatype.org/"
+    if (v.trim.endsWith("SNAPSHOT")) Some("snapshots" at nexus + "content/repositories/snapshots")
+    else                             Some("releases" at nexus + "service/local/staging/deploy/maven2")
+  },
+  pomIncludeRepository := { _ => false },
+  pomExtra :=
+    <scm>
+      <url>git@github.com:GlobalNamesArchitecture/gnparser.git</url>
+      <connection>scm:git:git@github.com:GlobalNamesArchitecture/gnparser.git</connection>
+    </scm>
+      <developers>
+        <developer>
+          <id>dimus</id>
+          <name>Dmitry Mozzherin</name>
+        </developer>
+        <developer>
+          <id>alexander-myltsev</id>
+          <name>Alexander Myltsev</name>
+          <url>http://myltsev.name</url>
+        </developer>
+      </developers>)
+
 val noPublishingSettings = Seq(
   publishArtifact := false,
   publishTo := Some(Resolver.file("Unused transient repository", file("target/unusedrepo"))))
@@ -50,6 +76,7 @@ lazy val root = project.in(file("."))
 lazy val parser = (project in file("./parser"))
   .enablePlugins(BuildInfoPlugin)
   .settings(commonSettings: _*)
+  .settings(publishingSettings: _*)
   .settings(
     name := "gnparser",
 
