@@ -150,7 +150,7 @@ ln -s /opt/gnparser/runner/target/universal/stage/bin/gnparse /usr/local/bin
 
 ### Windows
 
-1. Download [gnparse-0.1.0-SNAPSHOT.zip][gnparse-zip]
+1. Download [gnparse-0.1.0.zip][gnparse-zip]
 2. Extract it to a place where you usually store program files
 3. Update your [PATH][windows-set-path] to point to bin subdirectory
 4. Now you can use `gnparse` command provided by `gnparse.bat` script from CMD
@@ -195,8 +195,8 @@ a program. Such jar would include Scala and all required libraries. Run `sbt ass
 to put it to release packages at
 
 ```
-{PROJECT_ROOT}/parser/target/scala-2.11/gnparser-assembly-0.1.0-SNAPSHOT.jar
-{PROJECT_ROOT}/runner/target/scala-2.11/gnparser-runner-assembly-0.1.0-SNAPSHOT.jar
+{PROJECT_ROOT}/parser/target/scala-2.11/gnparser-assembly-0.1.0.jar
+{PROJECT_ROOT}/runner/target/scala-2.11/gnparser-runner-assembly-0.1.0.jar
 ```
 
 Fat jar for `gnparser` can be found at [current release][gnparse-fatjar].
@@ -240,7 +240,7 @@ defined):
 
 ```bash
 java -jar $JYTHON_HOME/jython.jar \
-  -Dpython.path=/path/to/gnparser-assembly-0.1.0-SNAPSHOT.jar \
+  -Dpython.path=/path/to/gnparser-assembly-0.1.0.jar \
   examples/jython/parser.py
 ```
 
@@ -263,7 +263,7 @@ instruction][jruby-installation]. [JRuby example][example-jruby] needs a
 command:
 
 ```bash
-jruby -J-classpath /path/to/gnparser-assembly-0.1.0-SNAPSHOT.jar \
+jruby -J-classpath /path/to/gnparser-assembly-0.1.0.jar \
   examples/jruby/parser.rb
 ```
 
@@ -308,17 +308,17 @@ Usage as a Web Service
 To install it on Linux/MacOS run commands as follows:
 
 ```bash
-wget https://github.com/GlobalNamesArchitecture/gnparser/archive/gnparser-web-0.1.0-SNAPSHOT.zip
-unzip gnparser-web-0.1.0-SNAPSHOT.zip
-cd gnparser-web-0.1.0-SNAPSHOT
+wget https://github.com/GlobalNamesArchitecture/gnparser/archive/gnparser-web-0.1.0.zip
+unzip gnparser-web-0.1.0.zip
+cd gnparser-web-0.1.0
 bin/global-names-parser-web
 ```
 
 To install it on Windows proceed to commands as follows:
 
-1. Download [gnparser-web-0.1.0-SNAPSHOT][gnparse-web-zip]
+1. Download [gnparser-web-0.1.0][gnparse-web-zip]
 2. Unzip it, and then launch CMD at that path
-3. Run `cd gnparser-web-0.1.0-SNAPSHOT`
+3. Run `cd gnparser-web-0.1.0`
 4. Run `.\bin\global-names-parser-web.bat`
 
 You can open it in a browser at [http://localhost:9000][localhost].
@@ -362,9 +362,9 @@ Released under [MIT license][license]
 [fat-jar]: #fat-jar
 [git-install]: https://git-scm.com/
 [gna]: http://globalnames.org
-[gnparse-fatjar]: https://github.com/GlobalNamesArchitecture/gnparser/archive/gnparser-assembly-0.1.0-SNAPSHOT.jar
-[gnparse-web-zip]: https://github.com/GlobalNamesArchitecture/gnparser/archive/gnparser-web-0.1.0-SNAPSHOT.zip
-[gnparse-zip]: https://github.com/GlobalNamesArchitecture/gnparser/archive/gnparser-0.1.0-SNAPSHOT.zip
+[gnparse-fatjar]: https://github.com/GlobalNamesArchitecture/gnparser/archive/gnparser-assembly-0.1.0.jar
+[gnparse-web-zip]: https://github.com/GlobalNamesArchitecture/gnparser/archive/gnparser-web-0.1.0.zip
+[gnparse-zip]: https://github.com/GlobalNamesArchitecture/gnparser/archive/gnparser-0.1.0.zip
 [jruby]: http://jruby.org/
 [jruby-installation]: http://jruby.org/getting-started
 [json-fields]: /JSON_FIELDS.md
