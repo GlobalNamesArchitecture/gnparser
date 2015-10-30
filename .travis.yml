@@ -2,9 +2,7 @@ language: scala
 jdk:
   - oraclejdk8
 scala:
+  - 2.10.3
   - 2.11.0
   - 2.11.7
-branches:
-  except:
-    - pos
 sudo: false

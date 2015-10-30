@@ -63,7 +63,6 @@ val json4s      = "org.json4s"         %% "json4s-jackson"         % "3.2.11"
 val javaUuid    = "com.fasterxml.uuid" %  "java-uuid-generator"    % "3.1.3"
 val lang3       = "org.apache.commons" %  "commons-lang3"          % "3.4"
 val parboiled   = "org.globalnames"    %% "parboiled"              % "2.2.1"
-val shapeless   = "com.chuusai"        %% "shapeless"              % "2.2.3"
 val scalaz      = "org.scalaz"         %% "scalaz-core"            % "7.1.3"
 val specs2core  = "org.specs2"         %% "specs2-core"            % "3.6.3" % Test
 
@@ -84,8 +83,16 @@ lazy val parser = (project in file("./parser"))
     buildInfoPackage := "org.globalnames.parser",
     test in assembly := {},
 
-    libraryDependencies ++= Seq(json4s, javaUuid, lang3, parboiled,
-                                shapeless, scalaz, specs2core),
+    libraryDependencies ++= {
+      val shapeless = scalaVersion.value match {
+        case v if v.startsWith("2.10") =>
+          Seq("com.chuusai" % "shapeless_2.10.4" % "2.1.0",
+              compilerPlugin("org.scalamacros" % "paradise" % "2.0.1" cross CrossVersion.full))
+        case _ =>
+          Seq("com.chuusai" %% "shapeless" % "2.2.3")
+      }
+      shapeless ++ Seq(json4s, javaUuid, lang3, parboiled, scalaz, specs2core)
+    },
 
     scalacOptions in Test ++= Seq("-Yrangepos"),
 
