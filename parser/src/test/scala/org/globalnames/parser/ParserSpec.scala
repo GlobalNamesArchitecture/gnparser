@@ -50,6 +50,18 @@ class ParserSpec extends Specification {
 
       (res.json \\ "canonical").extract[String] === "Homo sapiens"
     }
+
+    """Homo sp.\r""" in {
+      val res = parse("Homo sp.\r")
+
+      res.warnings must haveSize(2)
+      res.warnings(0).level === 2
+      res.warnings(0).message === "Trailing whitespace"
+      res.warnings(1).level === 3
+      res.warnings(1).message === "Name is approximate"
+
+      (res.json \\ "canonical").extract[String] === "Homo"
+    }
   }
 
   "Does not parse:" >> {
