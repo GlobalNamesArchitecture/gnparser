@@ -380,24 +380,28 @@ object Parser extends org.parboiled2.Parser {
     }
   }
 
+  val approxNameIgnored: Rule1[Option[String]] = rule {
+    (softSpace ~ capture(anyVisible.+ ~ (softSpace ~ anyVisible.+).*)).?
+  }
+
   val approxName1: RuleWithWarning[Name] = rule {
-    (uninomial ~ space ~ approximation ~ capture((softSpace ~ anyVisible.+).*)) ~>
-      { (u: NodeWarned[Uninomial], appr: NodeWarned[Approximation], ign: String) =>
+    (uninomial ~ space ~ approximation ~ approxNameIgnored) ~>
+      { (u: NodeWarned[Uninomial], appr: NodeWarned[Approximation],
+         ign: Option[String]) =>
         val nm = Name(AstNode.id, uninomial = u.astNode,
-                      approximation = appr.astNode.some, ignored = ign.some)
+                      approximation = appr.astNode.some, ignored = ign)
         NodeWarned(nm, u.warns ++ appr.warns)
       }
   }
 
   val approxName2: RuleWithWarning[Name] = rule {
-    (uninomial ~ space ~ word ~ space ~ approximation ~
-      capture((softSpace ~ anyVisible.+).*)) ~>
+    (uninomial ~ space ~ word ~ space ~ approximation ~ approxNameIgnored) ~>
       { (u: NodeWarned[Uninomial], sw: NodeWarned[SpeciesWord],
-         appr: NodeWarned[Approximation], ign: String) =>
+         appr: NodeWarned[Approximation], ign: Option[String]) =>
         val nm = Name(AstNode.id, uninomial = u.astNode,
                       species = Species(AstNode.id, sw.astNode.pos).some,
                       approximation = appr.astNode.some,
-                      ignored = ign.some)
+                      ignored = ign)
         NodeWarned(nm, u.warns ++ sw.warns ++ appr.warns)
       }
   }
