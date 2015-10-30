@@ -121,7 +121,7 @@ Maven:
 </dependency>
 ```
 
-`gnparser` is available for Scala 2.11.0+.
+`gnparser` is available for Scala 2.10.3+.
 
 Installation from a Release Package
 -----------------------------------
@@ -165,7 +165,7 @@ package][package-install]
 Requirements:
 
 * [Git][git-install]
-* [Scala version >= 2.11.0][scala-install]
+* [Scala version >= 2.10.3][scala-install]
 * Java SDK version >= 1.6.0
 * [SBT][sbt-install]
 
