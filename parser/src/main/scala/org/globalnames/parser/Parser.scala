@@ -27,7 +27,7 @@ object Parser extends org.parboiled2.Parser {
 
   val sciName: Rule2[ScientificName, Vector[Warning]] = rule {
     capturePos(softSpace ~ sciName1) ~ anyChars ~ EOI ~> {
-      (ng: NodeWarned[NamesGroup], pos: CapturePos, garbage: String) =>
+      (ng: NodeWarned[NamesGroup], pos: CapturePos, garbage: Option[String]) =>
       val name = state.input.sliceString(pos.start, pos.end)
 
       val warnings = Vector(
@@ -40,12 +40,11 @@ object Parser extends org.parboiled2.Parser {
         name.exists { ch => authCharMiscoded == ch }.option {
           Warning(3, "Incorrect conversion to UTF-8", ng.astNode.id)
         },
-        garbage match {
-          case g if g.isEmpty => None
+        garbage.map {
           case g if g.trim.isEmpty =>
-            Warning(2, "Trailing whitespace", ng.astNode.id).some
+            Warning(2, "Trailing whitespace", ng.astNode.id)
           case _ =>
-            Warning(3, "Unparseable tail", ng.astNode.id).some
+            Warning(3, "Unparseable tail", ng.astNode.id)
         },
         ctx.preprocessChanges.option {
           Warning(2, "Name had to be changed by preprocessing", ng.astNode.id)
@@ -370,7 +369,9 @@ object Parser extends org.parboiled2.Parser {
 
   val lowerChar = CharPredicate(LowerAlpha ++ "ë" ++ sciCharsExtended)
 
-  val anyChars: Rule1[String] = rule { capture(zeroOrMore(ANY)) }
+  val anyChars: Rule1[Option[String]] = rule { capture(ANY.+).? }
+
+  val anyVisible = upperChar ++ lowerChar ++ CharPredicate.Visible
 
   val approxName: RuleWithWarning[NamesGroup] = rule {
     (approxName1 | approxName2) ~> { (n: NodeWarned[Name]) =>
@@ -380,7 +381,7 @@ object Parser extends org.parboiled2.Parser {
   }
 
   val approxName1: RuleWithWarning[Name] = rule {
-    uninomial ~ space ~ approximation ~ softSpace ~ anyChars ~>
+    (uninomial ~ space ~ approximation ~ capture((softSpace ~ anyVisible.+).*)) ~>
       { (u: NodeWarned[Uninomial], appr: NodeWarned[Approximation], ign: String) =>
         val nm = Name(AstNode.id, uninomial = u.astNode,
                       approximation = appr.astNode.some, ignored = ign.some)
@@ -389,9 +390,10 @@ object Parser extends org.parboiled2.Parser {
   }
 
   val approxName2: RuleWithWarning[Name] = rule {
-    (uninomial ~ space ~ word ~ space ~ approximation ~ space ~ anyChars) ~>
-      { (u: NodeWarned[Uninomial], sw: NodeWarned[SpeciesWord], appr: NodeWarned[Approximation],
-         ign: String) =>
+    (uninomial ~ space ~ word ~ space ~ approximation ~
+      capture((softSpace ~ anyVisible.+).*)) ~>
+      { (u: NodeWarned[Uninomial], sw: NodeWarned[SpeciesWord],
+         appr: NodeWarned[Approximation], ign: String) =>
         val nm = Name(AstNode.id, uninomial = u.astNode,
                       species = Species(AstNode.id, sw.astNode.pos).some,
                       approximation = appr.astNode.some,
@@ -582,7 +584,7 @@ object Parser extends org.parboiled2.Parser {
   }
 
   val yearRange: RuleWithWarning[Year] = rule {
-    yearNumber ~ '-' ~ oneOrMore(Digit) ~ zeroOrMore(Alpha ++ "?") ~> 
+    yearNumber ~ '-' ~ oneOrMore(Digit) ~ zeroOrMore(Alpha ++ "?") ~>
     { (y: NodeWarned[Year]) => {
       val yr = y.astNode.copy(approximate = true)
       NodeWarned(yr, Warning(3, "Years range", yr.id) +: y.warns)
