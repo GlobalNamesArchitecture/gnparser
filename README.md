@@ -15,29 +15,31 @@ PEG-based scientific names parser -- [biodiversity][biodiversity-parser]
 written in Ruby. Both projects were developed as a part of [Global Names
 Architecture][gna].
 
-It is common to use [regular expressions][regex] for parsing scientific names,
+It is common to use regular expressions for parsing scientific names,
 and such approach works well for extraction of canonical forms in simple cases.
 However for complex scientific names and for breaking names to their semantic
 elements regular expression approach fails, unable to overcome recursive nature
 of data embedded in the names. By contrast, `gnparser` is able to deal with the
 most complex scientific name strings.
 
-`gnparser` takes a name string like `Drosophila (Sophophora) melanogaster Meigen,
-1830` and returns back parsed components in JSON format. We supply an informal
-[description of the output fields][json-fields]. Parser's behavior is defined
-in its tests and the [test file][test-file] is a good source of information
-about parser's capabilities, its input and output.
+`gnparser` takes a name string like `Drosophila (Sophophora) melanogaster
+Meigen, 1830` and returns back parsed components in JSON format. We supply an
+informal [description of the output fields][json-fields]. Parser's behavior is
+defined in its tests and the [test file][test-file] is a good source of
+information about parser's capabilities, its input and output.
 
 Features
 --------
 
-* Fast, rock solid and elegant
+* Fast (~5x faster than [biodiversity gem][biodiversity-parser]),
+  rock solid and elegant
 * Extracts all elements from a name, not only a canonical form
 * Works with very complex scientific names, including hybrids
 * Can be used directly in any language that can call Java -- Scala,
-Java, R, Python, Ruby etc.
+  Java, R, Python, Ruby etc.
 * Can run as a command line application
 * Can run as a socket server
+* Can run as a web server
 * Can be scaled to many CPUs and computers
 
 Use Cases
@@ -62,7 +64,7 @@ field to bring them all to a common form in spelling, empty spaces, ranks.
 
 Many data administrators store their name strings in two columns and split them
 into "name part" and "authorship part". Such practice is not very effective for
-names like "*Prosthechea cochleata* (L.) W.E.Higgins *var.  grandiflora*
+names like "*Prosthechea cochleata* (L.) W.E.Higgins *var. grandiflora*
 (Mutel) Christenson".  Combination of `canonical_extended` with the
 `authorship` from the lowest taxon will do the job better.
 
@@ -82,11 +84,12 @@ following:
 ### Creating stable GUIDs for name strings
 
 Parser uses UUID version 5 to generate its `id` field. There is algorithmic 1:1
-relationship between the name string and the name. Moreover the same algorithm
+relationship between the name string and the UUID. Moreover the same algorithm
 can be used in any popular language to generate the same UUID. Such IDs can be
 used to globally connect information about name strings.
 
-More information about these UUIDs can be found in [Global Names blog][uuid].
+More information about UUID version 5 can be found in the [Global Names
+blog][uuid].
 
 ### Assembling canonical forms etc. from original spelling
 
@@ -94,10 +97,14 @@ Parser tries to correct problems with spelling, but sometimes it is important
 to keep original spellings in canonical forms or authorships. The `positions`
 field attaches semantic meaning to every word in the original name string and
 allows to create canonical forms or other combinations using verbatim spelling
-of the words. Each member of positions collection contains fields indicating
-semantic meaning of a word, start of the word and the end of the word
-correspondingly.  For example `["species", 6, 11]` means that a specific
-epithet starts at 6th character and ends before 11th character of the string.
+of the words. Each element in `positions` contains 3 parts:
+
+1. semantic meaning of a word
+2. start position of the word
+3. end position of the word
+
+For example `["species", 6, 11]` means that a specific epithet starts at 6th
+character and ends *before* 11th character of the string.
 
 Dependency Declaration for Java or Scala
 ----------------------------------------
@@ -108,7 +115,7 @@ dependency in following ways:
 SBT:
 
 ```scala
-libraryDependencies += "org.globalnames" %% "parser" % "0.1.0"
+libraryDependencies += "org.globalnames" %% "gnparser" % "0.1.0"
 ```
 
 Maven:
@@ -116,90 +123,137 @@ Maven:
 ```xml
 <dependency>
     <groupId>org.globalnames</groupId>
-    <artifactId>parser</artifactId>
+    <artifactId>gnparser_2.11</artifactId>
     <version>0.1.0</version>
 </dependency>
 ```
 
-`gnparser` is available for Scala 2.10.3+.
+From version 0.1.1 `gnparser` will be available for Scala 2.10.3+.
 
-Installation from a Release Package
+Release Package
+---------------
+
+[Release package][release] should be sufficient for all usages but development.
+It is not needed for including parser into Java or Scala code -- [declare
+dependency instead][declare-dependency].
+
+### Requirements:
+
+Java Run Environment (JRE) version >= 1.6 (>= 1.8 for Web server)
+
+### Released Files
+
+| File                          | Description                                |
+|-------------------------------|--------------------------------------------|
+| `gnparser-assembly-0.1.0.jar` | [Fat Jar][fat-jar]                         |
+| `gnparser-0.1.0.zip`          | [Command line tool and socket server][cli] |
+| `gnparser-web-0.1.0.zip`      | [Web service and REST API][web]            |
+| `release-0.1.0.zip`           | Source code's zip file                     |
+| `release-0.1.0.tar.gz`        | Source code's tar file                     |
+
+Fat Jar
+-------
+
+Sometimes it is beneficial to have a jar that contains everything necessary to
+run a program. Such jar would include Scala and all required libraries.
+
+[Fat jar][gnparser-fatjar] for `gnparser` can be found in the [current
+release][release].
+
+Command Line Tool and Socket Server
 -----------------------------------
 
-Release package should be sufficient for all usages but the development. It is
-not needed for including parser into Java or Scala code -- [declare dependency
-instead][declare-dependency]. For most cases the only requirement is Java
-Run Environment (JRE) version >= 1.6, however you will also need [Scala Build
-Tool][sbt-install] to run web service.
-
-### Docker
-
-```
-docker pull gnames/gnparser
-```
-
-### Linux/Mac
+### Installation on Linux/Mac
 
 ```bash
-wget https://github.com/GlobalNamesArchitecture/gnparser/archive/v0.1.0.tar.gz
-tar xvf gnparser-0.1.0.tar.gz
+wget https://github.com/GlobalNamesArchitecture/gnparser/releases/download/release-0.1.0/gnparser-0.1.0.zip
+unzip gnparser-0.1.0.zip
 sudo rm -rf /opt/gnparser
 sudo mv gnparser-0.1.0 /opt/gnparser
-ln -s /opt/gnparser/runner/target/universal/stage/bin/gnparse /usr/local/bin
+sudo rm /usr/local/bin/gnparse
+sudo ln -s /opt/gnparser/bin/gnparse /usr/local/bin
 ```
 
-### Windows
+### Installation on Windows
 
-1. Download [gnparse-0.1.0.zip][gnparse-zip]
+1. Download [gnparser-0.1.0.zip][gnparser-zip]
 2. Extract it to a place where you usually store program files
 3. Update your [PATH][windows-set-path] to point to bin subdirectory
 4. Now you can use `gnparse` command provided by `gnparse.bat` script from CMD
 
-Installation from GitHub
+### Usage of Executable
+
+Note that `gnparse` loads Java run environment every time it is called. As a
+result parsing one name at a time is **much** slower than parsing many names
+from a file. When parsing large file expect rates of 3000-6000 name strings per
+second on one CPU.
+
+To parse one name
+
+```
+gnparse "Parus major Linnaeus, 1788"
+```
+
+To parse names from a file (one name per line).
+
+```
+gnparse -input file_with_names.txt [-output output_file.json]
+```
+
+To see help
+
+```
+gnparse -help
+```
+
+### Usage as a Socket Server
+
+Use socket (TCP/IP) server when `gnparser` library cannot be imported directly
+by a programming language. Setting `-port` is optional, 4334 is the default
+port.
+
+```
+gnparse -server -port 1234
+```
+
+To test the socket connection use `telnet localhost 1234`, enter a name and
+press `Enter`
+
+Web Service and REST API
 ------------------------
 
-Only needed for development. For all other usages [declare
-dependency][declare-dependency] or download a [release
-package][package-install]
+### Installation on Linux/Mac
 
-Requirements:
-
-* [Git][git-install]
-* [Scala version >= 2.10.3][scala-install]
-* Java SDK version >= 1.6.0
-* [SBT][sbt-install]
+```bash
+wget https://github.com/GlobalNamesArchitecture/gnparser/releases/download/release-0.1.0/gnparser-web-0.1.0.zip
+unzip gnparser-web-0.1.0.zip
+sudo rm -rf /opt/gnparser-web
+sudo mv gnparser-web-0.1.0 /opt/gnparser-web
+sudo rm /usr/local/bin/gnparser-web
+sudo ln -s /opt/gnparser-web/bin/gnparser-web /usr/local/bin
+```
+To start web server in production mode on http://0.0.0.0:9000
 
 ```
-git clone https://github.com/GlobalNamesArchitecture/gnparser.git
-cd gnparser
-sbt test
+gnparser-web
 ```
 
-Run `sbt stage` to create `gnparse` and `gnparse.bat` executing scripts at
-`{PROJECT_ROOT}/runner/target/universal/stage/bin/`.
+### Installation on Windows
 
-### Project Structure
+1. Download [gnparser-web-0.1.0.zip][gnparser-web-zip]
+2. Unzip it, and then launch CMD at that path
+3. Run `cd gnparser-web-0.1.0`
+4. Run `.\bin\gnparser-web.bat`
 
-The project consists of four parts:
+You can open it in a browser at [http://localhost:9000][localhost].
 
-* `parser` contains core routines for parsing input string
-* `examples` contains usage samples for some popular programming languages
-* `runner` contains code required to run `parser` from a command line as a
-  standalone tool or to run it as a TCP/IP server
-* `web` contains a web app and a RESTful interface to `parser`
+### REST API Interface
 
-## Fat Jar
+Make sure to CGI-escape name strings for GET requests. An '&' character needs
+to be converted to '%26'
 
-Sometimes it is beneficial to have a jar that contains everything necessary to run
-a program. Such jar would include Scala and all required libraries. Run `sbt assembly`
-to put it to release packages at
-
-```
-{PROJECT_ROOT}/parser/target/scala-2.11/gnparser-assembly-0.1.0.jar
-{PROJECT_ROOT}/runner/target/scala-2.11/gnparser-runner-assembly-0.1.0.jar
-```
-
-Fat jar for `gnparser` can be found at [current release][gnparse-fatjar].
+* `GET /api?names=["Aus bus", "Aus bus Linn. 1758"]`
+* `POST /api` with request body of JSON array of strings for `names` parameter
 
 Usage as a Library
 ------------------
@@ -209,12 +263,14 @@ versions. [Examples folder][examples-folder] provides scientific name parsing
 code snippets for Scala, Java, Jython, JRuby and R languages.
 
 To avoid declaring multiple dependencies Jython, JRuby and R need a [reference
- GnParser fat-jar][fat-jar].
+ gnparser fat-jar][fat-jar].
+
+If you decide to follow examples get the code from the [release] or [clone it
+from GitHub][gnparser-git]
 
 ### Scala
 
-[Scala example][example-scala] is an SBT subproject and is stored at [scala
-subfolder][examples-folder/scala]. To run it execute the command:
+[Scala example][example-scala] is an SBT subproject. To run it execute the command:
 
 ```
 sbt 'examples/runMain org.globalnames.parser.examples.ParserScala'
@@ -230,13 +286,11 @@ sbt 'examples/runMain org.globalnames.parser.examples.ParserJava'
 
 ### Jython
 
-[Jython][jython] is a Python language implementation for Java Virtual Machine.
-Jython distribution should be installed locally [according to
-instruction][jython-installation].
+[Jython example][example-jython] requires [Jython][jython] -- a Python language
+implementation for Java Virtual Machine.  Jython distribution should be
+installed locally [according to instructions][jython-installation].
 
-Jython needs [a reference GnParser fat-jar][fat-jar]. Run the command to
-execute [Jython example][example-jython] (`$JYTHON_HOME` should be
-defined):
+To run it execute the command:
 
 ```bash
 java -jar $JYTHON_HOME/jython.jar \
@@ -244,11 +298,12 @@ java -jar $JYTHON_HOME/jython.jar \
   examples/jython/parser.py
 ```
 
+(JYTHON_HOME needs to be defined or replaced by path to Jython jar)
+
 ### R
 
-[R is a language and environment][r-env] for statistical computing and
-graphics. [R example][example-r] requires [rJava package][rjava]
-to be installed. Example script can be run with the command:
+[R example][example-r] requires [rJava package][rjava]
+to be installed. To run it execute the command:
 
 ```
 Rscript /opt/gnparser/examples/R/parser.R
@@ -256,85 +311,62 @@ Rscript /opt/gnparser/examples/R/parser.R
 
 ### JRuby
 
-[JRuby][jruby] is an implementation of Ruby for Java Virtual Machine. A
-distribution should be installed locally [according to
-instruction][jruby-installation]. [JRuby example][example-jruby] needs a
-[reference GnParser fat jar][fat-jar]. Example script can be run with the
-command:
+[JRuby example][example-jruby] requires [JRuby][jruby] -- a Ruby language
+implementation for Java Virtual Machine.  JRuby distribution should be
+installed locally [according to instructions][jruby-installation].
+
+To run it execute the command:
 
 ```bash
 jruby -J-classpath /path/to/gnparser-assembly-0.1.0.jar \
   examples/jruby/parser.rb
 ```
 
-Command Line Usage
----------
+Getting Code for Development
+----------------------------
 
-### Usage of Executable
+### Requirements
 
-To see help
+* [Git][git-install]
+* [Scala version >= 2.10.3][scala-install]
+* Java SDK version >= 1.8.0
+* [SBT][sbt-install] >= 0.13.8
 
-```gnparse -help```
-
-To parse one name
-
-```gnparse "Parus major Linnaeus, 1788"```
-
-To parse names from a file (one name per line).
+### Installation
 
 ```
-gnparse -input file_with_names.txt [-output output_file.json]
+git clone https://github.com/GlobalNamesArchitecture/gnparser.git
+cd gnparser
 ```
 
-### Usage as a Socket Server
+If you decide to participate in `gnparser` development -- fork the repository
+and submit pull requests of your work.
 
-Use socket (TCP/IP) server when `gnparser` library cannot be imported directly
-by a programming language. Setting `-port` is optional, 4334 is the default
-port.
+### Project Structure
 
-```
-gnparse -server -port 1234
-```
+The project consists of four parts:
 
-To test socket connection use
+* `parser` contains core routines for parsing input string
+* `examples` contains usage samples for some popular programming languages
+* `runner` contains code required to run `parser` from a command line as a
+  standalone tool or to run it as a TCP/IP server
+* `web` contains a web app and a RESTful interface to `parser`
 
-```
-telnet localhost 1234
-```
+### Commands
 
-Usage as a Web Service
-----------------------
+| Command             | Description                                          |
+|---------------------|------------------------------------------------------|
+| `sbt test`          | Runs all tests                                       |
+| `sbt ++2.10.3 test` | Runs all tests against Scala v2.10.3                 |
+| `sbt assembly`      | Creates [fat jars][fat-jar] for command line and web |
+| `sbt stage`         | Creates executables for command line and web         |
+| `sbt web/run`       | Runs the web server in development mode              |
 
-To install it on Linux/MacOS run commands as follows:
+Docker container
+----------------
 
-```bash
-wget https://github.com/GlobalNamesArchitecture/gnparser/archive/gnparser-web-0.1.0.zip
-unzip gnparser-web-0.1.0.zip
-cd gnparser-web-0.1.0
-bin/global-names-parser-web
-```
-
-To install it on Windows proceed to commands as follows:
-
-1. Download [gnparser-web-0.1.0][gnparse-web-zip]
-2. Unzip it, and then launch CMD at that path
-3. Run `cd gnparser-web-0.1.0`
-4. Run `.\bin\global-names-parser-web.bat`
-
-You can open it in a browser at [http://localhost:9000][localhost].
-
-Web application has also REST API interface as follows:
-
-* `GET /api?names=["Aus bus", "Aus bus 1700"]`
-* `POST /api` with request body of JSON array of strings
-
-In case of using [docker's container for gnparser][gnparser-docker] the
-following command will download the container and set web service on port 80 of
-the host machine.
-
-```
-docker run -d -p 80:9000 --name gnparser gnames/gnparser
-```
+For usage with Docker containers read [gnparser container
+instructions][gnparser-docker].
 
 Authors
 -------
@@ -350,33 +382,36 @@ Released under [MIT license][license]
 [biodiversity-parser]: https://github.com/GlobalNamesArchitecture/biodiversity
 [ci-link]: http://travis-ci.org/GlobalNamesArchitecture/gnparser
 [ci-svg]: https://secure.travis-ci.org/GlobalNamesArchitecture/gnparser.svg
+[cli]: #command-line-tool-and-socket-server
 [declare-dependency]: #dependency-declaration-for-java-or-scala
 [dimus]: https://github.com/dimus
-[gnparser-docker]: https://github.com/gn-docker/gnparser
-[example-r]: /examples/R/parser.R
 [example-java]: /examples/java-scala/src/main/java/org/globalnames/parser/examples/ParserJava.java
 [example-jruby]: /examples/jruby/parser.rb
 [example-jython]: /examples/jython/parser.py
+[example-r]: /examples/R/parser.R
 [example-scala]: /examples/java-scala/src/main/scala/org/globalnames/parser/examples/ParserScala.scala
 [examples-folder]: /examples
 [fat-jar]: #fat-jar
 [git-install]: https://git-scm.com/
 [gna]: http://globalnames.org
-[gnparse-fatjar]: https://github.com/GlobalNamesArchitecture/gnparser/releases/download/release-0.1.0/gnparser-assembly-0.1.0.jar
-[gnparse-web-zip]: https://github.com/GlobalNamesArchitecture/gnparser/releases/download/release-0.1.0/gnparser-web-0.1.0.zip
-[gnparse-zip]: https://github.com/GlobalNamesArchitecture/gnparser/releases/download/release-0.1.0/gnparser-0.1.0.zip
-[jruby]: http://jruby.org/
+[gnparser-docker]: https://github.com/gn-docker/gnparser
+[gnparser-git]: #getting-code-for-development
+[gnparser-fatjar]: https://github.com/GlobalNamesArchitecture/gnparser/releases/download/release-0.1.0/gnparser-assembly-0.1.0.jar
+[gnparser-web-zip]: https://github.com/GlobalNamesArchitecture/gnparser/releases/download/release-0.1.0/gnparser-web-0.1.0.zip
+[gnparser-zip]: https://github.com/GlobalNamesArchitecture/gnparser/releases/download/release-0.1.0/gnparser-0.1.0.zip
 [jruby-installation]: http://jruby.org/getting-started
+[jruby]: http://jruby.org/
 [json-fields]: /JSON_FIELDS.md
 [jython-installation]: https://wiki.python.org/jython/InstallationInstructions
 [jython]: http://www.jython.org/
 [license]: /LICENSE
 [localhost]: http://localhost:9000
-[maven]: http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.globalnames%22
+[maven]: http://search.maven.org/#search%7Cga%7C1%7Cgnparser
 [package-install]: #installation-from-a-release-package
 [parboiled2]: http://parboiled2.org
 [r-env]: https://www.r-project.org/about.html
-[regex]: https://en.wikipedia.org/wiki/Regular_expression
+[release-package]: #release-package
+[release]: https://github.com/GlobalNamesArchitecture/gnparser/releases/tag/release-0.1.0
 [rjava]: https://cran.r-project.org/web/packages/rJava/index.html
 [sbt-install]: http://www.scala-sbt.org/download.html
 [scala-install]: http://www.scala-lang.org/download/install.html
@@ -385,4 +420,5 @@ Released under [MIT license][license]
 [waffle-progress-svg]: https://badge.waffle.io/GlobalNamesArchitecture/gnparser.svg?label=in%20progress&title=In%20Progress
 [waffle-ready-svg]: https://badge.waffle.io/GlobalNamesArchitecture/gnparser.svg?label=ready&title=Issues%20To%20Do
 [waffle]: https://waffle.io/GlobalNamesArchitecture/gnparser
+[web]: #web-service-and-rest-api
 [windows-set-path]: https://java.com/en/download/help/path.xml
