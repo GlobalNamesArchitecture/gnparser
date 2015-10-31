@@ -2,7 +2,9 @@ package org.globalnames.parser
 
 import org.parboiled2.CapturePos
 
-import scalaz.Scalaz._
+import scalaz._
+import Tags.{Disjunction => Disj}
+import Scalaz._
 
 trait AstNode {
   val id: Int
@@ -18,14 +20,16 @@ case class ScientificName(
   namesGroup: Option[NamesGroup] = None,
   isVirus: Boolean = false,
   quality: Int = 1,
-  garbage: String = "") {
+  garbage: Option[String] = None) {
 
   val isHybrid = namesGroup.map { ng => ng.name.size > 1 || ng.hybrid.isDefined }
   val surrogate: Boolean = {
-    val isBold = garbage.contains("BOLD") || garbage.contains("Bold")
-    val isAnnot = namesGroup.map { _.name.exists { n =>
-      n.approximation .isDefined || n.comparison.isDefined } }
-    isBold || isAnnot.getOrElse(false)
+    val isBold = garbage.map { g => Disj(g.contains("BOLD") || g.contains("Bold")) }
+    val isAnnot = namesGroup.map { ng => Disj(ng.name.exists { n =>
+        n.approximation.isDefined || n.comparison.isDefined
+      })
+    }
+    Disj.unwrap(~(isBold |+| isAnnot))
   }
 }
 

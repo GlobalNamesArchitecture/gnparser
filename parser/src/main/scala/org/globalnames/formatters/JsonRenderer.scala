@@ -29,8 +29,6 @@ trait JsonRenderer { parserResult: ScientificNameParser.Result =>
           parserResult.input.verbatimPosAt(position.end)))
       }
     }
-    val garbage = if (parserResult.scientificName.garbage.isEmpty) None
-    else parserResult.scientificName.garbage.some
 
     render("scientific_name" -> ("id" -> parserResult.input.id) ~
       ("parsed" -> parsed) ~
@@ -43,7 +41,7 @@ trait JsonRenderer { parserResult: ScientificNameParser.Result =>
       ("canonical_extended" -> parserResult.canonized(showRanks = true)) ~
       ("hybrid" -> parserResult.scientificName.isHybrid) ~
       ("surrogate" -> parserResult.scientificName.surrogate) ~
-      ("garbage" -> garbage) ~
+      ("garbage" -> parserResult.scientificName.garbage) ~
       ("virus" -> parserResult.scientificName.isVirus) ~
       ("details" -> parserResult.detailed) ~
       ("positions" -> positionsJson))
