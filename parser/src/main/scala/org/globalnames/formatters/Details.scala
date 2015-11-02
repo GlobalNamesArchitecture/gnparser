@@ -1,7 +1,7 @@
 package org.globalnames.formatters
 
 import org.globalnames.parser._
-import org.json4s.JsonAST.JNothing
+import org.json4s.JsonAST.{JBool, JNothing}
 import org.json4s.JsonDSL._
 import org.json4s.{JObject, JString, JValue}
 
@@ -64,9 +64,12 @@ trait Details { parsedResult: ScientificNameParser.Result =>
     def detailedInfraspeciesGroup(isg: InfraspeciesGroup): JValue =
       isg.group.map(detailedInfraspecies)
 
-    def detailedYear(y: Year): JValue =
-      ("str" -> stringOf(y)) ~
-        ("approximate" -> y.approximate)
+    def detailedYear(y: Year): JValue = {
+      val approximate: JObject =
+        if (y.approximate) "approximate" -> JBool(true)
+        else JObject()
+      ("str" -> stringOf(y)) ~ approximate
+    }
 
     def detailedAuthorship(as: Authorship): JObject = {
       def detailedAuthor(a: Author): String = normalizedAuthor(a)
