@@ -2,8 +2,6 @@ Global Names Parser
 ===================
 
 [![Continuous Integration Status][ci-svg]][ci-link]
-[![Stories in Ready][waffle-ready-svg]][waffle]
-[![Stories in Progress][waffle-progress-svg]][waffle]
 
 Introduction
 ------------
@@ -417,8 +415,5 @@ Released under [MIT license][license]
 [scala-install]: http://www.scala-lang.org/download/install.html
 [test-file]: https://raw.githubusercontent.com/GlobalNamesArchitecture/gnparser/master/parser/src/test/resources/test_data.txt
 [uuid]: http://globalnames.org/news/2015/05/31/gn-uuid-0-5-0/
-[waffle-progress-svg]: https://badge.waffle.io/GlobalNamesArchitecture/gnparser.svg?label=in%20progress&title=In%20Progress
-[waffle-ready-svg]: https://badge.waffle.io/GlobalNamesArchitecture/gnparser.svg?label=ready&title=Issues%20To%20Do
-[waffle]: https://waffle.io/GlobalNamesArchitecture/gnparser
 [web]: #web-service-and-rest-api
 [windows-set-path]: https://java.com/en/download/help/path.xml
