@@ -1,7 +1,7 @@
 package org.globalnames.formatters
 
 import org.globalnames.parser.ScientificNameParser
-import org.json4s.JsonAST.{JArray, JValue}
+import org.json4s.JsonAST.{JArray, JNothing, JValue}
 import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods._
 
@@ -12,8 +12,17 @@ trait JsonRenderer { parserResult: ScientificNameParser.Result =>
 
   def json: JValue = {
     val canonical = parserResult.canonized(showRanks = false)
-    val quality = canonical.map { _ => parserResult.scientificName.quality }
     val parsed = canonical.isDefined
+
+    val canonicalName: JValue =
+      if (parsed) {
+        val minimal = "value" -> canonical
+        val canonicalExtended = parserResult.canonized(showRanks = true)
+        if (canonical == canonicalExtended) minimal
+        else minimal ~ ("extended" -> canonicalExtended)
+      } else JNothing
+
+    val quality = canonical.map { _ => parserResult.scientificName.quality }
     val qualityWarnings: Option[JArray] =
       if (parserResult.warnings.isEmpty) None
       else {
@@ -30,15 +39,15 @@ trait JsonRenderer { parserResult: ScientificNameParser.Result =>
       }
     }
 
-    render("scientific_name" -> ("id" -> parserResult.input.id) ~
+    render(
+      ("name_string_id" -> parserResult.input.id) ~
       ("parsed" -> parsed) ~
       ("quality" -> quality) ~
       ("quality_warnings" -> qualityWarnings) ~
       ("parser_version" -> version) ~
       ("verbatim" -> parserResult.input.verbatim) ~
       ("normalized" -> parserResult.normalized) ~
-      ("canonical" -> canonical) ~
-      ("canonical_extended" -> parserResult.canonized(showRanks = true)) ~
+      ("canonical_name" -> canonicalName) ~
       ("hybrid" -> parserResult.scientificName.isHybrid) ~
       ("surrogate" -> parserResult.scientificName.surrogate) ~
       ("garbage" -> parserResult.scientificName.garbage) ~

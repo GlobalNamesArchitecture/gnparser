@@ -231,7 +231,7 @@ object Parser extends org.parboiled2.Parser {
   val rankForma: RuleWithWarning[Rank] = rule {
     capturePos(("forma"  | "fma" | "form" | "fo" | "f") ~
     (&(spaceCharsEOI) | '.')) ~> { (p: CapturePos) =>
-      NodeWarned(Rank(AstNode.id, p, "form".some))
+      NodeWarned(Rank(AstNode.id, p, "fm.".some))
     }
   }
 
