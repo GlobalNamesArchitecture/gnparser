@@ -75,7 +75,7 @@ trait Details { parsedResult: ScientificNameParser.Result =>
       def detailedAuthorsGroup(ag: AuthorsGroup): JObject =
         detailedAuthorsTeam(ag.authors) ~
           ("year" -> ag.year.map(detailedYear)) ~
-          ("exAuthorTeam" -> ag.authorsEx.map(detailedAuthorsTeam))
+          ("ex_author_team" -> ag.authorsEx.map(detailedAuthorsTeam))
 
       ("authorship" -> parsedResult.normalizedAuthorship(as)) ~
         ("basionym_author_team" -> as.basionym.map(detailedAuthorsGroup)) ~
