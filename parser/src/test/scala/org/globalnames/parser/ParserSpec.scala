@@ -15,7 +15,8 @@ class ParserSpec extends Specification {
   "Parses:" >> {
     "Homo sapiens" in {
       val res = parse("Homo sapiens")
-      (res.json \\ "canonical").extract[String] === "Homo sapiens"
+      (res.json \\ "canonical_name" \ "value")
+        .extract[String] === "Homo sapiens"
       res.warnings must beEmpty
     }
 
@@ -26,7 +27,8 @@ class ParserSpec extends Specification {
       res.warnings(0).level === 3
       res.warnings(0).message === "Non-standard space characters"
 
-      (res.json \\ "canonical").extract[String] === "Homo sapiens"
+      (res.json \\ "canonical_name" \ "value")
+        .extract[String] === "Homo sapiens"
     }
 
     """Homo\r\nsapiens""" in {
@@ -38,7 +40,8 @@ class ParserSpec extends Specification {
       res.warnings(1).level === 3
       res.warnings(1).message === "Non-standard space characters"
 
-      (res.json \\ "canonical").extract[String] === "Homo sapiens"
+      (res.json \\ "canonical_name" \ "value")
+        .extract[String] === "Homo sapiens"
     }
 
     """Homo sapiens\r""" in {
@@ -48,7 +51,8 @@ class ParserSpec extends Specification {
       res.warnings(0).level === 2
       res.warnings(0).message === "Trailing whitespace"
 
-      (res.json \\ "canonical").extract[String] === "Homo sapiens"
+      (res.json \\ "canonical_name" \ "value")
+        .extract[String] === "Homo sapiens"
     }
 
     """Homo sp.\r""" in {
@@ -60,7 +64,7 @@ class ParserSpec extends Specification {
       res.warnings(1).level === 3
       res.warnings(1).message === "Name is approximate"
 
-      (res.json \\ "canonical").extract[String] === "Homo"
+      (res.json \\ "canonical_name" \ "value").extract[String] === "Homo"
     }
   }
 

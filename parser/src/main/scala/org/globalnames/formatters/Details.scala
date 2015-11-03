@@ -21,13 +21,13 @@ trait Details { parsedResult: ScientificNameParser.Result =>
       }
 
       val ignoredObj = nm.ignored.map {
-          ign => JObject("ignored" -> JObject("string" -> JString(ign))) }
+          ign => JObject("ignored" -> JObject("value" -> JString(ign))) }
         .getOrElse(JObject())
 
       uninomialDetails ~
-        ("species" -> nm.species.map(detailedSpecies)) ~
-        ("infragenus" -> nm.subgenus.map(detailedSubGenus)) ~
-        ("infraspecies" -> nm.infraspecies.map(detailedInfraspeciesGroup)) ~
+        ("specific_epithet" -> nm.species.map(detailedSpecies)) ~
+        ("infrageneric_epithet" -> nm.subgenus.map(detailedSubGenus)) ~
+        ("infraspecific_epithets" -> nm.infraspecies.map(detailedInfraspeciesGroup)) ~
         ("annotation_identification" ->
           (nm.approximation.map { stringOf } |+|
             nm.comparison.map { stringOf })) ~
@@ -38,25 +38,22 @@ trait Details { parsedResult: ScientificNameParser.Result =>
       val rankStr =
         u.rank
          .map { r => r.typ.getOrElse(stringOf(r)) }
-      ("string" -> Util.norm(stringOf(u))) ~
+      ("value" -> Util.norm(stringOf(u))) ~
         ("rank" -> rankStr) ~
         ("parent" -> u.parent.map { p => Util.norm(stringOf(p)) }) ~
         u.authorship.map(detailedAuthorship).getOrElse(JObject())
     }
 
     def detailedSubGenus(sg: SubGenus): JValue =
-      "string" -> Util.norm(stringOf(sg.subgenus))
+      "value" -> Util.norm(stringOf(sg.subgenus))
 
     def detailedSpecies(sp: Species): JValue =
-      ("string" -> Util.norm(stringOf(sp))) ~
+      ("value" -> Util.norm(stringOf(sp))) ~
         sp.authorship.map(detailedAuthorship).getOrElse(JObject())
 
     def detailedInfraspecies(is: Infraspecies): JValue = {
-      val rankStr =
-        is.rank
-          .map { r => r.typ.getOrElse(stringOf(r)) }
-          .getOrElse("n/a")
-      ("string" -> Util.norm(stringOf(is))) ~
+      val rankStr = is.rank.map { r => r.typ.getOrElse(stringOf(r)) }
+      ("value" -> Util.norm(stringOf(is))) ~
         ("rank" -> rankStr) ~
         is.authorship.map(detailedAuthorship).getOrElse(JObject())
     }
@@ -68,21 +65,25 @@ trait Details { parsedResult: ScientificNameParser.Result =>
       val approximate: JObject =
         if (y.approximate) "approximate" -> JBool(true)
         else JObject()
-      ("str" -> stringOf(y)) ~ approximate
+      ("value" -> stringOf(y)) ~ approximate
     }
 
     def detailedAuthorship(as: Authorship): JObject = {
       def detailedAuthor(a: Author): String = normalizedAuthor(a)
       def detailedAuthorsTeam(at: AuthorsTeam): JObject =
-        "author" -> at.authors.map(detailedAuthor)
+        "authors" -> at.authors.map(detailedAuthor)
+      def detailedExAuthorsTeam(at: AuthorsTeam): Seq[String]  =
+        at.authors.map(detailedAuthor)
       def detailedAuthorsGroup(ag: AuthorsGroup): JObject =
         detailedAuthorsTeam(ag.authors) ~
           ("year" -> ag.year.map(detailedYear)) ~
-          ("exAuthorTeam" -> ag.authorsEx.map(detailedAuthorsTeam))
+          ("ex_authors" -> ag.authorsEx.map(detailedExAuthorsTeam))
 
-      ("authorship" -> parsedResult.normalizedAuthorship(as)) ~
-        ("basionym_author_team" -> as.basionym.map(detailedAuthorsGroup)) ~
-        ("combination_author_team" -> as.combination.map(detailedAuthorsGroup))
+      ("authorship" -> (
+        ("value" -> parsedResult.normalizedAuthorship(as)) ~
+        ("basionym_authorship" -> as.basionym.map(detailedAuthorsGroup)) ~
+        ("combination_authorship" -> as.combination.map(detailedAuthorsGroup))
+      ))
     }
 
     parsedResult.scientificName.namesGroup.map(detailedNamesGroup)

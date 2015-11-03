@@ -32,7 +32,7 @@ class ApplicationSpec extends Specification {
       val index = route(request).get
       status(index) must equalTo(OK)
       contentType(index) must beSome.which { _ == "text/html" }
-      contentAsString(index) must contain("scientific_name")
+      contentAsString(index) must contain("verbatim")
     }
 
     "handle 'GET /doc/api'" in new WithApplication {
