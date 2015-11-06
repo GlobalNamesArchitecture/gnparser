@@ -1,30 +1,28 @@
 package org.globalnames.formatters
 
 import org.globalnames.parser.ScientificNameParser
-import org.json4s.JValue
-import org.json4s.JsonAST.{JArray, JNothing}
+import org.json4s.JsonAST.{JArray, JNothing, JValue}
 import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods._
 
-import scalaz.Scalaz._
+import scalaz._
+import Scalaz._
 
 trait JsonRenderer { parserResult: ScientificNameParser.Result =>
 
   def json: JValue = {
     val canonical = parserResult.canonized(showRanks = false)
+    val parsed = canonical.isDefined
 
-    val canonicalName: JValue = {
-      if (canonical.isDefined) {
-        val minimal = ("value" -> canonical)
+    val canonicalName: JValue =
+      if (parsed) {
+        val minimal = "value" -> canonical
         val canonicalExtended = parserResult.canonized(showRanks = true)
         if (canonical == canonicalExtended) minimal
         else minimal ~ ("extended" -> canonicalExtended)
-      }
-      else JNothing
-    }
+      } else JNothing
 
     val quality = canonical.map { _ => parserResult.scientificName.quality }
-    val parsed = canonical.isDefined
     val qualityWarnings: Option[JArray] =
       if (parserResult.warnings.isEmpty) None
       else {

@@ -79,11 +79,11 @@ trait Details { parsedResult: ScientificNameParser.Result =>
           ("year" -> ag.year.map(detailedYear)) ~
           ("ex_authors" -> ag.authorsEx.map(detailedExAuthorsTeam))
 
-      ("authorship" -> (
+      "authorship" -> (
         ("value" -> parsedResult.normalizedAuthorship(as)) ~
-        ("basionym_authorship" -> as.basionym.map(detailedAuthorsGroup)) ~
-        ("combination_authorship" -> as.combination.map(detailedAuthorsGroup))
-      ))
+          ("basionym_authorship" -> as.basionym.map(detailedAuthorsGroup)) ~
+          ("combination_authorship" -> as.combination.map(detailedAuthorsGroup))
+        )
     }
 
     parsedResult.scientificName.namesGroup.map(detailedNamesGroup)
