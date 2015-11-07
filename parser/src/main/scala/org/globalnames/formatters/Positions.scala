@@ -55,15 +55,15 @@ trait Positions { parsedResult: ScientificNameParser.Result =>
 
     def positionedSubGenus(subGenus: Option[SubGenus]): Option[Position] =
       subGenus.map { sg =>
-        Position("infragenus", sg.pos.start, sg.pos.end)
+        Position("infrageneric_epithet", sg.pos.start, sg.pos.end)
       }
 
     def positionedSpecies(sp: Species): Vector[Position] =
-      Position("species", sp.pos.start, sp.pos.end) +:
+      Position("specific_epithet", sp.pos.start, sp.pos.end) +:
         ~sp.authorship.map(positionedAuthorship)
 
     def positionedInfraspecies(is: Infraspecies): Vector[Position] =
-      Vector(Position("infraspecies", is.pos.start, is.pos.end).some,
+      Vector(Position("infraspecific_epithet", is.pos.start, is.pos.end).some,
              positionedRank(is.rank)).flatten ++
         ~is.authorship.map(positionedAuthorship)
 
