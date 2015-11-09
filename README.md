@@ -349,6 +349,7 @@ The project consists of four parts:
 * `runner` contains code required to run `parser` from a command line as a
   standalone tool or to run it as a TCP/IP server
 * `web` contains a web app and a RESTful interface to `parser`
+* `benchmark` contains a bunch of JMH micro benchmarks of `parser` internals
 
 ### Commands
 

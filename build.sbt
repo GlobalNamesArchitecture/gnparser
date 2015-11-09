@@ -104,6 +104,15 @@ lazy val parser = (project in file("./parser"))
         |import org.parboiled2._""".stripMargin
   )
 
+lazy val benchmark = (project in file("./benchmark"))
+  .dependsOn(parser)
+  .enablePlugins(JmhPlugin)
+  .settings(commonSettings: _*)
+  .settings(noPublishingSettings: _*)
+  .settings(
+    name := "gnparser-benchmark"
+  )
+
 lazy val runner = (project in file("./runner"))
   .dependsOn(parser)
   .enablePlugins(JavaAppPackaging)
