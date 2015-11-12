@@ -9,7 +9,8 @@ val commonSettings = Seq(
   startYear := Some(2008),
   licenses := Seq("MIT" -> new URL("https://github.com/GlobalNamesArchitecture/gnparser/blob/master/LICENSE")),
   resolvers ++= Seq(
-    "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
+    "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases",
+    "bintray-fge"    at "https://dl.bintray.com/fge/maven/"
   ),
   javacOptions ++= Seq(
     "-encoding", "UTF-8",
@@ -65,6 +66,7 @@ val lang3       = "org.apache.commons" %  "commons-lang3"          % "3.4"
 val parboiled   = "org.globalnames"    %% "parboiled"              % "2.2.1"
 val scalaz      = "org.scalaz"         %% "scalaz-core"            % "7.1.3"
 val specs2core  = "org.specs2"         %% "specs2-core"            % "3.6.3" % Test
+val jsvalidate  = "com.github.fge"     %  "json-schema-validator"  % "2.2.6" % Test
 
 /////////////////////// PROJECTS /////////////////////////
 
@@ -91,7 +93,8 @@ lazy val parser = (project in file("./parser"))
         case _ =>
           Seq("com.chuusai" %% "shapeless" % "2.2.3")
       }
-      shapeless ++ Seq(json4s, javaUuid, lang3, parboiled, scalaz, specs2core)
+      shapeless ++ Seq(json4s, javaUuid, lang3, parboiled, scalaz, specs2core,
+                       jsvalidate)
     },
 
     scalacOptions in Test ++= Seq("-Yrangepos"),
