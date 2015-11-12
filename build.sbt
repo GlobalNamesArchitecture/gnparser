@@ -71,6 +71,9 @@ val specs2core  = "org.specs2"         %% "specs2-core"            % "3.6.3" % T
 lazy val root = project.in(file("."))
   .aggregate(parser, examples, runner, web)
   .settings(noPublishingSettings: _*)
+  .settings(
+    crossScalaVersions := Seq("2.10.3", "2.11.7")
+  )
 
 lazy val parser = (project in file("./parser"))
   .enablePlugins(BuildInfoPlugin)
