@@ -1,9 +1,11 @@
 package org.globalnames
 
-import java.io.{File, PrintWriter}
+import java.io.{BufferedWriter, FileWriter}
 
-import org.globalnames.parser.ScientificNameParser.{instance => scientificNameParser}
+import org.globalnames.parser.ScientificNameParser.{instance ⇒ scientificNameParser}
 
+import scala.collection.parallel.ForkJoinTaskSupport
+import scala.concurrent.forkjoin.ForkJoinPool
 import scala.io.Source
 import scala.util.{Failure, Success, Try}
 
@@ -41,20 +43,30 @@ object GnParser {
       ParServer(port).run()
     }
 
-    def startFileParse(input: String, output: String) = {
-      val writer = new PrintWriter(new File(output))
-      Try(Source.fromFile(input)) match {
-        case Failure(e) => Console.err.println(s"No such file: $input")
+    def startFileParse(inputFilePath: String, outputFilePath: String) =
+      Try(Source.fromFile(inputFilePath)) match {
+        case Failure(e) => Console.err.println(s"No such file: $inputFilePath")
         case Success(f) =>
-          f.getLines().zipWithIndex.foreach {
-            case (line, i) =>
-              if ((i + 1) % 10000 == 0) println(s"Parsed ${i + 1} lines")
-              val parsed = scientificNameParser.fromString(line.trim).renderCompactJson
-              writer.write(parsed + "\n")
+          val parallelism = Option(sys.props("parallelism")).map { _.toInt }
+            .getOrElse(ForkJoinPool.getCommonPoolParallelism)
+          println(s"running with parallelism: $parallelism")
+          val parsedNamesCount = new java.util.concurrent.atomic.AtomicInteger()
+          val namesInput = f.getLines().toVector.par
+          namesInput.tasksupport =
+            new ForkJoinTaskSupport(new ForkJoinPool(parallelism))
+          val namesParsed = namesInput.map { name ⇒
+            val currentParsedCount = parsedNamesCount.incrementAndGet()
+            if (currentParsedCount % 10000 == 0) {
+              println(s"Parsed $currentParsedCount of ${namesInput.size} lines")
+            }
+            scientificNameParser.fromString(name.trim).renderCompactJson
           }
+          val writer = new BufferedWriter(new FileWriter(outputFilePath))
+          namesParsed.seq.foreach { name ⇒
+            writer.write(name + System.lineSeparator)
+          }
+          writer.close()
       }
-      writer.close()
-    }
 
     val options = nextOption(Map(), argList)
 
