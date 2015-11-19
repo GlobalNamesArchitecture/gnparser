@@ -99,8 +99,6 @@ lazy val parser = (project in file("./parser"))
 
     scalacOptions in Test ++= Seq("-Yrangepos"),
 
-    mainClass in Compile := Some("org.globalnames.parser.GnParser"),
-
     initialCommands in console :=
       """import org.globalnames.parser.{ScientificNameParser => SNP, _}
         |import scala.util.{Failure, Success, Try}
@@ -127,7 +125,8 @@ lazy val runner = (project in file("./runner"))
     packageName := "gnparser",
     bashScriptExtraDefines := Seq(
       s"""declare -r script_name="${executableScriptName.value}""""
-    )
+    ),
+    mainClass in Compile := Some("org.globalnames.GnParser")
   )
 
 lazy val examples = (project in file("./examples/java-scala"))
