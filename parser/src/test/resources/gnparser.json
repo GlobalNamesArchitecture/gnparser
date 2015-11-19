@@ -1,0 +1,479 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "definitions": {
+    "uninomial_name": {
+      "type": "object",
+      "description": "uninomial name",
+      "additionalProperties": false,
+      "properties": {
+        "uninomial": {
+          "type": "object",
+          "description": "taxon higher than species",
+          "additionalProperties": false,
+          "properties": {
+            "value": {
+              "type": "string",
+              "description": "normalized value of uninomial string"
+            },
+            "authorship": {
+              "$ref": "#/definitions/authorship"
+            },
+            "rank": {
+              "type": "string",
+              "description": "rank of the uninomial"
+            },
+            "parent": {
+              "type": "string",
+              "description": "in uninomial combination -- higher taxon"
+            }
+          }
+        }
+      }
+    },
+    "polynomial_name": {
+      "type": "object",
+      "description": "includes binomial and polynomial names",
+      "additionalProperties": false,
+      "properties": {
+        "genus": {
+          "type": "object",
+          "description": "genus",
+          "required": [
+            "value"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "value": {
+              "type": "string",
+              "description": "genus word"
+            }
+          }
+        },
+        "infrageneric_epithet": {
+          "type": "object",
+          "description": "subgenus in zoological names",
+          "required": [
+            "value"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "value": {
+              "type": "string",
+              "description": "subgenus string"
+            }
+          }
+        },
+        "specific_epithet": {
+          "type": "object",
+          "description": "data pertaining to specific epithet",
+          "required": [
+            "value"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "value": {
+              "type": "string",
+              "description": "species_epithet string"
+            },
+            "authorship": {
+              "$ref": "#/definitions/authorship"
+            }
+          }
+        },
+        "infraspecific_epithets": {
+          "type": "array",
+          "items": [
+            {
+              "$ref": "#/definitions/infraspecific_epithet"
+            }
+          ]
+        },
+        "annotation_identification": {
+          "$ref": "#/definitions/annotation_identification"
+        },
+        "ignored": {
+          "$ref": "#/definitions/ignored"
+        }
+      }
+    },
+    "infraspecific_epithet": {
+      "type": "object",
+      "description": "data associated with infraspecific epithet of a name",
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "type": "string",
+          "description": "infraspecific epithet string"
+        },
+        "rank": {
+          "type": "string",
+          "description": "rank of the infraspecific epithet"
+        },
+        "authorship": {
+          "$ref": "#/definitions/authorship"
+        }
+      }
+    },
+    "annotation_identification": {
+      "type": "string",
+      "description": "annotation for not fully identified specimen"
+    },
+    "ignored": {
+      "type": "object",
+      "description": "tail of the name after annotation identification",
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "authorship": {
+      "type": "object",
+      "description": "normalized rendering of authorship",
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "type": "string"
+        },
+        "basionym_authorship": {
+          "$ref": "#/definitions/basionym_authorship"
+        },
+        "combination_authorship": {
+          "$ref": "#/definitions/combination_authorship"
+        }
+      }
+    },
+    "basionym_authorship": {
+      "type": "object",
+      "description": "authorship of original name and combination",
+      "required": [
+        "authors"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "authors": {
+          "type": "array",
+          "description": "list of authors' names",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "ex_authors": {
+          "type": "array",
+          "description": "list of ex-authors' names",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "year": {
+          "$ref": "#/definitions/year"
+        }
+      }
+    },
+    "combination_authorship": {
+      "type": "object",
+      "description": "authorship of new combination",
+      "required": [
+        "authors"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "authors": {
+          "type": "array",
+          "description": "list of authors' names",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "ex_authors": {
+          "type": "array",
+          "description": "list of ex-authors' names",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "year": {
+          "$ref": "#/definitions/year"
+        }
+      }
+    },
+    "year": {
+      "type": "object",
+      "description": "year of publication",
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "type": "string",
+          "description": "year string",
+          "pattern": "^(17[5-9]|1[89][0-9]|20[0-9])[0-9?]([^0-9]|$)"
+        },
+        "approximate": {
+          "type": "boolean",
+          "description": "indicates that a year is approximate"
+        }
+      }
+    }
+  },
+  "id": "http://globalnames.org/schemas/gnparser.json",
+  "title": "gnparser",
+  "type": "object",
+  "required": [
+    "name_string_id",
+    "parsed",
+    "parser_version",
+    "verbatim"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "name_string_id": {
+      "type": "string",
+      "description": "UUID v5 generated from name-string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-5[0-9a-f]{3}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "parsed": {
+      "type": "boolean",
+      "description": "true if parsing succeded, false otherwise"
+    },
+    "parser_version": {
+      "type": "string",
+      "description": "indicates version of gnparser",
+      "pattern": "^(test_version|[0-9]+\\.[0-9]+\\.[0-9]+(-SNAPSHOT)?)$"
+    },
+    "verbatim": {
+      "type": "string",
+      "description": "exact string used for parsing"
+    },
+    "hybrid": {
+      "type": "boolean",
+      "description": "true if name is a hybrid"
+    },
+    "virus": {
+      "type": "boolean",
+      "description": "true if it is a virus name"
+    },
+    "surrogate": {
+      "type": "boolean",
+      "description": "true if it is a surrogate name"
+    },
+    "quality": {
+      "type": "number",
+      "description": "parsed name quality 1 -- best, 3 -- worst",
+      "enum": [
+        1,
+        2,
+        3
+      ]
+    },
+    "quality_warnings": {
+      "type": "array",
+      "description": "lists problems with parsing",
+      "items": {
+        "type": "array",
+        "items": [
+          {
+            "type": "number",
+            "description": "quality number",
+            "enum": [
+              1,
+              2,
+              3
+            ]
+          },
+          {
+            "type": "string",
+            "description": "warning text"
+          }
+        ]
+      }
+    },
+    "normalized": {
+      "type": "string",
+      "description": "normalized form of name string"
+    },
+    "canonical_name": {
+      "type": "object",
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "type": "string",
+          "description": "canonical name"
+        },
+        "extended": {
+          "type": "string",
+          "description": "canonical name with infraspecific ranks"
+        }
+      }
+    },
+    "garbage": {
+      "type": "string",
+      "description": "unpareable tail of the name, if it exists"
+    },
+    "details": {
+      "type": "array",
+      "description": "contains parsed details of a name string",
+      "items": {
+        "anyOf": [
+          {
+            "type": "object",
+            "description": "uninomial name",
+            "additionalProperties": false,
+            "properties": {
+              "test": {
+                "type": "string"
+              },
+              "uninomial": {
+                "type": "object",
+                "description": "taxon higher than species",
+                "additionalProperties": false,
+                "properties": {
+                  "value": {
+                    "type": "string",
+                    "description": "normalized value of uninomial string"
+                  },
+                  "authorship": {
+                    "$ref": "#/definitions/authorship"
+                  },
+                  "rank": {
+                    "type": "string",
+                    "description": "rank of the uninomial"
+                  },
+                  "parent": {
+                    "type": "string",
+                    "description": "in uninomial combination -- higher taxon"
+                  }
+                }
+              },
+              "annotation_identification": {
+                "$ref": "#/definitions/annotation_identification"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "description": "includes binomial and polynomial names",
+            "additionalProperties": false,
+            "properties": {
+              "genus": {
+                "type": "object",
+                "description": "genus",
+                "required": [
+                  "value"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "value": {
+                    "type": "string",
+                    "description": "genus word"
+                  }
+                }
+              },
+              "infrageneric_epithet": {
+                "type": "object",
+                "description": "subgenus in zoological names",
+                "required": [
+                  "value"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "value": {
+                    "type": "string",
+                    "description": "subgenus string"
+                  }
+                }
+              },
+              "specific_epithet": {
+                "type": "object",
+                "description": "data pertaining to specific epithet",
+                "required": [
+                  "value"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "value": {
+                    "type": "string",
+                    "description": "species_epithet string"
+                  },
+                  "authorship": {
+                    "$ref": "#/definitions/authorship"
+                  }
+                }
+              },
+              "infraspecific_epithets": {
+                "type": "array",
+                "items": [
+                  {
+                    "$ref": "#/definitions/infraspecific_epithet"
+                  }
+                ]
+              },
+              "annotation_identification": {
+                "$ref": "#/definitions/annotation_identification"
+              },
+              "ignored": {
+                "$ref": "#/definitions/ignored"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "positions": {
+      "type": "array",
+      "description": "maps semantic meaning of words to positions in verbatim string",
+      "items": {
+        "type": "array",
+        "additionalProperties": false,
+        "items": [
+          {
+            "type": "string",
+            "description": "semantic meaning of a word",
+            "enum": [
+              "hybrid_char",
+              "annotation_identification",
+              "rank",
+              "uninomial",
+              "genus",
+              "infrageneric_epithet",
+              "specific_epithet",
+              "infraspecific_epithet",
+              "year",
+              "approximate_year",
+              "author_word",
+              "author_word_filius"
+            ]
+          },
+          {
+            "type": "number",
+            "description": "position of the first letter of the word"
+          },
+          {
+            "type": "number",
+            "description": "position of the next letter or end of input after the word"
+          }
+        ]
+      }
+    },
+    "dependencies": {
+      "details": [
+        "quality",
+        "positions",
+        "normalized",
+        "canonical_name"
+      ]
+    }
+  }
+}
