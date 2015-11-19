@@ -37,7 +37,6 @@
       "properties": {
         "genus": {
           "type": "object",
-          "optional": true,
           "description": "genus",
           "required": [
             "value"
@@ -329,10 +328,105 @@
       "items": {
         "anyOf": [
           {
-            "$ref": "#/definitions/uninomial_name"
+            "type": "object",
+            "description": "uninomial name",
+            "additionalProperties": false,
+            "properties": {
+              "test": {
+                "type": "string"
+              },
+              "uninomial": {
+                "type": "object",
+                "description": "taxon higher than species",
+                "additionalProperties": false,
+                "properties": {
+                  "value": {
+                    "type": "string",
+                    "description": "normalized value of uninomial string"
+                  },
+                  "authorship": {
+                    "$ref": "#/definitions/authorship"
+                  },
+                  "rank": {
+                    "type": "string",
+                    "description": "rank of the uninomial"
+                  },
+                  "parent": {
+                    "type": "string",
+                    "description": "in uninomial combination -- higher taxon"
+                  }
+                }
+              },
+              "annotation_identification": {
+                "$ref": "#/definitions/annotation_identification"
+              }
+            }
           },
           {
-            "$ref": "#/definitions/polynomial_name"
+            "type": "object",
+            "description": "includes binomial and polynomial names",
+            "additionalProperties": false,
+            "properties": {
+              "genus": {
+                "type": "object",
+                "description": "genus",
+                "required": [
+                  "value"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "value": {
+                    "type": "string",
+                    "description": "genus word"
+                  }
+                }
+              },
+              "infrageneric_epithet": {
+                "type": "object",
+                "description": "subgenus in zoological names",
+                "required": [
+                  "value"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "value": {
+                    "type": "string",
+                    "description": "subgenus string"
+                  }
+                }
+              },
+              "specific_epithet": {
+                "type": "object",
+                "description": "data pertaining to specific epithet",
+                "required": [
+                  "value"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "value": {
+                    "type": "string",
+                    "description": "species_epithet string"
+                  },
+                  "authorship": {
+                    "$ref": "#/definitions/authorship"
+                  }
+                }
+              },
+              "infraspecific_epithets": {
+                "type": "array",
+                "items": [
+                  {
+                    "$ref": "#/definitions/infraspecific_epithet"
+                  }
+                ]
+              },
+              "annotation_identification": {
+                "$ref": "#/definitions/annotation_identification"
+              },
+              "ignored": {
+                "$ref": "#/definitions/ignored"
+              }
+            }
           }
         ]
       }
