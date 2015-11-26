@@ -2,8 +2,55 @@ Global Names Parser
 ===================
 
 .. image:: https://secure.travis-ci.org/GlobalNamesArchitecture/gnparser.svg
-    :alt: Continuous Integration Status
+:alt: Continuous Integration Status
     :target: https://travis-ci.org/GlobalNamesArchitecture/gnparser
+
+Brief Intro
+-----------
+
+``gnparser`` splits scientific names to elements with meta information. For example,
+``"Homo sapiens Linnaeus"`` is decomposed to human readable information as follows:
+
+========  ================  ========
+Element   Meaning           Position
+========  ================  ========
+Homo      genus             (0,4)
+sapiens   specific_epithet  (5,12)
+Linnaeus  auhtor            (13,21)
+========  ================  ========
+
+Try it as a command line tool under Linux/Mac:
+
+.. code:: bash
+
+    wget https://github.com/GlobalNamesArchitecture/gnparser/releases/download/release-0.1.0/gnparser-0.1.0.zip
+    unzip gnparser-0.1.0.zip
+    sudo rm -rf /opt/gnparser
+    sudo mv gnparser-0.1.0 /opt/gnparser
+    sudo rm /usr/local/bin/gnparse
+    sudo ln -s /opt/gnparser/bin/gnparse /usr/local/bin
+    gnparse "Homo sapiens Linnaeus"
+    gnparse -help
+
+``gnparser`` is also `dockerized <https://github.com/gn-docker/gnparser>`_:
+
+.. code:: bash
+
+    docker pull gnames/gnparser
+    # to run web-server
+    docker run -d -p 80:9000 --name gnparser gnames/gnparser
+    # to run socket server
+    docker run -d -p 4334:4334 --name gnparser gnames/gnparser socket
+
+Finally, run it right from your SBT console:
+
+.. code:: bash
+
+    $ mkdir -p project
+    $ echo 'sbt.version=0.13.8' > project/build.properties
+    $ sbt ';set libraryDependencies += "org.globalnames" %% "gnparser" % "0.2.0";console'
+    scala> import org.globalnames.parser.ScientificNameParser.{instance => scientificNameParser}
+    scala> scientificNameParser.fromString("Homo sapiens Linnaeus").renderCompactJson
 
 .. contents:: Contents of this Document
 
@@ -139,7 +186,7 @@ SBT:
 
 .. code:: Scala
 
-    libraryDependencies += "org.globalnames" %% "gnparser" % "0.1.0"
+    libraryDependencies += "org.globalnames" %% "gnparser" % "0.2.0"
 
 Maven:
 
@@ -148,16 +195,20 @@ Maven:
     <dependency>
         <groupId>org.globalnames</groupId>
         <artifactId>gnparser_2.11</artifactId>
-        <version>0.1.0</version>
+        <version>0.2.0</version>
     </dependency>
 
-From version 0.1.1 ``gnparser`` will be available for Scala 2.10.3+.
+    <dependency>
+        <groupId>org.globalnames</groupId>
+        <artifactId>gnparser_2.10</artifactId>
+        <version>0.2.0</version>
+    </dependency>
 
 Release Package
 ---------------
 
 `Release
-package <https://github.com/GlobalNamesArchitecture/gnparser/releases/tag/release-0.1.0>`_
+package <https://github.com/GlobalNamesArchitecture/gnparser/releases/tag/release-0.2.0>`_
 should be sufficient for all usages but development. It is not needed
 for including parser into Java or Scala code -- `declare dependency
 instead <#dependency-declaration-for-java-or-scala>`_.
@@ -173,13 +224,13 @@ Released Files
 ===============================   ===============================================
 File                              Description
 ===============================   ===============================================
-``gnparser-assembly-0.1.0.jar``   `Fat Jar <#fat-jar>`_
-``gnparser-0.1.0.zip``            `Command line tool and socket
+``gnparser-assembly-0.2.0.jar``   `Fat Jar <#fat-jar>`_
+``gnparser-0.2.0.zip``            `Command line tool and socket
                                   server <#command-line-tool-and-socket-server>`_
-``gnparser-web-0.1.0.zip``        `Web service and REST API
+``gnparser-web-0.2.0.zip``        `Web service and REST API
                                   <#web-service-and-rest-api>`_
-``release-0.1.0.zip``             Source code's zip file
-``release-0.1.0.tar.gz``          Source code's tar file
+``release-0.2.0.zip``             Source code's zip file
+``release-0.2.0.tar.gz``          Source code's tar file
 ===============================   ===============================================
 
 Fat Jar
@@ -190,9 +241,9 @@ necessary to run a program. Such jar would include Scala and all
 required libraries.
 
 `Fat
-jar <https://github.com/GlobalNamesArchitecture/gnparser/releases/download/release-0.1.0/gnparser-assembly-0.1.0.jar>`_
+jar <https://github.com/GlobalNamesArchitecture/gnparser/releases/download/release-0.2.0/gnparser-assembly-0.2.0.jar>`_
 for ``gnparser`` can be found in the `current
-release <https://github.com/GlobalNamesArchitecture/gnparser/releases/tag/release-0.1.0>`_.
+release <https://github.com/GlobalNamesArchitecture/gnparser/releases/tag/release-0.2.0>`_.
 
 Command Line Tool and Socket Server
 -----------------------------------
@@ -202,10 +253,10 @@ Installation on Linux/Mac
 
 .. code:: bash
 
-    wget https://github.com/GlobalNamesArchitecture/gnparser/releases/download/release-0.1.0/gnparser-0.1.0.zip
-    unzip gnparser-0.1.0.zip
+    wget https://github.com/GlobalNamesArchitecture/gnparser/releases/download/release-0.2.0/gnparser-0.2.0.zip
+    unzip gnparser-0.2.0.zip
     sudo rm -rf /opt/gnparser
-    sudo mv gnparser-0.1.0 /opt/gnparser
+    sudo mv gnparser-0.2.0 /opt/gnparser
     sudo rm /usr/local/bin/gnparse
     sudo ln -s /opt/gnparser/bin/gnparse /usr/local/bin
 
@@ -213,7 +264,7 @@ Installation on Windows
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 1. Download
-   `gnparser-0.1.0.zip <https://github.com/GlobalNamesArchitecture/gnparser/releases/download/release-0.1.0/gnparser-0.1.0.zip>`_
+   `gnparser-0.2.0.zip <https://github.com/GlobalNamesArchitecture/gnparser/releases/download/release-0.2.0/gnparser-0.2.0.zip>`_
 2. Extract it to a place where you usually store program files
 3. Update your `PATH <https://java.com/en/download/help/path.xml>`_ to
    point to bin subdirectory
@@ -268,10 +319,10 @@ Installation on Linux/Mac
 
 .. code:: bash
 
-    wget https://github.com/GlobalNamesArchitecture/gnparser/releases/download/release-0.1.0/gnparser-web-0.1.0.zip
-    unzip gnparser-web-0.1.0.zip
+    wget https://github.com/GlobalNamesArchitecture/gnparser/releases/download/release-0.2.0/gnparser-web-0.2.0.zip
+    unzip gnparser-web-0.2.0.zip
     sudo rm -rf /opt/gnparser-web
-    sudo mv gnparser-web-0.1.0 /opt/gnparser-web
+    sudo mv gnparser-web-0.2.0 /opt/gnparser-web
     sudo rm /usr/local/bin/gnparser-web
     sudo ln -s /opt/gnparser-web/bin/gnparser-web /usr/local/bin
 
@@ -285,9 +336,9 @@ Installation on Windows
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 1. Download
-   `gnparser-web-0.1.0.zip <https://github.com/GlobalNamesArchitecture/gnparser/releases/download/release-0.1.0/gnparser-web-0.1.0.zip>`_
+   `gnparser-web-0.2.0.zip <https://github.com/GlobalNamesArchitecture/gnparser/releases/download/release-0.2.0/gnparser-web-0.2.0.zip>`_
 2. Unzip it, and then launch CMD at that path
-3. Run ``cd gnparser-web-0.1.0``
+3. Run ``cd gnparser-web-0.2.0``
 4. Run ``.\bin\gnparser-web.bat``
 
 You can open it in a browser at
@@ -315,7 +366,7 @@ To avoid declaring multiple dependencies Jython, JRuby and R need a
 `reference gnparser fat-jar <#fat-jar>`_.
 
 If you decide to follow examples get the code from the
-`release <https://github.com/GlobalNamesArchitecture/gnparser/releases/tag/release-0.1.0>`_
+`release <https://github.com/GlobalNamesArchitecture/gnparser/releases/tag/release-0.2.0>`_
 or `clone it from GitHub <#getting-code-for-development>`_
 
 Scala
@@ -354,7 +405,7 @@ To run it execute the command:
 .. code:: bash
 
     java -jar $JYTHON_HOME/jython.jar \
-      -Dpython.path=/path/to/gnparser-assembly-0.1.0.jar \
+      -Dpython.path=/path/to/gnparser-assembly-0.2.0.jar \
       examples/jython/parser.py
 
 (JYTHON\_HOME needs to be defined or replaced by path to Jython jar)
@@ -382,7 +433,7 @@ To run it execute the command:
 
 .. code:: bash
 
-    jruby -J-classpath /path/to/gnparser-assembly-0.1.0.jar \
+    jruby -J-classpath /path/to/gnparser-assembly-0.2.0.jar \
       examples/jruby/parser.rb
 
 Getting Code for Development
