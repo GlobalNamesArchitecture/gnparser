@@ -125,9 +125,17 @@ case class Year(
   alpha: Option[CapturePos] = None,
   approximate: Boolean = false) extends AstNode
 
+sealed trait AuthorWordSeparator
+object AuthorWordSeparator {
+  case object Dash extends AuthorWordSeparator
+  case object Space extends AuthorWordSeparator
+  case object None extends AuthorWordSeparator
+}
+
 case class AuthorWord(
   id: Int,
-  pos: CapturePos) extends AstNode
+  pos: CapturePos,
+  separator: AuthorWordSeparator = AuthorWordSeparator.None) extends AstNode
 
 case class Author(
   id: Int,
