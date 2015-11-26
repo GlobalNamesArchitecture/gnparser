@@ -518,9 +518,16 @@ object Parser extends org.parboiled2.Parser {
   }
 
   val author2: RuleWithWarning[Author] = rule {
-    oneOrMore(authorWord).separatedBy(softSpace) ~ !(':') ~>
-    { (au: Seq[NodeWarned[AuthorWord]]) =>
-      NodeWarned(Author(AstNode.id, au.map {_.astNode}), au.flatMap {_.warns}.toVector)
+    authorWord ~ zeroOrMore(
+      (softSpace ~ authorWord ~> { aw: NodeWarned[AuthorWord] =>
+        aw.copy(aw.astNode.copy(separator = AuthorWordSeparator.Space))
+      }) | (dash ~ authorWord ~> { aw: NodeWarned[AuthorWord] =>
+        aw.copy(aw.astNode.copy(separator = AuthorWordSeparator.Dash))
+      })) ~ !(':') ~>
+    { (au: NodeWarned[AuthorWord], aus: Seq[NodeWarned[AuthorWord]]) =>
+      NodeWarned(Author(AstNode.id,
+                        au.astNode +: aus.map {_.astNode}),
+                        au.warns ++ aus.flatMap {_.warns}.toVector)
     }
   }
 
@@ -651,6 +658,8 @@ object Parser extends org.parboiled2.Parser {
   val space = rule {
     oneOrMore(spaceChars)
   }
+
+  val dash = CharPredicate("-")
 
   val spaceChars = CharPredicate(" " + spaceMiscoded)
 

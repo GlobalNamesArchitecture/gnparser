@@ -64,11 +64,15 @@ trait Normalizer { parsedResult: ScientificNameParser.Result =>
   def normalizedAuthor(a: Author): String = {
     if (a.anon) "unknown"
     else {
-      val authorStr =
-        a.words
-          .map(p => Util.normAuthWord(stringOf(p)))
-          .mkString(" ")
-      (authorStr.some |+| a.filius.map(_ => " f.")).orZero
+      val authorStr = a.words.foldLeft(new StringBuilder) { (sb, aw) =>
+        aw.separator match {
+          case AuthorWordSeparator.None =>
+          case AuthorWordSeparator.Dash => sb.append("-")
+          case AuthorWordSeparator.Space => sb.append(" ")
+        }
+        sb.append(Util.normAuthWord(stringOf(aw)))
+      }
+      (authorStr.toString.some |+| a.filius.map(_ => " f.")).orZero
     }
   }
 
