@@ -6,6 +6,7 @@ Version 0.2.0 (2015-11-26)
 - parallel input file parsing (#35)
 - clearify JSON fields (#198, #202)
 - add JSON schema (#205)
+- support dashed authors' names (#218) 
 
 Version 0.1.0 (2015-10-29)
 --------------------------
