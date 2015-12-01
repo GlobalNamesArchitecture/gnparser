@@ -23,10 +23,10 @@ Try it as a command line tool under Linux/Mac:
 
 .. code:: bash
 
-    wget https://github.com/GlobalNamesArchitecture/gnparser/releases/download/release-0.1.0/gnparser-0.1.0.zip
-    unzip gnparser-0.1.0.zip
+    wget https://github.com/GlobalNamesArchitecture/gnparser/releases/download/release-0.2.0/gnparser-0.2.0.zip
+    unzip gnparser-0.2.0.zip
     sudo rm -rf /opt/gnparser
-    sudo mv gnparser-0.1.0 /opt/gnparser
+    sudo mv gnparser-0.2.0 /opt/gnparser
     sudo rm /usr/local/bin/gnparse
     sudo ln -s /opt/gnparser/bin/gnparse /usr/local/bin
     gnparse "Homo sapiens Linnaeus"
