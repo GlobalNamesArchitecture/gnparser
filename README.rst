@@ -8,7 +8,7 @@ Global Names Parser
 Brief Intro
 -----------
 
-``gnparser`` splits scientific names to elements with meta information. For example,
+``gnparser`` splits scientific names into elements with meta information. For example,
 ``"Homo sapiens Linnaeus"`` is decomposed to human readable information as follows:
 
 ========  ================  ========
@@ -16,7 +16,7 @@ Element   Meaning           Position
 ========  ================  ========
 Homo      genus             (0,4)
 sapiens   specific_epithet  (5,12)
-Linnaeus  auhtor            (13,21)
+Linnaeus  author            (13,21)
 ========  ================  ========
 
 Try it as a command line tool under Linux/Mac:
@@ -67,10 +67,10 @@ written in Ruby. Both projects were developed as a part of `Global Names
 Architecture <http://globalnames.org>`_.
 
 It is common to use regular expressions for parsing scientific names,
-and such approach works well for extraction of canonical forms in simple
-cases. However for complex scientific names and for breaking names to
-their semantic elements regular expression approach fails, unable to
-overcome recursive nature of data embedded in the names. By contrast,
+and this approach works well at extracting canonical forms in simple
+cases. However for complex scientific names and for breaking names into
+their semantic elements an approach using regular expressions often fails, unable to
+overcome the recursive nature of data embedded in names. By contrast,
 ``gnparser`` is able to deal with the most complex scientific name
 strings.
 
@@ -104,14 +104,14 @@ Use Cases
 Getting the simplest possible canonical form
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Canonical forms are great for matching names in spite of alternative
-spellings. Use ``canonical_form`` field from parsing results for such
+Canonical forms are great for matching names despite alternative
+spellings. Use ``canonical_form`` field from parsing results for this use
 case.
 
 Getting canonical form with infraspecies ranks
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In botany infraspecific ranks play important role. Use
+In botany infraspecific ranks play an important role. Use
 ``canonical_extended`` field to preserve them.
 
 Normalizing name strings
