@@ -26,7 +26,7 @@ object Parser extends org.parboiled2.Parser {
   private val doubleSpacePattern = """[\s_]{2,}""".r
 
   val sciName: Rule2[ScientificName, Vector[Warning]] = rule {
-    capturePos(softSpace ~ sciName1) ~ anyChars ~ EOI ~> {
+    capturePos(softSpace ~ sciName1) ~ unparsed ~ EOI ~> {
       (ng: NodeWarned[NamesGroup], pos: CapturePos, garbage: Option[String]) =>
       val name = state.input.sliceString(pos.start, pos.end)
 
@@ -369,7 +369,9 @@ object Parser extends org.parboiled2.Parser {
 
   val lowerChar = CharPredicate(LowerAlpha ++ "ë" ++ sciCharsExtended)
 
-  val anyChars: Rule1[Option[String]] = rule { capture(ANY.+).? }
+  val unparsed: Rule1[Option[String]] = rule {
+    capture(wordBorderChar ~ ANY.*).?
+  }
 
   val anyVisible = upperChar ++ lowerChar ++ CharPredicate.Visible
 
@@ -664,4 +666,6 @@ object Parser extends org.parboiled2.Parser {
   val spaceChars = CharPredicate(" " + spaceMiscoded)
 
   val spaceCharsEOI = spaceChars ++ EOI ++ ";"
+
+  val wordBorderChar = spaceChars ++ CharPredicate(";.,:)]")
 }
