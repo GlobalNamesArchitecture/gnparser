@@ -16,7 +16,7 @@ object Parser extends org.parboiled2.Parser {
 
   class Context(val preprocessChanges: Boolean)
 
-  private val sciCharsExtended = "æœſàâåãäáçčéèíìïňññóòôøõöúùüŕřŗššşž'"
+  private val sciCharsExtended = "æœſàâåãäáçčéèíìïňññóòôøõöúùüŕřŗššşž"
   private val sciUpperCharExtended = "ÆŒ"
   private val authCharUpperStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
     "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝĆČĎİĶĹĺĽľŁłŅŌŐŒŘŚŜŞŠŸŹŻŽƒǾȘȚ"
@@ -336,7 +336,7 @@ object Parser extends org.parboiled2.Parser {
   }
 
   val word: RuleWithWarning[SpeciesWord] = rule {
-    (word2 | word1) ~ &(spaceCharsEOI ++ '(') ~> { (pos: CapturePos) =>
+    (word3 | word2 | word1) ~ &(spaceCharsEOI ++ '(') ~> { (pos: CapturePos) =>
         val sw = SpeciesWord(AstNode.id, pos)
         val word = state.input.sliceString(pos.start, pos.end)
         val warns = Vector(
@@ -356,7 +356,13 @@ object Parser extends org.parboiled2.Parser {
   }
 
   val word2: Rule1[CapturePos] = rule {
-    word1 ~ '-' ~ word1 ~> {
+    capturePos(oneOrMore(lowerChar)) ~ dash ~ word1 ~> {
+      (p1: CapturePos, p2: CapturePos) => CapturePos(p1.start, p2.end)
+    }
+  }
+
+  val word3: Rule1[CapturePos] = rule {
+    capturePos(oneOrMore(lowerChar)) ~ apostr ~ word1 ~> {
       (p1: CapturePos, p2: CapturePos) => CapturePos(p1.start, p2.end)
     }
   }
@@ -523,7 +529,7 @@ object Parser extends org.parboiled2.Parser {
     authorWord ~ zeroOrMore(
       (softSpace ~ authorWord ~> { aw: NodeWarned[AuthorWord] =>
         aw.copy(aw.astNode.copy(separator = AuthorWordSeparator.Space))
-      }) | (dash ~ authorWord ~> { aw: NodeWarned[AuthorWord] =>
+      }) | (ch(dash) ~ authorWord ~> { aw: NodeWarned[AuthorWord] =>
         aw.copy(aw.astNode.copy(separator = AuthorWordSeparator.Dash))
       })) ~ !(':') ~>
     { (au: NodeWarned[AuthorWord], aus: Seq[NodeWarned[AuthorWord]]) =>
@@ -661,7 +667,7 @@ object Parser extends org.parboiled2.Parser {
     oneOrMore(spaceChars)
   }
 
-  val dash = CharPredicate("-")
+  val dash = '-'
 
   val spaceChars = CharPredicate(" " + spaceMiscoded)
 
