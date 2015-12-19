@@ -20,11 +20,13 @@ case class ScientificName(
   namesGroup: Option[NamesGroup] = None,
   isVirus: Boolean = false,
   quality: Int = 1,
-  garbage: Option[String] = None) {
+  unparsedTail: Option[String] = None) {
 
   val isHybrid = namesGroup.map { ng => ng.name.size > 1 || ng.hybrid.isDefined }
   val surrogate: Boolean = {
-    val isBold = garbage.map { g => Disj(g.contains("BOLD") || g.contains("Bold")) }
+    val isBold = unparsedTail.map {
+      g => Disj(g.contains("BOLD") || g.contains("Bold"))
+    }
     val isAnnot = namesGroup.map { ng => Disj(ng.name.exists { n =>
         n.approximation.isDefined || n.comparison.isDefined
       })
