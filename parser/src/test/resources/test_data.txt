@@ -403,6 +403,9 @@ inc.sed.|{"name_string_id":"dbb95e14-cebc-56a9-a1d2-a70d4b759e8d","parsed":false
 inc.   sed.|{"name_string_id":"f5245bf6-a459-5602-9979-02ba9428cf17","parsed":false,"parser_version":"test_version","verbatim":"inc.   sed.","surrogate":false,"virus":false}
 #>
 
+# Should not parse genus with apostrophe
+# Abbott's moray eel|
+
 # Should not parse viruses<
 Abutilon mosaic virus [X15983] [X15984] Abutilon mosaic virus ICTV|{"name_string_id":"879da2ea-836c-5ad2-b837-81594a1a208d","parsed":false,"parser_version":"test_version","verbatim":"Abutilon mosaic virus [X15983] [X15984] Abutilon mosaic virus ICTV","surrogate":false,"virus":true}
 Acute bee paralysis virus [AF150629] Acute bee paralysis virus|{"name_string_id":"584822dc-f68f-5abf-aeef-0265172195bf","parsed":false,"parser_version":"test_version","verbatim":"Acute bee paralysis virus [AF150629] Acute bee paralysis virus","surrogate":false,"virus":true}
@@ -542,6 +545,16 @@ Byssochlamys fulva Olliver & G. Smith|{"name_string_id":"83523455-cfe4-5ff9-b
 # UTF-8 0x3000 character (IDEOGRAPHIC_SPACE)<
 Kinosternidae　Agassiz, 1857|{"name_string_id":"7e74b6b8-5242-5802-9238-320192f4eaa4","parsed":true,"quality":3,"quality_warnings":[[3,"Non-standard space characters"]],"parser_version":"test_version","verbatim":"Kinosternidae　Agassiz, 1857","normalized":"Kinosternidae Agassiz 1857","canonical_name":{"value":"Kinosternidae"},"hybrid":false,"surrogate":false,"virus":false,"details":[{"uninomial":{"value":"Kinosternidae","authorship":{"value":"Agassiz 1857","basionym_authorship":{"authors":["Agassiz"],"year":{"value":"1857"}}}}}],"positions":[["uninomial",0,13],["author_word",14,21],["year",23,27]]}
 #>
+
+# Should not garbage-collect without a space
+PomaTomus|{"name_string_id":"106ff909-e787-52b2-9139-25d0eb7d161e","parsed":false,"parser_version":"test_version","verbatim":"PomaTomus","surrogate":false,"virus":false}
+DizygopUwa stosei|{"name_string_id":"46511ef9-02d8-5f24-8364-b72df3e1494d","parsed":false,"parser_version":"test_version","verbatim":"DizygopUwa stosei","surrogate":false,"virus":false}
+Oxytox[idae] Lindermann|{"name_string_id":"39a37760-d9f9-54d6-b49b-f6830e59f34e","parsed":false,"parser_version":"test_version","verbatim":"Oxytox[idae] Lindermann","surrogate":false,"virus":false}
+ScarabaeinGCsp.|{"name_string_id":"c84b775e-cc80-588f-b7bb-0094bab2c6a2","parsed":false,"parser_version":"test_version","verbatim":"ScarabaeinGCsp.","surrogate":false,"virus":false}
+HaloTag control vector|{"name_string_id":"0343bf04-3850-5410-92d4-484779684f8c","parsed":false,"parser_version":"test_version","verbatim":"HaloTag control vector","surrogate":false,"virus":false}
+
+# Should parse names ending with punctuation
+Melanius:|{"name_string_id":"0a761224-66db-55b4-b6f0-85de52534125","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Melanius:","normalized":"Melanius","canonical_name":{"value":"Melanius"},"hybrid":false,"surrogate":false,"garbage":":","virus":false,"details":[{"uninomial":{"value":"Melanius"}}],"positions":[["uninomial",0,8]]}
 
 # Should not flag as surrogates similar to surrogates names<
 Dryopteris X separabilis Small (pro sp.)|{"name_string_id":"34bf83d8-0466-51c4-b95d-70e583ba1c9f","parsed":true,"quality":3,"quality_warnings":[[3,"Incomplete hybrid formula"],[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Dryopteris X separabilis Small (pro sp.)","normalized":"Dryopteris × separabilis Small","canonical_name":{"value":"Dryopteris × separabilis"},"hybrid":true,"surrogate":false,"garbage":" (pro sp.)","virus":false,"details":[{"genus":{"value":"Dryopteris"}},{"specific_epithet":{"value":"separabilis","authorship":{"value":"Small","basionym_authorship":{"authors":["Small"]}}}}],"positions":[["genus",0,10],["hybrid_char",11,12],["specific_epithet",13,24],["author_word",25,30]]}
