@@ -52,7 +52,8 @@ trait Normalizer { parsedResult: ScientificNameParser.Result =>
     }
 
     def normalizedInfraspeciesGroup(isg: InfraspeciesGroup): Option[String] =
-      isg.group.map(normalizedInfraspecies).toVector.sequence.map { _.mkString(" ") }
+      isg.group.map(normalizedInfraspecies).toVector.sequence
+         .map { _.mkString(" ") }
 
     parsedResult.scientificName.namesGroup.flatMap { normalizedNamesGroup }
   }
@@ -82,18 +83,20 @@ trait Normalizer { parsedResult: ScientificNameParser.Result =>
         normalizedAuthor(at.authors.head).some
       } else {
         val auths = at.authors
-        val authsStr = auths.dropRight(1).map{ normalizedAuthor }.mkString(", ") +
-          " & " + normalizedAuthor(auths.last)
+        val authsStr = auths.dropRight(1).map { normalizedAuthor }
+                            .mkString(", ") +
+                       " & " + normalizedAuthor(auths.last)
         authsStr.some
       }
 
     def normalizedAuthorsGroup(ag: AuthorsGroup): Option[String] = {
       normalizedAuthorsTeam(ag.authors) |+|
-        ag.authorsEx.flatMap(normalizedAuthorsTeam).map(" ex " + _) |+|
-        ag.year.map(normalizedYear).map(" " + _)
+        ag.authorsEx.flatMap(normalizedAuthorsTeam).map { " ex " + _ } |+|
+        ag.year.map(normalizedYear).map { " " + _ }
     }
 
-    normalizedAuthorsGroup(as.authors).map { x => if (as.inparenthesis) "(" + x + ")" else x } |+|
-      as.combination.flatMap(normalizedAuthorsGroup).map(" " + _)
+    normalizedAuthorsGroup(as.authors).map { x =>
+      if (as.inparenthesis) "(" + x + ")" else x
+    } |+| as.combination.flatMap(normalizedAuthorsGroup).map { " " + _ }
   }
 }

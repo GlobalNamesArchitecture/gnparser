@@ -22,7 +22,9 @@ case class ScientificName(
   quality: Int = 1,
   unparsedTail: Option[String] = None) {
 
-  val isHybrid = namesGroup.map { ng => ng.name.size > 1 || ng.hybrid.isDefined }
+  val isHybrid = namesGroup.map { ng =>
+    ng.name.size > 1 || ng.hybrid.isDefined
+  }
   val surrogate: Boolean = {
     val isBold = unparsedTail.map {
       g => Disj(g.contains("BOLD") || g.contains("Bold"))
@@ -54,7 +56,8 @@ case class Name(
   ignored: Option[String] = None,
   private val genusParsed: Boolean = false) extends AstNode {
 
-  val genus: Boolean = genusParsed || species.isDefined || approximation.isDefined
+  val genus: Boolean = genusParsed || species.isDefined ||
+                       approximation.isDefined
   val pos: CapturePos = {
     val nodes = Vector(uninomial.some, subgenus, species,
                        infraspecies, comparison, approximation).flatten
@@ -186,5 +189,6 @@ case class Authorship(
     CapturePos(nodes.sortBy { _.pos.start }.head.pos.start,
                nodes.sortBy { _.pos.end }.last.pos.end)
   }
-  val basionym: Option[AuthorsGroup] = (basionymParsed || combination.isEmpty).option(authors)
+  val basionym: Option[AuthorsGroup] =
+    (basionymParsed || combination.isEmpty).option(authors)
 }
