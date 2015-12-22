@@ -27,7 +27,7 @@ object Parser extends org.parboiled2.Parser {
 
   val sciName: Rule2[ScientificName, Vector[Warning]] = rule {
     capturePos(softSpace ~ sciName1) ~ unparsed ~ EOI ~> {
-      (ng: NodeWarned[NamesGroup], pos: CapturePos, garbage: Option[String]) =>
+      (ng: NodeWarned[NamesGroup], pos: CapturePos, unparsedTail: Option[String]) =>
       val name = state.input.sliceString(pos.start, pos.end)
 
       val warnings = Vector(
@@ -40,7 +40,7 @@ object Parser extends org.parboiled2.Parser {
         name.exists { ch => authCharMiscoded == ch }.option {
           Warning(3, "Incorrect conversion to UTF-8", ng.astNode.id)
         },
-        garbage.map {
+        unparsedTail.map {
           case g if g.trim.isEmpty =>
             Warning(2, "Trailing whitespace", ng.astNode.id)
           case _ =>
@@ -54,7 +54,7 @@ object Parser extends org.parboiled2.Parser {
       val worstLevel = if (warnings.isEmpty) 1
                        else warnings.sortBy { _.level }.last.level
 
-      ScientificName(namesGroup = ng.astNode.some, garbage = garbage,
+      ScientificName(namesGroup = ng.astNode.some, unparsedTail = unparsedTail,
                      quality = worstLevel) :: warnings :: HNil
     }
   }
