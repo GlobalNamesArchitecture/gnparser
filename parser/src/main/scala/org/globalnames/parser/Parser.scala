@@ -351,6 +351,9 @@ object Parser extends org.parboiled2.Parser {
           (word.indexOf(apostr) >= 0).option {
             Warning(3, "Apostrophe is not allowed in canonical", sw.id)
           },
+          word(0).isDigit.option {
+            Warning(3, "Numeric prefix", sw.id)
+          },
           word.exists { ch => sciCharsExtended.indexOf(ch) >= 0 }.option {
             Warning(2, "Non-standard characters in canonical", sw.id)
           }
@@ -364,7 +367,8 @@ object Parser extends org.parboiled2.Parser {
   }
 
   val word2: Rule1[CapturePos] = rule {
-    capturePos(oneOrMore(lowerChar)) ~ dash ~ word1 ~> {
+    capturePos(oneOrMore(lowerChar) | (1 to 2).times(CharPredicate(Digit))) ~
+      dash ~ word1 ~> {
       (p1: CapturePos, p2: CapturePos) => CapturePos(p1.start, p2.end)
     }
   }
