@@ -27,7 +27,8 @@ trait Details { parsedResult: ScientificNameParser.Result =>
       uninomialDetails ~
         ("specific_epithet" -> nm.species.map(detailedSpecies)) ~
         ("infrageneric_epithet" -> nm.subgenus.map(detailedSubGenus)) ~
-        ("infraspecific_epithets" -> nm.infraspecies.map(detailedInfraspeciesGroup)) ~
+        ("infraspecific_epithets" ->
+          nm.infraspecies.map(detailedInfraspeciesGroup)) ~
         ("annotation_identification" ->
           (nm.approximation.map { stringOf } |+|
             nm.comparison.map { stringOf })) ~
