@@ -199,8 +199,8 @@ object Parser extends org.parboiled2.Parser {
   }
 
   val rankUninomial: RuleWithWarning[Rank] = rule {
-    capturePos(("sect" | "subsect" | "trib" | "subtrib" | "ser" | "subgen" |
-      "fam" | "subfam" | "supertrib") ~ '.'.?) ~>
+    capturePos(("sect" | "subsect" | "trib" | "subtrib" | "subser" | "ser" |
+      "subgen" | "fam" | "subfam" | "supertrib") ~ '.'.?) ~>
       { (p: CapturePos) => NodeWarned(Rank(AstNode.id, p)) }
   }
 
