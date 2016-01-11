@@ -27,7 +27,7 @@ Try it as a command line tool under Linux/Mac:
     unzip gnparser-0.2.0.zip
     sudo rm -rf /opt/gnparser
     sudo mv gnparser-0.2.0 /opt/gnparser
-    sudo rm /usr/local/bin/gnparse
+    sudo rm -f /usr/local/bin/gnparse
     sudo ln -s /opt/gnparser/bin/gnparse /usr/local/bin
     gnparse "Homo sapiens Linnaeus"
     gnparse -help
@@ -257,7 +257,7 @@ Installation on Linux/Mac
     unzip gnparser-0.2.0.zip
     sudo rm -rf /opt/gnparser
     sudo mv gnparser-0.2.0 /opt/gnparser
-    sudo rm /usr/local/bin/gnparse
+    sudo rm -f /usr/local/bin/gnparse
     sudo ln -s /opt/gnparser/bin/gnparse /usr/local/bin
 
 Installation on Windows
@@ -323,7 +323,7 @@ Installation on Linux/Mac
     unzip gnparser-web-0.2.0.zip
     sudo rm -rf /opt/gnparser-web
     sudo mv gnparser-web-0.2.0 /opt/gnparser-web
-    sudo rm /usr/local/bin/gnparser-web
+    sudo rm -f /usr/local/bin/gnparser-web
     sudo ln -s /opt/gnparser-web/bin/gnparser-web /usr/local/bin
 
 To start web server in production mode on http://0.0.0.0:9000
@@ -351,8 +351,7 @@ Make sure to CGI-escape name strings for GET requests. An '&' character
 needs to be converted to '%26'
 
 -  ``GET /api?names=["Aus bus", "Aus bus Linn. 1758"]``
--  ``POST /api`` with request body of JSON array of strings for
-   ``names`` parameter
+-  ``POST /api`` with request body of JSON array of strings
 
 Usage as a Library
 ------------------
