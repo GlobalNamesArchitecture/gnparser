@@ -609,7 +609,7 @@ object Parser extends org.parboiled2.Parser {
   val authCharUpper = CharPredicate(authCharUpperStr + authCharMiscoded)
 
   val filius: RuleWithWarning[AuthorWord] = rule {
-    capturePos("f." | "filius") ~> { (pos: CapturePos) =>
+    capturePos("f." | "fil." | "filius") ~> { (pos: CapturePos) =>
       NodeWarned(AuthorWord(AstNode.id, pos), Vector.empty)
     }
   }
