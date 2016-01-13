@@ -277,7 +277,6 @@ Abryna regis-petri Paiva, 1860|{"name_string_id":"27ad601d-bb92-515b-9c45-1faa55
 #Abryna- regis|{"name_string_id":"9ff9c1fa-068e-5296-8c39-66e1c58f0660","parsed":false,"parser_version":"test_version","verbatim":"Abryna- regis","normalized":null,"canonical":null,"hybrid":false,"virus":false}
 #Abryna regis- Paiva, 1860|{"name_string_id":"473b8b63-8d5c-521f-9a68-7aecd5b9a62c","parsed":false,"parser_version":"test_version","verbatim":"Abryna regis- Paiva, 1860","normalized":null,"canonical":null,"hybrid":false,"virus":false}
 Solms-laubachia orbiculata Y.C. Lan & T.Y. Cheo|{"name_string_id":"4dce39e2-ffd7-5a1b-bd1a-2bc12049be90","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Solms-laubachia orbiculata Y.C. Lan & T.Y. Cheo","normalized":"Solms-laubachia orbiculata Y. C. Lan & T. Y. Cheo","canonical_name":{"value":"Solms-laubachia orbiculata"},"hybrid":false,"surrogate":false,"virus":false,"details":[{"genus":{"value":"Solms-laubachia"},"specific_epithet":{"value":"orbiculata","authorship":{"value":"Y. C. Lan & T. Y. Cheo","basionym_authorship":{"authors":["Y. C. Lan","T. Y. Cheo"]}}}}],"positions":[["genus",0,15],["specific_epithet",16,26],["author_word",27,29],["author_word",29,31],["author_word",32,35],["author_word",38,40],["author_word",40,42],["author_word",43,47]]}
-#Abryna -petri Paiva, 1860|{"name_string_id":"6ccc6217-9084-5b31-81f7-6b4cd7963f65","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Abryna -petri Paiva, 1860","normalized":"Abryna","canonical":"Abryna","hybrid":false,"virus":false}
 #>
 
 #SECTION: Authorship with filius (son of)<
@@ -588,6 +587,11 @@ Staphylococcus hyicus chromogenes Devriese et al. 1978 (Approved Lists 1980).|{"
 
 #SECTION: Authors do not start with apostrophe<
 Nereidavus kulkovi 'Kulkov|{"name_string_id":"6a4999cd-95cc-509d-8e0a-26a0dfcef67d","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Nereidavus kulkovi 'Kulkov","normalized":"Nereidavus kulkovi","canonical_name":{"value":"Nereidavus kulkovi"},"hybrid":false,"surrogate":false,"unparsed_tail":" 'Kulkov","virus":false,"details":[{"genus":{"value":"Nereidavus"},"specific_epithet":{"value":"kulkovi"}}],"positions":[["genus",0,10],["specific_epithet",11,18]]}
+#>
+
+#SECTION: Epithets do not start or end with a dash<
+Abryna -petri Paiva, 1860|{"name_string_id":"6ccc6217-9084-5b31-81f7-6b4cd7963f65","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Abryna -petri Paiva, 1860","normalized":"Abryna","canonical_name":{"value":"Abryna"},"hybrid":false,"surrogate":false,"unparsed_tail":" -petri Paiva, 1860","virus":false,"details":[{"uninomial":{"value":"Abryna"}}],"positions":[["uninomial",0,6]]}
+Abryna petri- Paiva, 1860|{"name_string_id":"b1e37ace-3ca8-5274-bd93-7333aa3e5223","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Abryna petri- Paiva, 1860","normalized":"Abryna","canonical_name":{"value":"Abryna"},"hybrid":false,"surrogate":false,"unparsed_tail":" petri- Paiva, 1860","virus":false,"details":[{"uninomial":{"value":"Abryna"}}],"positions":[["uninomial",0,6]]}
 #>
 
 ### Unparseable
