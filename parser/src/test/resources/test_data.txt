@@ -619,4 +619,9 @@ ScarabaeinGCsp.|{"name_string_id":"c84b775e-cc80-588f-b7bb-0094bab2c6a2","parsed
 HaloTag control vector|{"name_string_id":"0343bf04-3850-5410-92d4-484779684f8c","parsed":false,"parser_version":"test_version","verbatim":"HaloTag control vector","surrogate":false,"virus":false}
 #>
 
+#SECTION: No parsing -- phytoplasma
+Alfalfa witches'-broom phytoplasma|{"name_string_id":"b31676ed-c1ed-522c-8380-19a27af11e0d","parsed":false,"parser_version":"test_version","verbatim":"Alfalfa witches'-broom phytoplasma","surrogate":false,"virus":false}
+Allium ampeloprasumphytoplasma|{"name_string_id":"f84e58c5-8e49-5b2d-a4d0-4f1e538c8c7c","parsed":false,"parser_version":"test_version","verbatim":"Allium ampeloprasumphytoplasma","surrogate":false,"virus":false}
+Alstroemeria sp. phytoplasma|{"name_string_id":"5348845f-c94a-5c7e-bba1-307e4c07a42d","parsed":false,"parser_version":"test_version","verbatim":"Alstroemeria sp. phytoplasma","surrogate":false,"virus":false}
+
 # vim: set foldmarker=<,> foldlevel=0 foldmethod=marker

@@ -53,11 +53,12 @@ abstract class ScientificNameParser {
   private def noParse(input: String): Boolean = {
     val incertaeSedis1 = """(?i).*incertae\s+sedis.*""".r
     val incertaeSedis2 = """(?i)inc\.\s*sed\.""".r
+    val phytoplasma = """(?i)phytoplasma\b""".r
     val rna = """[^A-Z]RNA[^A-Z]*""".r
-    if (List(incertaeSedis1.findFirstIn(input),
+    List(incertaeSedis1.findFirstIn(input),
       incertaeSedis2.findFirstIn(input),
-      rna.findFirstIn(input)) == List(None, None, None)) false
-    else true
+      phytoplasma.findFirstIn(input),
+      rna.findFirstIn(input)).exists { _.isDefined }
   }
 }
 
