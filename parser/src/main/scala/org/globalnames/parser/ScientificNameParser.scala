@@ -79,6 +79,13 @@ object ScientificNameParser {
 
     def stringOf(astNode: AstNode): String =
       input.unescaped.substring(astNode.pos.start, astNode.pos.end)
+
+    val verbatimUuid: String = uuidGenerator.generate(input.verbatim).toString
+
+    val canonicalUuid: Option[String] =
+      canonized(showRanks = false).map { canonical =>
+        uuidGenerator.generate(canonical).toString
+      }
   }
 
   case class Input(verbatim: String) {
@@ -92,8 +99,6 @@ object ScientificNameParser {
         !UNESCAPE_HTML4.identity || unescaped.length != preprocessed.length
       (preprocessed, isPreprocessed)
     }
-
-    val id: String = uuidGenerator.generate(verbatim).toString
 
     def verbatimPosAt(pos: Int): Int = UNESCAPE_HTML4.at(pos)
   }

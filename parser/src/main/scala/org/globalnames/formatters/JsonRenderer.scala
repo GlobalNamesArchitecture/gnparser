@@ -1,6 +1,6 @@
 package org.globalnames.formatters
 
-import org.globalnames.parser.ScientificNameParser
+import org.globalnames.parser.ScientificNameParser.Result
 import org.json4s.JsonAST.{JArray, JNothing, JValue}
 import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods._
@@ -8,7 +8,7 @@ import org.json4s.jackson.JsonMethods._
 import scalaz._
 import Scalaz._
 
-trait JsonRenderer { parserResult: ScientificNameParser.Result =>
+trait JsonRenderer { parserResult: Result =>
 
   def json: JValue = {
     val canonical = parserResult.canonized(showRanks = false)
@@ -40,7 +40,7 @@ trait JsonRenderer { parserResult: ScientificNameParser.Result =>
     }
 
     render(
-      ("name_string_id" -> parserResult.input.id) ~
+      ("name_string_id" -> parserResult.verbatimUuid) ~
       ("parsed" -> parsed) ~
       ("quality" -> quality) ~
       ("quality_warnings" -> qualityWarnings) ~
