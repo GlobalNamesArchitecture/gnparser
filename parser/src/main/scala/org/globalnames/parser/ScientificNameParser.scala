@@ -1,8 +1,6 @@
-package org.globalnames.parser
+package org.globalnames
+package parser
 
-import java.util.UUID
-
-import com.fasterxml.uuid.{Generators, StringArgGenerator}
 import org.globalnames.formatters._
 import org.parboiled2._
 import shapeless._
@@ -63,10 +61,7 @@ abstract class ScientificNameParser {
 }
 
 object ScientificNameParser {
-  private final val uuidGenerator: StringArgGenerator = {
-    val namespace = UUID.fromString("90181196-fecf-5082-a4c1-411d4f314cda")
-    Generators.nameBasedGenerator(namespace)
-  }
+  val uuidGenerator = UuidGenerator()
 
   final val instance = new ScientificNameParser {
     override final val version: String = BuildInfo.version

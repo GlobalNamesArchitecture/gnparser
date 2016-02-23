@@ -97,6 +97,7 @@ Features
 -  Can run as a socket server
 -  Can run as a web server
 -  Can be scaled to many CPUs and computers
+-  Calculates a stable UUID version 5 ID from the content of a string
 
 Use Cases
 ---------
@@ -157,6 +158,9 @@ information about name strings.
 
 More information about UUID version 5 can be found in the `Global Names
 blog <http://globalnames.org/news/2015/05/31/gn-uuid-0-5-0/>`_.
+
+You can also use UUID calculation library in your code as it is shown in
+`Scala example section <#scala>`_. 
 
 Assembling canonical forms etc. from original spelling
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -378,6 +382,15 @@ is an SBT subproject. To run it execute the command:
 .. code:: bash
 
     sbt 'examples/runMain org.globalnames.parser.examples.ParserScala'
+
+Calculation of UUID version 5 can be done in the following way:
+
+.. code:: scala
+
+    scala> val gen = org.globalnames.UuidGenerator()
+    scala> gen.generate("Salinator solida")
+    res0: java.util.UUID = da1a79e5-c16f-5ff7-a925-14c5c7ecdec5
+
 
 Java
 ~~~~
