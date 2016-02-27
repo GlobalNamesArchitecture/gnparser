@@ -40,7 +40,7 @@ trait JsonRenderer { parserResult: ScientificNameParser.Result =>
     }
 
     render(
-      ("name_string_id" -> parserResult.input.id) ~
+      ("name_string_id" -> parserResult.input.id.toString) ~
       ("parsed" -> parsed) ~
       ("quality" -> quality) ~
       ("quality_warnings" -> qualityWarnings) ~

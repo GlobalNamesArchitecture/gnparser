@@ -1,6 +1,8 @@
 package org.globalnames
 package parser
 
+import java.util.UUID
+
 import org.globalnames.formatters._
 import org.parboiled2._
 import shapeless._
@@ -88,7 +90,7 @@ object ScientificNameParser {
       (preprocessed, isPreprocessed)
     }
 
-    val id: String = uuidGenerator.generate(verbatim).toString
+    val id: UUID = uuidGenerator.generate(verbatim)
 
     def verbatimPosAt(pos: Int): Int = UNESCAPE_HTML4.at(pos)
   }
