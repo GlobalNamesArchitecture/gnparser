@@ -29,8 +29,8 @@ abstract class ScientificNameParser {
       Result(inputString, ScientificName(isVirus = isVirus), version)
     } else {
       val input = inputString.unescaped
-      val ctx = new Parser.Context(inputString.preprocessed)
-      Parser.sciName.runWithContext(input, ctx) match {
+      val parser = new Parser(input, inputString.preprocessed)
+      parser.sciName.run() match {
         case Success(scientificName :: warnings :: HNil) =>
           Result(inputString, scientificName, version, warnings)
         case Failure(err: ParseError) =>

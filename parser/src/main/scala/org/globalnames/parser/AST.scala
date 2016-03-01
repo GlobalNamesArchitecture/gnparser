@@ -1,6 +1,6 @@
 package org.globalnames.parser
 
-import org.parboiled2.CapturePos
+import org.parboiled2.CapturePosition
 
 import scalaz._
 import Tags.{Disjunction => Disj}
@@ -8,7 +8,7 @@ import Scalaz._
 
 trait AstNode {
   val id: Int
-  val pos: CapturePos
+  val pos: CapturePosition
 }
 
 object AstNode {
@@ -42,7 +42,8 @@ case class NamesGroup(
   name: Seq[Name],
   hybrid: Option[HybridChar] = None) extends AstNode {
 
-  val pos: CapturePos = CapturePos(name.head.pos.start, name.last.pos.end)
+  val pos: CapturePosition =
+    CapturePosition(name.head.pos.start, name.last.pos.end)
 }
 
 case class Name(
@@ -58,34 +59,34 @@ case class Name(
 
   val genus: Boolean = genusParsed || species.isDefined ||
                        approximation.isDefined
-  val pos: CapturePos = {
+  val pos: CapturePosition = {
     val nodes = Vector(uninomial.some, subgenus, species,
                        infraspecies, comparison, approximation).flatten
-    CapturePos(nodes.sortBy { _.pos.start }.head.pos.start,
+    CapturePosition(nodes.sortBy { _.pos.start }.head.pos.start,
                nodes.sortBy { -_.pos.end }.last.pos.end)
   }
 }
 
 case class HybridChar(
   id: Int,
-  pos: CapturePos) extends AstNode
+  pos: CapturePosition) extends AstNode
 
 case class Comparison(
   id: Int,
-  pos: CapturePos) extends AstNode
+  pos: CapturePosition) extends AstNode
 
 case class Approximation(
   id: Int,
-  pos: CapturePos) extends AstNode
+  pos: CapturePosition) extends AstNode
 
 case class Rank(
   id: Int,
-  pos: CapturePos,
+  pos: CapturePosition,
   typ: Option[String] = None) extends AstNode
 
 case class Uninomial(
   id: Int,
-  pos: CapturePos,
+  pos: CapturePosition,
   authorship: Option[Authorship] = None,
   rank: Option[Rank] = None,
   parent: Option[Uninomial] = None,
@@ -93,11 +94,11 @@ case class Uninomial(
 
 case class UninomialWord(
   id: Int,
-  pos: CapturePos) extends AstNode
+  pos: CapturePosition) extends AstNode
 
 case class SpeciesWord(
   id: Int,
-  pos: CapturePos) extends AstNode
+  pos: CapturePosition) extends AstNode
 
 case class SubGenus(
   id: Int,
@@ -108,12 +109,12 @@ case class SubGenus(
 
 case class Species(
   id: Int,
-  pos: CapturePos,
+  pos: CapturePosition,
   authorship: Option[Authorship] = None) extends AstNode
 
 case class Infraspecies(
   id: Int,
-  pos: CapturePos,
+  pos: CapturePosition,
   rank: Option[Rank] = None,
   authorship: Option[Authorship]) extends AstNode
 
@@ -121,13 +122,14 @@ case class InfraspeciesGroup(
   id: Int,
   group: Seq[Infraspecies]) extends AstNode {
 
-  val pos: CapturePos = CapturePos(group.head.pos.start, group.last.pos.end)
+  val pos: CapturePosition =
+    CapturePosition(group.head.pos.start, group.last.pos.end)
 }
 
 case class Year(
   id: Int,
-  pos: CapturePos,
-  alpha: Option[CapturePos] = None,
+  pos: CapturePosition,
+  alpha: Option[CapturePosition] = None,
   approximate: Boolean = false) extends AstNode
 
 sealed trait AuthorWordSeparator
@@ -139,7 +141,7 @@ object AuthorWordSeparator {
 
 case class AuthorWord(
   id: Int,
-  pos: CapturePos,
+  pos: CapturePosition,
   separator: AuthorWordSeparator = AuthorWordSeparator.None) extends AstNode
 
 case class Author(
@@ -150,7 +152,7 @@ case class Author(
 
   val pos = {
     val end = filius.getOrElse(words.last).pos.end
-    CapturePos(words.head.pos.start, end)
+    CapturePosition(words.head.pos.start, end)
   }
 }
 
@@ -158,9 +160,9 @@ case class AuthorsTeam(
   id: Int,
   authors: Seq[Author]) extends AstNode {
 
-  val pos: CapturePos = {
-    CapturePos(authors.sortBy { _.pos.start }.head.pos.start,
-               authors.sortBy { _.pos.end }.head.pos.start)
+  val pos: CapturePosition = {
+    CapturePosition(authors.sortBy { _.pos.start }.head.pos.start,
+                    authors.sortBy { _.pos.end }.head.pos.start)
   }
 }
 
@@ -170,10 +172,10 @@ case class AuthorsGroup(
   authorsEx: Option[AuthorsTeam] = None,
   year: Option[Year] = None) extends AstNode {
 
-  val pos: CapturePos = {
+  val pos: CapturePosition = {
     val nodes = Vector(authors.some, authorsEx, year).flatten
-    CapturePos(nodes.sortBy { _.pos.start }.head.pos.start,
-               nodes.sortBy { _.pos.end }.last.pos.end)
+    CapturePosition(nodes.sortBy { _.pos.start }.head.pos.start,
+                    nodes.sortBy { _.pos.end }.last.pos.end)
   }
 }
 
@@ -184,10 +186,10 @@ case class Authorship(
   inparenthesis: Boolean = false,
   private val basionymParsed: Boolean = false) extends AstNode {
 
-  val pos: CapturePos = {
+  val pos: CapturePosition = {
     val nodes = Vector(authors.some, combination).flatten
-    CapturePos(nodes.sortBy { _.pos.start }.head.pos.start,
-               nodes.sortBy { _.pos.end }.last.pos.end)
+    CapturePosition(nodes.sortBy { _.pos.start }.head.pos.start,
+                    nodes.sortBy { _.pos.end }.last.pos.end)
   }
   val basionym: Option[AuthorsGroup] =
     (basionymParsed || combination.isEmpty).option(authors)
