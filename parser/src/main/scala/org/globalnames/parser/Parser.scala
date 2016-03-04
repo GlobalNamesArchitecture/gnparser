@@ -1,20 +1,19 @@
 package org.globalnames.parser
 
 import org.parboiled2.CharPredicate.{Alpha, Digit, LowerAlpha, UpperAlpha}
-import org.parboiled2.{CapturePos, CharPredicate}
+import org.parboiled2._
 
 import scalaz.Scalaz._
 
 import shapeless._
 
-object Parser extends org.parboiled2.Parser {
+class Parser(val input: ParserInput, preprocessChanges: Boolean)
+  extends org.parboiled2.Parser {
 
   case class NodeWarned[T <: AstNode](astNode: T,
                                       warns: Vector[Warning] = Vector.empty)
 
   type RuleWithWarning[T <: AstNode] = Rule1[NodeWarned[T]]
-
-  class Context(val preprocessChanges: Boolean)
 
   private val sciCharsExtended = "æœſàâåãäáçčéèíìïňññóòôøõöúùüŕřŗššşž"
   private val sciUpperCharExtended = "ÆŒ"
@@ -25,11 +24,11 @@ object Parser extends org.parboiled2.Parser {
   private val spaceMiscoded = "　 \t\r\n\f_"
   private val doubleSpacePattern = """[\s_]{2,}""".r
 
-  val sciName: Rule2[ScientificName, Vector[Warning]] = rule {
+  def sciName: Rule2[ScientificName, Vector[Warning]] = rule {
     capturePos(softSpace ~ sciName1) ~ unparsed ~ EOI ~> {
-      (ng: NodeWarned[NamesGroup], pos: CapturePos,
+      (ng: NodeWarned[NamesGroup], pos: CapturePosition,
        unparsedTail: Option[String]) =>
-      val name = state.input.sliceString(pos.start, pos.end)
+      val name = input.sliceString(pos.start, pos.end)
 
       val warnings = Vector(
         doubleSpacePattern.findFirstIn(name).map { _ =>
@@ -47,7 +46,7 @@ object Parser extends org.parboiled2.Parser {
           case _ =>
             Warning(3, "Unparseable tail", ng.astNode.id)
         },
-        ctx.preprocessChanges.option {
+        preprocessChanges.option {
           Warning(2, "Name had to be changed by preprocessing", ng.astNode.id)
         }
       ).flatten ++ ng.warns
@@ -60,21 +59,21 @@ object Parser extends org.parboiled2.Parser {
     }
   }
 
-  val sciName1: RuleWithWarning[NamesGroup] = rule {
+  def sciName1: RuleWithWarning[NamesGroup] = rule {
     hybridFormula | namedHybrid | approxName | sciName2
   }
 
-  val sciName2: RuleWithWarning[NamesGroup] = rule {
+  def sciName2: RuleWithWarning[NamesGroup] = rule {
     name ~> { (n: NodeWarned[Name]) =>
       NodeWarned(NamesGroup(AstNode.id, Vector(n.astNode)), n.warns)
     }
   }
 
-  val hybridFormula: RuleWithWarning[NamesGroup] = rule {
+  def hybridFormula: RuleWithWarning[NamesGroup] = rule {
     hybridFormula1 | hybridFormula2
   }
 
-  val hybridFormula1: RuleWithWarning[NamesGroup] = rule {
+  def hybridFormula1: RuleWithWarning[NamesGroup] = rule {
     name ~ space ~ hybridChar ~ softSpace ~
     species ~ (space ~ infraspeciesGroup).? ~>
     { (n: NodeWarned[Name], hc: HybridChar, s: NodeWarned[Species],
@@ -92,7 +91,7 @@ object Parser extends org.parboiled2.Parser {
     }
   }
 
-  val hybridFormula2: RuleWithWarning[NamesGroup] = rule {
+  def hybridFormula2: RuleWithWarning[NamesGroup] = rule {
     name ~ space ~ hybridChar ~ (space ~ name).? ~> {
       (n1: NodeWarned[Name], hc: HybridChar, n2: Option[NodeWarned[Name]]) =>
         val ng = n2 match {
@@ -108,7 +107,7 @@ object Parser extends org.parboiled2.Parser {
     }
   }
 
-  val namedHybrid: RuleWithWarning[NamesGroup] = rule {
+  def namedHybrid: RuleWithWarning[NamesGroup] = rule {
     hybridChar ~ softSpace ~ name ~> { (hc: HybridChar, n: NodeWarned[Name]) =>
       val ng = NamesGroup(AstNode.id, Vector(n.astNode), hybrid = hc.some)
       val warns = Vector(
@@ -120,17 +119,17 @@ object Parser extends org.parboiled2.Parser {
     }
   }
 
-  val name: RuleWithWarning[Name] = rule {
+  def name: RuleWithWarning[Name] = rule {
     name2 | name3 | name1
   }
 
-  val name1: RuleWithWarning[Name] = rule {
+  def name1: RuleWithWarning[Name] = rule {
     (uninomialCombo | uninomial) ~> { (u: NodeWarned[Uninomial]) =>
       NodeWarned(Name(AstNode.id, u.astNode), u.warns)
     }
   }
 
-  val name2: RuleWithWarning[Name] = rule {
+  def name2: RuleWithWarning[Name] = rule {
     uninomialWord ~ space ~ comparison ~ (space ~ species).? ~>
     {(u: NodeWarned[UninomialWord], c: NodeWarned[Comparison],
       s: Option[NodeWarned[Species]]) =>
@@ -144,7 +143,7 @@ object Parser extends org.parboiled2.Parser {
     }
   }
 
-  val name3: RuleWithWarning[Name] = rule {
+  def name3: RuleWithWarning[Name] = rule {
     uninomialWord ~ (softSpace ~ subGenus).? ~ softSpace ~
     species ~ (space ~ infraspeciesGroup).? ~>
     {(uw: NodeWarned[UninomialWord],
@@ -161,7 +160,7 @@ object Parser extends org.parboiled2.Parser {
     }
   }
 
-  val infraspeciesGroup: RuleWithWarning[InfraspeciesGroup] = rule {
+  def infraspeciesGroup: RuleWithWarning[InfraspeciesGroup] = rule {
     oneOrMore(infraspecies).separatedBy(space) ~>
     { (inf: Seq[NodeWarned[Infraspecies]]) =>
       NodeWarned(InfraspeciesGroup(AstNode.id, inf.map{_.astNode}),
@@ -169,7 +168,7 @@ object Parser extends org.parboiled2.Parser {
     }
   }
 
-  val infraspecies: RuleWithWarning[Infraspecies] = rule {
+  def infraspecies: RuleWithWarning[Infraspecies] = rule {
     (rank ~ softSpace).? ~ word ~ (space ~ authorship).? ~>
     { (r: Option[NodeWarned[Rank]], sw: NodeWarned[SpeciesWord],
        a: Option[NodeWarned[Authorship]]) =>
@@ -178,7 +177,7 @@ object Parser extends org.parboiled2.Parser {
            (r.map{_.warns} |+| sw.warns.some |+| a.map{_.warns}).get) }
   }
 
-  val species: RuleWithWarning[Species] = rule {
+  def species: RuleWithWarning[Species] = rule {
     word ~ (softSpace ~ authorship).? ~ &(spaceCharsEOI ++ "(,:") ~> {
       (sw: NodeWarned[SpeciesWord], a: Option[NodeWarned[Authorship]]) =>
         NodeWarned(Species(AstNode.id, sw.astNode.pos, a.map{_.astNode}),
@@ -186,37 +185,37 @@ object Parser extends org.parboiled2.Parser {
     }
   }
 
-  val comparison: RuleWithWarning[Comparison] = rule {
-    capturePos("cf" ~ '.'.?) ~> { (p: CapturePos) =>
+  def comparison: RuleWithWarning[Comparison] = rule {
+    capturePos("cf" ~ '.'.?) ~> { (p: CapturePosition) =>
       NodeWarned(Comparison(AstNode.id, p), Vector.empty)
     }
   }
 
-  val approximation: RuleWithWarning[Approximation] = rule {
+  def approximation: RuleWithWarning[Approximation] = rule {
     capturePos("sp.nr." | "sp. nr." | "sp.aff." | "sp. aff." | "monst." | "?" |
       (("spp" | "nr" | "sp" | "aff" | "species") ~ (&(spaceCharsEOI) | '.'))) ~>
-      { (p: CapturePos) => NodeWarned(Approximation(AstNode.id, p)) }
+      { (p: CapturePosition) => NodeWarned(Approximation(AstNode.id, p)) }
   }
 
-  val rankUninomial: RuleWithWarning[Rank] = rule {
+  def rankUninomial: RuleWithWarning[Rank] = rule {
     capturePos(("sect" | "subsect" | "trib" | "subtrib" | "subser" | "ser" |
       "subgen" | "fam" | "subfam" | "supertrib") ~ '.'.?) ~>
-      { (p: CapturePos) => NodeWarned(Rank(AstNode.id, p)) }
+      { (p: CapturePosition) => NodeWarned(Rank(AstNode.id, p)) }
   }
 
-  val rank: RuleWithWarning[Rank] = rule {
+  def rank: RuleWithWarning[Rank] = rule {
     rankForma | rankVar | rankSsp | rankOther
   }
 
-  val rankOther: RuleWithWarning[Rank] = rule {
+  def rankOther: RuleWithWarning[Rank] = rule {
     capturePos("morph." | "f.sp." | "mut." | "nat" |
      "nothosubsp." | "convar." | "pseudovar." | "sect." | "ser." |
      "subvar." | "subf." | "race" | "α" | "ββ" | "β" | "γ" | "δ" |
      "ε" | "φ" | "θ" | "μ" | "a." | "b." | "c." | "d." | "e." | "g." |
      "k." | "****" | "**" | "*") ~ &(spaceCharsEOI) ~> {
-       (p: CapturePos) =>
+       (p: CapturePosition) =>
          val r = Rank(AstNode.id, p)
-         val rank = state.input.sliceString(p.start, p.end)
+         val rank = input.sliceString(p.start, p.end)
          val warns = rank match {
            case "*" | "**" | "***" | "****" | "nat" | "f.sp" | "mut." =>
              Vector(Warning(3, "Uncommon rank", r.id))
@@ -226,31 +225,31 @@ object Parser extends org.parboiled2.Parser {
      }
   }
 
-  val rankVar: RuleWithWarning[Rank] = rule {
+  def rankVar: RuleWithWarning[Rank] = rule {
     capturePos("[var.]" | ("var" ~ (&(spaceCharsEOI) | '.'))) ~>
-      { (p: CapturePos) => NodeWarned(Rank(AstNode.id, p, "var.".some)) }
+      { (p: CapturePosition) => NodeWarned(Rank(AstNode.id, p, "var.".some)) }
   }
 
-  val rankForma: RuleWithWarning[Rank] = rule {
+  def rankForma: RuleWithWarning[Rank] = rule {
     capturePos(("forma"  | "fma" | "form" | "fo" | "f") ~
-    (&(spaceCharsEOI) | '.')) ~> { (p: CapturePos) =>
+    (&(spaceCharsEOI) | '.')) ~> { (p: CapturePosition) =>
       NodeWarned(Rank(AstNode.id, p, "fm.".some))
     }
   }
 
-  val rankSsp: RuleWithWarning[Rank] = rule {
+  def rankSsp: RuleWithWarning[Rank] = rule {
     capturePos(("ssp" | "subsp") ~ (&(spaceCharsEOI) | '.')) ~>
-      { (p: CapturePos) => NodeWarned(Rank(AstNode.id, p, "ssp.".some)) }
+      { (p: CapturePosition) => NodeWarned(Rank(AstNode.id, p, "ssp.".some)) }
   }
 
-  val subGenus: RuleWithWarning[SubGenus] = rule {
+  def subGenus: RuleWithWarning[SubGenus] = rule {
     '(' ~ softSpace ~ uninomialWord ~ softSpace ~ ')' ~> {
       (u: NodeWarned[UninomialWord]) =>
         NodeWarned(SubGenus(AstNode.id, u.astNode), u.warns)
     }
   }
 
-  val uninomialCombo: RuleWithWarning[Uninomial] = rule {
+  def uninomialCombo: RuleWithWarning[Uninomial] = rule {
     (uninomialCombo1 | uninomialCombo2) ~> { (u: NodeWarned[Uninomial]) =>
       val warns = Warning(2, "Combination of two uninomials", u.astNode.id) +:
                   u.warns
@@ -258,19 +257,20 @@ object Parser extends org.parboiled2.Parser {
     }
   }
 
-  val uninomialCombo1: RuleWithWarning[Uninomial] = rule {
+  def uninomialCombo1: RuleWithWarning[Uninomial] = rule {
     uninomialWord ~ softSpace ~ subGenus ~ softSpace ~ authorship.? ~>
     {(uw: NodeWarned[UninomialWord], sg: NodeWarned[SubGenus],
       a: Option[NodeWarned[Authorship]]) =>
       val u = Uninomial(AstNode.id, sg.astNode.pos, a.map{_.astNode},
-                Rank(AstNode.id, CapturePos.empty, typ = "subgen.".some).some,
+                Rank(AstNode.id, CapturePosition.empty,
+                     typ = "subgen.".some).some,
                 Uninomial(AstNode.id, uw.astNode.pos).some)
       val warns = (uw.warns ++ sg.warns).some |+| a.map{_.warns}
       NodeWarned(u, warns.get)
     }
   }
 
-  val uninomialCombo2: RuleWithWarning[Uninomial] = rule {
+  def uninomialCombo2: RuleWithWarning[Uninomial] = rule {
     (uninomial ~ softSpace ~ rankUninomial ~ softSpace ~ uninomial) ~> {
       (u1: NodeWarned[Uninomial], r: NodeWarned[Rank],
        u2: NodeWarned[Uninomial]) =>
@@ -281,7 +281,7 @@ object Parser extends org.parboiled2.Parser {
       }
   }
 
-  val uninomial: RuleWithWarning[Uninomial] = rule {
+  def uninomial: RuleWithWarning[Uninomial] = rule {
     uninomialWord ~ (space ~ authorship).? ~>
     { (u: NodeWarned[UninomialWord],
        authorship: Option[NodeWarned[Authorship]]) =>
@@ -291,21 +291,21 @@ object Parser extends org.parboiled2.Parser {
     }
   }
 
-  val uninomialWord: RuleWithWarning[UninomialWord] = rule {
+  def uninomialWord: RuleWithWarning[UninomialWord] = rule {
     abbrGenus | capWord | twoLetterGenera
   }
 
-  val abbrGenus: RuleWithWarning[UninomialWord] = rule {
+  def abbrGenus: RuleWithWarning[UninomialWord] = rule {
     capturePos(upperChar ~ lowerChar.? ~ lowerChar.? ~ '.') ~> {
-      (wp: CapturePos) =>
+      (wp: CapturePosition) =>
         val uw = UninomialWord(AstNode.id, wp)
         NodeWarned(uw, Vector(Warning(3, "Abbreviated uninomial word", uw.id)))
     }
   }
 
-  val capWord: RuleWithWarning[UninomialWord] = rule {
+  def capWord: RuleWithWarning[UninomialWord] = rule {
     (capWord2 | capWord1) ~> { (uw: NodeWarned[UninomialWord]) => {
-      val word = state.input.sliceString(uw.astNode.pos.start,
+      val word = input.sliceString(uw.astNode.pos.start,
                                          uw.astNode.pos.end)
       val hasForbiddenChars =
         word.exists { ch => sciCharsExtended.indexOf(ch) >= 0 ||
@@ -317,36 +317,37 @@ object Parser extends org.parboiled2.Parser {
     }}
   }
 
-  val capWord1: RuleWithWarning[UninomialWord] = rule {
+  def capWord1: RuleWithWarning[UninomialWord] = rule {
     capturePos(upperChar ~ lowerChar ~ oneOrMore(lowerChar) ~ '?'.?) ~> {
-      (p: CapturePos) =>
+      (p: CapturePosition) =>
         val uw = UninomialWord(AstNode.id, p)
-        val warns = (state.input.charAt(p.end - 1) == '?').option {
+        val warns = (input.charAt(p.end - 1) == '?').option {
           Warning(3, "Uninomial word with question mark", uw.id)
         }.toVector
         NodeWarned(uw, warns)
     }
   }
 
-  val capWord2: RuleWithWarning[UninomialWord] = rule {
+  def capWord2: RuleWithWarning[UninomialWord] = rule {
     capWord1 ~ '-' ~ word1 ~ &(spaceCharsEOI ++ '(') ~> {
-      (uw: NodeWarned[UninomialWord], wPos: CapturePos) =>
-        NodeWarned(uw.astNode.copy(pos = CapturePos(uw.astNode.pos.start,
-                                              wPos.end)),
-             uw.warns)
+      (uw: NodeWarned[UninomialWord], wPos: CapturePosition) =>
+        NodeWarned(uw.astNode.copy(pos = CapturePosition(uw.astNode.pos.start,
+                                                         wPos.end)),
+                   uw.warns)
     }
   }
 
-  val twoLetterGenera: RuleWithWarning[UninomialWord] = rule {
+  def twoLetterGenera: RuleWithWarning[UninomialWord] = rule {
     capturePos("Ca" | "Ea" | "Ge" | "Ia" | "Io" | "Io" | "Ix" | "Lo" | "Oa" |
       "Ra" | "Ty" | "Ua" | "Aa" | "Ja" | "Zu" | "La" | "Qu" | "As" | "Ba") ~>
-    { (p: CapturePos) => NodeWarned(UninomialWord(AstNode.id, p)) }
+    { (p: CapturePosition) => NodeWarned(UninomialWord(AstNode.id, p)) }
   }
 
-  val word: RuleWithWarning[SpeciesWord] = rule {
-    (word3 | word2 | word1) ~ &(spaceCharsEOI ++ '(') ~> { (pos: CapturePos) =>
+  def word: RuleWithWarning[SpeciesWord] = rule {
+    (word3 | word2 | word1) ~ &(spaceCharsEOI ++ '(') ~> {
+      (pos: CapturePosition) =>
         val sw = SpeciesWord(AstNode.id, pos)
-        val word = state.input.sliceString(pos.start, pos.end)
+        val word = input.sliceString(pos.start, pos.end)
         val warns = Vector(
           (word.indexOf(apostr) >= 0).option {
             Warning(3, "Apostrophe is not allowed in canonical", sw.id)
@@ -362,49 +363,51 @@ object Parser extends org.parboiled2.Parser {
     }
   }
 
-  val word1: Rule1[CapturePos] = rule {
+  def word1: Rule1[CapturePosition] = rule {
     capturePos(lowerChar ~ oneOrMore(lowerChar))
   }
 
-  val word2: Rule1[CapturePos] = rule {
+  def word2: Rule1[CapturePosition] = rule {
     capturePos(oneOrMore(lowerChar) | (1 to 2).times(CharPredicate(Digit))) ~
       dash ~ word1 ~> {
-      (p1: CapturePos, p2: CapturePos) => CapturePos(p1.start, p2.end)
+      (p1: CapturePosition, p2: CapturePosition) =>
+        CapturePosition(p1.start, p2.end)
     }
   }
 
-  val word3: Rule1[CapturePos] = rule {
+  def word3: Rule1[CapturePosition] = rule {
     capturePos(oneOrMore(lowerChar)) ~ apostr ~ word1 ~> {
-      (p1: CapturePos, p2: CapturePos) => CapturePos(p1.start, p2.end)
+      (p1: CapturePosition, p2: CapturePosition) =>
+        CapturePosition(p1.start, p2.end)
     }
   }
 
-  val hybridChar: Rule1[HybridChar] = rule {
-    capturePos('×') ~> { (pos: CapturePos) => HybridChar(AstNode.id, pos) }
+  def hybridChar: Rule1[HybridChar] = rule {
+    capturePos('×') ~> { (pos: CapturePosition) => HybridChar(AstNode.id, pos) }
   }
 
   val upperChar = CharPredicate(UpperAlpha ++ "Ë" ++ sciUpperCharExtended)
 
   val lowerChar = CharPredicate(LowerAlpha ++ "ë" ++ sciCharsExtended)
 
-  val unparsed: Rule1[Option[String]] = rule {
+  def unparsed: Rule1[Option[String]] = rule {
     capture(wordBorderChar ~ ANY.*).?
   }
 
   val anyVisible = upperChar ++ lowerChar ++ CharPredicate.Visible
 
-  val approxName: RuleWithWarning[NamesGroup] = rule {
+  def approxName: RuleWithWarning[NamesGroup] = rule {
     (approxName1 | approxName2) ~> { (n: NodeWarned[Name]) =>
       val ng = NamesGroup(AstNode.id, name = Vector(n.astNode))
       NodeWarned(ng, Warning(3, "Name is approximate", ng.id) +: n.warns)
     }
   }
 
-  val approxNameIgnored: Rule1[Option[String]] = rule {
+  def approxNameIgnored: Rule1[Option[String]] = rule {
     (softSpace ~ capture(anyVisible.+ ~ (softSpace ~ anyVisible.+).*)).?
   }
 
-  val approxName1: RuleWithWarning[Name] = rule {
+  def approxName1: RuleWithWarning[Name] = rule {
     (uninomial ~ space ~ approximation ~ approxNameIgnored) ~>
       { (u: NodeWarned[Uninomial], appr: NodeWarned[Approximation],
          ign: Option[String]) =>
@@ -414,7 +417,7 @@ object Parser extends org.parboiled2.Parser {
       }
   }
 
-  val approxName2: RuleWithWarning[Name] = rule {
+  def approxName2: RuleWithWarning[Name] = rule {
     (uninomial ~ space ~ word ~ space ~ approximation ~ approxNameIgnored) ~>
       { (u: NodeWarned[Uninomial], sw: NodeWarned[SpeciesWord],
          appr: NodeWarned[Approximation], ign: Option[String]) =>
@@ -426,16 +429,16 @@ object Parser extends org.parboiled2.Parser {
       }
   }
 
-  val authorship: RuleWithWarning[Authorship] = rule {
+  def authorship: RuleWithWarning[Authorship] = rule {
     (combinedAuthorship | basionymYearMisformed |
      basionymAuthorship | authorship1) ~ &(spaceCharsEOI ++ "(,:")
   }
 
-  val combinedAuthorship: RuleWithWarning[Authorship] = rule {
+  def combinedAuthorship: RuleWithWarning[Authorship] = rule {
     combinedAuthorship1 | combinedAuthorship2
   }
 
-  val combinedAuthorship1: RuleWithWarning[Authorship] = rule {
+  def combinedAuthorship1: RuleWithWarning[Authorship] = rule {
     basionymAuthorship ~ authorEx ~ authorship1 ~>
     { (bau: NodeWarned[Authorship], exau: NodeWarned[Authorship]) =>
       val bau1 = bau.astNode.copy(
@@ -446,7 +449,7 @@ object Parser extends org.parboiled2.Parser {
     }
   }
 
-  val combinedAuthorship2: RuleWithWarning[Authorship] = rule {
+  def combinedAuthorship2: RuleWithWarning[Authorship] = rule {
     basionymAuthorship ~ softSpace ~ authorship1 ~>
     {(bau: NodeWarned[Authorship], cau: NodeWarned[Authorship]) =>
       val bau1 = bau.astNode.copy(combination = cau.astNode.authors.some,
@@ -455,7 +458,7 @@ object Parser extends org.parboiled2.Parser {
     }
   }
 
-  val basionymYearMisformed: RuleWithWarning[Authorship] = rule {
+  def basionymYearMisformed: RuleWithWarning[Authorship] = rule {
     '(' ~ softSpace ~ authorsGroup ~ softSpace ~ ')' ~ (softSpace ~ ',').? ~
     softSpace ~ year ~>  {
       (a: NodeWarned[AuthorsGroup], y: NodeWarned[Year]) => {
@@ -468,11 +471,11 @@ object Parser extends org.parboiled2.Parser {
     }
   }
 
-  val basionymAuthorship: RuleWithWarning[Authorship] = rule {
+  def basionymAuthorship: RuleWithWarning[Authorship] = rule {
     basionymAuthorship1 | basionymAuthorship2
   }
 
-  val basionymAuthorship1: RuleWithWarning[Authorship] = rule {
+  def basionymAuthorship1: RuleWithWarning[Authorship] = rule {
     '(' ~ softSpace ~ authorship1 ~ softSpace ~ ')' ~> {
       (a: NodeWarned[Authorship]) =>
         val as = a.astNode.copy(basionymParsed = true, inparenthesis = true)
@@ -480,7 +483,7 @@ object Parser extends org.parboiled2.Parser {
     }
   }
 
-  val basionymAuthorship2: RuleWithWarning[Authorship] = rule {
+  def basionymAuthorship2: RuleWithWarning[Authorship] = rule {
     '(' ~ softSpace ~ '(' ~ softSpace ~ authorship1 ~ softSpace ~ ')' ~
     softSpace ~ ')' ~> { (a: NodeWarned[Authorship]) =>
       val as = a.astNode.copy(basionymParsed = true, inparenthesis = true)
@@ -489,20 +492,20 @@ object Parser extends org.parboiled2.Parser {
     }
   }
 
-  val authorship1: RuleWithWarning[Authorship] = rule {
+  def authorship1: RuleWithWarning[Authorship] = rule {
     (authorsYear | authorsGroup) ~> { (a: NodeWarned[AuthorsGroup]) =>
       NodeWarned(Authorship(AstNode.id, a.astNode), a.warns)
     }
   }
 
-  val authorsYear: RuleWithWarning[AuthorsGroup] = rule {
+  def authorsYear: RuleWithWarning[AuthorsGroup] = rule {
     authorsGroup ~ softSpace ~ (',' ~ softSpace).? ~ year ~>
     { (a: NodeWarned[AuthorsGroup], y: NodeWarned[Year]) =>
       NodeWarned(a.astNode.copy(year = y.astNode.some), a.warns ++ y.warns)
     }
   }
 
-  val authorsGroup: RuleWithWarning[AuthorsGroup] = rule {
+  def authorsGroup: RuleWithWarning[AuthorsGroup] = rule {
     authorsTeam ~ (authorEx ~ authorsTeam).? ~>
     { (a: NodeWarned[AuthorsTeam], exAu: Option[NodeWarned[AuthorsTeam]]) =>
       val ag = AuthorsGroup(AstNode.id, a.astNode, exAu.map{_.astNode})
@@ -513,7 +516,7 @@ object Parser extends org.parboiled2.Parser {
     }
   }
 
-  val authorsTeam: RuleWithWarning[AuthorsTeam] = rule {
+  def authorsTeam: RuleWithWarning[AuthorsTeam] = rule {
     oneOrMore(author).separatedBy(authorSep) ~> {
       (a: Seq[NodeWarned[Author]]) =>
         NodeWarned(AuthorsTeam(AstNode.id,
@@ -522,11 +525,11 @@ object Parser extends org.parboiled2.Parser {
     }
   }
 
-  val authorSep = rule { softSpace ~ ("," | "&" | "and" | "et") ~ softSpace }
+  def authorSep = rule { softSpace ~ ("," | "&" | "and" | "et") ~ softSpace }
 
-  val authorEx = rule { space ~ ("ex" | "in") ~ space }
+  def authorEx = rule { space ~ ("ex" | "in") ~ space }
 
-  val author: RuleWithWarning[Author] = rule {
+  def author: RuleWithWarning[Author] = rule {
     (author1 | author2 | unknownAuthor) ~> { (au: NodeWarned[Author]) => {
       val warns =
         (au.astNode.pos.end - au.astNode.pos.start < 2).option {
@@ -536,7 +539,7 @@ object Parser extends org.parboiled2.Parser {
     }}
   }
 
-  val author1: RuleWithWarning[Author] = rule {
+  def author1: RuleWithWarning[Author] = rule {
     author2 ~ softSpace ~ filius ~> {
       (au: NodeWarned[Author], filius: NodeWarned[AuthorWord]) =>
         NodeWarned(au.astNode.copy(filius = filius.astNode.some),
@@ -544,7 +547,7 @@ object Parser extends org.parboiled2.Parser {
     }
   }
 
-  val author2: RuleWithWarning[Author] = rule {
+  def author2: RuleWithWarning[Author] = rule {
     authorWord ~ zeroOrMore(
       (softSpace ~ authorWord ~> { aw: NodeWarned[AuthorWord] =>
         aw.copy(aw.astNode.copy(separator = AuthorWordSeparator.Space))
@@ -558,13 +561,13 @@ object Parser extends org.parboiled2.Parser {
     }
   }
 
-  val unknownAuthor: RuleWithWarning[Author] = rule {
+  def unknownAuthor: RuleWithWarning[Author] = rule {
     capturePos("?" |
             (("auct" | "anon" | "ht" | "hort") ~ (&(spaceCharsEOI) | '.'))) ~>
-    { (authPos: CapturePos) =>
+    { (authPos: CapturePosition) =>
       val auth = Author(AstNode.id, Seq(AuthorWord(AstNode.id, authPos)),
                         anon = true)
-      val endsWithQuestion = state.input.charAt(authPos.end - 1) == '?'
+      val endsWithQuestion = input.charAt(authPos.end - 1) == '?'
       val warns = Vector(
         Warning(2, "Author is unknown", auth.id).some,
         endsWithQuestion.option(Warning(3, "Author as a question mark",
@@ -573,11 +576,10 @@ object Parser extends org.parboiled2.Parser {
     }
   }
 
-  val authorWord: RuleWithWarning[AuthorWord] = rule {
+  def authorWord: RuleWithWarning[AuthorWord] = rule {
     (authorWord1 | authorWord2 | authorPre) ~> {
       (aw: NodeWarned[AuthorWord]) => {
-        val word = state.input.sliceString(aw.astNode.pos.start,
-                                           aw.astNode.pos.end)
+        val word = input.sliceString(aw.astNode.pos.start, aw.astNode.pos.end)
         val authorIsUpperCase = word.length > 2 &&
           word.forall { ch => ch == '-' || authCharUpperStr.indexOf(ch) >= 0 }
         val warns = authorIsUpperCase.option {
@@ -588,16 +590,18 @@ object Parser extends org.parboiled2.Parser {
     }
   }
 
-  val authorWord1: RuleWithWarning[AuthorWord] = rule {
+  def authorWord1: RuleWithWarning[AuthorWord] = rule {
     capturePos("arg." | "et al.{?}" | "et al." | "et al") ~> {
-      (pos: CapturePos) => NodeWarned(AuthorWord(AstNode.id, pos), Vector.empty)
+      (pos: CapturePosition) =>
+        NodeWarned(AuthorWord(AstNode.id, pos), Vector.empty)
     }
   }
 
-  val authorWord2: RuleWithWarning[AuthorWord] = rule {
+  def authorWord2: RuleWithWarning[AuthorWord] = rule {
     capturePos("d'".? ~ authCharUpper ~
-    zeroOrMore(authCharUpper | authCharLower) ~ '.'.?) ~> { (pos: CapturePos) =>
-      NodeWarned(AuthorWord(AstNode.id, pos), Vector.empty)
+    zeroOrMore(authCharUpper | authCharLower) ~ '.'.?) ~> {
+      (pos: CapturePosition) =>
+        NodeWarned(AuthorWord(AstNode.id, pos), Vector.empty)
     }
   }
 
@@ -608,27 +612,27 @@ object Parser extends org.parboiled2.Parser {
 
   val authCharUpper = CharPredicate(authCharUpperStr + authCharMiscoded)
 
-  val filius: RuleWithWarning[AuthorWord] = rule {
-    capturePos("f." | "fil." | "filius") ~> { (pos: CapturePos) =>
+  def filius: RuleWithWarning[AuthorWord] = rule {
+    capturePos("f." | "fil." | "filius") ~> { (pos: CapturePosition) =>
       NodeWarned(AuthorWord(AstNode.id, pos), Vector.empty)
     }
   }
 
-  val authorPre: RuleWithWarning[AuthorWord] = rule {
+  def authorPre: RuleWithWarning[AuthorWord] = rule {
     capturePos("ab" | "af" | "bis" | "da" | "der" | "des" |
                "den" | "della" | "dela" | "de" | "di" | "du" |
                "la" | "ter" | "van" | "von" | "d'") ~ &(spaceCharsEOI) ~> {
-      (pos: CapturePos) =>
+      (pos: CapturePosition) =>
         NodeWarned(AuthorWord(AstNode.id, pos), Vector.empty)
     }
   }
 
-  val year: RuleWithWarning[Year] = rule {
+  def year: RuleWithWarning[Year] = rule {
     yearRange | yearApprox | yearWithParens | yearWithPage |
     yearWithDot | yearWithChar | yearNumber
   }
 
-  val yearRange: RuleWithWarning[Year] = rule {
+  def yearRange: RuleWithWarning[Year] = rule {
     yearNumber ~ '-' ~ oneOrMore(Digit) ~ zeroOrMore(Alpha ++ "?") ~>
     { (y: NodeWarned[Year]) => {
       val yr = y.astNode.copy(approximate = true)
@@ -636,14 +640,14 @@ object Parser extends org.parboiled2.Parser {
     }}
   }
 
-  val yearWithDot: RuleWithWarning[Year] = rule {
+  def yearWithDot: RuleWithWarning[Year] = rule {
     yearNumber ~ '.' ~> { (y: NodeWarned[Year]) =>
       NodeWarned(y.astNode, Warning(2, "Year with period",
                  y.astNode.id) +: y.warns)
     }
   }
 
-  val yearApprox: RuleWithWarning[Year] = rule {
+  def yearApprox: RuleWithWarning[Year] = rule {
     '[' ~ softSpace ~ yearNumber ~ softSpace ~ ']' ~>
       { (y: NodeWarned[Year]) => {
         val yr = y.astNode.copy(approximate = true)
@@ -652,7 +656,7 @@ object Parser extends org.parboiled2.Parser {
     }
   }
 
-  val yearWithPage: RuleWithWarning[Year] = rule {
+  def yearWithPage: RuleWithWarning[Year] = rule {
     (yearWithChar | yearNumber) ~ softSpace ~ ':' ~ softSpace ~
       oneOrMore(Digit) ~> { (y: NodeWarned[Year]) =>
       NodeWarned(y.astNode, Warning(3, "Year with page info", y.astNode.id) +:
@@ -660,7 +664,7 @@ object Parser extends org.parboiled2.Parser {
     }
   }
 
-  val yearWithParens: RuleWithWarning[Year] = rule {
+  def yearWithParens: RuleWithWarning[Year] = rule {
     '(' ~ softSpace ~ (yearWithChar | yearNumber) ~ softSpace ~ ')' ~>
     { (y: NodeWarned[Year]) => {
       val yr = y.astNode.copy(approximate = true)
@@ -668,34 +672,34 @@ object Parser extends org.parboiled2.Parser {
     }}
   }
 
-  val yearWithChar: RuleWithWarning[Year] = rule {
+  def yearWithChar: RuleWithWarning[Year] = rule {
     yearNumber ~ capturePos(Alpha) ~> {
-      (y: NodeWarned[Year], pos: CapturePos) =>
+      (y: NodeWarned[Year], pos: CapturePosition) =>
         val yr = y.astNode.copy(alpha = pos.some)
         NodeWarned(yr, Vector(Warning(2, "Year with latin character", yr.id)))
     }
   }
 
-  val yearNumber: RuleWithWarning[Year] = rule {
+  def yearNumber: RuleWithWarning[Year] = rule {
     capturePos(CharPredicate("12") ~ CharPredicate("0789") ~ Digit ~
-      (Digit|'?') ~ '?'.?) ~> { (yPos: CapturePos) => {
+      (Digit|'?') ~ '?'.?) ~> { (yPos: CapturePosition) => {
         val yr = Year(AstNode.id, yPos)
-        if (state.input.charAt(yPos.end - 1) == '?') {
+        if (input.charAt(yPos.end - 1) == '?') {
           NodeWarned(yr.copy(approximate = true),
                      Vector(Warning(2, "Year with question mark", yr.id)))
         } else NodeWarned(yr)
     }}
   }
 
-  val softSpace = rule {
+  def softSpace = rule {
     zeroOrMore(spaceChars)
   }
 
-  val space = rule {
+  def space = rule {
     oneOrMore(spaceChars)
   }
 
-  val dash = '-'
+  def dash = '-'
 
   val spaceChars = CharPredicate(" " + spaceMiscoded)
 

@@ -59,12 +59,13 @@ val noPublishingSettings = Seq(
 
 /////////////////////// DEPENDENCIES /////////////////////////
 
-val json4s      = "org.json4s"         %% "json4s-jackson"         % "3.2.11"
-val javaUuid    = "com.fasterxml.uuid" %  "java-uuid-generator"    % "3.1.3"
+val shapeless   = "com.chuusai"        %% "shapeless"              % "2.3.0"
+val json4s      = "org.json4s"         %% "json4s-jackson"         % "3.3.0"
+val javaUuid    = "com.fasterxml.uuid" %  "java-uuid-generator"    % "3.1.4"
 val lang3       = "org.apache.commons" %  "commons-lang3"          % "3.4"
-val parboiled   = "org.globalnames"    %% "parboiled"              % "2.2.1"
-val scalaz      = "org.scalaz"         %% "scalaz-core"            % "7.1.3"
-val specs2core  = "org.specs2"         %% "specs2-core"            % "3.6.3" % Test
+val parboiled   = "org.globalnames"    %% "parboiled"              % "2.1.2.1"
+val scalaz      = "org.scalaz"         %% "scalaz-core"            % "7.1.7"
+val specs2core  = "org.specs2"         %% "specs2-core"            % "3.6.6" % Test
 
 /////////////////////// PROJECTS /////////////////////////
 
@@ -72,7 +73,7 @@ lazy val root = project.in(file("."))
   .aggregate(parser, examples, runner, web)
   .settings(noPublishingSettings: _*)
   .settings(
-    crossScalaVersions := Seq("2.10.3", "2.11.7")
+    crossScalaVersions := Seq("2.10.6", "2.11.7")
   )
 
 lazy val parser = (project in file("./parser"))
@@ -87,14 +88,7 @@ lazy val parser = (project in file("./parser"))
     test in assembly := {},
 
     libraryDependencies ++= {
-      val shapeless = scalaVersion.value match {
-        case v if v.startsWith("2.10") =>
-          Seq("com.chuusai" % "shapeless_2.10.4" % "2.1.0",
-              compilerPlugin("org.scalamacros" % "paradise" % "2.0.1" cross CrossVersion.full))
-        case _ =>
-          Seq("com.chuusai" %% "shapeless" % "2.2.3")
-      }
-      shapeless ++ Seq(json4s, javaUuid, lang3, parboiled, scalaz, specs2core)
+      Seq(shapeless, json4s, javaUuid, lang3, parboiled, scalaz, specs2core)
     },
 
     scalacOptions in Test ++= Seq("-Yrangepos"),

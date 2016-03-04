@@ -160,7 +160,7 @@ More information about UUID version 5 can be found in the `Global Names
 blog <http://globalnames.org/news/2015/05/31/gn-uuid-0-5-0/>`_.
 
 You can also use UUID calculation library in your code as it is shown in
-`Scala example section <#scala>`_. 
+`Scala example section <#scala>`_.
 
 Assembling canonical forms etc. from original spelling
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -456,7 +456,7 @@ Requirements
 
 -  `Git <https://git-scm.com/>`_
 -  `Scala version >=
-   2.10.3 <http://www.scala-lang.org/download/install.html>`_
+   2.10.6 <http://www.scala-lang.org/download/install.html>`_
 -  Java SDK version >= 1.8.0
 -  `SBT <http://www.scala-sbt.org/download.html>`_ >= 0.13.8
 
@@ -490,7 +490,7 @@ Commands
 Command                 Description
 =====================   =======================================
 ``sbt test``            Runs all tests
-``sbt ++2.10.3 test``   Runs all tests against Scala v2.10.3
+``sbt ++2.10.6 test``   Runs all tests against Scala v2.10.6
 ``sbt assembly``        Creates `fat jars <#fat-jar>`_ for
                         command line and web
 ``sbt stage``           Creates executables for
