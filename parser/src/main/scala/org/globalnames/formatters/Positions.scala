@@ -21,8 +21,8 @@ trait Positions { parsedResult: ScientificNameParser.Result =>
              positionedSubGenus(nm.subgenus),
              positionedComparison(nm.comparison)).flatten ++
         positionedUninomial(typ, nm.uninomial) ++
-        ~nm.species.map(positionedSpecies) ++
-        ~nm.infraspecies.map(positionedInfraspeciesGroup)
+        nm.species.map(positionedSpecies).orZero ++
+        nm.infraspecies.map(positionedInfraspeciesGroup).orZero
     }
 
     def positionedHybridChar(hybridChar: Option[HybridChar]): Option[Position] =
@@ -50,7 +50,7 @@ trait Positions { parsedResult: ScientificNameParser.Result =>
         Vector(Position(typ, u.pos.start, u.pos.end).some,
                positionedRank(u.rank)).flatten ++
           u.parent.map { positionedUninomial("uninomial", _) }.orZero ++
-          ~u.authorship.map(positionedAuthorship)
+          u.authorship.map(positionedAuthorship).orZero
       }
 
     def positionedSubGenus(subGenus: Option[SubGenus]): Option[Position] =
@@ -60,12 +60,12 @@ trait Positions { parsedResult: ScientificNameParser.Result =>
 
     def positionedSpecies(sp: Species): Vector[Position] =
       Position("specific_epithet", sp.pos.start, sp.pos.end) +:
-        ~sp.authorship.map(positionedAuthorship)
+        sp.authorship.map(positionedAuthorship).orZero
 
     def positionedInfraspecies(is: Infraspecies): Vector[Position] =
       Vector(Position("infraspecific_epithet", is.pos.start, is.pos.end).some,
              positionedRank(is.rank)).flatten ++
-        ~is.authorship.map(positionedAuthorship)
+        is.authorship.map(positionedAuthorship).orZero
 
     def positionedInfraspeciesGroup(isg: InfraspeciesGroup): Vector[Position] =
       isg.group.flatMap(positionedInfraspecies).toVector
@@ -88,13 +88,13 @@ trait Positions { parsedResult: ScientificNameParser.Result =>
       def positionedAuthorsGroup(ag: AuthorsGroup): Vector[Position] =
         positionedAuthorsTeam(ag.authors) ++
           ag.year.map(positionedYear) ++
-          ~ag.authorsEx.map(positionedAuthorsTeam)
+          ag.authorsEx.map(positionedAuthorsTeam).orZero
 
-      ~as.basionym.map(positionedAuthorsGroup) ++
-        ~as.combination.map(positionedAuthorsGroup)
+      as.basionym.map(positionedAuthorsGroup).orZero ++
+        as.combination.map(positionedAuthorsGroup).orZero
     }
 
-    ~parsedResult.scientificName.namesGroup.map(positionedNamesGroup)
+    parsedResult.scientificName.namesGroup.map(positionedNamesGroup).orZero
   }
 }
 
