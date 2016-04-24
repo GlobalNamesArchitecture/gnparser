@@ -108,9 +108,10 @@ object ScientificNameParser {
   }
 
   case class Input(verbatim: String) {
-    private lazy val UNESCAPE_HTML4 =
+    private val UNESCAPE_HTML4 =
       new TrackingPositionsUnescapeHtml4Translator
-    lazy val (unescaped, preprocessed): (String, Boolean) = {
+
+    val (unescaped, preprocessed): (String, Boolean) = {
       val unescaped = UNESCAPE_HTML4.translate(verbatim)
       val preprocessed = normalizeHybridChar(removeJunk(unescaped))
 

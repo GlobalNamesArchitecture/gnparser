@@ -7,12 +7,15 @@ import org.apache.commons.lang3.text.translate._
 import scala.collection.mutable.ArrayBuffer
 
 class TrackingPositionsUnescapeHtml4Translator extends AggregateTranslator {
-  private final val translators =
-    List(EntityArrays.BASIC_UNESCAPE,
-         EntityArrays.ISO8859_1_UNESCAPE,
-         EntityArrays.HTML40_EXTENDED_UNESCAPE()).map { strss =>
-    new LookupTranslator(strss.asInstanceOf[Array[Array[CharSequence]]]: _*)
-  } :+ new NumericEntityUnescaper
+  private final val translators = {
+    def lookupTranslator(strss: Array[Array[String]]) =
+      new LookupTranslator(strss.asInstanceOf[Array[Array[CharSequence]]]: _*)
+    List(
+      lookupTranslator(EntityArrays.BASIC_UNESCAPE),
+      lookupTranslator(EntityArrays.ISO8859_1_UNESCAPE),
+      lookupTranslator(EntityArrays.HTML40_EXTENDED_UNESCAPE()),
+      new NumericEntityUnescaper)
+  }
 
   private final val positions = ArrayBuffer.fill(1)(0)
   var identity: Boolean = true

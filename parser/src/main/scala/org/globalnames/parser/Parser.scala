@@ -12,19 +12,12 @@ class Parser(val input: ParserInput,
              collectErrors: Boolean)
   extends org.parboiled2.Parser(collectErrors = collectErrors) {
 
+  import Parser._
+
   case class NodeWarned[T <: AstNode](astNode: T,
                                       warns: Vector[Warning] = Vector.empty)
 
   type RuleWithWarning[T <: AstNode] = Rule1[NodeWarned[T]]
-
-  private val sciCharsExtended = "æœſàâåãäáçčéèíìïňññóòôøõöúùüŕřŗššşž"
-  private val sciUpperCharExtended = "ÆŒ"
-  private val authCharUpperStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-    "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝĆČĎİĶĹĺĽľŁłŅŌŐŒŘŚŜŞŠŸŹŻŽƒǾȘȚ"
-  private val authCharMiscoded = '�'
-  private val apostr = '\''
-  private val spaceMiscoded = "　 \t\r\n\f_"
-  private val doubleSpacePattern = """[\s_]{2,}""".r
 
   def sciName: Rule2[ScientificName, Vector[Warning]] = rule {
     capturePos(softSpace ~ sciName1) ~ unparsed ~ EOI ~> {
@@ -72,13 +65,13 @@ class Parser(val input: ParserInput,
   }
 
   def hybridFormula: RuleWithWarning[NamesGroup] = rule {
-    hybridFormula1 | hybridFormula2
+    name ~ space ~ hybridChar ~ (hybridFormula1 | hybridFormula2)
   }
 
-  def hybridFormula1: RuleWithWarning[NamesGroup] = rule {
-    name ~ space ~ hybridChar ~ softSpace ~
-    species ~ (space ~ infraspeciesGroup).? ~>
-    { (n: NodeWarned[Name], hc: HybridChar, s: NodeWarned[Species],
+  def hybridFormula1: Rule[NodeWarned[Name] :: HybridChar :: HNil,
+                           NodeWarned[NamesGroup] :: HNil] = rule {
+    softSpace ~ species ~ (space ~ infraspeciesGroup).? ~> {
+      (n: NodeWarned[Name], hc: HybridChar, s: NodeWarned[Species],
        i: Option[NodeWarned[InfraspeciesGroup]]) =>
       val ng = NamesGroup(AstNode.id,
         name = Vector(n.astNode.copy(genusParsed = true),
@@ -93,8 +86,9 @@ class Parser(val input: ParserInput,
     }
   }
 
-  def hybridFormula2: RuleWithWarning[NamesGroup] = rule {
-    name ~ space ~ hybridChar ~ (space ~ name).? ~> {
+  def hybridFormula2: Rule[NodeWarned[Name] :: HybridChar :: HNil,
+                           NodeWarned[NamesGroup] :: HNil] = rule {
+    (space ~ name).? ~> {
       (n1: NodeWarned[Name], hc: HybridChar, n2: Option[NodeWarned[Name]]) =>
         val ng = n2 match {
           case None =>
@@ -388,20 +382,15 @@ class Parser(val input: ParserInput,
     capturePos('×') ~> { (pos: CapturePosition) => HybridChar(AstNode.id, pos) }
   }
 
-  val upperChar = CharPredicate(UpperAlpha ++ "Ë" ++ sciUpperCharExtended)
-
-  val lowerChar = CharPredicate(LowerAlpha ++ "ë" ++ sciCharsExtended)
-
   def unparsed: Rule1[Option[String]] = rule {
     capture(wordBorderChar ~ ANY.*).?
   }
 
-  val anyVisible = upperChar ++ lowerChar ++ CharPredicate.Visible
-
   def approxName: RuleWithWarning[NamesGroup] = rule {
-    (approxName1 | approxName2) ~> { (n: NodeWarned[Name]) =>
-      val ng = NamesGroup(AstNode.id, name = Vector(n.astNode))
-      NodeWarned(ng, Warning(3, "Name is approximate", ng.id) +: n.warns)
+    uninomial ~ space ~ (approxName1 | approxName2) ~> {
+      (n: NodeWarned[Name]) =>
+        val ng = NamesGroup(AstNode.id, name = Vector(n.astNode))
+        NodeWarned(ng, Warning(3, "Name is approximate", ng.id) +: n.warns)
     }
   }
 
@@ -409,8 +398,9 @@ class Parser(val input: ParserInput,
     (softSpace ~ capture(anyVisible.+ ~ (softSpace ~ anyVisible.+).*)).?
   }
 
-  def approxName1: RuleWithWarning[Name] = rule {
-    (uninomial ~ space ~ approximation ~ approxNameIgnored) ~>
+  def approxName1: Rule[NodeWarned[Uninomial] :: HNil,
+                        NodeWarned[Name] :: HNil] = rule {
+    approximation ~ approxNameIgnored ~>
       { (u: NodeWarned[Uninomial], appr: NodeWarned[Approximation],
          ign: Option[String]) =>
         val nm = Name(AstNode.id, uninomial = u.astNode,
@@ -419,8 +409,9 @@ class Parser(val input: ParserInput,
       }
   }
 
-  def approxName2: RuleWithWarning[Name] = rule {
-    (uninomial ~ space ~ word ~ space ~ approximation ~ approxNameIgnored) ~>
+  def approxName2: Rule[NodeWarned[Uninomial] :: HNil,
+                        NodeWarned[Name] :: HNil] = rule {
+    word ~ space ~ approximation ~ approxNameIgnored ~>
       { (u: NodeWarned[Uninomial], sw: NodeWarned[SpeciesWord],
          appr: NodeWarned[Approximation], ign: Option[String]) =>
         val nm = Name(AstNode.id, uninomial = u.astNode,
@@ -607,12 +598,7 @@ class Parser(val input: ParserInput,
     }
   }
 
-  val authCharLower = CharPredicate(LowerAlpha ++
-                                    ("àáâãäåæçèéêëìíîïðñòóóôõöøùúûüýÿ" +
-                                     "āăąćĉčďđ'-ēĕėęěğīĭİıĺľłńņňŏő" +
-                                     "œŕřśşšţťũūŭůűźżžſǎǔǧșțȳß"))
 
-  val authCharUpper = CharPredicate(authCharUpperStr + authCharMiscoded)
 
   def filius: RuleWithWarning[AuthorWord] = rule {
     capturePos("f." | "fil." | "filius") ~> { (pos: CapturePosition) =>
@@ -700,12 +686,27 @@ class Parser(val input: ParserInput,
   def space = rule {
     oneOrMore(spaceChars)
   }
+}
 
-  def dash = '-'
-
-  val spaceChars = CharPredicate(" " + spaceMiscoded)
-
-  val spaceCharsEOI = spaceChars ++ EOI ++ ";"
-
-  val wordBorderChar = spaceChars ++ CharPredicate(";.,:)]")
+object Parser {
+  final val dash = '-'
+  final val spaceMiscoded = "　 \t\r\n\f_"
+  final val spaceChars = CharPredicate(" " + spaceMiscoded)
+  final val spaceCharsEOI = spaceChars ++ EOI ++ ";"
+  final val wordBorderChar = spaceChars ++ CharPredicate(";.,:)]")
+  final val sciCharsExtended = "æœſàâåãäáçčéèíìïňññóòôøõöúùüŕřŗššşž"
+  final val sciUpperCharExtended = "ÆŒ"
+  final val authCharUpperStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+    "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝĆČĎİĶĹĺĽľŁłŅŌŐŒŘŚŜŞŠŸŹŻŽƒǾȘȚ"
+  final val authCharMiscoded = '�'
+  final val apostr = '\''
+  final val doubleSpacePattern = """[\s_]{2}""".r
+  final val authCharLower = CharPredicate(LowerAlpha ++
+    ("àáâãäåæçèéêëìíîïðñòóóôõöøùúûüýÿ" +
+      "āăąćĉčďđ'-ēĕėęěğīĭİıĺľłńņňŏő" +
+      "œŕřśşšţťũūŭůűźżžſǎǔǧșțȳß"))
+  final val authCharUpper = CharPredicate(authCharUpperStr + authCharMiscoded)
+  final val upperChar = CharPredicate(UpperAlpha ++ "Ë" ++ sciUpperCharExtended)
+  final val lowerChar = CharPredicate(LowerAlpha ++ "ë" ++ sciCharsExtended)
+  final val anyVisible = upperChar ++ lowerChar ++ CharPredicate.Visible
 }
