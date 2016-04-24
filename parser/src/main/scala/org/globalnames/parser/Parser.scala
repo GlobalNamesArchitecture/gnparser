@@ -7,8 +7,10 @@ import scalaz.Scalaz._
 
 import shapeless._
 
-class Parser(val input: ParserInput, preprocessChanges: Boolean)
-  extends org.parboiled2.Parser {
+class Parser(val input: ParserInput,
+             preprocessChanges: Boolean,
+             collectErrors: Boolean)
+  extends org.parboiled2.Parser(collectErrors = collectErrors) {
 
   case class NodeWarned[T <: AstNode](astNode: T,
                                       warns: Vector[Warning] = Vector.empty)

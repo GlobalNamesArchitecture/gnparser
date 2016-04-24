@@ -63,7 +63,7 @@ val shapeless   = "com.chuusai"        %% "shapeless"              % "2.3.0"
 val json4s      = "org.json4s"         %% "json4s-jackson"         % "3.3.0"
 val javaUuid    = "com.fasterxml.uuid" %  "java-uuid-generator"    % "3.1.4"
 val lang3       = "org.apache.commons" %  "commons-lang3"          % "3.4"
-val parboiled   = "org.globalnames"    %% "parboiled"              % "2.1.2.1"
+val parboiled   = "org.globalnames"    %% "parboiled"              % "2.1.2.2"
 val scalaz      = "org.scalaz"         %% "scalaz-core"            % "7.1.7"
 val specs2core  = "org.specs2"         %% "specs2-core"            % "3.6.6" % Test
 

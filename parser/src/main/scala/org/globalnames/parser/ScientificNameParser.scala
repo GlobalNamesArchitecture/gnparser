@@ -22,18 +22,23 @@ abstract class ScientificNameParser {
                prion|prions|NPV)\b""".r ::
     """\b[A-Za-z]*(satellite[s]?|NPV)\b""".r :: HNil
 
-  def fromString(input: String): Result = {
+  def fromString(input: String): Result =
+    fromString(input, collectParsingErrors = false)
+
+  def fromString(input: String,
+                 collectParsingErrors: Boolean): Result = {
     val isVirus = checkVirus(input)
     val inputString = Input(input)
     if (isVirus || noParse(input)) {
       Result(inputString, ScientificName(isVirus = isVirus), version)
     } else {
       val input = inputString.unescaped
-      val parser = new Parser(input, inputString.preprocessed)
+      val parser = new Parser(input, inputString.preprocessed,
+                              collectParsingErrors)
       parser.sciName.run() match {
         case Success(scientificName :: warnings :: HNil) =>
           Result(inputString, scientificName, version, warnings)
-        case Failure(err: ParseError) =>
+        case Failure(err: ParseError) if collectParsingErrors =>
           Console.err.println(err.format(inputString.verbatim))
           Result(inputString, ScientificName(), version)
         case Failure(err) =>
