@@ -11,7 +11,7 @@ import Scalaz._
 trait JsonRenderer { parserResult: ScientificNameParser.Result =>
 
   def json: JValue = {
-    val canonical = parserResult.canonized(showRanks = false)
+    val canonical = parserResult.canonized()
     val parsed = canonical.isDefined
 
     val canonicalName: JValue =

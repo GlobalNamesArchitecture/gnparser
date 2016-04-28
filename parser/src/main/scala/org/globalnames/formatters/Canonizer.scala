@@ -7,7 +7,7 @@ import Scalaz._
 
 trait Canonizer { parsedResult: ScientificNameParser.Result =>
 
-  def canonized(showRanks: Boolean): Option[String] = {
+  def canonized(showRanks: Boolean = false): Option[String] = {
     def canonizedNamesGroup(namesGroup: NamesGroup): String =
       if (namesGroup.name.size == 1) {
         namesGroup.hybrid.map { _ ⇒ "× " }.orZero +
