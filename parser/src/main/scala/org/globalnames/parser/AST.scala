@@ -35,6 +35,28 @@ case class ScientificName(
     }
     Disj.unwrap(~(isBold |+| isAnnot))
   }
+  val authorship: Option[Authorship] =
+    namesGroup.flatMap { x => (x.name.size == 1).option {
+      val name = namesGroup.get.name.head
+      val infraspeciesAuthorship =
+        name.infraspecies.map { _.group.last.authorship }
+      val speciesAuthorship = name.species.map { _.authorship }
+      val uninomialAuthorship = name.uninomial.authorship.map { _.some }
+      val authorship =
+        infraspeciesAuthorship <+> speciesAuthorship <+> uninomialAuthorship
+      authorship.flatten
+    }}.flatten
+  val year: Option[Year] = namesGroup.flatMap { x => (x.name.size == 1).option {
+    val name = namesGroup.get.name.head
+    val infraspeciesYear =
+      name.infraspecies.flatMap {
+        _.group.last.authorship.flatMap { _.authors.year }
+      }
+    val speciesYear =
+      name.species.flatMap { _.authorship.flatMap { _.authors.year } }
+    val uninomialYear = name.uninomial.authorship.flatMap { _.authors.year }
+    infraspeciesYear <+> speciesYear <+> uninomialYear
+  }}.flatten
 }
 
 case class NamesGroup(

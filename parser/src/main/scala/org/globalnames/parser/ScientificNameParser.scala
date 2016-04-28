@@ -100,8 +100,8 @@ object ScientificNameParser {
 
   case class Result(input: Input, scientificName: ScientificName,
                     version: String, warnings: Vector[Warning] = Vector.empty)
-    extends JsonRenderer with Details with Positions
-       with Normalizer with Canonizer {
+    extends JsonRenderer with DelimitedStringRenderer with Details
+       with Positions with Normalizer with Canonizer {
 
     def stringOf(astNode: AstNode): String =
       input.unescaped.substring(astNode.pos.start, astNode.pos.end)
