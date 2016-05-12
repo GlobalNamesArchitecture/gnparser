@@ -24,12 +24,15 @@ object GnParser {
                     outputFile: Option[String] = None,
                     port: Int = 4334,
                     name: String = "",
+                    simpleFormat: Boolean = false,
                     threadsNumber: Option[Int] = None)
 
   def main(args: Array[String]): Unit = {
     val parser = new scopt.OptionParser[Config]("gnparse") {
       head("gnparse", BuildInfo.version)
       help("help").text("prints this usage text")
+      opt[Unit]('s', "simple").text("simple CSV format")
+        .optional.action { (x, c) => c.copy(simpleFormat = true) }
       cmd("file").action { (_, c) => c.copy(mode = InputFileParsing.some) }
                  .text("file command").children(
         opt[String]('i', "input").required.valueName("<path_to_input_file>")
@@ -53,11 +56,16 @@ object GnParser {
 
     parser.parse(args, Config()) match {
       case Some(cfg) if cfg.mode.get == InputFileParsing =>
-        startFileParse(cfg.inputFile.get, cfg.outputFile.get, cfg.threadsNumber)
+        startFileParse(cfg.inputFile.get, cfg.outputFile.get,
+                       cfg.threadsNumber, cfg.simpleFormat)
       case Some(cfg) if cfg.mode.get == TcpServer =>
-        ParServer(cfg.port).run()
+        ParServer(cfg.port, cfg.simpleFormat).run()
       case Some(cfg) if cfg.mode.get == NameParsing =>
-        println(scientificNameParser.fromString(cfg.name).renderCompactJson)
+        val result = scientificNameParser.fromString(cfg.name)
+        println {
+          if (cfg.simpleFormat) result.delimitedString()
+          else result.renderCompactJson
+        }
       case None =>
         Console.err.println("Invalid configuration of parameters. Check --help")
     }
@@ -65,7 +73,8 @@ object GnParser {
 
   def startFileParse(inputFilePath: String,
                      outputFilePath: String,
-                     threadsNumber: Option[Int]) =
+                     threadsNumber: Option[Int],
+                     simpleFormat: Boolean) =
     Try(Source.fromFile(inputFilePath)) match {
       case Failure(e) => Console.err.println(s"No such file: $inputFilePath")
       case Success(f) =>
@@ -81,7 +90,9 @@ object GnParser {
           if (currentParsedCount % 10000 == 0) {
             println(s"Parsed $currentParsedCount of ${namesInput.size} lines")
           }
-          scientificNameParser.fromString(name.trim).renderCompactJson
+          val result = scientificNameParser.fromString(name.trim)
+          if (simpleFormat) result.delimitedString()
+          else result.renderCompactJson
         }
         val writer = new BufferedWriter(new FileWriter(outputFilePath))
         namesParsed.seq.foreach { name ⇒
