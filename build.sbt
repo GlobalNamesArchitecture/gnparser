@@ -65,6 +65,7 @@ val javaUuid    = "com.fasterxml.uuid" %  "java-uuid-generator"    % "3.1.4"
 val lang3       = "org.apache.commons" %  "commons-lang3"          % "3.4"
 val parboiled   = "org.globalnames"    %% "parboiled"              % "2.1.2.2"
 val scalaz      = "org.scalaz"         %% "scalaz-core"            % "7.1.7"
+val scopt       = "com.github.scopt"   %% "scopt"                  % "3.4.0"
 val specs2core  = "org.specs2"         %% "specs2-core"            % "3.6.6" % Test
 
 /////////////////////// PROJECTS /////////////////////////
@@ -83,7 +84,7 @@ lazy val parser = (project in file("./parser"))
   .settings(
     name := "gnparser",
 
-    buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
+    buildInfoKeys := Seq[BuildInfoKey](version),
     buildInfoPackage := "org.globalnames.parser",
     test in assembly := {},
 
@@ -110,7 +111,7 @@ lazy val benchmark = (project in file("./benchmark"))
 
 lazy val runner = (project in file("./runner"))
   .dependsOn(parser)
-  .enablePlugins(JavaAppPackaging)
+  .enablePlugins(JavaAppPackaging, BuildInfoPlugin)
   .settings(commonSettings: _*)
   .settings(noPublishingSettings: _*)
   .settings(
@@ -120,7 +121,10 @@ lazy val runner = (project in file("./runner"))
     bashScriptExtraDefines := Seq(
       s"""declare -r script_name="${executableScriptName.value}""""
     ),
-    mainClass in Compile := Some("org.globalnames.GnParser")
+    libraryDependencies ++= Seq(scopt),
+    mainClass in Compile := Some("org.globalnames.GnParser"),
+    buildInfoKeys := Seq[BuildInfoKey](version),
+    buildInfoPackage := "org.globalnames.runner"
   )
 
 lazy val examples = (project in file("./examples/java-scala"))
