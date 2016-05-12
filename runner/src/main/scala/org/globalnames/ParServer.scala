@@ -5,7 +5,7 @@ import java.net.ServerSocket
 
 import org.globalnames.parser.ScientificNameParser.{instance => scientificNameParser}
 
-case class ParServer(port: Int = 4334) {
+case class ParServer(port: Int = 4334, simpleFormat: Boolean) {
   def run(): Unit = {
     println(s"\nStarting Parsing Server on port $port\n")
     var line: String = ""
@@ -15,7 +15,11 @@ case class ParServer(port: Int = 4334) {
     val output = new PrintStream(new BufferedOutputStream(sock.getOutputStream))
     while (true) {
       line = input.readLine.trim
-      output.println(scientificNameParser.fromString(line).renderCompactJson)
+      val result = scientificNameParser.fromString(line)
+      output.println {
+        if (simpleFormat) result.delimitedString()
+        else result.renderCompactJson
+      }
       output.flush()
     }
   }
