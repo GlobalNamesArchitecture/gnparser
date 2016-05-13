@@ -1044,7 +1044,7 @@ Aconitum napellus var. formosum (Rchb.) W. D. J. Koch (nom. ambig.)
 #TODO Donatia novae-zelandiae Hook.f.
 #>
 
-#SECTION: Epithets starting with numeric value< 
+#SECTION: Epithets starting with numeric value<
 Acanthoderes 4-gibbus RILEY Charles Valentine, 1880
 {"name_string_id":"90bb5882-b093-586d-881a-aeabc55f248b","parsed":true,"quality":3,"quality_warnings":[[3,"Numeric prefix"],[2,"Author in upper case"]],"parser_version":"test_version","verbatim":"Acanthoderes 4-gibbus RILEY Charles Valentine, 1880","normalized":"Acanthoderes quadrigibbus Riley Charles Valentine 1880","canonical_name":{"value":"Acanthoderes quadrigibbus"},"hybrid":false,"surrogate":false,"virus":false,"details":[{"genus":{"value":"Acanthoderes"},"specific_epithet":{"value":"quadrigibbus","authorship":{"value":"Riley Charles Valentine 1880","basionym_authorship":{"authors":["Riley Charles Valentine"],"year":{"value":"1880"}}}}}],"positions":[["genus",0,12],["specific_epithet",13,21],["author_word",22,27],["author_word",28,35],["author_word",36,45],["year",47,51]]}
 90bb5882-b093-586d-881a-aeabc55f248b|Acanthoderes 4-gibbus RILEY Charles Valentine, 1880|Acanthoderes quadrigibbus|Acanthoderes quadrigibbus|Riley Charles Valentine 1880|1880|3
@@ -1461,7 +1461,7 @@ Fakus prioni
 f2561b5b-37ed-592d-9c12-4ef96d09f554|Fakus prioni|Fakus prioni|Fakus prioni|||1
 #>
 
-### Miscellaneous Inconsistencies 
+### Miscellaneous Inconsistencies
 
 #SECTION: Authoship in upper case<
 Lecanora strobilinoides GIRALT & GÓMEZ-BOLEA
@@ -1748,7 +1748,7 @@ HaloTag control vector
 0343bf04-3850-5410-92d4-484779684f8c|HaloTag control vector|||||1
 #>
 
-#SECTION: No parsing -- phytoplasma
+#SECTION: No parsing -- phytoplasma<
 Alfalfa witches'-broom phytoplasma
 {"name_string_id":"b31676ed-c1ed-522c-8380-19a27af11e0d","parsed":false,"parser_version":"test_version","verbatim":"Alfalfa witches'-broom phytoplasma","surrogate":false,"virus":false}
 b31676ed-c1ed-522c-8380-19a27af11e0d|Alfalfa witches'-broom phytoplasma|||||1
@@ -1760,5 +1760,6 @@ f84e58c5-8e49-5b2d-a4d0-4f1e538c8c7c|Allium ampeloprasumphytoplasma|||||1
 Alstroemeria sp. phytoplasma
 {"name_string_id":"5348845f-c94a-5c7e-bba1-307e4c07a42d","parsed":false,"parser_version":"test_version","verbatim":"Alstroemeria sp. phytoplasma","surrogate":false,"virus":false}
 5348845f-c94a-5c7e-bba1-307e4c07a42d|Alstroemeria sp. phytoplasma|||||1
+#>
 
 # vim: set foldmarker=<,> foldlevel=0 foldmethod=marker
