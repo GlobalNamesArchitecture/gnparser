@@ -392,6 +392,11 @@ Calculation of UUID version 5 can be done in the following way:
     res0: java.util.UUID = da1a79e5-c16f-5ff7-a925-14c5c7ecdec5
 
 
+Apache Spark
+~~~~~~~~~~~~
+
+`README </examples/spark/README.rst>`_
+
 Java
 ~~~~
 
