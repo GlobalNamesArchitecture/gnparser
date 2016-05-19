@@ -3,6 +3,7 @@ package org.globalnames
 import java.io.{BufferedWriter, FileWriter}
 
 import parser.ScientificNameParser.{instance ⇒ scientificNameParser}
+import parser.runner.web.controllers.WebServer
 import runner.BuildInfo
 
 import scala.collection.parallel.ForkJoinTaskSupport
@@ -16,7 +17,8 @@ import Scalaz._
 object GnParser {
   sealed trait Mode
   case object InputFileParsing extends Mode
-  case object TcpServer extends Mode
+  case object TcpServerMode extends Mode
+  case object WebServerMode extends Mode
   case object NameParsing extends Mode
 
   case class Config(mode: Option[Mode] = None,
@@ -42,10 +44,15 @@ object GnParser {
         opt[Int]('t', "threads").valueName("<threads_number>")
           .action { (x, c) => c.copy(threadsNumber = x.some)}
       )
-      cmd("server").action { (_, c) => c.copy(mode = TcpServer.some) }
+      cmd("server").action { (_, c) => c.copy(mode = TcpServerMode.some) }
                    .text("server command").children(
         opt[Int]('p', "port").valueName("<port>")
                              .action { (x, c) => c.copy(port = x)}
+      )
+      cmd("web").action { (_, c) => c.copy(mode = WebServerMode.some) }
+                .text("web-api command").children(
+        opt[Int]('p', "port").valueName("<port>")
+                             .action { (x, c) => c.copy(port = x) }
       )
       cmd("name").action { (_, c) => c.copy(mode = NameParsing.some) }
                  .text("name command").children(
@@ -58,8 +65,10 @@ object GnParser {
       case Some(cfg) if cfg.mode.get == InputFileParsing =>
         startFileParse(cfg.inputFile.get, cfg.outputFile.get,
                        cfg.threadsNumber, cfg.simpleFormat)
-      case Some(cfg) if cfg.mode.get == TcpServer =>
+      case Some(cfg) if cfg.mode.get == TcpServerMode =>
         ParServer(cfg.port, cfg.simpleFormat).run()
+      case Some(cfg) if cfg.mode.get == WebServerMode =>
+        WebServer.run(cfg.port)
       case Some(cfg) if cfg.mode.get == NameParsing =>
         val result = scientificNameParser.fromString(cfg.name)
         println {
