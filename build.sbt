@@ -59,8 +59,9 @@ val noPublishingSettings = Seq(
 
 /////////////////////// DEPENDENCIES /////////////////////////
 
+val spark       = "org.apache.spark"   %% "spark-core"             % "1.6.1" % Provided
 val shapeless   = "com.chuusai"        %% "shapeless"              % "2.3.0"
-val json4s      = "org.json4s"         %% "json4s-jackson"         % "3.3.0"
+val json4s      = "org.json4s"         %% "json4s-jackson"         % "3.2.10"
 val javaUuid    = "com.fasterxml.uuid" %  "java-uuid-generator"    % "3.1.4"
 val lang3       = "org.apache.commons" %  "commons-lang3"          % "3.4"
 val parboiled   = "org.globalnames"    %% "parboiled"              % "2.1.2.2"
@@ -71,7 +72,7 @@ val specs2core  = "org.specs2"         %% "specs2-core"            % "3.6.6" % T
 /////////////////////// PROJECTS /////////////////////////
 
 lazy val root = project.in(file("."))
-  .aggregate(parser, examples, runner, web)
+  .aggregate(parser, exampleJavaScala, runner, web, sparkPython)
   .settings(noPublishingSettings: _*)
   .settings(
     crossScalaVersions := Seq("2.10.6", "2.11.7")
@@ -127,12 +128,21 @@ lazy val runner = (project in file("./runner"))
     buildInfoPackage := "org.globalnames.runner"
   )
 
-lazy val examples = (project in file("./examples/java-scala"))
+lazy val exampleJavaScala = (project in file("./examples/java-scala"))
   .dependsOn(parser)
   .settings(commonSettings: _*)
   .settings(noPublishingSettings: _*)
   .settings(
     name := "gnparser-examples"
+  )
+
+lazy val exampleSpark = (project in file("./examples/spark"))
+  .dependsOn(parser)
+  .settings(commonSettings: _*)
+  .settings(noPublishingSettings: _*)
+  .settings(
+    name := "gnparser-example-spark",
+    libraryDependencies ++= Seq(spark)
   )
 
 lazy val web = (project in file("./web"))
@@ -145,4 +155,16 @@ lazy val web = (project in file("./web"))
     packageName := "gnparser-web",
     pipelineStages := Seq(digest, gzip),
     libraryDependencies ++= Seq(specs2 % Test)
+  )
+
+lazy val sparkPython = (project in file("./spark-python"))
+  .dependsOn(parser)
+  .settings(commonSettings: _*)
+  .settings(publishingSettings: _*)
+  .settings(
+    name := "gnparser-spark-python",
+    libraryDependencies ++= Seq(spark),
+    projectDependencies := Seq(
+      (projectID in parser).value.exclude("org.json4s", "json4s-jackson_2.10")
+    )
   )
