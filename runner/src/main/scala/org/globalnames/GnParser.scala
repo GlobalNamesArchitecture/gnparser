@@ -4,6 +4,7 @@ import java.io.{BufferedWriter, FileWriter}
 
 import parser.ScientificNameParser.{instance ⇒ scientificNameParser}
 import parser.runner.web.controllers.WebServer
+import parser.runner.tcp.TcpServer
 import runner.BuildInfo
 
 import scala.collection.parallel.ForkJoinTaskSupport
@@ -66,7 +67,7 @@ object GnParser {
         startFileParse(cfg.inputFile.get, cfg.outputFile.get,
                        cfg.threadsNumber, cfg.simpleFormat)
       case Some(cfg) if cfg.mode.get == TcpServerMode =>
-        ParServer(cfg.port, cfg.simpleFormat).run()
+        TcpServer.run(cfg.port, cfg.simpleFormat)
       case Some(cfg) if cfg.mode.get == WebServerMode =>
         WebServer.run(cfg.port)
       case Some(cfg) if cfg.mode.get == NameParsing =>
