@@ -5,7 +5,7 @@ package controllers
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Directives._
-import akka.stream.ActorMaterializer
+import akka.stream.{ActorMaterializer, Materializer}
 import spray.json._
 import spray.json.DefaultJsonProtocol
 import views.{MenuItem, MenuItemContent, html}
@@ -13,13 +13,18 @@ import models.{NamesRequest, NamesResponse}
 import ScientificNameParser.{instance => snp}
 import akkahttptwirl.TwirlSupport._
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
+import scala.concurrent.ExecutionContextExecutor
 
 trait Protocols extends DefaultJsonProtocol {
-  implicit val nameRequestFormat   = jsonFormat1(NamesRequest.apply)
+  implicit val nameRequestFormat  = jsonFormat1(NamesRequest.apply)
   implicit val nameResponseFormat = jsonFormat1(NamesResponse.apply)
 }
 
-object WebServer extends Protocols {
+trait Service extends Protocols {
+  implicit val system: ActorSystem
+  implicit def executor: ExecutionContextExecutor
+  implicit val materializer: Materializer
+
   private val (indexMenu, parserMenu) = {
     val prs = MenuItemContent("Parser", "/")
     val api = MenuItemContent("API", "/doc/api")
@@ -69,12 +74,14 @@ object WebServer extends Protocols {
     pathPrefix("public") {
       getFromResourceDirectory("public")
     }
+}
+
+object WebServer extends Service {
+  override implicit val system = ActorSystem("global-names-web-system")
+  override implicit val materializer = ActorMaterializer()
+  override implicit val executor = system.dispatcher
 
   def run(port: Int): Unit = {
-    implicit val system = ActorSystem("global-names-web-system")
-    implicit val materializer = ActorMaterializer()
-    implicit val executionContext = system.dispatcher
-
     Http().bindAndHandle(route, "localhost", port)
     println(s"Server online at http://localhost:$port/")
   }
