@@ -2,7 +2,7 @@ import sbt.Keys._
 
 val commonSettings = Seq(
   version := "0.3.0-SNAPSHOT",
-  scalaVersion := "2.11.7",
+  scalaVersion := "2.11.8",
   organization := "org.globalnames",
   homepage := Some(new URL("http://globalnames.org/")),
   description := "Fast and elegant parser for taxonomic scientific names",
