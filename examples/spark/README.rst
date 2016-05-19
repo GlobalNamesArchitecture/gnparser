@@ -1,6 +1,9 @@
 Apache Spark
 ------------
 
+To run these examples `download <http://spark.apache.org/downloads.html>`_
+and install Apache Spark version ``1.6.1``
+
 Scala
 ~~~~~
 
@@ -8,19 +11,15 @@ Scala
 </spark/src/main/scala/org/globalnames/parser/examples/ParserSpark.scala>`_
 is an SBT subproject. To run it complete steps as follows:
 
-1. get a working `Apache Spark <http://spark.apache.org/downloads.html>`_
-environment of version ``1.6.1``
-2. build a fat-jar of example with ``sbt ";++2.10.6;exampleSpark/assembly"``
-3. run it with Spark by executing
-``$SPARK_HOME/bin/spark-submit ./examples/spark/target/scala-2.10/gnparser-example-spark-assembly-0.3.0-SNAPSHOT.jar``
+1. build a fat-jar of the example with ``sbt ";++2.10.6;exampleSpark/assembly"``
+
+2. run it with Spark by executing ``$SPARK_HOME/bin/spark-submit ./examples/spark/target/scala-2.10/gnparser-example-spark-assembly-0.3.0-SNAPSHOT.jar``
 
 Python
 ~~~~~~
 
-1. build a fat-jar of ``spark-python`` project with
-``sbt ";++2.10.6;sparkPython/assembly"``. The project provides a thin wrapper
-that allows to transform `RDD[String]` of input scientific names to
-`RDD[String]` of parsed results rendered to compact JSON strings.
+1. build a fat-jar of the ``gnparser's spark-python`` project with ``sbt ";++2.10.6;sparkPython/assembly"``. The project provides a thin wrapper for allowing transformation of input (`RDD[String]` scientific names) to the output (`RDD[String]` parsed results in compact JSON format).
+
 2. run ``pyspark`` with command:
 
 .. code:: bash
@@ -39,7 +38,7 @@ that allows to transform `RDD[String]` of input scientific names to
         result = parser.parse(_py2java(sc, names))
         return _java2py(sc, result)
 
-4. now names can be parsed in your program as follows:
+4. now scientific name strings can be parsed in your program as follows:
 
 .. code:: python
 

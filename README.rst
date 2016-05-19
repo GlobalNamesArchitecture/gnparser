@@ -96,6 +96,7 @@ Features
 -  Can run as a command line application
 -  Can run as a socket server
 -  Can run as a web server
+-  Can be integrated into Apache Spark-based projects
 -  Can be scaled to many CPUs and computers
 -  Calculates a stable UUID version 5 ID from the content of a string
 
@@ -395,7 +396,9 @@ Calculation of UUID version 5 can be done in the following way:
 Apache Spark
 ~~~~~~~~~~~~
 
-`README </examples/spark/README.rst>`_
+`examples/spark/README.rst </examples/spark/README.rst>`_
+describes how to use ``gnparser`` with Scala or Python in Apache Spark
+projects.
 
 Java
 ~~~~
