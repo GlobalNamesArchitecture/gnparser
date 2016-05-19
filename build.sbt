@@ -72,7 +72,7 @@ val specs2core  = "org.specs2"         %% "specs2-core"            % "3.6.6" % T
 /////////////////////// PROJECTS /////////////////////////
 
 lazy val root = project.in(file("."))
-  .aggregate(parser, exampleJavaScala, runner, web, sparkPython)
+  .aggregate(parser, exampleJavaScala, runner, sparkPython)
   .settings(noPublishingSettings: _*)
   .settings(
     crossScalaVersions := Seq("2.10.6", "2.11.7")
@@ -143,18 +143,6 @@ lazy val exampleSpark = (project in file("./examples/spark"))
   .settings(
     name := "gnparser-example-spark",
     libraryDependencies ++= Seq(spark)
-  )
-
-lazy val web = (project in file("./web"))
-  .dependsOn(parser)
-  .enablePlugins(PlayScala)
-  .settings(commonSettings: _*)
-  .settings(noPublishingSettings: _*)
-  .settings(
-    name := "gnparser-web",
-    packageName := "gnparser-web",
-    pipelineStages := Seq(digest, gzip),
-    libraryDependencies ++= Seq(specs2 % Test)
   )
 
 lazy val sparkPython = (project in file("./spark-python"))
