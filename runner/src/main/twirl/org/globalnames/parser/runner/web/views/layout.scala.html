@@ -1,4 +1,4 @@
-@import views.MenuItem
+@import org.globalnames.parser.runner.web.views.MenuItem
 
 @(title: String, menu: Seq[MenuItem])(content: Html)
 <!DOCTYPE html>
@@ -8,11 +8,11 @@
     <title>@title</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="stylesheet" 
-      href="@routes.Assets.versioned("stylesheets/screen.css")">
+      href="/public/stylesheets/screen.css">
     <link rel="stylesheet"
-      href="@routes.Assets.versioned("stylesheets/parser.css")">
+      href="/public/stylesheets/parser.css">
     <link rel="icon" type="image/x-icon"
-      href="@routes.Assets.versioned("images/favicon.ico")">
+      href="/public/images/favicon.ico">
   </head>
   <body class="wrap">
     <header role="banner">
@@ -34,9 +34,9 @@
       <div class="grid">
         <div class="unit one-quarter center-on-mobiles">
           <div class="logo">
-            <a href="@routes.Application.api()">
+            <a href="/doc/api">
               <span class="sr-only">GlobalNames</span>
-              <img src="@routes.Assets.versioned("images/gna.svg")" width="72" alt="GNA Logo">
+              <img src="/public/images/gna.svg" width="72" alt="GNA Logo">
             </a>
           </div>
         </div>

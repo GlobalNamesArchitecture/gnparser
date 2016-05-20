@@ -2,7 +2,7 @@ import sbt.Keys._
 
 val commonSettings = Seq(
   version := "0.3.0-SNAPSHOT",
-  scalaVersion := "2.11.7",
+  scalaVersion := "2.11.8",
   organization := "org.globalnames",
   homepage := Some(new URL("http://globalnames.org/")),
   description := "Fast and elegant parser for taxonomic scientific names",
@@ -59,23 +59,31 @@ val noPublishingSettings = Seq(
 
 /////////////////////// DEPENDENCIES /////////////////////////
 
-val spark       = "org.apache.spark"   %% "spark-core"             % "1.6.1" % Provided
-val shapeless   = "com.chuusai"        %% "shapeless"              % "2.3.0"
-val json4s      = "org.json4s"         %% "json4s-jackson"         % "3.2.10"
-val javaUuid    = "com.fasterxml.uuid" %  "java-uuid-generator"    % "3.1.4"
-val lang3       = "org.apache.commons" %  "commons-lang3"          % "3.4"
-val parboiled   = "org.globalnames"    %% "parboiled"              % "2.1.2.2"
-val scalaz      = "org.scalaz"         %% "scalaz-core"            % "7.1.7"
-val scopt       = "com.github.scopt"   %% "scopt"                  % "3.4.0"
-val specs2core  = "org.specs2"         %% "specs2-core"            % "3.6.6" % Test
+val akkaV        = "2.4.6"
+
+val akkaHttpCore     = "com.typesafe.akka"  %% "akka-http-core"                    % akkaV
+val akkaHttp         = "com.typesafe.akka"  %% "akka-http-experimental"            % akkaV
+val akkaActor        = "com.typesafe.akka"  %% "akka-actor"                        % akkaV
+val akkaJson         = "com.typesafe.akka"  %% "akka-http-spray-json-experimental" % akkaV
+val spark            = "org.apache.spark"   %% "spark-core"                        % "1.6.1" % Provided
+val shapeless        = "com.chuusai"        %% "shapeless"                         % "2.3.0"
+val json4s           = "org.json4s"         %% "json4s-jackson"                    % "3.2.10"
+val javaUuid         = "com.fasterxml.uuid" %  "java-uuid-generator"               % "3.1.4"
+val lang3            = "org.apache.commons" %  "commons-lang3"                     % "3.4"
+val parboiled        = "org.globalnames"    %% "parboiled"                         % "2.1.2.2"
+val scalaz           = "org.scalaz"         %% "scalaz-core"                       % "7.1.7"
+val scopt            = "com.github.scopt"   %% "scopt"                             % "3.4.0"
+val specs2core       = "org.specs2"         %% "specs2-core"                       % "3.6.6" % Test
+val akkaHttpTestkit  = "com.typesafe.akka"  %% "akka-http-testkit"                 % akkaV   % Test
+val scalatest        = "org.scalatest"      %% "scalatest"                         % "2.2.6" % Test
 
 /////////////////////// PROJECTS /////////////////////////
 
 lazy val root = project.in(file("."))
-  .aggregate(parser, exampleJavaScala, runner, web, sparkPython)
+  .aggregate(parser, exampleJavaScala, runner, sparkPython)
   .settings(noPublishingSettings: _*)
   .settings(
-    crossScalaVersions := Seq("2.10.6", "2.11.7")
+    crossScalaVersions := Seq("2.10.6", "2.11.8")
   )
 
 lazy val parser = (project in file("./parser"))
@@ -84,6 +92,7 @@ lazy val parser = (project in file("./parser"))
   .settings(publishingSettings: _*)
   .settings(
     name := "gnparser",
+    crossScalaVersions := Seq("2.10.6", "2.11.8"),
 
     buildInfoKeys := Seq[BuildInfoKey](version),
     buildInfoPackage := "org.globalnames.parser",
@@ -112,18 +121,22 @@ lazy val benchmark = (project in file("./benchmark"))
 
 lazy val runner = (project in file("./runner"))
   .dependsOn(parser)
-  .enablePlugins(JavaAppPackaging, BuildInfoPlugin)
+  .enablePlugins(JavaAppPackaging, BuildInfoPlugin, SbtTwirl)
   .settings(commonSettings: _*)
   .settings(noPublishingSettings: _*)
   .settings(
     name := "gnparser-runner",
     executableScriptName := "gnparse",
+    crossScalaVersions := Seq("2.11.8"),
     packageName := "gnparser",
     bashScriptExtraDefines := Seq(
       s"""declare -r script_name="${executableScriptName.value}""""
     ),
-    libraryDependencies ++= Seq(scopt),
+    libraryDependencies ++= Seq(scopt, akkaHttp, akkaHttpCore, akkaActor,
+                                akkaJson, akkaHttpTestkit, scalatest),
     mainClass in Compile := Some("org.globalnames.GnParser"),
+    mainClass in reStart :=
+      Some("org.globalnames.parser.runner.web.controllers.WebServer"),
     buildInfoKeys := Seq[BuildInfoKey](version),
     buildInfoPackage := "org.globalnames.runner"
   )
@@ -143,18 +156,6 @@ lazy val exampleSpark = (project in file("./examples/spark"))
   .settings(
     name := "gnparser-example-spark",
     libraryDependencies ++= Seq(spark)
-  )
-
-lazy val web = (project in file("./web"))
-  .dependsOn(parser)
-  .enablePlugins(PlayScala)
-  .settings(commonSettings: _*)
-  .settings(noPublishingSettings: _*)
-  .settings(
-    name := "gnparser-web",
-    packageName := "gnparser-web",
-    pipelineStages := Seq(digest, gzip),
-    libraryDependencies ++= Seq(specs2 % Test)
   )
 
 lazy val sparkPython = (project in file("./spark-python"))
