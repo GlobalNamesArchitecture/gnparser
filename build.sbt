@@ -74,7 +74,7 @@ val parboiled        = "org.globalnames"    %% "parboiled"                      
 val scalaz           = "org.scalaz"         %% "scalaz-core"                       % "7.1.7"
 val scopt            = "com.github.scopt"   %% "scopt"                             % "3.4.0"
 val specs2core       = "org.specs2"         %% "specs2-core"                       % "3.6.6" % Test
-val akkaHttpTestkit  = "com.typesafe.akka"  %% "akka-http-testkit"                 % akkaV % Test
+val akkaHttpTestkit  = "com.typesafe.akka"  %% "akka-http-testkit"                 % akkaV   % Test
 val scalatest        = "org.scalatest"      %% "scalatest"                         % "2.2.6" % Test
 
 /////////////////////// PROJECTS /////////////////////////
@@ -83,7 +83,7 @@ lazy val root = project.in(file("."))
   .aggregate(parser, exampleJavaScala, runner, sparkPython)
   .settings(noPublishingSettings: _*)
   .settings(
-    crossScalaVersions := Seq("2.10.6", "2.11.7")
+    crossScalaVersions := Seq("2.10.6", "2.11.8")
   )
 
 lazy val parser = (project in file("./parser"))
@@ -92,6 +92,7 @@ lazy val parser = (project in file("./parser"))
   .settings(publishingSettings: _*)
   .settings(
     name := "gnparser",
+    crossScalaVersions := Seq("2.10.6", "2.11.8"),
 
     buildInfoKeys := Seq[BuildInfoKey](version),
     buildInfoPackage := "org.globalnames.parser",
@@ -126,6 +127,7 @@ lazy val runner = (project in file("./runner"))
   .settings(
     name := "gnparser-runner",
     executableScriptName := "gnparse",
+    crossScalaVersions := Seq("2.11.8"),
     packageName := "gnparser",
     bashScriptExtraDefines := Seq(
       s"""declare -r script_name="${executableScriptName.value}""""
