@@ -221,7 +221,7 @@ instead <#dependency-declaration-for-java-or-scala>`_.
 Requirements
 ~~~~~~~~~~~~
 
-Java Run Environment (JRE) version >= 1.6 (>= 1.8 for Web server)
+Java Run Environment (JRE) version >= 1.6 (>= 1.8 for `runner` project)
 
 Released Files
 ~~~~~~~~~~~~~~
@@ -230,10 +230,8 @@ Released Files
 File                              Description
 ===============================   ===============================================
 ``gnparser-assembly-0.3.0.jar``   `Fat Jar <#fat-jar>`_
-``gnparser-0.3.0.zip``            `Command line tool and socket
+``gnparser-0.3.0.zip``            `Command line tool, web and socket
                                   server <#command-line-tool-and-socket-server>`_
-``gnparser-web-0.3.0.zip``        `Web service and REST API
-                                  <#web-service-and-rest-api>`_
 ``release-0.3.0.zip``             Source code's zip file
 ``release-0.3.0.tar.gz``          Source code's tar file
 ===============================   ===============================================
@@ -288,74 +286,49 @@ To parse one name
 
 ::
 
-    gnparse "Parus major Linnaeus, 1788"
+    gnparse name "Parus major Linnaeus, 1788"
 
 To parse names from a file (one name per line).
 
 ::
 
-    gnparse -input file_with_names.txt [-output output_file.json]
+    gnparse file --input file_with_names.txt [--output output_file.json --threads 8]
 
 To see help
 
 ::
 
-    gnparse -help
+    gnparse --help
 
 Usage as a Socket Server
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 Use socket (TCP/IP) server when ``gnparser`` library cannot be imported
-directly by a programming language. Setting ``-port`` is optional, 4334
+directly by a programming language. Setting ``--port`` is optional, 4334
 is the default port.
 
 ::
 
-    gnparse -server -port 1234
+    gnparse socket --port 1234
 
 To test the socket connection use ``telnet localhost 1234``, enter a
 name and press ``Enter``
 
-Web Service and REST API
-------------------------
+Usage as a REST API Interface
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Installation on Linux/Mac
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. code:: bash
-
-    wget https://github.com/GlobalNamesArchitecture/gnparser/releases/download/release-0.3.0/gnparser-web-0.3.0.zip
-    unzip gnparser-web-0.3.0.zip
-    sudo rm -rf /opt/gnparser-web
-    sudo mv gnparser-web-0.3.0 /opt/gnparser-web
-    sudo rm -f /usr/local/bin/gnparser-web
-    sudo ln -s /opt/gnparser-web/bin/gnparser-web /usr/local/bin
-
-To start web server in production mode on http://0.0.0.0:9000
+Use web-server as an HTTP alternative to TCP/IP server. Setting ``--port`` is
+optional, 4334 is the default port. To start web server in production mode on
+http://0.0.0.0:9000
 
 ::
 
-    gnparser-web
-
-Installation on Windows
-~~~~~~~~~~~~~~~~~~~~~~~
-
-1. Download
-   `gnparser-web-0.3.0.zip <https://github.com/GlobalNamesArchitecture/gnparser/releases/download/release-0.3.0/gnparser-web-0.3.0.zip>`_
-2. Unzip it, and then launch CMD at that path
-3. Run ``cd gnparser-web-0.3.0``
-4. Run ``.\bin\gnparser-web.bat``
-
-You can open it in a browser at
-`http://localhost:9000 <http://localhost:9000>`_.
-
-REST API Interface
-~~~~~~~~~~~~~~~~~~
+    gnparse web --port 9000
 
 Make sure to CGI-escape name strings for GET requests. An '&' character
 needs to be converted to '%26'
 
--  ``GET /api?names=["Aus bus", "Aus bus Linn. 1758"]``
+-  ``GET /api?q=Aus+bus|Aus+bus+D.+%26+M.,+1870`
 -  ``POST /api`` with request body of JSON array of strings
 
 Usage as a Library
@@ -509,13 +482,34 @@ Command                 Description
 Docker container
 ----------------
 
-For usage with Docker containers read `gnparser container
-instructions <https://github.com/gn-docker/gnparser>`_.
+Prebuilt container image can be found on
+`dockerhub <https://hub.docker.com/r/gnames/gnparser/>`_
+
+Usage
+-----
+
+To install/update container
+
+.. code:: bash
+
+    docker pull gnames/gnparser
+
+To run web server
+
+.. code:: bash
+
+    docker run -d -p 80:4334 --name gnparser gnames/gnparser web
+
+To run socket server
+
+.. code:: bash
+
+    docker run -d -p 4334:4334 --name gnparser gnames/gnparser socket
 
 Contributors
 ------------
 
-+ Alexander Myltsev `http://myltsev.name <http://myltsev.name>`_ `alexander-myltsev@github <https://github.com/alexander-myltsev>`_
++ Alexander Myltsev `http://myltsev.com <http://myltsev.com>`_ `alexander-myltsev@github <https://github.com/alexander-myltsev>`_
 + Dmitry Mozzherin `dimus@github <https://github.com/dimus>`_
 
 License
