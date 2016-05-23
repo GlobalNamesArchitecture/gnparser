@@ -138,7 +138,8 @@ lazy val runner = (project in file("./runner"))
     mainClass in reStart :=
       Some("org.globalnames.parser.runner.web.controllers.WebServer"),
     buildInfoKeys := Seq[BuildInfoKey](version),
-    buildInfoPackage := "org.globalnames.runner"
+    buildInfoPackage := "org.globalnames.runner",
+    dockerRepository := Some("gnames")
   )
 
 lazy val exampleJavaScala = (project in file("./examples/java-scala"))
