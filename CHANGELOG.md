@@ -8,7 +8,7 @@ Version 0.3.0 (2016-05-23)
 - become Spark friendly (#280)
 - add simplified output form (#281, #282)
 - move UUID generation to Utils (#273)
-- publish docker right from `runner`
+- publish docker right from `runner` (#250)
 
 Version 0.2.0 (2015-11-26)
 --------------------------
