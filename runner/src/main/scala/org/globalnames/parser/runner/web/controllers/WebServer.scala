@@ -81,11 +81,11 @@ object WebServer extends Service {
   override implicit val materializer = ActorMaterializer()
   override implicit val executor = system.dispatcher
 
-  def run(port: Int): Unit = {
-    Http().bindAndHandle(route, "localhost", port)
-    println(s"Server online at http://localhost:$port/")
+  def run(host: String, port: Int): Unit = {
+    Http().bindAndHandle(route, host, port)
+    println(s"Server online at http://$host:$port/")
   }
 
   def main(args: Array[String]): Unit =
-    run(8080)
+    run("0.0.0.0", 8080)
 }
