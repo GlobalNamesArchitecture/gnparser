@@ -28,7 +28,7 @@ object TcpServer {
     boundFuture.onSuccess { case Tcp.Bound(address) =>
       println(
         s"""Bound Global Names TCP server to $address
-           |Run `telnet localhost $port`, type something and press RETURN
+           |Run `telnet $host $port`, type something and press RETURN
            |Type `STOP` to exit
            |""".stripMargin)
     }
