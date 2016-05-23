@@ -29,8 +29,8 @@ Try it as a command line tool under Linux/Mac:
     sudo mv gnparser-0.3.0 /opt/gnparser
     sudo rm -f /usr/local/bin/gnparse
     sudo ln -s /opt/gnparser/bin/gnparse /usr/local/bin
-    gnparse "Homo sapiens Linnaeus"
-    gnparse -help
+    gnparse name "Homo sapiens Linnaeus"
+    gnparse --help
 
 ``gnparser`` is also `dockerized <https://hub.docker.com/r/gnames/gnparser>`_:
 
@@ -66,13 +66,12 @@ scientific names parser --
 written in Ruby. Both projects were developed as a part of `Global Names
 Architecture <http://globalnames.org>`_.
 
-It is common to use regular expressions for parsing scientific names,
-and this approach works well at extracting canonical forms in simple
-cases. However for complex scientific names and for breaking names into
-their semantic elements an approach using regular expressions often fails, unable to
-overcome the recursive nature of data embedded in names. By contrast,
-``gnparser`` is able to deal with the most complex scientific name
-strings.
+It is common to use regular expressions for parsing scientific names, and this
+approach works well at extracting canonical forms in simple cases. However for
+complex scientific names and for breaking names into their semantic elements an
+approach using regular expressions often fails, unable to overcome the
+recursive nature of data embedded in names. By contrast, ``gnparser`` is able
+to deal with the most complex scientific name strings.
 
 ``gnparser`` takes a name string like
 ``Drosophila (Sophophora) melanogaster Meigen, 1830`` and returns back
@@ -86,7 +85,7 @@ and output.
 Features
 --------
 
--  Fast (~5x faster than `biodiversity
+-  Fast (~7x faster than biodiversity
    gem <https://github.com/GlobalNamesArchitecture/biodiversity>`_),
    rock solid and elegant
 -  Extracts all elements from a name, not only a canonical form
@@ -131,7 +130,8 @@ split them into "name part" and "authorship part". Such practice is not
 very effective for names like "*Prosthechea cochleata* (L.) W.E.Higgins
 *var. grandiflora* (Mutel) Christenson". Combination of
 ``canonical_extended`` with the ``authorship`` from the lowest taxon
-will do the job better.
+will do the job better. You can also use ``--simple`` flag for ``gnparse``
+command line tool
 
 Figuring out if names are well-formed
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
