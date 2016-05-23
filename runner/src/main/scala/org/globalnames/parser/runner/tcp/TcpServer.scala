@@ -14,12 +14,12 @@ import scala.concurrent.duration._
 import ScientificNameParser.{instance => snp}
 
 object TcpServer {
-  def run(port: Int, simpleFormat: Boolean): Unit = {
+  def run(host: String, port: Int, simpleFormat: Boolean): Unit = {
     implicit val system = ActorSystem("global-names-tcp-system")
     val server = system.actorOf(Props(new TcpServiceActor(simpleFormat)),
-                                name = "global-names-web-system")
+                                name = "global-names-tcp-actor")
 
-    val endpoint = new InetSocketAddress("localhost", port)
+    val endpoint = new InetSocketAddress(host, port)
     implicit val bindingTimeout = Timeout(1.second)
     import system.dispatcher
 
@@ -121,7 +121,6 @@ class TcpServiceConnection(tcpConnection: ActorRef, simpleFormat: Boolean)
         context.become(idle)
 
       case SentOk =>
-        // for brevity we don't interpret STOP commands here
         tcpConnection ! Tcp.Write(queuedData.head, ack = SentOk)
         context.become(waitingForAckWithQueuedData(queuedData.tail, closed))
 
