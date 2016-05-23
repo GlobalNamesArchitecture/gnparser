@@ -303,14 +303,11 @@ Usage: $script_name [name] [options]
 
 Parse one name: $script_name "Parus major Linnaeus, 1758"
 
-  -h | -help           print this message
+  -help                Print this message: Java launcher script usage.
+                       Use "-h" or "--help" for help on gnparser library usage
 
-  -server [-port 1234] run a server (default: -port 4334)
-  -input file_with_names.txt [-output output_file.json]
-                       parse names from a file (default output: output.json)
-
-  -v | -verbose        this runner is chattier
-  -d | -debug          set sbt log level to debug
+  -v | -verbose        This runner is chattier
+  -d | -debug          Set sbt log level to debug
   -no-version-check    Don't run the java version check.
   -main <classname>    Define a custom main class
   -jvm-debug <port>    Turn on JVM debugging, open at the given port.
