@@ -32,13 +32,13 @@ Try it as a command line tool under Linux/Mac:
     gnparse "Homo sapiens Linnaeus"
     gnparse -help
 
-``gnparser`` is also `dockerized <https://github.com/gn-docker/gnparser>`_:
+``gnparser`` is also `dockerized <https://hub.docker.com/r/gnames/gnparser>`_:
 
 .. code:: bash
 
     docker pull gnames/gnparser
     # to run web-server
-    docker run -d -p 80:9000 --name gnparser gnames/gnparser
+    docker run -p 80:4334 --name gnparser gnames/gnparser web
     # to run socket server
     docker run -d -p 4334:4334 --name gnparser gnames/gnparser socket
 

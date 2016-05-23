@@ -46,8 +46,8 @@ object GnParser {
         opt[Int]('t', "threads").valueName("<threads_number>")
           .action { (x, c) => c.copy(threadsNumber = x.some)}
       )
-      cmd("server").action { (_, c) => c.copy(mode = TcpServerMode.some) }
-                   .text("server command").children(
+      cmd("socket").action { (_, c) => c.copy(mode = TcpServerMode.some) }
+                   .text("socket server command").children(
         opt[Int]('p', "port").valueName("<port>")
                              .action { (x, c) => c.copy(port = x)},
         opt[String]('h', "host").valueName("<host>")
