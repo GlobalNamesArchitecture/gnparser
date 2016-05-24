@@ -340,7 +340,7 @@ class Parser(val input: ParserInput,
   }
 
   def word: RuleWithWarning[SpeciesWord] = rule {
-    !(rankUninomial | approximation) ~ (word3 | word2 | word1) ~
+    !(authorPre | rankUninomial | approximation) ~ (word3 | word2 | word1) ~
       &(spaceCharsEOI ++ "(.,:;") ~> {
       (pos: CapturePosition) =>
         val sw = SpeciesWord(AstNode.id, pos)
