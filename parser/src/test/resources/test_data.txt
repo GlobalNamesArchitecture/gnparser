@@ -25,6 +25,18 @@ Döringina Ihering 1929 (synonym)
 Pseudocercospora Speg., Francis Jack.-Drake.
 {"name_string_id":"25b015c7-a099-5bf6-91a9-cc8fde31f388","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Pseudocercospora Speg., Francis Jack.-Drake.","normalized":"Pseudocercospora Speg. & Francis Jack.-Drake.","canonical_name":{"value":"Pseudocercospora"},"hybrid":false,"surrogate":false,"virus":false,"details":[{"uninomial":{"value":"Pseudocercospora","authorship":{"value":"Speg. & Francis Jack.-Drake.","basionym_authorship":{"authors":["Speg.","Francis Jack.-Drake."]}}}}],"positions":[["uninomial",0,16],["author_word",17,22],["author_word",24,31],["author_word",32,37],["author_word",38,44]]}
 25b015c7-a099-5bf6-91a9-cc8fde31f388|Pseudocercospora Speg., Francis Jack.-Drake.|Pseudocercospora|Pseudocercospora|Speg. & Francis Jack.-Drake.||1
+
+Aaaba de Laubenfels, 1936
+{"name_string_id":"abead069-293d-5299-badd-c10c0f5545fb","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Aaaba de Laubenfels, 1936","normalized":"Aaaba de Laubenfels 1936","canonical_name":{"value":"Aaaba"},"hybrid":false,"surrogate":false,"virus":false,"details":[{"uninomial":{"value":"Aaaba","authorship":{"value":"de Laubenfels 1936","basionym_authorship":{"authors":["de Laubenfels"],"year":{"value":"1936"}}}}}],"positions":[["uninomial",0,5],["author_word",6,8],["author_word",9,19],["year",21,25]]}
+abead069-293d-5299-badd-c10c0f5545fb|Aaaba de Laubenfels, 1936|Aaaba|Aaaba|de Laubenfels 1936|1936|1
+
+Abbottia F. von Mueller, 1875
+{"name_string_id":"34738de5-0112-56f0-85f2-0f4e815161b5","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Abbottia F. von Mueller, 1875","normalized":"Abbottia F. von Mueller 1875","canonical_name":{"value":"Abbottia"},"hybrid":false,"surrogate":false,"virus":false,"details":[{"uninomial":{"value":"Abbottia","authorship":{"value":"F. von Mueller 1875","basionym_authorship":{"authors":["F. von Mueller"],"year":{"value":"1875"}}}}}],"positions":[["uninomial",0,8],["author_word",9,11],["author_word",12,15],["author_word",16,23],["year",25,29]]}
+34738de5-0112-56f0-85f2-0f4e815161b5|Abbottia F. von Mueller, 1875|Abbottia|Abbottia|F. von Mueller 1875|1875|1
+
+Abella von Heyden, 1826
+{"name_string_id":"7dc5b624-1232-5072-bc4c-8eebde6c48b2","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Abella von Heyden, 1826","normalized":"Abella von Heyden 1826","canonical_name":{"value":"Abella"},"hybrid":false,"surrogate":false,"virus":false,"details":[{"uninomial":{"value":"Abella","authorship":{"value":"von Heyden 1826","basionym_authorship":{"authors":["von Heyden"],"year":{"value":"1826"}}}}}],"positions":[["uninomial",0,6],["author_word",7,10],["author_word",11,17],["year",19,23]]}
+7dc5b624-1232-5072-bc4c-8eebde6c48b2|Abella von Heyden, 1826|Abella|Abella|von Heyden 1826|1826|1
 #>
 
 #SECTION: Uninomial with an author and a year<

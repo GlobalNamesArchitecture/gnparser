@@ -174,7 +174,7 @@ class Parser(val input: ParserInput,
   }
 
   def species: RuleWithWarning[Species] = rule {
-    word ~ (softSpace ~ authorship).? ~ &(spaceCharsEOI ++ "(,:.") ~> {
+    word ~ (softSpace ~ authorship).? ~ &(spaceCharsEOI ++ "(,:.;") ~> {
       (sw: NodeWarned[SpeciesWord], a: Option[NodeWarned[Authorship]]) =>
         NodeWarned(Species(AstNode.id, sw.astNode.pos, a.map{_.astNode}),
              (sw.warns.some |+| a.map{_.warns}).get)
@@ -325,7 +325,7 @@ class Parser(val input: ParserInput,
   }
 
   def capWord2: RuleWithWarning[UninomialWord] = rule {
-    capWord1 ~ '-' ~ word1 ~ &(spaceCharsEOI ++ '(') ~> {
+    capWord1 ~ '-' ~ word1 ~> {
       (uw: NodeWarned[UninomialWord], wPos: CapturePosition) =>
         NodeWarned(uw.astNode.copy(pos = CapturePosition(uw.astNode.pos.start,
                                                          wPos.end)),
@@ -340,7 +340,7 @@ class Parser(val input: ParserInput,
   }
 
   def word: RuleWithWarning[SpeciesWord] = rule {
-    !(rankUninomial | approximation) ~ (word3 | word2 | word1) ~
+    !(authorPre | rankUninomial | approximation) ~ (word3 | word2 | word1) ~
       &(spaceCharsEOI ++ "(.,:;") ~> {
       (pos: CapturePosition) =>
         val sw = SpeciesWord(AstNode.id, pos)
@@ -694,7 +694,7 @@ object Parser {
   final val spaceMiscoded = "　 \t\r\n\f_"
   final val spaceChars = CharPredicate(" " + spaceMiscoded)
   final val spaceCharsEOI = spaceChars ++ EOI ++ ";"
-  final val wordBorderChar = spaceChars ++ CharPredicate(";.,:)]")
+  final val wordBorderChar = spaceChars ++ CharPredicate(";.,:()]")
   final val sciCharsExtended = "æœſàâåãäáçčéèíìïňññóòôøõöúùüŕřŗššşž"
   final val sciUpperCharExtended = "ÆŒ"
   final val authCharUpperStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
