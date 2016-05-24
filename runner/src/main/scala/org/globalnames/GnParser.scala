@@ -35,10 +35,15 @@ object GnParser {
     val parser = new scopt.OptionParser[Config]("gnparse") {
       head("gnparse", BuildInfo.version)
       help("help").text("prints this usage text")
-      opt[Unit]('s', "simple").text("simple CSV format")
+      opt[Unit]('s', "simple").text("return simple CSV format instead of JSON")
         .optional.action { (x, c) => c.copy(simpleFormat = true) }
+      cmd("name").action { (_, c) => c.copy(mode = NameParsing.some) }
+                 .text("parse single scientific name").children(
+        arg[String]("<scientific_name>").required
+          .action { (x, c) => c.copy(name = x) }
+      )
       cmd("file").action { (_, c) => c.copy(mode = InputFileParsing.some) }
-                 .text("file command").children(
+                 .text("parse scientific names from input file").children(
         opt[String]('i', "input").required.valueName("<path_to_input_file>")
           .action { (x, c) => c.copy(inputFile = x.some) },
         opt[String]('o', "output").required.valueName("<path_to_output_file>")
@@ -47,23 +52,18 @@ object GnParser {
           .action { (x, c) => c.copy(threadsNumber = x.some)}
       )
       cmd("socket").action { (_, c) => c.copy(mode = TcpServerMode.some) }
-                   .text("socket server command").children(
+                   .text("run socket server for parsing").children(
         opt[Int]('p', "port").valueName("<port>")
                              .action { (x, c) => c.copy(port = x)},
         opt[String]('h', "host").valueName("<host>")
                                 .action { (x, c) => c.copy(host = x) }
       )
       cmd("web").action { (_, c) => c.copy(mode = WebServerMode.some) }
-                .text("web-api command").children(
+                .text("run web server for parsing").children(
         opt[Int]('p', "port").valueName("<port>")
                              .action { (x, c) => c.copy(port = x) },
         opt[String]('h', "host").valueName("<host>")
                                 .action { (x, c) => c.copy(host = x) }
-      )
-      cmd("name").action { (_, c) => c.copy(mode = NameParsing.some) }
-                 .text("name command").children(
-        arg[String]("scientific name").required
-                                      .action { (x, c) => c.copy(name = x) }
       )
     }
 
