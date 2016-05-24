@@ -3,7 +3,7 @@ package org.globalnames.formatters
 import org.globalnames.parser.ScientificNameParser
 import org.json4s.JsonAST.{JArray, JNothing, JValue}
 import org.json4s.JsonDSL._
-import org.json4s.jackson.JsonMethods._
+import org.json4s.jackson.JsonMethods
 
 import scalaz._
 import Scalaz._
@@ -39,7 +39,7 @@ trait JsonRenderer { parserResult: ScientificNameParser.Result =>
       }
     }
 
-    render(
+    JsonMethods.render(
       ("name_string_id" -> parserResult.input.id.toString) ~
       ("parsed" -> parsed) ~
       ("quality" -> quality) ~
@@ -56,5 +56,9 @@ trait JsonRenderer { parserResult: ScientificNameParser.Result =>
       ("positions" -> positionsJson))
   }
 
-  def renderCompactJson: String = compact(json)
+  def renderCompactJson: String = render(true)
+
+  def render(compact: Boolean): String =
+    if (compact) JsonMethods.compact(json)
+    else JsonMethods.pretty(json)
 }
