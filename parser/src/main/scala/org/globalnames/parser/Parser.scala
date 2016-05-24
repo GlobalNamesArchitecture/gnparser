@@ -174,7 +174,7 @@ class Parser(val input: ParserInput,
   }
 
   def species: RuleWithWarning[Species] = rule {
-    word ~ (softSpace ~ authorship).? ~ &(spaceCharsEOI ++ "(,:") ~> {
+    word ~ (softSpace ~ authorship).? ~ &(spaceCharsEOI ++ "(,:.") ~> {
       (sw: NodeWarned[SpeciesWord], a: Option[NodeWarned[Authorship]]) =>
         NodeWarned(Species(AstNode.id, sw.astNode.pos, a.map{_.astNode}),
              (sw.warns.some |+| a.map{_.warns}).get)
@@ -195,7 +195,7 @@ class Parser(val input: ParserInput,
 
   def rankUninomial: RuleWithWarning[Rank] = rule {
     capturePos(("sect" | "subsect" | "trib" | "subtrib" | "subser" | "ser" |
-      "subgen" | "fam" | "subfam" | "supertrib") ~ '.'.?) ~>
+      "subgen" | "fam" | "subfam" | "supertrib") ~ '.'.?) ~ &(spaceCharsEOI) ~>
       { (p: CapturePosition) => NodeWarned(Rank(AstNode.id, p)) }
   }
 
@@ -340,7 +340,8 @@ class Parser(val input: ParserInput,
   }
 
   def word: RuleWithWarning[SpeciesWord] = rule {
-    (word3 | word2 | word1) ~ &(spaceCharsEOI ++ '(') ~> {
+    !(rankUninomial | approximation) ~ (word3 | word2 | word1) ~
+      &(spaceCharsEOI ++ "(.,:;") ~> {
       (pos: CapturePosition) =>
         val sw = SpeciesWord(AstNode.id, pos)
         val word = input.sliceString(pos.start, pos.end)
