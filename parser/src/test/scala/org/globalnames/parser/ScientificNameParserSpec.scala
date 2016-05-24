@@ -34,17 +34,17 @@ class ScientificNameParserSpec extends Specification {
 
       val jsonDiff = {
         val Diff(changed, added, deleted) = jsonParsed.diff(json)
-        s"""Line:
+        s"""line:
            |$inputStr
-           |Original:
+           |parsed:
            |${pretty(jsonParsed)}
-           |Expected:
+           |test_data:
            |${pretty(json)}
-           |Changed:
+           |changed:
            |${pretty(changed)}
-           |Added:
+           |added:
            |${pretty(added)}
-           |Deleted:
+           |deleted:
            |${pretty(deleted)}""".stripMargin
       }
 
