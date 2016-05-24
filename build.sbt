@@ -106,8 +106,11 @@ lazy val parser = (project in file("./parser"))
 
     initialCommands in console :=
       """import org.globalnames.parser.{ScientificNameParser => SNP, _}
+        |import SNP.instance._
+        |import org.globalnames.parser.Parser._
         |import scala.util.{Failure, Success, Try}
-        |import org.parboiled2._""".stripMargin
+        |import org.parboiled2._
+        |import org.json4s.jackson.JsonMethods._""".stripMargin
   )
 
 lazy val benchmark = (project in file("./benchmark"))
