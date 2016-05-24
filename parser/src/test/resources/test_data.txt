@@ -1588,6 +1588,30 @@ Kinosternidae　Agassiz, 1857
 Melanius:
 {"name_string_id":"0a761224-66db-55b4-b6f0-85de52534125","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Melanius:","normalized":"Melanius","canonical_name":{"value":"Melanius"},"hybrid":false,"surrogate":false,"unparsed_tail":":","virus":false,"details":[{"uninomial":{"value":"Melanius"}}],"positions":[["uninomial",0,8]]}
 0a761224-66db-55b4-b6f0-85de52534125|Melanius:|Melanius|Melanius|||3
+
+Negalasa fumalis Barnes & McDunnough 1913. Next sentence
+{"name_string_id":"45b7343f-d42a-52d5-b0a4-25956d46427b","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"],[2,"Year with period"]],"parser_version":"test_version","verbatim":"Negalasa fumalis Barnes & McDunnough 1913. Next sentence","normalized":"Negalasa fumalis Barnes & McDunnough 1913","canonical_name":{"value":"Negalasa fumalis"},"hybrid":false,"surrogate":false,"unparsed_tail":" Next sentence","virus":false,"details":[{"genus":{"value":"Negalasa"},"specific_epithet":{"value":"fumalis","authorship":{"value":"Barnes & McDunnough 1913","basionym_authorship":{"authors":["Barnes","McDunnough"],"year":{"value":"1913"}}}}}],"positions":[["genus",0,8],["specific_epithet",9,16],["author_word",17,23],["author_word",26,36],["year",37,41]]}
+45b7343f-d42a-52d5-b0a4-25956d46427b|Negalasa fumalis Barnes & McDunnough 1913. Next sentence|Negalasa fumalis|Negalasa fumalis|Barnes & McDunnough 1913|1913|3
+
+Negalasa fumalis. Next sentence
+{"name_string_id":"ce740482-fa87-5d84-b335-1c063fd18de1","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Negalasa fumalis. Next sentence","normalized":"Negalasa fumalis","canonical_name":{"value":"Negalasa fumalis"},"hybrid":false,"surrogate":false,"unparsed_tail":". Next sentence","virus":false,"details":[{"genus":{"value":"Negalasa"},"specific_epithet":{"value":"fumalis"}}],"positions":[["genus",0,8],["specific_epithet",9,16]]}
+ce740482-fa87-5d84-b335-1c063fd18de1|Negalasa fumalis. Next sentence|Negalasa fumalis|Negalasa fumalis|||3
+
+Negalasa fumalis, continuation of a sentence
+{"name_string_id":"7862a3d9-ba4d-5f53-a106-ea048e558f1a","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Negalasa fumalis, continuation of a sentence","normalized":"Negalasa fumalis","canonical_name":{"value":"Negalasa fumalis"},"hybrid":false,"surrogate":false,"unparsed_tail":", continuation of a sentence","virus":false,"details":[{"genus":{"value":"Negalasa"},"specific_epithet":{"value":"fumalis"}}],"positions":[["genus",0,8],["specific_epithet",9,16]]}
+7862a3d9-ba4d-5f53-a106-ea048e558f1a|Negalasa fumalis, continuation of a sentence|Negalasa fumalis|Negalasa fumalis|||3
+
+Negalasa fumalis Barnes; something else
+{"name_string_id":"6359dac4-1a88-5b41-86d3-9c01aaee4a2e","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Negalasa fumalis Barnes; something else","normalized":"Negalasa fumalis Barnes","canonical_name":{"value":"Negalasa fumalis"},"hybrid":false,"surrogate":false,"unparsed_tail":"; something else","virus":false,"details":[{"genus":{"value":"Negalasa"},"specific_epithet":{"value":"fumalis","authorship":{"value":"Barnes","basionym_authorship":{"authors":["Barnes"]}}}}],"positions":[["genus",0,8],["specific_epithet",9,16],["author_word",17,23]]}
+6359dac4-1a88-5b41-86d3-9c01aaee4a2e|Negalasa fumalis Barnes; something else|Negalasa fumalis|Negalasa fumalis|Barnes||3
+
+Negaprion brevirostris Negaprion brevirostris, the rest of the sentence
+{"name_string_id":"619b95fa-017d-5b9b-b800-64ebd5ed433b","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Negaprion brevirostris Negaprion brevirostris, the rest of the sentence","normalized":"Negaprion brevirostris Negaprion brevirostris","canonical_name":{"value":"Negaprion brevirostris brevirostris"},"hybrid":false,"surrogate":false,"unparsed_tail":", the rest of the sentence","virus":false,"details":[{"genus":{"value":"Negaprion"},"specific_epithet":{"value":"brevirostris","authorship":{"value":"Negaprion","basionym_authorship":{"authors":["Negaprion"]}}},"infraspecific_epithets":[{"value":"brevirostris"}]}],"positions":[["genus",0,9],["specific_epithet",10,22],["author_word",23,32],["infraspecific_epithet",33,45]]}
+619b95fa-017d-5b9b-b800-64ebd5ed433b|Negaprion brevirostris Negaprion brevirostris, the rest of the sentence|Negaprion brevirostris brevirostris|Negaprion brevirostris brevirostris|||3
+
+Negaprion fronto (Jordan and Gilbert, 1882):
+{"name_string_id":"4bb6a543-d757-5fa5-ae8b-a5ac95722e1d","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Negaprion fronto (Jordan and Gilbert, 1882):","normalized":"Negaprion fronto (Jordan & Gilbert 1882)","canonical_name":{"value":"Negaprion fronto"},"hybrid":false,"surrogate":false,"unparsed_tail":":","virus":false,"details":[{"genus":{"value":"Negaprion"},"specific_epithet":{"value":"fronto","authorship":{"value":"(Jordan & Gilbert 1882)","basionym_authorship":{"authors":["Jordan","Gilbert"],"year":{"value":"1882"}}}}}],"positions":[["genus",0,9],["specific_epithet",10,16],["author_word",18,24],["author_word",29,36],["year",38,42]]}
+4bb6a543-d757-5fa5-ae8b-a5ac95722e1d|Negaprion fronto (Jordan and Gilbert, 1882):|Negaprion fronto|Negaprion fronto|(Jordan & Gilbert 1882)|1882|3
 #>
 
 ### Unparseable Tail
