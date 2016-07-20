@@ -1,3 +1,16 @@
+Version 0.3.2 (2016-07-20)
+--------------------------
+
+- speedup performance of lookup translators, regex, string concatenation
+- add UUID to parsed canonical
+
+Version 0.3.1 (2016-06-06)
+--------------------------
+
+- fix authors' prefix parsing bug (#301)
+- add JSON pretty rendering method
+- dandle punctuation in the end of a name (#302)
+
 Version 0.3.0 (2016-05-23)
 --------------------------
 
