@@ -5,7 +5,13 @@ import org.globalnames.parser._
 import scalaz.{Name => _, _}
 import Scalaz._
 
+case class Canonical(value: String) extends AnyVal {
+  def id = ScientificNameParser.uuidGenerator.generate(value)
+}
+
 trait Canonizer { parsedResult: ScientificNameParser.Result =>
+
+  def canonizedUuid(showRanks: Boolean = false) = canonized(showRanks).map { Canonical }
 
   def canonized(showRanks: Boolean = false): Option[String] = {
     def canonizedNamesGroup(namesGroup: NamesGroup): String =
