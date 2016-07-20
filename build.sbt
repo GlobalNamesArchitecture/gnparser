@@ -1,7 +1,7 @@
 import sbt.Keys._
 
 val commonSettings = Seq(
-  version := "0.3.1",
+  version := "0.3.2-SNAPSHOT",
   scalaVersion := "2.11.8",
   organization := "org.globalnames",
   homepage := Some(new URL("http://globalnames.org/")),
