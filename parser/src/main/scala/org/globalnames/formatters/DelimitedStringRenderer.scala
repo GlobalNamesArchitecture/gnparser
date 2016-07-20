@@ -1,7 +1,6 @@
 package org.globalnames.formatters
 
 import org.globalnames.parser.ScientificNameParser
-import shapeless._
 import scalaz._
 import Scalaz._
 
@@ -28,8 +27,6 @@ trait DelimitedStringRenderer {
     val canonical = parserResult.canonized().orZero
     val canonicalExtended = parserResult.canonized(showRanks = true).orZero
     val quality = parserResult.scientificName.quality
-    val result = uuid :: verbatim :: canonical :: canonicalExtended ::
-      authorshipDelimited :: yearDelimited :: quality :: HNil
-    result.mkString("", delimiter.toString, "")
+    uuid + verbatim + canonical + canonicalExtended + authorshipDelimited + yearDelimited + quality
   }
 }
