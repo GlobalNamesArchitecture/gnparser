@@ -2,6 +2,7 @@ package org.globalnames
 package parser
 
 import java.util.UUID
+import java.util.regex.Pattern
 
 import org.globalnames.formatters._
 import org.parboiled2._
@@ -88,8 +89,11 @@ object ScientificNameParser {
                     (var\.|var|von|van|ined\.|
                      ined|sensu|new|non|nec|nudum|
                      ssp\.|ssp|subsp|subgen|hybrid|hort\.|hort)\??\s*$"""
-    notes :: taxonConcepts1 :: taxonConcepts2 :: taxonConcepts3 ::
-      nomenConcepts :: lastWordJunk :: HNil
+    object PatternCompile extends Poly1 {
+      implicit def default = at[String] { x => Pattern.compile(x) }
+    }
+    (notes :: taxonConcepts1 :: taxonConcepts2 :: taxonConcepts3 ::
+      nomenConcepts :: lastWordJunk :: HNil).map { PatternCompile }
   }
 
   val uuidGenerator = UuidGenerator()
@@ -125,15 +129,18 @@ object ScientificNameParser {
     def verbatimPosAt(pos: Int): Int = UNESCAPE_HTML4.at(pos)
   }
 
-  def removeJunk(input: String): String = {
-    object PatternMatch extends Poly2 {
-      implicit def default =
-        at[String, String]{ _.replaceFirst(_, "") }
-    }
-    substitutionsPatterns.foldLeft(input)(PatternMatch)
+  private object RemoveJunk extends Poly2 {
+    implicit def default =
+      at[String, Pattern]{ (str, ptrn) => ptrn.matcher(str).replaceFirst("") }
   }
 
+  def removeJunk(input: String): String = {
+    substitutionsPatterns.foldLeft(input)(RemoveJunk)
+  }
+
+  private val hybridPattern = Pattern.compile("""(^)[Xx](\p{Lu})|(\b)[Xx](\b)""")
+
   def normalizeHybridChar(input: String): String = {
-    input.replaceAll("""(^)[Xx](\p{Lu})|(\b)[Xx](\b)""", "$1×$2")
+    hybridPattern.matcher(input).replaceAll("$1×$2")
   }
 }
