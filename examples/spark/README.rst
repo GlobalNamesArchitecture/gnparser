@@ -52,7 +52,7 @@ Python
       .map(lambda j: (j["name_string_id"], j["canonical_name"]["value"])) \
       .collect()
 
-    println canonical_names
+    print canonical_names
 
     # [(u'208eb0ea-40e3-5894-9b7d-664721bd24e6', u'Homo sapiens'),
     #  (u'b0f8459f-8b73-514c-b6f3-568d54d99ded', u'Salinator solida'),
