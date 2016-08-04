@@ -1,7 +1,7 @@
 package org.globalnames.formatters
 
 import org.globalnames.parser.ScientificNameParser
-import org.json4s.JsonAST.{JArray, JNothing, JValue}
+import org.json4s.JsonAST.{JArray, JNothing, JValue, JField, JObject}
 import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods
 
@@ -10,13 +10,16 @@ import Scalaz._
 
 trait JsonRenderer { parserResult: ScientificNameParser.Result =>
 
-  def json: JValue = {
+  def json(showCanonicalUuid: Boolean = false): JValue = {
     val canonical = parserResult.canonized()
     val parsed = canonical.isDefined
 
     val canonicalName: JValue =
       if (parsed) {
-        val minimal = "value" -> canonical
+        val minimal = {
+          ("id" -> showCanonicalUuid.option { canonizedUuid().map { _.id.toString } }.join) ~
+            ("value" -> canonical)
+        }
         val canonicalExtended = parserResult.canonized(showRanks = true)
         if (canonical == canonicalExtended) minimal
         else minimal ~ ("extended" -> canonicalExtended)
@@ -56,9 +59,11 @@ trait JsonRenderer { parserResult: ScientificNameParser.Result =>
       ("positions" -> positionsJson))
   }
 
-  def renderCompactJson: String = render(true)
+  def renderCompactJson: String = render(compact = true)
 
-  def render(compact: Boolean): String =
-    if (compact) JsonMethods.compact(json)
-    else JsonMethods.pretty(json)
+  def render(compact: Boolean, showCanonicalUuid: Boolean = false): String = {
+    val jsonResult = json(showCanonicalUuid)
+    if (compact) JsonMethods.compact(jsonResult)
+    else JsonMethods.pretty(jsonResult)
+  }
 }

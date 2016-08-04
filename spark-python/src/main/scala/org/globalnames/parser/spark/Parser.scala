@@ -5,9 +5,9 @@ import org.apache.spark.api.java.function.Function
 import org.globalnames.parser.ScientificNameParser.{instance => snp}
 
 class Parser {
-  def parse(names: JavaRDD[String]): JavaRDD[String] = names.map(
-    new Function[String, String] {
+  def parse(names: JavaRDD[String], compact: Boolean, showCanonicalUuid: Boolean): JavaRDD[String] =
+    names.map(new Function[String, String] {
       override def call(name: String): String =
-        snp.fromString(name).renderCompactJson
+        snp.fromString(name).render(compact, showCanonicalUuid)
     })
 }

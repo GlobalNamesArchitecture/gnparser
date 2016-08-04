@@ -29,7 +29,7 @@ class ScientificNameParserSpec extends Specification {
   expectedNames("/test_data.txt").foreach {
     case (inputStr, expectedJsonStr, expectedDelimitedStr) =>
       val json = parse(expectedJsonStr)
-      val jsonParsed = scientificNameParser.fromString(inputStr).json
+      val jsonParsed = scientificNameParser.fromString(inputStr).json()
                          .removeField { case (_, v) => v == JNothing }
 
       val jsonDiff = {

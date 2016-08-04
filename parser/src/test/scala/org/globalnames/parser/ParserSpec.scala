@@ -17,7 +17,7 @@ class ParserSpec extends Specification {
 
     "Homo sapiens" in {
       val res = parse("Homo sapiens")
-      canonical(res.json).extract[String] === "Homo sapiens"
+      canonical(res.json()).extract[String] === "Homo sapiens"
       res.warnings must beEmpty
     }
 
@@ -28,7 +28,7 @@ class ParserSpec extends Specification {
       res.warnings(0).level === 3
       res.warnings(0).message === "Non-standard space characters"
 
-      canonical(res.json).extract[String] === "Homo sapiens"
+      canonical(res.json()).extract[String] === "Homo sapiens"
     }
 
     """Homo\r\nsapiens""" in {
@@ -40,7 +40,7 @@ class ParserSpec extends Specification {
       res.warnings(1).level === 3
       res.warnings(1).message === "Non-standard space characters"
 
-      canonical(res.json).extract[String] === "Homo sapiens"
+      canonical(res.json()).extract[String] === "Homo sapiens"
     }
 
     """Homo sapiens\r""" in {
@@ -50,7 +50,7 @@ class ParserSpec extends Specification {
       res.warnings(0).level === 2
       res.warnings(0).message === "Trailing whitespace"
 
-      canonical(res.json).extract[String] === "Homo sapiens"
+      canonical(res.json()).extract[String] === "Homo sapiens"
     }
 
     """Homo sp.\r""" in {
@@ -62,14 +62,14 @@ class ParserSpec extends Specification {
       res.warnings(1).level === 3
       res.warnings(1).message === "Name is approximate"
 
-      canonical(res.json).extract[String] === "Homo"
+      canonical(res.json()).extract[String] === "Homo"
     }
   }
 
   "Does not parse:" >> {
     "whateva" in {
       val res = parse("whateva")
-      (res.json \\ "parsed").extract[Boolean] must beFalse
+      (res.json() \\ "parsed").extract[Boolean] must beFalse
     }
   }
 }
