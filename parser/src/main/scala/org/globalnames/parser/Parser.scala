@@ -630,11 +630,11 @@ class Parser(val input: ParserInput,
   }
 
   def yearRange: RuleWithWarning[Year] = rule {
-    yearNumber ~ '-' ~ oneOrMore(Digit) ~ zeroOrMore(Alpha ++ "?") ~>
-    { (y: NodeWarned[Year]) => {
-      val yr = y.astNode.copy(approximate = true)
-      val warns = y.warns.map { w =>
-        if (w.node == y.astNode) w.copy(node = yr)
+    yearNumber ~ '-' ~ capturePos(oneOrMore(Digit)) ~ zeroOrMore(Alpha ++ "?") ~>
+    { (yStart: NodeWarned[Year], yEnd: CapturePosition) => {
+      val yr = yStart.astNode.copy(approximate = true, rangeEnd = Some(yEnd))
+      val warns = yStart.warns.map { w =>
+        if (w.node == yStart.astNode) w.copy(node = yr)
         else w
       }
       NodeWarned(yr, Warning(3, "Years range", yr) +: warns)

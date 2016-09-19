@@ -117,7 +117,10 @@ case class InfraspeciesGroup(group: Seq[Infraspecies]) extends AstNode {
 
 case class Year(pos: CapturePosition,
                 alpha: Option[CapturePosition] = None,
-                approximate: Boolean = false) extends AstNode
+                rangeEnd: Option[CapturePosition] = None,
+                approximate: Boolean = false) extends AstNode {
+  val isRange = rangeEnd.isDefined
+}
 
 sealed trait AuthorWordSeparator
 object AuthorWordSeparator {
