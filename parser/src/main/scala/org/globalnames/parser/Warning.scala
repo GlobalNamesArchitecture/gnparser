@@ -1,7 +1,6 @@
 package org.globalnames.parser
 
-case class Warning(level: Int, message: String, astNodeId: Int)
-  extends Ordered[Warning] {
+case class Warning(level: Int, message: String, node: AstNode) extends Ordered[Warning] {
 
   override def compare(that: Warning): Int =
     if (level != that.level) {

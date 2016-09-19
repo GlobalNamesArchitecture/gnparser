@@ -27,22 +27,22 @@ class Parser(val input: ParserInput,
 
       val warnings = Vector(
         doubleSpacePattern.findFirstIn(name).map { _ =>
-          Warning(2, "Multiple adjacent space characters", ng.astNode.id)
+          Warning(2, "Multiple adjacent space characters", ng.astNode)
         },
         name.exists { ch => spaceMiscoded.indexOf(ch) >= 0 }.option {
-          Warning(3, "Non-standard space characters", ng.astNode.id)
+          Warning(3, "Non-standard space characters", ng.astNode)
         },
         name.exists { ch => authCharMiscoded == ch }.option {
-          Warning(3, "Incorrect conversion to UTF-8", ng.astNode.id)
+          Warning(3, "Incorrect conversion to UTF-8", ng.astNode)
         },
         unparsedTail.map {
           case g if g.trim.isEmpty =>
-            Warning(2, "Trailing whitespace", ng.astNode.id)
+            Warning(2, "Trailing whitespace", ng.astNode)
           case _ =>
-            Warning(3, "Unparseable tail", ng.astNode.id)
+            Warning(3, "Unparseable tail", ng.astNode)
         },
         preprocessChanges.option {
-          Warning(2, "Name had to be changed by preprocessing", ng.astNode.id)
+          Warning(2, "Name had to be changed by preprocessing", ng.astNode)
         }
       ).flatten ++ ng.warns
 
@@ -60,7 +60,7 @@ class Parser(val input: ParserInput,
 
   def sciName2: RuleWithWarning[NamesGroup] = rule {
     name ~> { (n: NodeWarned[Name]) =>
-      NodeWarned(NamesGroup(AstNode.id, Vector(n.astNode)), n.warns)
+      NodeWarned(NamesGroup(Vector(n.astNode)), n.warns)
     }
   }
 
@@ -73,16 +73,22 @@ class Parser(val input: ParserInput,
     softSpace ~ species ~ (space ~ infraspeciesGroup).? ~> {
       (n: NodeWarned[Name], hc: HybridChar, s: NodeWarned[Species],
        i: Option[NodeWarned[InfraspeciesGroup]]) =>
-      val ng = NamesGroup(AstNode.id,
-        name = Vector(n.astNode.copy(genusParsed = true),
-                      Name(AstNode.id,
-                           uninomial = n.astNode.uninomial.copy(implied = true),
-                           species = s.astNode.some,
-                           infraspecies = i.map{_.astNode})),
-        hybrid = hc.some)
-      val warns = (Warning(3, "Incomplete hybrid formula", ng.id) +: (n.warns ++ s.warns)) ++
-                    i.map { _.warns }.orZero
-      NodeWarned(ng, warns)
+        val uninomial1 = n.astNode.uninomial.copy(implied = true)
+        val n1 = n.astNode.copy(genusParsed = true)
+
+        val ng = NamesGroup(
+          name = Vector(n1,
+                        Name(uninomial = uninomial1,
+                             species = s.astNode.some,
+                             infraspecies = i.map { _.astNode })),
+          hybrid = hc.some)
+
+        val warns = (n.warns ++ s.warns ++ i.map { _.warns }.orZero).map { w =>
+          if (w.node == n.astNode) w.copy(node = n1)
+          else if (w.node == n.astNode.uninomial) w.copy(node = uninomial1)
+          else w
+        }
+        NodeWarned(ng, Warning(3, "Incomplete hybrid formula", ng) +: warns)
     }
   }
 
@@ -91,25 +97,22 @@ class Parser(val input: ParserInput,
     (space ~ name).? ~> {
       (n1: NodeWarned[Name], hc: HybridChar, n2: Option[NodeWarned[Name]]) =>
         val ng = n2 match {
-          case None =>
-            NamesGroup(AstNode.id, name = Vector(n1.astNode), hybrid = hc.some)
-          case Some(name2) =>
-            NamesGroup(AstNode.id, name = Vector(n1.astNode, name2.astNode),
-                       hybrid = hc.some)
+          case None => NamesGroup(name = Vector(n1.astNode), hybrid = hc.some)
+          case Some(name2) => NamesGroup(name = Vector(n1.astNode, name2.astNode), hybrid = hc.some)
         }
-        val warns = (Warning(2, "Hybrid formula", ng.id) +: n1.warns) ++ n2.map { _.warns }.orZero
+        val warns = Warning(2, "Hybrid formula", ng) +: (n1.warns ++ n2.map { _.warns }.orZero)
         NodeWarned(ng, warns)
     }
   }
 
   def namedHybrid: RuleWithWarning[NamesGroup] = rule {
     hybridChar ~ softSpace ~ name ~> { (hc: HybridChar, n: NodeWarned[Name]) =>
-      val ng = NamesGroup(AstNode.id, Vector(n.astNode), hybrid = hc.some)
+      val ng = NamesGroup(Vector(n.astNode), hybrid = hc.some)
       val warns = Vector(
         (n.astNode.uninomial.pos.start == 1).option {
-          Warning(3, "Hybrid char not separated by space", ng.id)
+          Warning(3, "Hybrid char not separated by space", ng)
         },
-        Warning(2, "Named hybrid", ng.id).some).flatten
+        Warning(2, "Named hybrid", ng).some).flatten
       NodeWarned(ng, warns)
     }
   }
@@ -120,7 +123,7 @@ class Parser(val input: ParserInput,
 
   def name1: RuleWithWarning[Name] = rule {
     (uninomialCombo | uninomial) ~> { (u: NodeWarned[Uninomial]) =>
-      NodeWarned(Name(AstNode.id, u.astNode), u.warns)
+      NodeWarned(Name(u.astNode), u.warns)
     }
   }
 
@@ -128,10 +131,10 @@ class Parser(val input: ParserInput,
     uninomialWord ~ space ~ comparison ~ (space ~ species).? ~>
     {(u: NodeWarned[UninomialWord], c: NodeWarned[Comparison],
       s: Option[NodeWarned[Species]]) =>
-      val nm = Name(AstNode.id, uninomial = Uninomial(AstNode.id, u.astNode.pos),
-                    species = s.map{_.astNode}, comparison = c.astNode.some)
-      val warns = (Warning(3, "Name comparison", nm.id) +: (u.warns ++ c.warns)) ++
-                    s.map { _.warns }.orZero
+      val nm = Name(uninomial = Uninomial(u.astNode.pos),
+                    species = s.map { _.astNode }, comparison = c.astNode.some)
+      val warns = Warning(3, "Name comparison", nm) +:
+                    (u.warns ++ c.warns ++ s.map { _.warns }.orZero)
       NodeWarned(nm, warns)
     }
   }
@@ -142,11 +145,10 @@ class Parser(val input: ParserInput,
     {(uw: NodeWarned[UninomialWord],
       maybeSubGenus: Option[NodeWarned[SubGenus]], species: NodeWarned[Species],
       maybeInfraspeciesGroup: Option[NodeWarned[InfraspeciesGroup]]) =>
-        val node = Name(AstNode.id,
-                        Uninomial(AstNode.id, uw.astNode.pos),
-                        maybeSubGenus.map{_.astNode},
+        val node = Name(Uninomial(uw.astNode.pos),
+                        maybeSubGenus.map { _.astNode },
                         species = species.astNode.some,
-                        infraspecies = maybeInfraspeciesGroup.map{_.astNode})
+                        infraspecies = maybeInfraspeciesGroup.map { _.astNode })
         val warns = uw.warns ++ maybeSubGenus.map { _.warns }.orZero ++
                     species.warns ++ maybeInfraspeciesGroup.map { _.warns }.orZero
         NodeWarned(node, warns)
@@ -156,8 +158,8 @@ class Parser(val input: ParserInput,
   def infraspeciesGroup: RuleWithWarning[InfraspeciesGroup] = rule {
     oneOrMore(infraspecies).separatedBy(space) ~>
     { (inf: Seq[NodeWarned[Infraspecies]]) =>
-      NodeWarned(InfraspeciesGroup(AstNode.id, inf.map{_.astNode}),
-           inf.flatMap{_.warns}.toVector)
+      NodeWarned(InfraspeciesGroup(inf.map { _.astNode }),
+                 inf.flatMap { _.warns }.toVector)
     }
   }
 
@@ -165,8 +167,7 @@ class Parser(val input: ParserInput,
     (rank ~ softSpace).? ~ word ~ (space ~ authorship).? ~>
     { (r: Option[NodeWarned[Rank]], sw: NodeWarned[SpeciesWord],
        a: Option[NodeWarned[Authorship]]) =>
-      NodeWarned(Infraspecies(AstNode.id, sw.astNode.pos,
-                              r.map { _.astNode }, a.map { _.astNode }),
+      NodeWarned(Infraspecies(sw.astNode.pos, r.map { _.astNode }, a.map { _.astNode }),
                  r.map { _.warns }.orZero ++ sw.warns ++ a.map { _.warns }.orZero)
     }
   }
@@ -174,27 +175,27 @@ class Parser(val input: ParserInput,
   def species: RuleWithWarning[Species] = rule {
     word ~ (softSpace ~ authorship).? ~ &(spaceCharsEOI ++ "(,:.;") ~> {
       (sw: NodeWarned[SpeciesWord], a: Option[NodeWarned[Authorship]]) =>
-        NodeWarned(Species(AstNode.id, sw.astNode.pos, a.map{_.astNode}),
+        NodeWarned(Species(sw.astNode.pos, a.map { _.astNode }),
                    sw.warns ++ a.map { _.warns }.orZero)
     }
   }
 
   def comparison: RuleWithWarning[Comparison] = rule {
     capturePos("cf" ~ '.'.?) ~> { (p: CapturePosition) =>
-      NodeWarned(Comparison(AstNode.id, p), Vector.empty)
+      NodeWarned(Comparison(p), Vector.empty)
     }
   }
 
   def approximation: RuleWithWarning[Approximation] = rule {
     capturePos("sp.nr." | "sp. nr." | "sp.aff." | "sp. aff." | "monst." | "?" |
       (("spp" | "nr" | "sp" | "aff" | "species") ~ (&(spaceCharsEOI) | '.'))) ~>
-      { (p: CapturePosition) => NodeWarned(Approximation(AstNode.id, p)) }
+      { (p: CapturePosition) => NodeWarned(Approximation(p)) }
   }
 
   def rankUninomial: RuleWithWarning[Rank] = rule {
     capturePos(("sect" | "subsect" | "trib" | "subtrib" | "subser" | "ser" |
       "subgen" | "fam" | "subfam" | "supertrib") ~ '.'.?) ~ &(spaceCharsEOI) ~>
-      { (p: CapturePosition) => NodeWarned(Rank(AstNode.id, p)) }
+      { (p: CapturePosition) => NodeWarned(Rank(p)) }
   }
 
   def rank: RuleWithWarning[Rank] = rule {
@@ -208,11 +209,11 @@ class Parser(val input: ParserInput,
      "ε" | "φ" | "θ" | "μ" | "a." | "b." | "c." | "d." | "e." | "g." |
      "k." | "****" | "**" | "*") ~ &(spaceCharsEOI) ~> {
        (p: CapturePosition) =>
-         val r = Rank(AstNode.id, p)
+         val r = Rank(p)
          val rank = input.sliceString(p.start, p.end)
          val warns = rank match {
            case "*" | "**" | "***" | "****" | "nat" | "f.sp" | "mut." =>
-             Vector(Warning(3, "Uncommon rank", r.id))
+             Vector(Warning(3, "Uncommon rank", r))
            case _ => Vector.empty
          }
          NodeWarned(r, warns)
@@ -221,42 +222,38 @@ class Parser(val input: ParserInput,
 
   def rankVar: RuleWithWarning[Rank] = rule {
     capturePos("[var.]" | ("var" ~ (&(spaceCharsEOI) | '.'))) ~>
-      { (p: CapturePosition) => NodeWarned(Rank(AstNode.id, p, "var.".some)) }
+      { (p: CapturePosition) => NodeWarned(Rank(p, "var.".some)) }
   }
 
   def rankForma: RuleWithWarning[Rank] = rule {
     capturePos(("forma"  | "fma" | "form" | "fo" | "f") ~
-    (&(spaceCharsEOI) | '.')) ~> { (p: CapturePosition) =>
-      NodeWarned(Rank(AstNode.id, p, "fm.".some))
-    }
+    (&(spaceCharsEOI) | '.')) ~> { (p: CapturePosition) => NodeWarned(Rank(p, "fm.".some)) }
   }
 
   def rankSsp: RuleWithWarning[Rank] = rule {
     capturePos(("ssp" | "subsp") ~ (&(spaceCharsEOI) | '.')) ~>
-      { (p: CapturePosition) => NodeWarned(Rank(AstNode.id, p, "ssp.".some)) }
+      { (p: CapturePosition) => NodeWarned(Rank(p, "ssp.".some)) }
   }
 
   def subGenus: RuleWithWarning[SubGenus] = rule {
     '(' ~ softSpace ~ uninomialWord ~ softSpace ~ ')' ~> {
-      (u: NodeWarned[UninomialWord]) =>
-        NodeWarned(SubGenus(AstNode.id, u.astNode), u.warns)
+      (u: NodeWarned[UninomialWord]) => NodeWarned(SubGenus(u.astNode), u.warns)
     }
   }
 
   def uninomialCombo: RuleWithWarning[Uninomial] = rule {
     (uninomialCombo1 | uninomialCombo2) ~> { (u: NodeWarned[Uninomial]) =>
-      val warns = Warning(2, "Combination of two uninomials", u.astNode.id) +: u.warns
+      val warns = Warning(2, "Combination of two uninomials", u.astNode) +: u.warns
       NodeWarned(u.astNode, warns)
     }
   }
 
   def uninomialCombo1: RuleWithWarning[Uninomial] = rule {
     uninomialWord ~ softSpace ~ subGenus ~ softSpace ~ authorship.? ~>
-    {(uw: NodeWarned[UninomialWord], sg: NodeWarned[SubGenus],
-      a: Option[NodeWarned[Authorship]]) =>
-      val u = Uninomial(AstNode.id, sg.astNode.pos, a.map { _.astNode },
-                Rank(AstNode.id, CapturePosition.empty, typ = "subgen.".some).some,
-                Uninomial(AstNode.id, uw.astNode.pos).some)
+    {(uw: NodeWarned[UninomialWord], sg: NodeWarned[SubGenus], a: Option[NodeWarned[Authorship]]) =>
+      val u = Uninomial(sg.astNode.pos, a.map { _.astNode },
+                        Rank(CapturePosition.empty, typ = "subgen.".some).some,
+                        Uninomial(uw.astNode.pos).some)
       val warns = uw.warns ++ sg.warns ++ a.map { _.warns }.orZero
       NodeWarned(u, warns)
     }
@@ -264,21 +261,21 @@ class Parser(val input: ParserInput,
 
   def uninomialCombo2: RuleWithWarning[Uninomial] = rule {
     (uninomial ~ softSpace ~ rankUninomial ~ softSpace ~ uninomial) ~> {
-      (u1: NodeWarned[Uninomial], r: NodeWarned[Rank],
-       u2: NodeWarned[Uninomial]) =>
+      (u1: NodeWarned[Uninomial], r: NodeWarned[Rank], u2: NodeWarned[Uninomial]) =>
         val uw = u2.astNode.copy(rank = r.astNode.some, parent = u1.astNode.some)
-        val warns = u1.warns ++ r.warns ++ u2.warns
+        val warns = (u1.warns ++ r.warns ++ u2.warns).map { w =>
+          if (w.node == u2.astNode) w.copy(node = uw)
+          else w
+        }
         NodeWarned(uw, warns)
       }
   }
 
   def uninomial: RuleWithWarning[Uninomial] = rule {
     uninomialWord ~ (space ~ authorship).? ~>
-    { (u: NodeWarned[UninomialWord],
-       authorship: Option[NodeWarned[Authorship]]) =>
+    { (u: NodeWarned[UninomialWord], authorship: Option[NodeWarned[Authorship]]) =>
       val warns = u.warns ++ authorship.map { _.warns }.orZero
-      NodeWarned(Uninomial(AstNode.id, u.astNode.pos,
-                 authorship.map { _.astNode }), warns)
+      NodeWarned(Uninomial(u.astNode.pos, authorship.map { _.astNode }), warns)
     }
   }
 
@@ -287,22 +284,20 @@ class Parser(val input: ParserInput,
   }
 
   def abbrGenus: RuleWithWarning[UninomialWord] = rule {
-    capturePos(upperChar ~ lowerChar.? ~ lowerChar.? ~ '.') ~> {
-      (wp: CapturePosition) =>
-        val uw = UninomialWord(AstNode.id, wp)
-        NodeWarned(uw, Vector(Warning(3, "Abbreviated uninomial word", uw.id)))
+    capturePos(upperChar ~ lowerChar.? ~ lowerChar.? ~ '.') ~> { (wp: CapturePosition) =>
+      val uw = UninomialWord(wp)
+      NodeWarned(uw, Vector(Warning(3, "Abbreviated uninomial word", uw)))
     }
   }
 
   def capWord: RuleWithWarning[UninomialWord] = rule {
     (capWord2 | capWord1) ~> { (uw: NodeWarned[UninomialWord]) => {
-      val word = input.sliceString(uw.astNode.pos.start,
-                                         uw.astNode.pos.end)
+      val word = input.sliceString(uw.astNode.pos.start, uw.astNode.pos.end)
       val hasForbiddenChars =
         word.exists { ch => sciCharsExtended.indexOf(ch) >= 0 ||
                             sciUpperCharExtended.indexOf(ch) >= 0 }
       val warns = hasForbiddenChars.option {
-        Warning(2, "Non-standard characters in canonical", uw.astNode.id)
+        Warning(2, "Non-standard characters in canonical", uw.astNode)
       }.toVector ++ uw.warns
       NodeWarned(uw.astNode, warns)
     }}
@@ -311,9 +306,9 @@ class Parser(val input: ParserInput,
   def capWord1: RuleWithWarning[UninomialWord] = rule {
     capturePos(upperChar ~ lowerChar ~ oneOrMore(lowerChar) ~ '?'.?) ~> {
       (p: CapturePosition) =>
-        val uw = UninomialWord(AstNode.id, p)
+        val uw = UninomialWord(p)
         val warns = (input.charAt(p.end - 1) == '?').option {
-          Warning(3, "Uninomial word with question mark", uw.id)
+          Warning(3, "Uninomial word with question mark", uw)
         }.toVector
         NodeWarned(uw, warns)
     }
@@ -322,33 +317,34 @@ class Parser(val input: ParserInput,
   def capWord2: RuleWithWarning[UninomialWord] = rule {
     capWord1 ~ '-' ~ word1 ~> {
       (uw: NodeWarned[UninomialWord], wPos: CapturePosition) =>
-        NodeWarned(uw.astNode.copy(pos = CapturePosition(uw.astNode.pos.start,
-                                                         wPos.end)),
-                   uw.warns)
+        val uw1 = uw.astNode.copy(pos = CapturePosition(uw.astNode.pos.start, wPos.end))
+        val warns = uw.warns.map { w =>
+          if (w.node == uw.astNode) w.copy(node = uw1)
+          else w
+        }
+        NodeWarned(uw1, warns)
     }
   }
 
   def twoLetterGenera: RuleWithWarning[UninomialWord] = rule {
     capturePos("Ca" | "Ea" | "Ge" | "Ia" | "Io" | "Io" | "Ix" | "Lo" | "Oa" |
       "Ra" | "Ty" | "Ua" | "Aa" | "Ja" | "Zu" | "La" | "Qu" | "As" | "Ba") ~>
-    { (p: CapturePosition) => NodeWarned(UninomialWord(AstNode.id, p)) }
+    { (p: CapturePosition) => NodeWarned(UninomialWord(p)) }
   }
 
   def word: RuleWithWarning[SpeciesWord] = rule {
     !(authorPre | rankUninomial | approximation) ~ (word3 | word2 | word1) ~
       &(spaceCharsEOI ++ "(.,:;") ~> {
       (pos: CapturePosition) =>
-        val sw = SpeciesWord(AstNode.id, pos)
+        val sw = SpeciesWord(pos)
         val word = input.sliceString(pos.start, pos.end)
         val warns = Vector(
           (word.indexOf(apostr) >= 0).option {
-            Warning(3, "Apostrophe is not allowed in canonical", sw.id)
+            Warning(3, "Apostrophe is not allowed in canonical", sw)
           },
-          word(0).isDigit.option {
-            Warning(3, "Numeric prefix", sw.id)
-          },
+          word(0).isDigit.option { Warning(3, "Numeric prefix", sw) },
           word.exists { ch => sciCharsExtended.indexOf(ch) >= 0 }.option {
-            Warning(2, "Non-standard characters in canonical", sw.id)
+            Warning(2, "Non-standard characters in canonical", sw)
           }
         )
         NodeWarned(sw, warns.flatten)
@@ -360,22 +356,19 @@ class Parser(val input: ParserInput,
   }
 
   def word2: Rule1[CapturePosition] = rule {
-    capturePos(oneOrMore(lowerChar) | (1 to 2).times(CharPredicate(Digit))) ~
-      dash ~ word1 ~> {
-      (p1: CapturePosition, p2: CapturePosition) =>
-        CapturePosition(p1.start, p2.end)
+    capturePos(oneOrMore(lowerChar) | (1 to 2).times(CharPredicate(Digit))) ~ dash ~ word1 ~> {
+      (p1: CapturePosition, p2: CapturePosition) => CapturePosition(p1.start, p2.end)
     }
   }
 
   def word3: Rule1[CapturePosition] = rule {
     capturePos(oneOrMore(lowerChar)) ~ apostr ~ word1 ~> {
-      (p1: CapturePosition, p2: CapturePosition) =>
-        CapturePosition(p1.start, p2.end)
+      (p1: CapturePosition, p2: CapturePosition) => CapturePosition(p1.start, p2.end)
     }
   }
 
   def hybridChar: Rule1[HybridChar] = rule {
-    capturePos('×') ~> { (pos: CapturePosition) => HybridChar(AstNode.id, pos) }
+    capturePos('×') ~> { (pos: CapturePosition) => HybridChar(pos) }
   }
 
   def unparsed: Rule1[Option[String]] = rule {
@@ -385,8 +378,8 @@ class Parser(val input: ParserInput,
   def approxName: RuleWithWarning[NamesGroup] = rule {
     uninomial ~ space ~ (approxName1 | approxName2) ~> {
       (n: NodeWarned[Name]) =>
-        val ng = NamesGroup(AstNode.id, name = Vector(n.astNode))
-        NodeWarned(ng, Warning(3, "Name is approximate", ng.id) +: n.warns)
+        val ng = NamesGroup(name = Vector(n.astNode))
+        NodeWarned(ng, Warning(3, "Name is approximate", ng) +: n.warns)
     }
   }
 
@@ -397,10 +390,8 @@ class Parser(val input: ParserInput,
   def approxName1: Rule[NodeWarned[Uninomial] :: HNil,
                         NodeWarned[Name] :: HNil] = rule {
     approximation ~ approxNameIgnored ~>
-      { (u: NodeWarned[Uninomial], appr: NodeWarned[Approximation],
-         ign: Option[String]) =>
-        val nm = Name(AstNode.id, uninomial = u.astNode,
-                      approximation = appr.astNode.some, ignored = ign)
+      { (u: NodeWarned[Uninomial], appr: NodeWarned[Approximation], ign: Option[String]) =>
+        val nm = Name(uninomial = u.astNode, approximation = appr.astNode.some, ignored = ign)
         NodeWarned(nm, u.warns ++ appr.warns)
       }
   }
@@ -410,10 +401,8 @@ class Parser(val input: ParserInput,
     word ~ space ~ approximation ~ approxNameIgnored ~>
       { (u: NodeWarned[Uninomial], sw: NodeWarned[SpeciesWord],
          appr: NodeWarned[Approximation], ign: Option[String]) =>
-        val nm = Name(AstNode.id, uninomial = u.astNode,
-                      species = Species(AstNode.id, sw.astNode.pos).some,
-                      approximation = appr.astNode.some,
-                      ignored = ign)
+        val nm = Name(uninomial = u.astNode, species = Species(sw.astNode.pos).some,
+                      approximation = appr.astNode.some, ignored = ign)
         NodeWarned(nm, u.warns ++ sw.warns ++ appr.warns)
       }
   }
@@ -430,20 +419,26 @@ class Parser(val input: ParserInput,
   def combinedAuthorship1: RuleWithWarning[Authorship] = rule {
     basionymAuthorship ~ authorEx ~ authorship1 ~>
     { (bau: NodeWarned[Authorship], exau: NodeWarned[Authorship]) =>
-      val bau1 = bau.astNode.copy(
-        authors = bau.astNode.authors.copy(
-          authorsEx = exau.astNode.authors.authors.some))
-      NodeWarned(bau1, Warning(2, "Ex authors are not required", bau1.id) +:
-                 (bau.warns ++ exau.warns))
+      val authors1 = bau.astNode.authors.copy(authorsEx = exau.astNode.authors.authors.some)
+      val bau1 = bau.astNode.copy(authors = authors1)
+      val warns = (bau.warns ++ exau.warns).map { w =>
+        if (w.node == bau.astNode.authors) w.copy(node = authors1)
+        else if (w.node == bau.astNode) w.copy(node = bau1)
+        else w
+      }
+      NodeWarned(bau1, Warning(2, "Ex authors are not required", bau1) +: warns)
     }
   }
 
   def combinedAuthorship2: RuleWithWarning[Authorship] = rule {
     basionymAuthorship ~ softSpace ~ authorship1 ~>
     {(bau: NodeWarned[Authorship], cau: NodeWarned[Authorship]) =>
-      val bau1 = bau.astNode.copy(combination = cau.astNode.authors.some,
-                                  basionymParsed = true)
-      NodeWarned(bau1, bau.warns ++ cau.warns)
+      val bau1 = bau.astNode.copy(combination = cau.astNode.authors.some, basionymParsed = true)
+      val warns = (bau.warns ++ cau.warns).map { w =>
+        if (w.node == bau.astNode) w.copy(node = bau1)
+        else w
+      }
+      NodeWarned(bau1, warns)
     }
   }
 
@@ -451,10 +446,13 @@ class Parser(val input: ParserInput,
     '(' ~ softSpace ~ authorsGroup ~ softSpace ~ ')' ~ (softSpace ~ ',').? ~
     softSpace ~ year ~>  {
       (a: NodeWarned[AuthorsGroup], y: NodeWarned[Year]) => {
-        val as = Authorship(AstNode.id,
-                            authors = a.astNode.copy(year = y.astNode.some),
-                            inparenthesis = true, basionymParsed = true)
-        NodeWarned(as, (Warning(2, "Misformed basionym year", as.id) +: y.warns) ++ a.warns)
+        val authors1 = a.astNode.copy(year = y.astNode.some)
+        val as = Authorship(authors = authors1, inparenthesis = true, basionymParsed = true)
+        val warns = (y.warns ++ a.warns).map { w =>
+          if (w.node == a.astNode) w.copy(node = authors1)
+          else w
+        }
+        NodeWarned(as, Warning(2, "Misformed basionym year", as) +: warns)
       }
     }
   }
@@ -467,7 +465,11 @@ class Parser(val input: ParserInput,
     '(' ~ softSpace ~ authorship1 ~ softSpace ~ ')' ~> {
       (a: NodeWarned[Authorship]) =>
         val as = a.astNode.copy(basionymParsed = true, inparenthesis = true)
-        NodeWarned(as, a.warns)
+        val warns = a.warns.map { w =>
+          if (w.node == a.astNode) w.copy(node = as)
+          else w
+        }
+        NodeWarned(as, warns)
     }
   }
 
@@ -475,29 +477,38 @@ class Parser(val input: ParserInput,
     '(' ~ softSpace ~ '(' ~ softSpace ~ authorship1 ~ softSpace ~ ')' ~
     softSpace ~ ')' ~> { (a: NodeWarned[Authorship]) =>
       val as = a.astNode.copy(basionymParsed = true, inparenthesis = true)
-      NodeWarned(as, Warning(3, "Authroship in double parentheses", as.id) +: a.warns)
+      val warns = a.warns.map { w =>
+        if (w.node == a.astNode) w.copy(node = as)
+        else w
+      }
+      NodeWarned(as, Warning(3, "Authroship in double parentheses", as) +: warns)
     }
   }
 
   def authorship1: RuleWithWarning[Authorship] = rule {
     (authorsYear | authorsGroup) ~> { (a: NodeWarned[AuthorsGroup]) =>
-      NodeWarned(Authorship(AstNode.id, a.astNode), a.warns)
+      NodeWarned(Authorship(a.astNode), a.warns)
     }
   }
 
   def authorsYear: RuleWithWarning[AuthorsGroup] = rule {
     authorsGroup ~ softSpace ~ (',' ~ softSpace).? ~ year ~>
     { (a: NodeWarned[AuthorsGroup], y: NodeWarned[Year]) =>
-      NodeWarned(a.astNode.copy(year = y.astNode.some), a.warns ++ y.warns)
+      val a1 = a.astNode.copy(year = y.astNode.some)
+      val warns = (a.warns ++ y.warns).map { w =>
+        if (w.node == a.astNode) w.copy(node = a1)
+        else w
+      }
+      NodeWarned(a1, warns)
     }
   }
 
   def authorsGroup: RuleWithWarning[AuthorsGroup] = rule {
     authorsTeam ~ (authorEx ~ authorsTeam).? ~>
     { (a: NodeWarned[AuthorsTeam], exAu: Option[NodeWarned[AuthorsTeam]]) =>
-      val ag = AuthorsGroup(AstNode.id, a.astNode, exAu.map{_.astNode})
+      val ag = AuthorsGroup(a.astNode, exAu.map { _.astNode })
       val warns =
-        exAu.map { _ => Vector(Warning(2, "Ex authors are not required", ag.id)) }.orZero ++
+        exAu.map { _ => Vector(Warning(2, "Ex authors are not required", ag)) }.orZero ++
         a.warns ++ exAu.map { _.warns }.orZero
       NodeWarned(ag, warns)
     }
@@ -506,9 +517,7 @@ class Parser(val input: ParserInput,
   def authorsTeam: RuleWithWarning[AuthorsTeam] = rule {
     oneOrMore(author).separatedBy(authorSep) ~> {
       (a: Seq[NodeWarned[Author]]) =>
-        NodeWarned(AuthorsTeam(AstNode.id,
-                               a.map {_.astNode}),
-                               a.flatMap{_.warns}.toVector)
+        NodeWarned(AuthorsTeam(a.map {_.astNode}), a.flatMap{_.warns}.toVector)
     }
   }
 
@@ -520,7 +529,7 @@ class Parser(val input: ParserInput,
     (author1 | author2 | unknownAuthor) ~> { (au: NodeWarned[Author]) => {
       val warns =
         (au.astNode.pos.end - au.astNode.pos.start < 2).option {
-          Warning(3, "Author is too short", au.astNode.id)
+          Warning(3, "Author is too short", au.astNode)
         }.toVector ++ au.warns
       NodeWarned(au.astNode, warns)
     }}
@@ -529,35 +538,46 @@ class Parser(val input: ParserInput,
   def author1: RuleWithWarning[Author] = rule {
     author2 ~ softSpace ~ filius ~> {
       (au: NodeWarned[Author], filius: NodeWarned[AuthorWord]) =>
-        NodeWarned(au.astNode.copy(filius = filius.astNode.some),
-                   au.warns ++ filius.warns)
+        val au1 = au.astNode.copy(filius = filius.astNode.some)
+        val warns = (au.warns ++ filius.warns).map { w =>
+          if (w.node == au.astNode) w.copy(node = au1)
+          else w
+        }
+        NodeWarned(au1, warns)
     }
   }
 
   def author2: RuleWithWarning[Author] = rule {
-    authorWord ~ zeroOrMore(
-      (softSpace ~ authorWord ~> { aw: NodeWarned[AuthorWord] =>
-        aw.copy(aw.astNode.copy(separator = AuthorWordSeparator.Space))
-      }) | (ch(dash) ~ authorWord ~> { aw: NodeWarned[AuthorWord] =>
-        aw.copy(aw.astNode.copy(separator = AuthorWordSeparator.Dash))
-      })) ~ !(':') ~>
-    { (au: NodeWarned[AuthorWord], aus: Seq[NodeWarned[AuthorWord]]) =>
-      NodeWarned(Author(AstNode.id,
-                        au.astNode +: aus.map {_.astNode}),
-                        au.warns ++ aus.flatMap {_.warns}.toVector)
+    authorWord ~ zeroOrMore(authorWordSep) ~ !(':') ~>
+    { (au: NodeWarned[AuthorWord], aus: Seq[NodeWarned[AuthorWord]]) => {
+        NodeWarned(Author(au.astNode +: aus.map { _.astNode }),
+                          au.warns ++ aus.flatMap { _.warns }.toVector)
+      }
     }
   }
 
+  def authorWordSep: RuleWithWarning[AuthorWord] = rule {
+    capture(ch(dash) | softSpace) ~ authorWord ~> { (sep: String, aw: NodeWarned[AuthorWord]) => {
+      val aw1 = sep match {
+        case d if d.length == 1 && d(0) == dash =>
+          aw.astNode.copy(separator = AuthorWordSeparator.Dash)
+        case _ => aw.astNode.copy(separator = AuthorWordSeparator.Space)
+      }
+      val warns = aw.warns.map { w =>
+        if (w.node == aw.astNode) w.copy(node = aw1)
+        else w
+      }
+      NodeWarned(aw1, warns)
+    }}
+  }
+
   def unknownAuthor: RuleWithWarning[Author] = rule {
-    capturePos("?" |
-            (("auct" | "anon" | "ht" | "hort") ~ (&(spaceCharsEOI) | '.'))) ~>
+    capturePos("?" | (("auct" | "anon" | "ht" | "hort") ~ (&(spaceCharsEOI) | '.'))) ~>
     { (authPos: CapturePosition) =>
-      val auth = Author(AstNode.id, Seq(AuthorWord(AstNode.id, authPos)),
-                        anon = true)
+      val auth = Author(Seq(AuthorWord(authPos)), anon = true)
       val endsWithQuestion = input.charAt(authPos.end - 1) == '?'
-      val warns = Vector(
-        Warning(2, "Author is unknown", auth.id).some,
-        endsWithQuestion.option(Warning(3, "Author as a question mark", auth.id)))
+      val warns = Vector(Warning(2, "Author is unknown", auth).some,
+                         endsWithQuestion.option(Warning(3, "Author as a question mark", auth)))
       NodeWarned(auth, warns.flatten)
     }
   }
@@ -569,7 +589,7 @@ class Parser(val input: ParserInput,
         val authorIsUpperCase = word.length > 2 &&
           word.forall { ch => ch == '-' || authCharUpperStr.indexOf(ch) >= 0 }
         val warns = authorIsUpperCase.option {
-          Warning(2, "Author in upper case", aw.astNode.id)
+          Warning(2, "Author in upper case", aw.astNode)
         }.toVector ++ aw.warns
         NodeWarned(aw.astNode, warns)
       }
@@ -578,24 +598,21 @@ class Parser(val input: ParserInput,
 
   def authorWord1: RuleWithWarning[AuthorWord] = rule {
     capturePos("arg." | "et al.{?}" | "et al." | "et al") ~> {
-      (pos: CapturePosition) =>
-        NodeWarned(AuthorWord(AstNode.id, pos), Vector.empty)
+      (pos: CapturePosition) => NodeWarned(AuthorWord(pos), Vector.empty)
     }
   }
 
   def authorWord2: RuleWithWarning[AuthorWord] = rule {
-    capturePos("d'".? ~ authCharUpper ~
-    zeroOrMore(authCharUpper | authCharLower) ~ '.'.?) ~> {
-      (pos: CapturePosition) =>
-        NodeWarned(AuthorWord(AstNode.id, pos), Vector.empty)
+    capturePos("d'".? ~ authCharUpper ~ zeroOrMore(authCharUpper | authCharLower) ~ '.'.?) ~> {
+      (pos: CapturePosition) => NodeWarned(AuthorWord(pos), Vector.empty)
     }
   }
 
 
 
   def filius: RuleWithWarning[AuthorWord] = rule {
-    capturePos("f." | "fil." | "filius") ~> { (pos: CapturePosition) =>
-      NodeWarned(AuthorWord(AstNode.id, pos), Vector.empty)
+    capturePos("f." | "fil." | "filius") ~> {
+      (pos: CapturePosition) => NodeWarned(AuthorWord(pos), Vector.empty)
     }
   }
 
@@ -603,8 +620,7 @@ class Parser(val input: ParserInput,
     capturePos("ab" | "af" | "bis" | "da" | "der" | "des" |
                "den" | "della" | "dela" | "de" | "di" | "du" |
                "la" | "ter" | "van" | "von" | "d'") ~ &(spaceCharsEOI) ~> {
-      (pos: CapturePosition) =>
-        NodeWarned(AuthorWord(AstNode.id, pos), Vector.empty)
+      (pos: CapturePosition) => NodeWarned(AuthorWord(pos), Vector.empty)
     }
   }
 
@@ -617,13 +633,17 @@ class Parser(val input: ParserInput,
     yearNumber ~ '-' ~ oneOrMore(Digit) ~ zeroOrMore(Alpha ++ "?") ~>
     { (y: NodeWarned[Year]) => {
       val yr = y.astNode.copy(approximate = true)
-      NodeWarned(yr, Warning(3, "Years range", yr.id) +: y.warns)
+      val warns = y.warns.map { w =>
+        if (w.node == y.astNode) w.copy(node = yr)
+        else w
+      }
+      NodeWarned(yr, Warning(3, "Years range", yr) +: warns)
     }}
   }
 
   def yearWithDot: RuleWithWarning[Year] = rule {
     yearNumber ~ '.' ~> { (y: NodeWarned[Year]) =>
-      NodeWarned(y.astNode, Warning(2, "Year with period", y.astNode.id) +: y.warns)
+      NodeWarned(y.astNode, Warning(2, "Year with period", y.astNode) +: y.warns)
     }
   }
 
@@ -631,41 +651,53 @@ class Parser(val input: ParserInput,
     '[' ~ softSpace ~ yearNumber ~ softSpace ~ ']' ~>
       { (y: NodeWarned[Year]) => {
         val yr = y.astNode.copy(approximate = true)
-        NodeWarned(yr, Warning(3, "Year with square brakets", yr.id) +: y.warns)
+        val warns = y.warns.map { w =>
+          if (w.node == y.astNode) w.copy(node = yr)
+          else w
+        }
+        NodeWarned(yr, Warning(3, "Year with square brakets", yr) +: warns)
       }
     }
   }
 
   def yearWithPage: RuleWithWarning[Year] = rule {
-    (yearWithChar | yearNumber) ~ softSpace ~ ':' ~ softSpace ~
-      oneOrMore(Digit) ~> { (y: NodeWarned[Year]) =>
-      NodeWarned(y.astNode, Warning(3, "Year with page info", y.astNode.id) +: y.warns)
+    (yearWithChar | yearNumber) ~ softSpace ~ ':' ~ softSpace ~ oneOrMore(Digit) ~> {
+      (y: NodeWarned[Year]) =>
+        NodeWarned(y.astNode, Warning(3, "Year with page info", y.astNode) +: y.warns)
     }
   }
 
   def yearWithParens: RuleWithWarning[Year] = rule {
-    '(' ~ softSpace ~ (yearWithChar | yearNumber) ~ softSpace ~ ')' ~>
-    { (y: NodeWarned[Year]) => {
-      val yr = y.astNode.copy(approximate = true)
-      NodeWarned(yr, Warning(2, "Year with parentheses", yr.id) +: y.warns)
-    }}
+    '(' ~ softSpace ~ (yearWithChar | yearNumber) ~ softSpace ~ ')' ~> {
+      (y: NodeWarned[Year]) => {
+        val yr = y.astNode.copy(approximate = true)
+        val warns = y.warns.map { w =>
+          if (w.node == y.astNode) w.copy(node = yr)
+          else w
+        }
+        NodeWarned(yr, Warning(2, "Year with parentheses", yr) +: warns)
+      }}
   }
 
   def yearWithChar: RuleWithWarning[Year] = rule {
     yearNumber ~ capturePos(Alpha) ~> {
       (y: NodeWarned[Year], pos: CapturePosition) =>
         val yr = y.astNode.copy(alpha = pos.some)
-        NodeWarned(yr, Vector(Warning(2, "Year with latin character", yr.id)))
+        val warns = y.warns.map { w =>
+          if (w.node == y.astNode) w.copy(node = yr)
+          else w
+        }
+        NodeWarned(yr, Warning(2, "Year with latin character", yr) +: warns)
     }
   }
 
   def yearNumber: RuleWithWarning[Year] = rule {
-    capturePos(CharPredicate("12") ~ CharPredicate("0789") ~ Digit ~
-      (Digit|'?') ~ '?'.?) ~> { (yPos: CapturePosition) => {
-        val yr = Year(AstNode.id, yPos)
+    capturePos(CharPredicate("12") ~ CharPredicate("0789") ~ Digit ~ (Digit|'?') ~ '?'.?) ~> {
+      (yPos: CapturePosition) => {
+        val yr = Year(yPos)
         if (input.charAt(yPos.end - 1) == '?') {
-          NodeWarned(yr.copy(approximate = true),
-                     Vector(Warning(2, "Year with question mark", yr.id)))
+          val yr1 = yr.copy(approximate = true)
+          NodeWarned(yr1, Vector(Warning(2, "Year with question mark", yr1)))
         } else NodeWarned(yr)
     }}
   }
