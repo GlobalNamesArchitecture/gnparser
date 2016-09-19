@@ -719,17 +719,15 @@ object Parser {
   final val wordBorderChar = spaceChars ++ CharPredicate(";.,:()]")
   final val sciCharsExtended = "æœſàâåãäáçčéèíìïňññóòôøõöúùüŕřŗššşž"
   final val sciUpperCharExtended = "ÆŒ"
-  final val authCharUpperStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-    "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝĆČĎİĶĹĺĽľŁłŅŌŐŒŘŚŜŞŠŸŹŻŽƒǾȘȚ"
+  final val authCharUpperStr =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝĆČĎİĶĹĺĽľŁłŅŌŐŒŘŚŜŞŠŸŹŻŽƒǾȘȚ"
   final val authCharMiscoded = '�'
   final val apostr = '\''
   final val doubleSpacePattern = """[\s_]{2}""".r
-  final val authCharLower = CharPredicate(LowerAlpha ++
-    ("àáâãäåæçèéêëìíîïðñòóóôõöøùúûüýÿ" +
-      "āăąćĉčďđ'-ēĕėęěğīĭİıĺľłńņňŏő" +
-      "œŕřśşšţťũūŭůűźżžſǎǔǧșțȳß"))
+  final val authCharLower = LowerAlpha ++
+    "àáâãäåæçèéêëìíîïðñòóóôõöøùúûüýÿāăąćĉčďđ'-ēĕėęěğīĭİıĺľłńņňŏőœŕřśşšţťũūŭůűźżžſǎǔǧșțȳß"
   final val authCharUpper = CharPredicate(authCharUpperStr + authCharMiscoded)
-  final val upperChar = CharPredicate(UpperAlpha ++ "Ë" ++ sciUpperCharExtended)
-  final val lowerChar = CharPredicate(LowerAlpha ++ "ë" ++ sciCharsExtended)
+  final val upperChar = UpperAlpha ++ "Ë" ++ sciUpperCharExtended
+  final val lowerChar = LowerAlpha ++ "ë" ++ sciCharsExtended
   final val anyVisible = upperChar ++ lowerChar ++ CharPredicate.Visible
 }
