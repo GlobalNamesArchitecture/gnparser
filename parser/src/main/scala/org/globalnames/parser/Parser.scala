@@ -47,7 +47,7 @@ class Parser(val input: ParserInput,
       ).flatten ++ ng.warns
 
       val worstLevel = if (warnings.isEmpty) 1
-                       else warnings.sortBy { _.level }.last.level
+                       else warnings.maxBy { _.level }.level
 
       ScientificName(namesGroup = ng.astNode.some, unparsedTail = unparsedTail,
                      quality = worstLevel) :: warnings :: HNil
