@@ -131,27 +131,34 @@ class Parser(val input: ParserInput,
     uninomialWord ~ space ~ comparison ~ (space ~ species).? ~>
     {(u: NodeWarned[UninomialWord], c: NodeWarned[Comparison],
       s: Option[NodeWarned[Species]]) =>
-      val nm = Name(uninomial = Uninomial(u.astNode.pos),
-                    species = s.map { _.astNode }, comparison = c.astNode.some)
-      val warns = Warning(3, "Name comparison", nm) +:
-                    (u.warns ++ c.warns ++ s.map { _.warns }.orZero)
-      NodeWarned(nm, warns)
+      val u1 = Uninomial(u.astNode.pos)
+      val nm = Name(uninomial = u1, species = s.map { _.astNode }, comparison = c.astNode.some)
+      val warns = (u.warns ++ c.warns ++ s.map { _.warns }.orZero).map { w =>
+        if (w.node == u.astNode) w.copy(node = u1)
+        else w
+      }
+      NodeWarned(nm, Warning(3, "Name comparison", nm) +: warns)
     }
   }
 
   def name3: RuleWithWarning[Name] = rule {
     uninomialWord ~ (softSpace ~ subGenus).? ~ softSpace ~
-    species ~ (space ~ infraspeciesGroup).? ~>
-    {(uw: NodeWarned[UninomialWord],
-      maybeSubGenus: Option[NodeWarned[SubGenus]], species: NodeWarned[Species],
-      maybeInfraspeciesGroup: Option[NodeWarned[InfraspeciesGroup]]) =>
-        val node = Name(Uninomial(uw.astNode.pos),
-                        maybeSubGenus.map { _.astNode },
-                        species = species.astNode.some,
-                        infraspecies = maybeInfraspeciesGroup.map { _.astNode })
-        val warns = uw.warns ++ maybeSubGenus.map { _.warns }.orZero ++
-                    species.warns ++ maybeInfraspeciesGroup.map { _.warns }.orZero
-        NodeWarned(node, warns)
+    species ~ (space ~ infraspeciesGroup).? ~> {
+      (uw: NodeWarned[UninomialWord],
+       maybeSubGenus: Option[NodeWarned[SubGenus]],
+       species: NodeWarned[Species],
+       maybeInfraspeciesGroup: Option[NodeWarned[InfraspeciesGroup]]) =>
+         val u1 = Uninomial(uw.astNode.pos)
+         val node = Name(u1,
+                         maybeSubGenus.map { _.astNode },
+                         species = species.astNode.some,
+                         infraspecies = maybeInfraspeciesGroup.map { _.astNode })
+         val warns = (uw.warns ++ maybeSubGenus.map { _.warns }.orZero ++
+                      species.warns ++ maybeInfraspeciesGroup.map { _.warns }.orZero).map { w =>
+           if (w.node == uw.astNode) w.copy(node = u1)
+           else w
+         }
+         NodeWarned(node, warns)
     }
   }
 
@@ -167,7 +174,7 @@ class Parser(val input: ParserInput,
     (rank ~ softSpace).? ~ word ~ (space ~ authorship).? ~>
     { (r: Option[NodeWarned[Rank]], sw: NodeWarned[SpeciesWord],
        a: Option[NodeWarned[Authorship]]) =>
-      NodeWarned(Infraspecies(sw.astNode.pos, r.map { _.astNode }, a.map { _.astNode }),
+      NodeWarned(Infraspecies(sw.astNode, r.map { _.astNode }, a.map { _.astNode }),
                  r.map { _.warns }.orZero ++ sw.warns ++ a.map { _.warns }.orZero)
     }
   }
@@ -175,7 +182,7 @@ class Parser(val input: ParserInput,
   def species: RuleWithWarning[Species] = rule {
     word ~ (softSpace ~ authorship).? ~ &(spaceCharsEOI ++ "(,:.;") ~> {
       (sw: NodeWarned[SpeciesWord], a: Option[NodeWarned[Authorship]]) =>
-        NodeWarned(Species(sw.astNode.pos, a.map { _.astNode }),
+        NodeWarned(Species(sw.astNode, a.map { _.astNode }),
                    sw.warns ++ a.map { _.warns }.orZero)
     }
   }
@@ -274,8 +281,12 @@ class Parser(val input: ParserInput,
   def uninomial: RuleWithWarning[Uninomial] = rule {
     uninomialWord ~ (space ~ authorship).? ~>
     { (u: NodeWarned[UninomialWord], authorship: Option[NodeWarned[Authorship]]) =>
-      val warns = u.warns ++ authorship.map { _.warns }.orZero
-      NodeWarned(Uninomial(u.astNode.pos, authorship.map { _.astNode }), warns)
+      val u1 = Uninomial(u.astNode.pos, authorship.map { _.astNode })
+      val warns = (u.warns ++ authorship.map { _.warns }.orZero).map { w =>
+        if (w.node == u.astNode) w.copy(node = u1)
+        else w
+      }
+      NodeWarned(u1, warns)
     }
   }
 
@@ -401,7 +412,7 @@ class Parser(val input: ParserInput,
     word ~ space ~ approximation ~ approxNameIgnored ~>
       { (u: NodeWarned[Uninomial], sw: NodeWarned[SpeciesWord],
          appr: NodeWarned[Approximation], ign: Option[String]) =>
-        val nm = Name(uninomial = u.astNode, species = Species(sw.astNode.pos).some,
+        val nm = Name(uninomial = u.astNode, species = Species(sw.astNode).some,
                       approximation = appr.astNode.some, ignored = ign)
         NodeWarned(nm, u.warns ++ sw.warns ++ appr.warns)
       }

@@ -11,10 +11,11 @@ trait AstNode {
 }
 
 case class ScientificName(
+  pos: CapturePosition = CapturePosition.empty,
   namesGroup: Option[NamesGroup] = None,
   isVirus: Boolean = false,
   quality: Int = 1,
-  unparsedTail: Option[String] = None) {
+  unparsedTail: Option[String] = None) extends AstNode {
 
   val isHybrid = namesGroup.map { ng =>
     ng.name.size > 1 || ng.hybrid.isDefined
@@ -104,12 +105,16 @@ case class SubGenus(subgenus: UninomialWord) extends AstNode {
   val pos = subgenus.pos
 }
 
-case class Species(pos: CapturePosition,
-                   authorship: Option[Authorship] = None) extends AstNode
+case class Species(word: SpeciesWord,
+                   authorship: Option[Authorship] = None) extends AstNode {
+  val pos = word.pos
+}
 
-case class Infraspecies(pos: CapturePosition,
+case class Infraspecies(word: SpeciesWord,
                         rank: Option[Rank] = None,
-                        authorship: Option[Authorship]) extends AstNode
+                        authorship: Option[Authorship]) extends AstNode {
+  val pos = word.pos
+}
 
 case class InfraspeciesGroup(group: Seq[Infraspecies]) extends AstNode {
   val pos = CapturePosition(group.head.pos.start, group.last.pos.end)
