@@ -32,7 +32,7 @@ tags
 # Other
 *.pyc
 output.json
-*.log
+logs/
 
 # Play Framework
 RUNNING_PID
