@@ -106,14 +106,15 @@ class Parser(val input: ParserInput,
   }
 
   def namedHybrid: RuleWithWarning[NamesGroup] = rule {
-    hybridChar ~ softSpace ~ name ~> { (hc: HybridChar, n: NodeWarned[Name]) =>
-      val ng = NamesGroup(Vector(n.astNode), hybrid = hc.some)
-      val warns = Vector(
-        (n.astNode.uninomial.pos.start == 1).option {
-          Warning(3, "Hybrid char not separated by space", ng)
-        },
-        Warning(2, "Named hybrid", ng).some).flatten
-      NodeWarned(ng, warns)
+    hybridChar ~ capturePos(softSpace) ~ name ~> {
+      (hc: HybridChar, spacePos: CapturePosition, n: NodeWarned[Name]) =>
+        val ng = NamesGroup(Vector(n.astNode), hybrid = hc.some)
+        val warns = Vector(
+          (spacePos.start == spacePos.end).option {
+            Warning(3, "Hybrid char not separated by space", ng)
+          },
+          Warning(2, "Named hybrid", ng).some).flatten
+        NodeWarned(ng, warns)
     }
   }
 
