@@ -1,5 +1,7 @@
 package org.globalnames.parser
 
+import java.util.regex.Pattern
+
 import org.parboiled2.CharPredicate.{Alpha, Digit, LowerAlpha, UpperAlpha}
 import org.parboiled2._
 
@@ -23,7 +25,7 @@ class Parser(val input: ParserInput,
       val name = input.sliceString(pos.start, pos.end)
 
       val warnings = Vector(
-        doubleSpacePattern.findFirstIn(name).map { _ =>
+        doubleSpacePattern.matcher(name).find().option {
           Warning(2, "Multiple adjacent space characters", ng.node)
         },
         name.exists { ch => spaceMiscoded.indexOf(ch) >= 0 }.option {
@@ -688,7 +690,7 @@ object Parser {
     "ABCDEFGHIJKLMNOPQRSTUVWXYZÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝĆČĎİĶĹĺĽľŁłŅŌŐŒŘŚŜŞŠŸŹŻŽƒǾȘȚ"
   final val authCharMiscoded = '�'
   final val apostr = '\''
-  final val doubleSpacePattern = """[\s_]{2}""".r
+  final val doubleSpacePattern = Pattern.compile("""[\s_]{2}""")
   final val authCharLower = LowerAlpha ++
     "àáâãäåæçèéêëìíîïðñòóóôõöøùúûüýÿāăąćĉčďđ'-ēĕėęěğīĭİıĺľłńņňŏőœŕřśşšţťũūŭůűźżžſǎǔǧșțȳß"
   final val authCharUpper = CharPredicate(authCharUpperStr + authCharMiscoded)
