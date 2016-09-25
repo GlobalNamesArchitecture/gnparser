@@ -67,6 +67,11 @@ class ScientificNameParserSpec extends Specification {
         quality.toInt     === pr.scientificName.quality
       }
 
+      s"contain no duplicates in warnings" in {
+        val pr = scientificNameParser.fromString(expectedName.verbatim)
+        Set(pr.warnings: _*).size === pr.warnings.size
+      }
+
       s"contain no orphans in warnings" in {
         def hasRefNode(sourceNode: AstNode, targetNode: AstNode): Boolean = targetNode match {
           case tn if tn == sourceNode => true
