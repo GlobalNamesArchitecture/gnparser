@@ -83,7 +83,7 @@ class ScientificNameParserSpec extends Specification {
                           n.infraspecies.exists { is => hasRefNode(sourceNode, is) } ||
                           n.comparison.exists { cmp => hasRefNode(sourceNode, cmp) } ||
                           n.approximation.exists { aprx => hasRefNode(sourceNode, aprx) }
-          case sg: SubGenus => hasRefNode(sourceNode, sg.subgenus)
+          case sg: SubGenus => hasRefNode(sourceNode, sg.word)
           case u: Uninomial => u.authorship.exists { auth => hasRefNode(sourceNode, auth)} ||
                                u.rank.exists { rk => hasRefNode(sourceNode, rk) } ||
                                u.parent.exists { par => hasRefNode(sourceNode, par) }

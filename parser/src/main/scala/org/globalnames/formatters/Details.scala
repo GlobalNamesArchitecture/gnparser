@@ -46,7 +46,7 @@ trait Details { parsedResult: ScientificNameParser.Result =>
     }
 
     def detailedSubGenus(sg: SubGenus): JValue =
-      "value" -> Util.norm(stringOf(sg.subgenus))
+      "value" -> Util.norm(stringOf(sg.word))
 
     def detailedSpecies(sp: Species): JValue =
       ("value" -> Util.norm(stringOf(sp))) ~

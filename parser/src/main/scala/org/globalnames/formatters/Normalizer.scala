@@ -38,7 +38,7 @@ trait Normalizer { parsedResult: ScientificNameParser.Result =>
       stringOf(uw).some
 
     def normalizedSubGenus(sg: SubGenus): Option[String] =
-      normalizedUninomialWord(sg.subgenus)
+      normalizedUninomialWord(sg.word)
 
     def normalizedSpecies(sp: Species): Option[String] = {
       Util.norm(stringOf(sp)).some |+|

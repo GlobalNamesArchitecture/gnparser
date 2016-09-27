@@ -101,8 +101,8 @@ case class UninomialWord(pos: CapturePosition) extends AstNode
 
 case class SpeciesWord(pos: CapturePosition) extends AstNode
 
-case class SubGenus(subgenus: UninomialWord) extends AstNode {
-  val pos = subgenus.pos
+case class SubGenus(word: UninomialWord) extends AstNode {
+  val pos = word.pos
 }
 
 case class Species(word: SpeciesWord,
