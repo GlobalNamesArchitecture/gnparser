@@ -9,10 +9,11 @@ trait Normalizer { parsedResult: ScientificNameParser.Result =>
   def normalized: Option[String] = {
     def normalizedNamesGroup(namesGroup: NamesGroup): Option[String] = {
       val name = namesGroup.name
-      if (name.size == 1)
+      if (name.size == 1) {
         namesGroup.hybrid.map { _ => "× " } |+| normalizedName(name.head)
-      else
+      } else {
         name.map(normalizedName).toVector.sequence.map { _.mkString(" × ") }
+      }
     }
 
     def normalizedName(nm: Name): Option[String] = {
@@ -22,8 +23,7 @@ trait Normalizer { parsedResult: ScientificNameParser.Result =>
                nm.comparison.map { stringOf },
                nm.species.flatMap { normalizedSpecies },
                nm.infraspecies.flatMap { normalizedInfraspeciesGroup })
-      if (parts.isEmpty) None
-      else parts.flatten.mkString(" ").some
+      parts.nonEmpty.option { parts.flatten.mkString(" ") }
     }
 
     def normalizedUninomial(u: Uninomial): Option[String] =
@@ -42,18 +42,17 @@ trait Normalizer { parsedResult: ScientificNameParser.Result =>
 
     def normalizedSpecies(sp: Species): Option[String] = {
       Util.norm(stringOf(sp)).some |+|
-        sp.authorship.flatMap(normalizedAuthorship).map(" " + _)
+        sp.authorship.flatMap(normalizedAuthorship).map { " " + _ }
     }
 
     def normalizedInfraspecies(is: Infraspecies): Option[String] = {
       is.rank.map { r => r.typ.getOrElse(stringOf(r)) + " " } |+|
         Util.norm(stringOf(is)).some |+|
-        is.authorship.flatMap(normalizedAuthorship).map(" " + _)
+        is.authorship.flatMap(normalizedAuthorship).map { " " + _ }
     }
 
     def normalizedInfraspeciesGroup(isg: InfraspeciesGroup): Option[String] =
-      isg.group.map(normalizedInfraspecies).toVector.sequence
-         .map { _.mkString(" ") }
+      isg.group.map(normalizedInfraspecies).toVector.sequence.map { _.mkString(" ") }
 
     parsedResult.scientificName.namesGroup.flatMap { normalizedNamesGroup }
   }
@@ -73,7 +72,7 @@ trait Normalizer { parsedResult: ScientificNameParser.Result =>
         }
         sb.append(Util.normAuthWord(stringOf(aw)))
       }
-      (authorStr.toString.some |+| a.filius.map(_ => " f.")).orZero
+      (authorStr.toString.some |+| a.filius.map { _ => " f." }).orZero
     }
   }
 
@@ -81,10 +80,8 @@ trait Normalizer { parsedResult: ScientificNameParser.Result =>
     if (at.authors.size == 1) {
       normalizedAuthor(at.authors.head).some
     } else {
-      val auths = at.authors
-      val authsStr = auths.dropRight(1).map { normalizedAuthor }
-                          .mkString(", ") +
-                     " & " + normalizedAuthor(auths.last)
+      val authsStr = at.authors.dropRight(1).map { normalizedAuthor }.mkString(", ") + " & " +
+                     normalizedAuthor(at.authors.last)
       authsStr.some
     }
 
