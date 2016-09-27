@@ -91,11 +91,13 @@ case class Approximation(pos: CapturePosition) extends AstNode
 case class Rank(pos: CapturePosition, typ: Option[String] = None) extends AstNode
 
 case class Uninomial(
-  pos: CapturePosition,
+  word: UninomialWord,
   authorship: Option[Authorship] = None,
   rank: Option[Rank] = None,
   parent: Option[Uninomial] = None,
-  implied: Boolean = false) extends AstNode
+  implied: Boolean = false) extends AstNode {
+  val pos = word.pos
+}
 
 case class UninomialWord(pos: CapturePosition) extends AstNode
 
