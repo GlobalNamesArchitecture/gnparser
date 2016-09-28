@@ -177,7 +177,7 @@ class Parser(val input: ParserInput,
   }
 
   def rankOtherUncommon: RuleNodeMeta[Rank] = rule {
-    capturePos("****" | "***" | "**" | "*" | "nat" | "f.sp" | "mut.") ~ &(spaceCharsEOI) ~> {
+    capturePos("*" | "nat" | "f.sp" | "mut.") ~ &(spaceCharsEOI) ~> {
       (p: CapturePosition) => FactoryAST.rank(p).add(warnings = Seq((3, "Uncommon rank")))
     }
   }
