@@ -16,7 +16,7 @@ class Parser(val input: ParserInput,
 
   import Parser._
 
-  type RuleWithWarning[T <: AstNode] = Rule1[NodeMeta[T]]
+  type RuleNodeMeta[T <: AstNode] = Rule1[NodeMeta[T]]
 
   def sciName: Rule2[ScientificName, Vector[Warning]] = rule {
     capturePos(softSpace ~ sciName1) ~ unparsed ~ EOI ~> {
@@ -52,15 +52,15 @@ class Parser(val input: ParserInput,
     }
   }
 
-  def sciName1: RuleWithWarning[NamesGroup] = rule {
+  def sciName1: RuleNodeMeta[NamesGroup] = rule {
     hybridFormula | namedHybrid | approxName | sciName2
   }
 
-  def sciName2: RuleWithWarning[NamesGroup] = rule {
+  def sciName2: RuleNodeMeta[NamesGroup] = rule {
     name ~> { (n: NodeMeta[Name]) => FactoryAST.namesGroup(Vector(n)) }
   }
 
-  def hybridFormula: RuleWithWarning[NamesGroup] = rule {
+  def hybridFormula: RuleNodeMeta[NamesGroup] = rule {
     name ~ space ~ hybridChar ~ (hybridFormula1 | hybridFormula2)
   }
 
@@ -93,7 +93,7 @@ class Parser(val input: ParserInput,
     }
   }
 
-  def namedHybrid: RuleWithWarning[NamesGroup] = rule {
+  def namedHybrid: RuleNodeMeta[NamesGroup] = rule {
     hybridChar ~ capturePos(softSpace) ~ name ~> {
       (hc: HybridChar, spacePos: CapturePosition, n: NodeMeta[Name]) =>
         val ng = FactoryAST.namesGroup(Vector(n), hybrid = hc.some)
@@ -104,15 +104,15 @@ class Parser(val input: ParserInput,
     }
   }
 
-  def name: RuleWithWarning[Name] = rule {
+  def name: RuleNodeMeta[Name] = rule {
     name2 | name3 | name1
   }
 
-  def name1: RuleWithWarning[Name] = rule {
+  def name1: RuleNodeMeta[Name] = rule {
     (uninomialCombo | uninomial) ~> { (u: NodeMeta[Uninomial]) => FactoryAST.name(u) }
   }
 
-  def name2: RuleWithWarning[Name] = rule {
+  def name2: RuleNodeMeta[Name] = rule {
     uninomialWord ~ space ~ comparison ~ (space ~ species).? ~> {
       (u: NodeMeta[UninomialWord], c: NodeMeta[Comparison], s: Option[NodeMeta[Species]]) =>
         val u1 = FactoryAST.uninomial(u)
@@ -122,7 +122,7 @@ class Parser(val input: ParserInput,
     }
   }
 
-  def name3: RuleWithWarning[Name] = rule {
+  def name3: RuleNodeMeta[Name] = rule {
     uninomialWord ~ (softSpace ~ subGenus).? ~ softSpace ~
     species ~ (space ~ infraspeciesGroup).? ~> {
       (uw: NodeMeta[UninomialWord], maybeSubGenus: Option[NodeMeta[SubGenus]],
@@ -136,53 +136,53 @@ class Parser(val input: ParserInput,
     }
   }
 
-  def infraspeciesGroup: RuleWithWarning[InfraspeciesGroup] = rule {
+  def infraspeciesGroup: RuleNodeMeta[InfraspeciesGroup] = rule {
     oneOrMore(infraspecies).separatedBy(space) ~> {
       (infs: Seq[NodeMeta[Infraspecies]]) => FactoryAST.infraspeciesGroup(infs)
     }
   }
 
-  def infraspecies: RuleWithWarning[Infraspecies] = rule {
+  def infraspecies: RuleNodeMeta[Infraspecies] = rule {
     (rank ~ softSpace).? ~ word ~ (space ~ authorship).? ~> {
       (r: Option[NodeMeta[Rank]], sw: NodeMeta[SpeciesWord], a: Option[NodeMeta[Authorship]]) =>
         FactoryAST.infraspecies(sw, r, a)
     }
   }
 
-  def species: RuleWithWarning[Species] = rule {
+  def species: RuleNodeMeta[Species] = rule {
     word ~ (softSpace ~ authorship).? ~ &(spaceCharsEOI ++ "(,:.;") ~> {
       (sw: NodeMeta[SpeciesWord], a: Option[NodeMeta[Authorship]]) => FactoryAST.species(sw, a)
     }
   }
 
-  def comparison: RuleWithWarning[Comparison] = rule {
+  def comparison: RuleNodeMeta[Comparison] = rule {
     capturePos("cf" ~ '.'.?) ~> { (p: CapturePosition) => FactoryAST.comparison(p) }
   }
 
-  def approximation: RuleWithWarning[Approximation] = rule {
+  def approximation: RuleNodeMeta[Approximation] = rule {
     capturePos("sp.nr." | "sp. nr." | "sp.aff." | "sp. aff." | "monst." | "?" |
                (("spp" | "nr" | "sp" | "aff" | "species") ~ (&(spaceCharsEOI) | '.'))) ~> {
       (p: CapturePosition) => FactoryAST.approximation(p) }
   }
 
-  def rankUninomial: RuleWithWarning[Rank] = rule {
+  def rankUninomial: RuleNodeMeta[Rank] = rule {
     capturePos(("sect" | "subsect" | "trib" | "subtrib" | "subser" | "ser" |
                 "subgen" | "fam" | "subfam" | "supertrib") ~ '.'.?) ~ &(spaceCharsEOI) ~> {
       (p: CapturePosition) => FactoryAST.rank(p)
     }
   }
 
-  def rank: RuleWithWarning[Rank] = rule {
+  def rank: RuleNodeMeta[Rank] = rule {
     rankForma | rankVar | rankSsp | rankOther | rankOtherUncommon
   }
 
-  def rankOtherUncommon: RuleWithWarning[Rank] = rule {
+  def rankOtherUncommon: RuleNodeMeta[Rank] = rule {
     capturePos("****" | "***" | "**" | "*" | "nat" | "f.sp" | "mut.") ~ &(spaceCharsEOI) ~> {
       (p: CapturePosition) => FactoryAST.rank(p).add(warnings = Seq((3, "Uncommon rank")))
     }
   }
 
-  def rankOther: RuleWithWarning[Rank] = rule {
+  def rankOther: RuleNodeMeta[Rank] = rule {
     capturePos("morph." | "nothosubsp." | "convar." | "pseudovar." | "sect." | "ser." | "subvar." |
                "subf." | "race" | "α" | "ββ" | "β" | "γ" | "δ" | "ε" | "φ" | "θ" | "μ" | "a." |
                "b." | "c." | "d." | "e." | "g." | "k.") ~ &(spaceCharsEOI) ~> {
@@ -190,37 +190,37 @@ class Parser(val input: ParserInput,
     }
   }
 
-  def rankVar: RuleWithWarning[Rank] = rule {
+  def rankVar: RuleNodeMeta[Rank] = rule {
     capturePos("[var.]" | ("var" ~ (&(spaceCharsEOI) | '.'))) ~> {
       (p: CapturePosition) => FactoryAST.rank(p, "var.".some)
     }
   }
 
-  def rankForma: RuleWithWarning[Rank] = rule {
+  def rankForma: RuleNodeMeta[Rank] = rule {
     capturePos(("forma" | "fma" | "form" | "fo" | "f") ~ (&(spaceCharsEOI) | '.')) ~> {
       (p: CapturePosition) => FactoryAST.rank(p, "fm.".some)
     }
   }
 
-  def rankSsp: RuleWithWarning[Rank] = rule {
+  def rankSsp: RuleNodeMeta[Rank] = rule {
     capturePos(("ssp" | "subsp") ~ (&(spaceCharsEOI) | '.')) ~> {
       (p: CapturePosition) => FactoryAST.rank(p, "ssp.".some)
     }
   }
 
-  def subGenus: RuleWithWarning[SubGenus] = rule {
+  def subGenus: RuleNodeMeta[SubGenus] = rule {
     '(' ~ softSpace ~ uninomialWord ~ softSpace ~ ')' ~> {
       (u: NodeMeta[UninomialWord]) => FactoryAST.subGenus(u)
     }
   }
 
-  def uninomialCombo: RuleWithWarning[Uninomial] = rule {
+  def uninomialCombo: RuleNodeMeta[Uninomial] = rule {
     (uninomialCombo1 | uninomialCombo2) ~> { (u: NodeMeta[Uninomial]) =>
       u.add(warnings = Seq((2, "Combination of two uninomials")))
     }
   }
 
-  def uninomialCombo1: RuleWithWarning[Uninomial] = rule {
+  def uninomialCombo1: RuleNodeMeta[Uninomial] = rule {
     uninomialWord ~ softSpace ~ subGenus ~ softSpace ~ authorship.? ~> {
       (uw: NodeMeta[UninomialWord], sg: NodeMeta[SubGenus], a: Option[NodeMeta[Authorship]]) =>
         FactoryAST.uninomial(sg.map { _.word }, a,
@@ -229,7 +229,7 @@ class Parser(val input: ParserInput,
     }
   }
 
-  def uninomialCombo2: RuleWithWarning[Uninomial] = rule {
+  def uninomialCombo2: RuleNodeMeta[Uninomial] = rule {
     (uninomial ~ softSpace ~ rankUninomial ~ softSpace ~ uninomial) ~> {
       (u1M: NodeMeta[Uninomial], rM: NodeMeta[Rank], u2M: NodeMeta[Uninomial]) =>
         val r = for { u1 <- u1M; r <- rM; u2 <- u2M } yield u2.copy(rank = r.some, parent = u1.some)
@@ -237,7 +237,7 @@ class Parser(val input: ParserInput,
       }
   }
 
-  def uninomial: RuleWithWarning[Uninomial] = rule {
+  def uninomial: RuleNodeMeta[Uninomial] = rule {
     uninomialWord ~ (space ~ authorship).? ~> {
       (uM: NodeMeta[UninomialWord], aM: Option[NodeMeta[Authorship]]) =>
         val r = for { u <- uM; a <- lift(aM) } yield Uninomial(u, a)
@@ -245,17 +245,17 @@ class Parser(val input: ParserInput,
     }
   }
 
-  def uninomialWord: RuleWithWarning[UninomialWord] = rule {
+  def uninomialWord: RuleNodeMeta[UninomialWord] = rule {
     abbrGenus | capWord | twoLetterGenera
   }
 
-  def abbrGenus: RuleWithWarning[UninomialWord] = rule {
+  def abbrGenus: RuleNodeMeta[UninomialWord] = rule {
     capturePos(upperChar ~ lowerChar.? ~ lowerChar.? ~ '.') ~> { (wp: CapturePosition) =>
       FactoryAST.uninomialWord(wp).add(warnings = Seq((3, "Abbreviated uninomial word")))
     }
   }
 
-  def capWord: RuleWithWarning[UninomialWord] = rule {
+  def capWord: RuleNodeMeta[UninomialWord] = rule {
     (capWord2 | capWord1) ~> { (uw: NodeMeta[UninomialWord]) => {
       val word = input.sliceString(uw.node.pos.start, uw.node.pos.end)
       val hasForbiddenChars = word.exists { ch => sciCharsExtended.indexOf(ch) >= 0 ||
@@ -265,7 +265,7 @@ class Parser(val input: ParserInput,
     }}
   }
 
-  def capWord1: RuleWithWarning[UninomialWord] = rule {
+  def capWord1: RuleNodeMeta[UninomialWord] = rule {
     capturePos(upperChar ~ lowerChar ~ oneOrMore(lowerChar) ~ '?'.?) ~> {
       (p: CapturePosition) =>
         val warns = (input.charAt(p.end - 1) == '?').option {
@@ -275,7 +275,7 @@ class Parser(val input: ParserInput,
     }
   }
 
-  def capWord2: RuleWithWarning[UninomialWord] = rule {
+  def capWord2: RuleNodeMeta[UninomialWord] = rule {
     capWord1 ~ '-' ~ word1 ~> {
       (uwM: NodeMeta[UninomialWord], wPos: CapturePosition) =>
         val uw1M = uwM.map { uw => uw.copy(pos = CapturePosition(uwM.node.pos.start, wPos.end)) }
@@ -283,13 +283,13 @@ class Parser(val input: ParserInput,
     }
   }
 
-  def twoLetterGenera: RuleWithWarning[UninomialWord] = rule {
+  def twoLetterGenera: RuleNodeMeta[UninomialWord] = rule {
     capturePos("Ca" | "Ea" | "Ge" | "Ia" | "Io" | "Io" | "Ix" | "Lo" | "Oa" |
       "Ra" | "Ty" | "Ua" | "Aa" | "Ja" | "Zu" | "La" | "Qu" | "As" | "Ba") ~>
     { (p: CapturePosition) => FactoryAST.uninomialWord(p) }
   }
 
-  def word: RuleWithWarning[SpeciesWord] = rule {
+  def word: RuleNodeMeta[SpeciesWord] = rule {
     !(authorPre | rankUninomial | approximation) ~ (word3 | word2 | word1) ~
     &(spaceCharsEOI ++ "(.,:;") ~> {
       (pos: CapturePosition) =>
@@ -329,7 +329,7 @@ class Parser(val input: ParserInput,
     capture(wordBorderChar ~ ANY.*).?
   }
 
-  def approxName: RuleWithWarning[NamesGroup] = rule {
+  def approxName: RuleNodeMeta[NamesGroup] = rule {
     uninomial ~ space ~ (approxName1 | approxName2) ~> {
       (n: NodeMeta[Name]) =>
         FactoryAST.namesGroup(Seq(n)).add(warnings = Seq((3, "Name is approximate")))
@@ -358,16 +358,16 @@ class Parser(val input: ParserInput,
       }
   }
 
-  def authorship: RuleWithWarning[Authorship] = rule {
+  def authorship: RuleNodeMeta[Authorship] = rule {
     (combinedAuthorship | basionymYearMisformed |
      basionymAuthorship | authorship1) ~ &(spaceCharsEOI ++ "(,:")
   }
 
-  def combinedAuthorship: RuleWithWarning[Authorship] = rule {
+  def combinedAuthorship: RuleNodeMeta[Authorship] = rule {
     combinedAuthorship1 | combinedAuthorship2
   }
 
-  def combinedAuthorship1: RuleWithWarning[Authorship] = rule {
+  def combinedAuthorship1: RuleNodeMeta[Authorship] = rule {
     basionymAuthorship ~ authorEx ~ authorship1 ~> {
       (bauM: NodeMeta[Authorship], exauM: NodeMeta[Authorship]) =>
         val authors1M =
@@ -378,7 +378,7 @@ class Parser(val input: ParserInput,
     }
   }
 
-  def combinedAuthorship2: RuleWithWarning[Authorship] = rule {
+  def combinedAuthorship2: RuleNodeMeta[Authorship] = rule {
     basionymAuthorship ~ softSpace ~ authorship1 ~> {
       (bauM: NodeMeta[Authorship], cauM: NodeMeta[Authorship]) =>
         val bau1 = bauM.node.copy(combination = cauM.node.authors.some, basionymParsed = true)
@@ -391,7 +391,7 @@ class Parser(val input: ParserInput,
     }
   }
 
-  def basionymYearMisformed: RuleWithWarning[Authorship] = rule {
+  def basionymYearMisformed: RuleNodeMeta[Authorship] = rule {
     '(' ~ softSpace ~ authorsGroup ~ softSpace ~ ')' ~ (softSpace ~ ',').? ~ softSpace ~ year ~> {
       (aM: NodeMeta[AuthorsGroup], yM: NodeMeta[Year]) =>
         val authors1 = aM.map { a => a.copy(year = yM.node.some) }
@@ -401,11 +401,11 @@ class Parser(val input: ParserInput,
     }
   }
 
-  def basionymAuthorship: RuleWithWarning[Authorship] = rule {
+  def basionymAuthorship: RuleNodeMeta[Authorship] = rule {
     basionymAuthorship1 | basionymAuthorship2
   }
 
-  def basionymAuthorship1: RuleWithWarning[Authorship] = rule {
+  def basionymAuthorship1: RuleNodeMeta[Authorship] = rule {
     '(' ~ softSpace ~ authorship1 ~ softSpace ~ ')' ~> {
       (aM: NodeMeta[Authorship]) =>
         val r = aM.map { a => a.copy(basionymParsed = true, inparenthesis = true) }
@@ -413,7 +413,7 @@ class Parser(val input: ParserInput,
     }
   }
 
-  def basionymAuthorship2: RuleWithWarning[Authorship] = rule {
+  def basionymAuthorship2: RuleNodeMeta[Authorship] = rule {
     '(' ~ softSpace ~ '(' ~ softSpace ~ authorship1 ~ softSpace ~ ')' ~ softSpace ~ ')' ~> {
       (aM: NodeMeta[Authorship]) =>
         val r = aM.map { a => a.copy(basionymParsed = true, inparenthesis = true) }
@@ -422,11 +422,11 @@ class Parser(val input: ParserInput,
     }
   }
 
-  def authorship1: RuleWithWarning[Authorship] = rule {
+  def authorship1: RuleNodeMeta[Authorship] = rule {
     (authorsYear | authorsGroup) ~> { (a: NodeMeta[AuthorsGroup]) => FactoryAST.authorship(a) }
   }
 
-  def authorsYear: RuleWithWarning[AuthorsGroup] = rule {
+  def authorsYear: RuleNodeMeta[AuthorsGroup] = rule {
     authorsGroup ~ softSpace ~ (',' ~ softSpace).? ~ year ~> {
       (aM: NodeMeta[AuthorsGroup], yM: NodeMeta[Year]) =>
         val a1 = for { a <- aM; y <- yM } yield a.copy(year = y.some)
@@ -434,7 +434,7 @@ class Parser(val input: ParserInput,
     }
   }
 
-  def authorsGroup: RuleWithWarning[AuthorsGroup] = rule {
+  def authorsGroup: RuleNodeMeta[AuthorsGroup] = rule {
     authorsTeam ~ (authorEx ~ authorsTeam).? ~> {
       (a: NodeMeta[AuthorsTeam], exAu: Option[NodeMeta[AuthorsTeam]]) =>
         val ag = FactoryAST.authorsGroup(a, exAu)
@@ -443,7 +443,7 @@ class Parser(val input: ParserInput,
     }
   }
 
-  def authorsTeam: RuleWithWarning[AuthorsTeam] = rule {
+  def authorsTeam: RuleNodeMeta[AuthorsTeam] = rule {
     oneOrMore(author).separatedBy(authorSep) ~> {
       (asM: Seq[NodeMeta[Author]]) => FactoryAST.authorsTeam(asM)
     }
@@ -453,14 +453,14 @@ class Parser(val input: ParserInput,
 
   def authorEx = rule { space ~ ("ex" | "in") ~ space }
 
-  def author: RuleWithWarning[Author] = rule {
+  def author: RuleNodeMeta[Author] = rule {
     (author1 | author2 | unknownAuthor) ~> { (auM: NodeMeta[Author]) =>
       val warns = (auM.node.pos.end - auM.node.pos.start < 2).option { (3, "Author is too short") }
       auM.add(warnings = warns.toVector)
     }
   }
 
-  def author1: RuleWithWarning[Author] = rule {
+  def author1: RuleNodeMeta[Author] = rule {
     author2 ~ softSpace ~ filius ~> {
       (auM: NodeMeta[Author], filiusM: NodeMeta[AuthorWord]) =>
         val au1M = for { au <- auM; filius <- filiusM } yield au.copy(filius = filius.some)
@@ -468,14 +468,14 @@ class Parser(val input: ParserInput,
     }
   }
 
-  def author2: RuleWithWarning[Author] = rule {
+  def author2: RuleNodeMeta[Author] = rule {
     authorWord ~ zeroOrMore(authorWordSep) ~ !(':') ~> {
       (auM: NodeMeta[AuthorWord], ausM: Seq[NodeMeta[AuthorWord]]) =>
         for { au <- auM; aus <- lift(ausM) } yield Author(au +: aus)
     }
   }
 
-  def authorWordSep: RuleWithWarning[AuthorWord] = rule {
+  def authorWordSep: RuleNodeMeta[AuthorWord] = rule {
     capture(ch(dash) | softSpace) ~ authorWord ~> {
       (sep: String, awM: NodeMeta[AuthorWord]) =>
         val aw1M = awM.map { aw => sep match {
@@ -488,7 +488,7 @@ class Parser(val input: ParserInput,
     }
   }
 
-  def unknownAuthor: RuleWithWarning[Author] = rule {
+  def unknownAuthor: RuleNodeMeta[Author] = rule {
     capturePos("?" | (("auct" | "anon" | "ht" | "hort") ~ (&(spaceCharsEOI) | '.'))) ~> {
       (authPos: CapturePosition) =>
         val endsWithQuestion = input.charAt(authPos.end - 1) == '?'
@@ -499,7 +499,7 @@ class Parser(val input: ParserInput,
     }
   }
 
-  def authorWord: RuleWithWarning[AuthorWord] = rule {
+  def authorWord: RuleNodeMeta[AuthorWord] = rule {
     (authorWord1 | authorWord2 | authorPre) ~> {
       (awM: NodeMeta[AuthorWord]) =>
         val word = input.sliceString(awM.node.pos.start, awM.node.pos.end)
@@ -510,23 +510,23 @@ class Parser(val input: ParserInput,
     }
   }
 
-  def authorWord1: RuleWithWarning[AuthorWord] = rule {
+  def authorWord1: RuleNodeMeta[AuthorWord] = rule {
     capturePos("arg." | "et al.{?}" | "et al." | "et al") ~> {
       (pos: CapturePosition) => FactoryAST.authorWord(pos)
     }
   }
 
-  def authorWord2: RuleWithWarning[AuthorWord] = rule {
+  def authorWord2: RuleNodeMeta[AuthorWord] = rule {
     capturePos("d'".? ~ authCharUpper ~ zeroOrMore(authCharUpper | authCharLower) ~ '.'.?) ~> {
       (pos: CapturePosition) => FactoryAST.authorWord(pos)
     }
   }
 
-  def filius: RuleWithWarning[AuthorWord] = rule {
+  def filius: RuleNodeMeta[AuthorWord] = rule {
     capturePos("f." | "fil." | "filius") ~> { (pos: CapturePosition) => FactoryAST.authorWord(pos) }
   }
 
-  def authorPre: RuleWithWarning[AuthorWord] = rule {
+  def authorPre: RuleNodeMeta[AuthorWord] = rule {
     capturePos("ab" | "af" | "bis" | "da" | "der" | "des" |
                "den" | "della" | "dela" | "de" | "di" | "du" |
                "la" | "ter" | "van" | "von" | "d'") ~ &(spaceCharsEOI) ~> {
@@ -534,11 +534,11 @@ class Parser(val input: ParserInput,
     }
   }
 
-  def year: RuleWithWarning[Year] = rule {
+  def year: RuleNodeMeta[Year] = rule {
     yearRange | yearApprox | yearWithParens | yearWithPage | yearWithDot | yearWithChar | yearNumber
   }
 
-  def yearRange: RuleWithWarning[Year] = rule {
+  def yearRange: RuleNodeMeta[Year] = rule {
     yearNumber ~ '-' ~ capturePos(oneOrMore(Digit)) ~ zeroOrMore(Alpha ++ "?") ~> {
       (yStartM: NodeMeta[Year], yEnd: CapturePosition) =>
         val yrM = yStartM.map { yStart => yStart.copy(approximate = true, rangeEnd = Some(yEnd)) }
@@ -547,11 +547,11 @@ class Parser(val input: ParserInput,
     }
   }
 
-  def yearWithDot: RuleWithWarning[Year] = rule {
+  def yearWithDot: RuleNodeMeta[Year] = rule {
     yearNumber ~ '.' ~> { (y: NodeMeta[Year]) => y.add(warnings = Seq((2, "Year with period"))) }
   }
 
-  def yearApprox: RuleWithWarning[Year] = rule {
+  def yearApprox: RuleNodeMeta[Year] = rule {
     '[' ~ softSpace ~ yearNumber ~ softSpace ~ ']' ~> {
       (yM: NodeMeta[Year]) =>
         val yrM = yM.map { y => y.copy(approximate = true) }
@@ -560,13 +560,13 @@ class Parser(val input: ParserInput,
     }
   }
 
-  def yearWithPage: RuleWithWarning[Year] = rule {
+  def yearWithPage: RuleNodeMeta[Year] = rule {
     (yearWithChar | yearNumber) ~ softSpace ~ ':' ~ softSpace ~ oneOrMore(Digit) ~> {
       (yM: NodeMeta[Year]) => yM.add(warnings = Seq((3, "Year with page info")))
     }
   }
 
-  def yearWithParens: RuleWithWarning[Year] = rule {
+  def yearWithParens: RuleNodeMeta[Year] = rule {
     '(' ~ softSpace ~ (yearWithChar | yearNumber) ~ softSpace ~ ')' ~> {
       (yM: NodeMeta[Year]) =>
         val y1M = yM.map { y => y.copy(approximate = true) }
@@ -575,7 +575,7 @@ class Parser(val input: ParserInput,
       }
   }
 
-  def yearWithChar: RuleWithWarning[Year] = rule {
+  def yearWithChar: RuleNodeMeta[Year] = rule {
     yearNumber ~ capturePos(Alpha) ~> {
       (yM: NodeMeta[Year], pos: CapturePosition) =>
         val y1M = yM.map { y => y.copy(alpha = pos.some) }
@@ -584,7 +584,7 @@ class Parser(val input: ParserInput,
     }
   }
 
-  def yearNumber: RuleWithWarning[Year] = rule {
+  def yearNumber: RuleNodeMeta[Year] = rule {
     capturePos(CharPredicate("12") ~ CharPredicate("0789") ~ Digit ~ (Digit|'?') ~ '?'.?) ~> {
       (yPos: CapturePosition) =>
         val yrM = FactoryAST.year(yPos)
