@@ -173,22 +173,20 @@ class Parser(val input: ParserInput,
   }
 
   def rank: RuleWithWarning[Rank] = rule {
-    rankForma | rankVar | rankSsp | rankOther
+    rankForma | rankVar | rankSsp | rankOther | rankOtherUncommon
+  }
+
+  def rankOtherUncommon: RuleWithWarning[Rank] = rule {
+    capturePos("****" | "***" | "**" | "*" | "nat" | "f.sp" | "mut.") ~ &(spaceCharsEOI) ~> {
+      (p: CapturePosition) => FactoryAST.rank(p).add(warnings = Seq((3, "Uncommon rank")))
+    }
   }
 
   def rankOther: RuleWithWarning[Rank] = rule {
-    capturePos("morph." | "f.sp." | "mut." | "nat" |
-               "nothosubsp." | "convar." | "pseudovar." | "sect." | "ser." |
-               "subvar." | "subf." | "race" | "α" | "ββ" | "β" | "γ" | "δ" |
-               "ε" | "φ" | "θ" | "μ" | "a." | "b." | "c." | "d." | "e." | "g." |
-               "k." | "****" | "**" | "*") ~ &(spaceCharsEOI) ~> {
-      (p: CapturePosition) =>
-        val rank = input.sliceString(p.start, p.end)
-        val warns = rank match {
-          case "*" | "**" | "***" | "****" | "nat" | "f.sp" | "mut." => Vector((3, "Uncommon rank"))
-          case _ => Vector.empty
-        }
-        FactoryAST.rank(p).add(warnings = warns)
+    capturePos("morph." | "nothosubsp." | "convar." | "pseudovar." | "sect." | "ser." | "subvar." |
+               "subf." | "race" | "α" | "ββ" | "β" | "γ" | "δ" | "ε" | "φ" | "θ" | "μ" | "a." |
+               "b." | "c." | "d." | "e." | "g." | "k.") ~ &(spaceCharsEOI) ~> {
+      (p: CapturePosition) => FactoryAST.rank(p)
     }
   }
 
