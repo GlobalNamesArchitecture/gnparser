@@ -1,9 +1,8 @@
 Global Names Parser
 ===================
 
-.. image:: https://secure.travis-ci.org/GlobalNamesArchitecture/gnparser.svg
-    :alt: Continuous Integration Status
-    :target: https://travis-ci.org/GlobalNamesArchitecture/gnparser
+.. image:: https://circleci.com/gh/GlobalNamesArchitecture/gnparser.svg?style=svg
+    :target: https://circleci.com/gh/GlobalNamesArchitecture/gnparser
 
 Brief Intro
 -----------
