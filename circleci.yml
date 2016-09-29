@@ -13,6 +13,10 @@ dependencies:
   override:
     - sbt test:compile
 
+notify:
+  webhooks:
+    - url: https://webhooks.gitter.im/e/448e1ef7669c919cdc5f
+
 test:
   override:
     - sbt "very test"
