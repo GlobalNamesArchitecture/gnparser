@@ -21,12 +21,13 @@ trait DelimitedStringRenderer {
     * @param delimiter delimits fields strings in result output. Default is TAB
     * @return fields concatenated to single string with delimiter
     */
-  def delimitedString(delimiter: Char = '\t'): String = {
+  def delimitedString(delimiter: String = "\t"): String = {
     val uuid = parserResult.input.id
     val verbatim = parserResult.input.verbatim
     val canonical = parserResult.canonized().orZero
     val canonicalExtended = parserResult.canonized(showRanks = true).orZero
     val quality = parserResult.scientificName.quality
-    uuid + verbatim + canonical + canonicalExtended + authorshipDelimited + yearDelimited + quality
+    Seq(uuid, verbatim, canonical, canonicalExtended, authorshipDelimited, yearDelimited, quality)
+      .mkString(delimiter)
   }
 }

@@ -79,7 +79,7 @@ class TcpServiceConnection(tcpConnection: ActorRef, simpleFormat: Boolean)
       } else {
         val parsedNames = inputNames.map { name =>
           val result = snp.fromString(name)
-          if (simpleFormat) result.delimitedString('|')
+          if (simpleFormat) result.delimitedString("|")
           else result.renderCompactJson
         }
         parsedNames.mkString("", "\n", "\n")
