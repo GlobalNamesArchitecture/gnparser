@@ -57,46 +57,53 @@ class Parser(val input: ParserInput,
   }
 
   def sciName2: RuleNodeMeta[NamesGroup] = rule {
-    name ~> { (n: NodeMeta[Name]) => FactoryAST.namesGroup(Vector(n)) }
+    name ~> { (n: NodeMeta[Name]) => FactoryAST.namesGroup(n) }
   }
+
+  private type HybridFormula1Type =
+    (HybridChar, NodeMeta[Species], Option[NodeMeta[InfraspeciesGroup]])
+  private type HybridFormula2Type = (HybridChar, Option[NodeMeta[Name]])
 
   def hybridFormula: RuleNodeMeta[NamesGroup] = rule {
-    name ~ space ~ hybridChar ~ (hybridFormula1 | hybridFormula2)
-  }
+    name ~ oneOrMore(space ~ (hybridFormula1 | hybridFormula2)) ~> {
+      (n1M: NodeMeta[Name], hybsM: Seq[Either[HybridFormula1Type, HybridFormula2Type]]) =>
+        val isFormula1 = hybsM.exists { _.isLeft }
+        val isFormula2 = hybsM.exists { _.isRight }
 
-  def hybridFormula1: Rule[NodeMeta[Name] :: HybridChar :: HNil,
-                           NodeMeta[NamesGroup] :: HNil] = rule {
-    softSpace ~ species ~ (space ~ infraspeciesGroup).? ~> {
-      (n: NodeMeta[Name], hc: HybridChar, s: NodeMeta[Species],
-       i: Option[NodeMeta[InfraspeciesGroup]]) =>
-        val uninomial1 = n.node.uninomial.copy(implied = true)
-        val n1 = n.node.copy(genusParsed = true)
-        val n2 = FactoryAST.name(uninomial = uninomial1,
-                                 species = s.some,
-                                 infraspecies = i)
-        FactoryAST.namesGroup(Seq(n1, n2), hybrid = hc.some)
-          .add(warnings = Seq((3, "Incomplete hybrid formula")))
-          .changeWarningsRef((n.node, n1.node), (n.node.uninomial, uninomial1.node))
+        val n2M = isFormula1.option { n1M.map { n => n.copy(genusParsed = true) } }.getOrElse(n1M)
+        val hybs1M = hybsM.map {
+          case Left((hc, sp, ig)) =>
+            val uninomial1M = nodeToMeta(n1M.node.uninomial.copy(implied = true))
+            val r = FactoryAST.name(uninomial = uninomial1M,
+                                    species = sp.some,
+                                    infraspecies = ig)
+                    .changeWarningsRef((n1M.node, n2M.node), (n1M.node.uninomial, uninomial1M.node))
+            (hc, r.some)
+          case Right((hc, n)) => (hc, n)
+        }
+        val r = FactoryAST.namesGroup(n2M, hybs1M)
+        val r1 = isFormula2.option { r.add(warnings = Seq((2, "Hybrid formula"))) }.getOrElse(r)
+        isFormula1.option { r1.add(warnings = Seq((3, "Incomplete hybrid formula"))) }.getOrElse(r1)
     }
   }
 
-  def hybridFormula2: Rule[NodeMeta[Name] :: HybridChar :: HNil,
-                           NodeMeta[NamesGroup] :: HNil] = rule {
-    (space ~ name).? ~> {
-      (n1: NodeMeta[Name], hc: HybridChar, n2: Option[NodeMeta[Name]]) =>
-        val ng = n2 match {
-          case None => FactoryAST.namesGroup(Seq(n1), hybrid = hc.some)
-          case Some(name2) =>
-            FactoryAST.namesGroup(name = Vector(n1, name2), hybrid = hc.some)
-        }
-        ng.add(warnings = Seq((2, "Hybrid formula")))
+  def hybridFormula1: Rule1[Either[HybridFormula1Type, HybridFormula2Type]] = rule {
+    hybridChar ~ softSpace ~ species ~ (space ~ infraspeciesGroup).? ~> {
+      (hc: HybridChar, sp: NodeMeta[Species], ig: Option[NodeMeta[InfraspeciesGroup]]) =>
+        Left((hc, sp, ig))
+    }
+  }
+
+  def hybridFormula2: Rule1[Either[HybridFormula1Type, HybridFormula2Type]] = rule {
+    hybridChar ~ (space ~ name).? ~> {
+      (hc: HybridChar, n: Option[NodeMeta[Name]]) => Right((hc, n))
     }
   }
 
   def namedHybrid: RuleNodeMeta[NamesGroup] = rule {
     hybridChar ~ capturePos(softSpace) ~ name ~> {
       (hc: HybridChar, spacePos: CapturePosition, n: NodeMeta[Name]) =>
-        val ng = FactoryAST.namesGroup(Vector(n), hybrid = hc.some)
+        val ng = FactoryAST.namesGroup(n, hybridParts = Seq((hc, None)))
         val warns = Vector(
           (spacePos.start == spacePos.end).option { (3, "Hybrid char not separated by space") },
           (2, "Named hybrid").some).flatten
@@ -332,7 +339,7 @@ class Parser(val input: ParserInput,
   def approxName: RuleNodeMeta[NamesGroup] = rule {
     uninomial ~ space ~ (approxName1 | approxName2) ~> {
       (n: NodeMeta[Name]) =>
-        FactoryAST.namesGroup(Seq(n)).add(warnings = Seq((3, "Name is approximate")))
+        FactoryAST.namesGroup(n).add(warnings = Seq((3, "Name is approximate")))
     }
   }
 

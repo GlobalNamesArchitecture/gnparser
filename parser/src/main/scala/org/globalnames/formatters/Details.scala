@@ -11,7 +11,7 @@ trait Details { parsedResult: ScientificNameParser.Result =>
 
   def detailed: JValue = {
     def detailedNamesGroup(namesGroup: NamesGroup): JValue =
-      namesGroup.name.map { detailedName }
+      (namesGroup.name +: namesGroup.hybridParts.flatMap { _._2 }).map { detailedName }
 
     def detailedName(nm: Name): JValue = {
       val uninomialDetails = {
