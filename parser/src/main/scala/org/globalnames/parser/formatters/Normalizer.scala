@@ -7,19 +7,29 @@ import Scalaz._
 trait Normalizer { parsedResult: ScientificNameParser.Result =>
 
   def normalized: Option[String] = {
-    def normalizedNamesGroup(namesGroup: NamesGroup): Option[String] =
+
+    def normalizedNamesGroup(namesGroup: NamesGroup): Option[String] = {
       namesGroup.hybridParts match {
-        case Seq() => normalizedName(namesGroup.name)
-        case Seq((hc, None)) => normalizedName(namesGroup.name).map { "× " + _ }
+        case Seq() => normalizedName(namesGroup.name, None)
+        case Seq((hc, None)) => normalizedName(namesGroup.name, None).map { "× " + _ }
         case hybs =>
-          val parts = normalizedName(namesGroup.name) +:
-                      hybs.map { case (hc, nOpt) => normalizedName(nOpt.get).map { " × " + _ } }
+          val nameNormal = normalizedName(namesGroup.name, None)
+          val hybsNormal = hybs.map { case (hc, nOpt) =>
+            val normal =
+              if (namesEqual(namesGroup.name, nOpt.get)) {
+                normalizedName(nOpt.get, namesGroup.name.uninomial.some)
+              } else normalizedName(nOpt.get, None)
+            normal.map { " × " + _ }
+          }
+          val parts = nameNormal +: hybsNormal
           parts.reduce { _ |+| _ }
       }
+    }
 
-    def normalizedName(nm: Name): Option[String] = {
+    def normalizedName(nm: Name, firstName: Option[Uninomial]): Option[String] = {
       val parts =
-        Vector(normalizedUninomial(nm.uninomial),
+        Vector(firstName.map { normalizedUninomial }
+                        .getOrElse(normalizedUninomial(nm.uninomial)),
                nm.subgenus.flatMap { normalizedSubGenus }.map { "(" + _ + ")" },
                nm.comparison.map { stringOf },
                nm.species.flatMap { normalizedSpecies },

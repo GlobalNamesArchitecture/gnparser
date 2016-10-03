@@ -10,19 +10,27 @@ import scalaz.Scalaz._
 trait Details { parsedResult: ScientificNameParser.Result =>
 
   def detailed: JValue = {
-    def detailedNamesGroup(namesGroup: NamesGroup): JValue =
-      (namesGroup.name +: namesGroup.hybridParts.flatMap { _._2 }).map { detailedName }
+    def detailedNamesGroup(namesGroup: NamesGroup): JValue = {
+      val hybs = namesGroup.hybridParts.flatMap { _._2.map { (_, namesGroup.name.some) } }
+      ((namesGroup.name, None) +: hybs).map { case (n, fn) => detailedName(n, fn) }
+    }
 
-    def detailedName(nm: Name): JValue = {
+    def detailedName(nm: Name, firstName: Option[Name]): JValue = {
       val uninomialDetails = {
         val typ = if (nm.genus) "genus" else "uninomial"
-        typ -> (if (nm.uninomial.implied) JNothing
-                else detailedUninomial(nm.uninomial))
+        val typVal =
+          if (nm.uninomial.implied) JNothing
+          else {
+            val firstNameUninomial =
+              firstName.flatMap { fn => namesEqual(fn, nm).option { fn.uninomial } }
+            detailedUninomial(nm.uninomial, firstNameUninomial)
+          }
+        typ -> typVal
       }
 
       val ignoredObj = nm.ignored.map {
-          ign => JObject("ignored" -> JObject("value" -> JString(ign))) }
-        .getOrElse(JObject())
+        ign => JObject("ignored" -> JObject("value" -> JString(ign)))
+      }.getOrElse(JObject())
 
       uninomialDetails ~
         ("specific_epithet" -> nm.species.map(detailedSpecies)) ~
@@ -35,11 +43,10 @@ trait Details { parsedResult: ScientificNameParser.Result =>
         ignoredObj
     }
 
-    def detailedUninomial(u: Uninomial): JValue = {
-      val rankStr =
-        u.rank
-         .map { r => r.typ.getOrElse(stringOf(r)) }
-      ("value" -> Util.norm(stringOf(u))) ~
+    def detailedUninomial(u: Uninomial, firstName: Option[Uninomial]): JValue = {
+      val rankStr = u.rank.map { r => r.typ.getOrElse(stringOf(r)) }
+      val fnVal = firstName.map { fn => Util.norm(stringOf(fn)) }.getOrElse(Util.norm(stringOf(u)))
+      ("value" -> fnVal) ~
         ("rank" -> rankStr) ~
         ("parent" -> u.parent.map { p => Util.norm(stringOf(p)) }) ~
         u.authorship.map(detailedAuthorship).getOrElse(JObject())

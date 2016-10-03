@@ -19,15 +19,21 @@ trait Canonizer { parsedResult: ScientificNameParser.Result =>
   def canonized(showRanks: Boolean = false): Option[String] = {
     def canonizedNamesGroup(namesGroup: NamesGroup): String =
       namesGroup.hybridParts match {
-        case Seq() => canonizedName(namesGroup.name)
-        case Seq((hc, None)) => "× " + canonizedName(namesGroup.name)
+        case Seq() => canonizedName(namesGroup.name, None)
+        case Seq((hc, None)) => "× " + canonizedName(namesGroup.name, None)
         case hybs =>
-          (canonizedName(namesGroup.name) +:
-            hybs.map { case (_, n) => canonizedName(n.get) }).mkString(" × ")
+          val nameCanonical = canonizedName(namesGroup.name, None)
+          val hybsCanonical = hybs.map { case (_, n) =>
+            if (namesEqual(namesGroup.name, n.get)) {
+              canonizedName(n.get, namesGroup.name.uninomial.some)
+            } else canonizedName(n.get, None)
+          }
+          (nameCanonical +: hybsCanonical).mkString(" × ")
       }
 
-    def canonizedName(nm: Name): String =
-      Vector(canonizedUninomial(nm.uninomial, showRanks),
+    def canonizedName(nm: Name, firstName: Option[Uninomial]): String =
+      Vector(firstName.map { fn => canonizedUninomial(fn, showRanks) }
+                      .getOrElse(canonizedUninomial(nm.uninomial, showRanks)),
                nm.species.map { canonizedSpecies },
                nm.infraspecies.map { canonizedInfraspeciesGroup })
         .flatten.mkString(" ")
