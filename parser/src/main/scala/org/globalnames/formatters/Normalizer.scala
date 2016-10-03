@@ -7,14 +7,15 @@ import Scalaz._
 trait Normalizer { parsedResult: ScientificNameParser.Result =>
 
   def normalized: Option[String] = {
-    def normalizedNamesGroup(namesGroup: NamesGroup): Option[String] = {
-      val name = namesGroup.name
-      if (name.size == 1) {
-        namesGroup.hybrid.map { _ => "× " } |+| normalizedName(name.head)
-      } else {
-        name.map(normalizedName).toVector.sequence.map { _.mkString(" × ") }
+    def normalizedNamesGroup(namesGroup: NamesGroup): Option[String] =
+      namesGroup.hybridParts match {
+        case Seq() => normalizedName(namesGroup.name)
+        case Seq((hc, None)) => normalizedName(namesGroup.name).map { "× " + _ }
+        case hybs =>
+          val parts = normalizedName(namesGroup.name) +:
+                      hybs.map { case (hc, nOpt) => normalizedName(nOpt.get).map { " × " + _ } }
+          parts.reduce { _ |+| _ }
       }
-    }
 
     def normalizedName(nm: Name): Option[String] = {
       val parts =

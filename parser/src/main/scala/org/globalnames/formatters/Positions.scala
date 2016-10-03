@@ -10,9 +10,10 @@ trait Positions { parsedResult: ScientificNameParser.Result =>
 
   def positioned: Seq[Position] = {
     def positionedNamesGroup(namesGroup: NamesGroup): Vector[Position] = {
-      val positions = positionedHybridChar(namesGroup.hybrid).toVector ++
-                      namesGroup.name.flatMap(positionedName).toVector
-      positions.sortBy(_.start)
+      val (hchars, names) = namesGroup.hybridParts.unzip
+      val namesPositions = names.flatMap { _.map { positionedName } }.flatten
+      val hcharsPositions = hchars.map { positionedHybridChar }
+      positionedName(namesGroup.name) ++ namesPositions ++ hcharsPositions
     }
 
     def positionedName(nm: Name): Vector[Position] = {
@@ -25,10 +26,8 @@ trait Positions { parsedResult: ScientificNameParser.Result =>
         nm.infraspecies.map(positionedInfraspeciesGroup).orZero
     }
 
-    def positionedHybridChar(hybridChar: Option[HybridChar]): Option[Position] =
-      hybridChar.map { hc =>
-        Position("hybrid_char", hc.pos.start, hc.pos.end)
-      }
+    def positionedHybridChar(hybridChar: HybridChar): Position =
+      Position("hybrid_char", hybridChar.pos.start, hybridChar.pos.end)
 
     def positionedApproximation(approximation: Option[Approximation]): Option[Position] =
       approximation.map { app =>
@@ -94,7 +93,9 @@ trait Positions { parsedResult: ScientificNameParser.Result =>
         as.combination.map(positionedAuthorsGroup).orZero
     }
 
-    parsedResult.scientificName.namesGroup.map(positionedNamesGroup).orZero
+    parsedResult.scientificName.namesGroup.map { ng =>
+      positionedNamesGroup(ng).sortBy { _.start }
+    }.orZero
   }
 }
 

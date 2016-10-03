@@ -7,11 +7,11 @@ import scalaz.{Name => _, _}
 import Scalaz._
 
 object FactoryAST {
-  def namesGroup(name: Seq[NodeMeta[Name]],
-                 hybrid: Option[HybridChar] = None): NodeMeta[NamesGroup] = {
-    val nameNode = name.map { _.node }
-    val warns = name.flatMap { _.warnings }.toVector
-    NodeMeta(NamesGroup(nameNode, hybrid), warns)
+  def namesGroup(name: NodeMeta[Name],
+       hybridParts: Seq[(HybridChar, Option[NodeMeta[Name]])] = Seq.empty): NodeMeta[NamesGroup] = {
+    val ng = NamesGroup(name.node, hybridParts.map { case (hc, nm) => (hc, nm.map { _.node }) })
+    val warns = name.warnings ++ hybridParts.flatMap{ case (_, nm) => nm.map { _.warnings }.orZero }
+    NodeMeta(ng, warns)
   }
 
   def name(uninomial: NodeMeta[Uninomial],

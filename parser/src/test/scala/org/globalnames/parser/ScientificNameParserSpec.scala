@@ -5,6 +5,8 @@ import org.json4s.jackson.JsonMethods._
 import org.specs2.mutable.Specification
 
 import scala.io.Source
+import scalaz.std.string._
+import scalaz.syntax.std.option._
 
 class ScientificNameParserSpec extends Specification {
   case class ExpectedName(verbatim: String, json: String, simple: String)
@@ -60,10 +62,10 @@ class ScientificNameParserSpec extends Specification {
 
         uuid              === pr.input.id.toString
         verbatim          === pr.input.verbatim
-        canonical         === pr.canonized().getOrElse("")
-        canonicalExtended === pr.canonized(showRanks = true).getOrElse("")
-        authorship        === pr.authorshipDelimited
-        year              === pr.yearDelimited
+        canonical         === pr.canonized().orZero
+        canonicalExtended === pr.canonized(showRanks = true).orZero
+        authorship        === pr.authorshipDelimited.orZero
+        year              === pr.yearDelimited.orZero
         quality.toInt     === pr.scientificName.quality
       }
 
@@ -76,7 +78,11 @@ class ScientificNameParserSpec extends Specification {
         def hasRefNode(sourceNode: AstNode, targetNode: AstNode): Boolean = targetNode match {
           case tn if tn == sourceNode => true
           case sn: ScientificName => sn.namesGroup.exists { ng => hasRefNode(sourceNode, ng) }
-          case ng: NamesGroup => ng.name.exists { n => hasRefNode(sourceNode, n) }
+          case ng: NamesGroup =>
+            hasRefNode(sourceNode, ng.name) ||
+            ng.hybridParts.exists { case (hc, name) =>
+              hasRefNode(sourceNode, hc) || name.exists { n => hasRefNode(sourceNode, n) }
+            }
           case n: Name => hasRefNode(sourceNode, n.uninomial) ||
                           n.subgenus.exists { sg => hasRefNode(sourceNode, sg) } ||
                           n.species.exists { sp => hasRefNode(sourceNode, sp) } ||

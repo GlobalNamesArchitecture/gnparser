@@ -18,11 +18,12 @@ trait Canonizer { parsedResult: ScientificNameParser.Result =>
 
   def canonized(showRanks: Boolean = false): Option[String] = {
     def canonizedNamesGroup(namesGroup: NamesGroup): String =
-      if (namesGroup.name.size == 1) {
-        namesGroup.hybrid.map { _ ⇒ "× " }.orZero +
-          canonizedName(namesGroup.name.head)
-      } else {
-        namesGroup.name.map(canonizedName).mkString(" × ")
+      namesGroup.hybridParts match {
+        case Seq() => canonizedName(namesGroup.name)
+        case Seq((hc, None)) => "× " + canonizedName(namesGroup.name)
+        case hybs =>
+          (canonizedName(namesGroup.name) +:
+            hybs.map { case (_, n) => canonizedName(n.get) }).mkString(" × ")
       }
 
     def canonizedName(nm: Name): String =

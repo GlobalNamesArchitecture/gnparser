@@ -17,49 +17,46 @@ case class ScientificName(
   quality: Int = 1,
   unparsedTail: Option[String] = None) extends AstNode {
 
-  val isHybrid = namesGroup.map { ng =>
-    ng.name.size > 1 || ng.hybrid.isDefined
-  }
+  val isHybrid: Option[Boolean] = namesGroup.map { ng => ng.hybridParts.nonEmpty }
   val surrogate: Boolean = {
     val isBold = unparsedTail.map {
       g => Disj(g.contains("BOLD") || g.contains("Bold"))
     }
-    val isAnnot = namesGroup.map { ng => Disj(ng.name.exists { n =>
-        n.approximation.isDefined || n.comparison.isDefined
+    val isAnnot = namesGroup.map { ng => Disj(ng.names.exists { n =>
+        n.isDefined && (n.get.approximation.isDefined || n.get.comparison.isDefined)
       })
     }
     Disj.unwrap(~(isBold |+| isAnnot))
   }
-  val authorship: Option[Authorship] =
-    namesGroup.flatMap { x => (x.name.size == 1).option {
-      val name = namesGroup.get.name.head
-      val infraspeciesAuthorship =
-        name.infraspecies.map { _.group.last.authorship }
-      val speciesAuthorship = name.species.map { _.authorship }
-      val uninomialAuthorship = name.uninomial.authorship.map { _.some }
-      val authorship =
-        infraspeciesAuthorship <+> speciesAuthorship <+> uninomialAuthorship
-      authorship.flatten
-    }}.flatten
-  val year: Option[Year] = namesGroup.flatMap { x => (x.name.size == 1).option {
-    val name = namesGroup.get.name.head
-    val infraspeciesYear =
-      name.infraspecies.flatMap {
-        _.group.last.authorship.flatMap { _.authors.year }
-      }
-    val speciesYear =
-      name.species.flatMap { _.authorship.flatMap { _.authors.year } }
-    val uninomialYear = name.uninomial.authorship.flatMap { _.authors.year }
+  val authorship: Option[Authorship] = namesGroup.flatMap { ng =>
+    val infraspeciesAuthorship = ng.name.infraspecies.map { _.group.last.authorship }
+    val speciesAuthorship = ng.name.species.map { _.authorship }
+    val uninomialAuthorship = ng.name.uninomial.authorship.map { _.some }
+    val authorship = infraspeciesAuthorship <+> speciesAuthorship <+> uninomialAuthorship
+    authorship.flatten
+  }
+  val year: Option[Year] = namesGroup.flatMap { ng =>
+    val infraspeciesYear = ng.name.infraspecies.flatMap {
+      _.group.last.authorship.flatMap { _.authors.year }
+    }
+    val speciesYear = ng.name.species.flatMap { _.authorship.flatMap { _.authors.year } }
+    val uninomialYear = ng.name.uninomial.authorship.flatMap { _.authors.year }
     infraspeciesYear <+> speciesYear <+> uninomialYear
-  }}.flatten
+  }
 }
 
-case class NamesGroup(
-  name: Seq[Name],
-  hybrid: Option[HybridChar] = None) extends AstNode {
-
-  val pos: CapturePosition =
-    CapturePosition(name.head.pos.start, name.last.pos.end)
+case class NamesGroup(name: Name,
+                      hybridParts: Seq[(HybridChar, Option[Name])]) extends AstNode {
+  val names: Seq[Option[Name]] = name.some +: hybridParts.map { _._2 }
+  val pos: CapturePosition = {
+    val end =
+      if (hybridParts.isEmpty) name.pos.end
+      else hybridParts.last match {
+        case (_, Some(n)) => n.pos.end
+        case (hc, None) => hc.pos.end
+      }
+    CapturePosition(name.pos.start, end)
+  }
 }
 
 case class Name(
