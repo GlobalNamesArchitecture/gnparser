@@ -4,7 +4,7 @@ package parser
 import java.util.UUID
 import java.util.regex.Pattern
 
-import org.globalnames.formatters._
+import org.globalnames.parser.formatters._
 import org.parboiled2._
 import shapeless._
 

@@ -1,4 +1,4 @@
-package org.globalnames.formatters
+package org.globalnames.parser.formatters
 
 import org.globalnames.parser._
 import scalaz.{Name => _, _}

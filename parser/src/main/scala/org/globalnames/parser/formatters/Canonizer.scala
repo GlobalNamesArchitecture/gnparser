@@ -1,4 +1,4 @@
-package org.globalnames.formatters
+package org.globalnames.parser.formatters
 
 import java.util.UUID
 
