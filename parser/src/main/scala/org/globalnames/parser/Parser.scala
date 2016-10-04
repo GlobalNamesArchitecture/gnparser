@@ -5,7 +5,8 @@ import java.util.regex.Pattern
 import org.parboiled2.CharPredicate.{Alpha, Digit, LowerAlpha, UpperAlpha}
 import org.parboiled2._
 
-import scalaz.Scalaz._
+import scalaz._
+import Scalaz._
 
 import shapeless._
 
@@ -70,7 +71,7 @@ class Parser(val input: ParserInput,
         val isFormula1 = hybsM.exists { _.isLeft }
         val isFormula2 = hybsM.exists { _.isRight }
 
-        val n2M = isFormula1.option { n1M.map { n => n.copy(genusParsed = true) } }.getOrElse(n1M)
+        val n2M = isFormula1 ? (n1M.map { n => n.copy(genusParsed = true) }) | n1M
         val hybs1M = hybsM.map {
           case Left((hc, sp, ig)) =>
             val uninomial1M = nodeToMeta(n1M.node.uninomial.copy(implied = true))
@@ -82,8 +83,8 @@ class Parser(val input: ParserInput,
           case Right((hc, n)) => (hc, n)
         }
         val r = FactoryAST.namesGroup(n2M, hybs1M)
-        val r1 = isFormula2.option { r.add(warnings = Seq((2, "Hybrid formula"))) }.getOrElse(r)
-        isFormula1.option { r1.add(warnings = Seq((3, "Incomplete hybrid formula"))) }.getOrElse(r1)
+        val r1 = isFormula2 ? (r.add(warnings = Seq((2, "Hybrid formula")))) | r
+        isFormula1 ? (r1.add(warnings = Seq((3, "Incomplete hybrid formula")))) | r1
     }
   }
 
