@@ -17,18 +17,20 @@ trait Canonizer { parsedResult: ScientificNameParser.Result =>
     canonized(showRanks).map { Canonical }
 
   def canonized(showRanks: Boolean = false): Option[String] = {
-    def canonizedNamesGroup(namesGroup: NamesGroup): String =
-      namesGroup.hybridParts match {
-        case Seq() => canonizedName(namesGroup.name, None)
-        case Seq((hc, None)) => "× " + canonizedName(namesGroup.name, None)
-        case hybs =>
-          val nameCanonical = canonizedName(namesGroup.name, None)
-          val hybsCanonical = hybs.map { case (_, n) =>
-            canonizedName(n.get,
-                          namesEqual(namesGroup.name, n.get).option { namesGroup.name.uninomial })
-          }
-          (nameCanonical +: hybsCanonical).mkString(" × ")
+    def canonizedNamesGroup(namesGroup: NamesGroup): String = {
+      val name = namesGroup.name
+      if (namesGroup.namedHybrid) {
+        "× " + canonizedName(name, None)
+      } else {
+        val hybsCanonized = namesGroup.hybridParts.map {
+          case (hc, Some(n)) =>
+            val firstUni = namesEqual(namesGroup.name, n).option { namesGroup.name.uninomial }
+            " " + canonizedName(n, firstUni)
+          case (hc, None) => ""
+        }
+        (canonizedName(name, None) +: hybsCanonized).mkString(" ×")
       }
+    }
 
     def canonizedName(nm: Name, firstName: Option[Uninomial]): String =
       Vector(firstName.map { fn => canonizedUninomial(fn, showRanks) }

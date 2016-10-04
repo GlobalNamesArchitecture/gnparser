@@ -9,18 +9,17 @@ trait Normalizer { parsedResult: ScientificNameParser.Result =>
   def normalized: Option[String] = {
 
     def normalizedNamesGroup(namesGroup: NamesGroup): Option[String] = {
-      namesGroup.hybridParts match {
-        case Seq() => normalizedName(namesGroup.name, None)
-        case Seq((hc, None)) => normalizedName(namesGroup.name, None).map { "× " + _ }
-        case hybs =>
-          val nameNormal = normalizedName(namesGroup.name, None)
-          val hybsNormal = hybs.map { case (hc, nOpt) =>
-              normalizedName(nOpt.get,
-                        namesEqual(namesGroup.name, nOpt.get).option { namesGroup.name.uninomial })
-                .map { " × " + _ }
-          }
-          val parts = nameNormal +: hybsNormal
-          parts.reduce { _ |+| _ }
+      val name = namesGroup.name
+      if (namesGroup.namedHybrid) {
+        "× ".some |+| normalizedName(name, None)
+      } else {
+        val hybsNormal = namesGroup.hybridParts.map {
+          case (hc, Some(n)) =>
+            normalizedName(n, namesEqual(name, n).option { name.uninomial }).map { " × " + _ }
+          case (hc, None) => " ×".some
+        }
+        val parts = normalizedName(name, None) +: hybsNormal
+        parts.reduce { _ |+| _ }
       }
     }
 

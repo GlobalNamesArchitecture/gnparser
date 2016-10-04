@@ -69,9 +69,10 @@ class Parser(val input: ParserInput,
     name ~ oneOrMore(space ~ (hybridFormula1 | hybridFormula2)) ~> {
       (n1M: NodeMeta[Name], hybsM: Seq[Either[HybridFormula1Type, HybridFormula2Type]]) =>
         val isFormula1 = hybsM.exists { _.isLeft }
-        val isFormula2 = hybsM.exists { _.isRight }
+        val isFormula2emptyName = hybsM.exists { h => h.isRight && h.right.get._2.isEmpty }
+        val isFormula2 = isFormula2emptyName || hybsM.exists { _.isRight }
 
-        val n2M = isFormula1 ? (n1M.map { n => n.copy(genusParsed = true) }) | n1M
+        val n2M = isFormula1 ? n1M.map { n => n.copy(genusParsed = true) } | n1M
         val hybs1M = hybsM.map {
           case Left((hc, sp, ig)) =>
             val uninomial1M = nodeToMeta(n1M.node.uninomial.copy(implied = true))
@@ -82,9 +83,10 @@ class Parser(val input: ParserInput,
             (hc, r.some)
           case Right((hc, n)) => (hc, n)
         }
-        val r = FactoryAST.namesGroup(n2M, hybs1M)
-        val r1 = isFormula2 ? (r.add(warnings = Seq((2, "Hybrid formula")))) | r
-        isFormula1 ? (r1.add(warnings = Seq((3, "Incomplete hybrid formula")))) | r1
+        val r0 = FactoryAST.namesGroup(n2M, hybs1M)
+        val r1 = isFormula2 ? r0.add(warnings = Seq((2, "Hybrid formula"))) | r0
+        val r2 = isFormula1 ? r1.add(warnings = Seq((3, "Incomplete hybrid formula"))) | r1
+        isFormula2emptyName ? r2.add(warnings = Seq((2, "Probably incomplete hybrid formula"))) | r2
     }
   }
 
@@ -104,7 +106,7 @@ class Parser(val input: ParserInput,
   def namedHybrid: RuleNodeMeta[NamesGroup] = rule {
     hybridChar ~ capturePos(softSpace) ~ name ~> {
       (hc: HybridChar, spacePos: CapturePosition, n: NodeMeta[Name]) =>
-        val ng = FactoryAST.namesGroup(n, hybridParts = Seq((hc, None)))
+        val ng = FactoryAST.namesGroup(n, namedHybrid = hc.some)
         val warns = Vector(
           (spacePos.start == spacePos.end).option { (3, "Hybrid char not separated by space") },
           (2, "Named hybrid").some).flatten

@@ -8,10 +8,12 @@ trait DelimitedStringRenderer {
   parserResult: ScientificNameParser.Result with Normalizer =>
 
   protected[globalnames] val ambiguousAuthorship: Boolean = {
-    parserResult.scientificName.isHybrid.fzip(parserResult.scientificName.namesGroup) match {
-      case Some((true, ng)) => !(ng.hybridParts.size == 1 && ng.hybridParts.head._2.isEmpty)
-      case _ => false
-    }
+    val isAmbiguousOpt = for {
+      isHybrid <- parserResult.scientificName.isHybrid
+      ng <- parserResult.scientificName.namesGroup
+      isNamedHybrid = ng.namedHybrid
+    } yield isHybrid && !isNamedHybrid
+    isAmbiguousOpt.getOrElse(false)
   }
 
   protected[globalnames] val authorshipDelimited: Option[String] =

@@ -8,8 +8,11 @@ import Scalaz._
 
 object FactoryAST {
   def namesGroup(name: NodeMeta[Name],
-       hybridParts: Seq[(HybridChar, Option[NodeMeta[Name]])] = Seq.empty): NodeMeta[NamesGroup] = {
-    val ng = NamesGroup(name.node, hybridParts.map { case (hc, nm) => (hc, nm.map { _.node }) })
+                 hybridParts: Seq[(HybridChar, Option[NodeMeta[Name]])] = Seq.empty,
+                 namedHybrid: Option[HybridChar] = None): NodeMeta[NamesGroup] = {
+    val ng = NamesGroup(name.node,
+                        hybridParts.map { case (hc, nm) => (hc, nm.map { _.node }) },
+                        namedHybrid)
     val warns = name.warnings ++ hybridParts.flatMap{ case (_, nm) => nm.map { _.warnings }.orZero }
     NodeMeta(ng, warns)
   }
