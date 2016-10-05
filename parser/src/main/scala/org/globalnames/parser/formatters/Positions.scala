@@ -12,7 +12,8 @@ trait Positions { parsedResult: ScientificNameParser.Result =>
     def positionedNamesGroup(namesGroup: NamesGroup): Vector[Position] = {
       val (hchars, names) = namesGroup.hybridParts.unzip
       val namesPositions = names.flatMap { _.map { positionedName } }.flatten
-      val hcharsPositions = hchars.map { positionedHybridChar }
+      val hcharsPositions = hchars.map { positionedHybridChar } ++
+                            namesGroup.leadingHybridChar.map { positionedHybridChar }
       positionedName(namesGroup.name) ++ namesPositions ++ hcharsPositions
     }
 

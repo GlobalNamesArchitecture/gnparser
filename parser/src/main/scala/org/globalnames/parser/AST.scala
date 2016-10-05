@@ -17,7 +17,10 @@ case class ScientificName(
   quality: Int = 1,
   unparsedTail: Option[String] = None) extends AstNode {
 
-  val isHybrid: Option[Boolean] = namesGroup.map { ng => ng.hybridParts.nonEmpty }
+  val isHybrid: Option[Boolean] = namesGroup.map { ng =>
+    ng.namedHybrid || ng.hybridParts.nonEmpty
+  }
+
   val surrogate: Boolean = {
     val isBold = unparsedTail.map {
       g => Disj(g.contains("BOLD") || g.contains("Bold"))
@@ -28,6 +31,7 @@ case class ScientificName(
     }
     Disj.unwrap(~(isBold |+| isAnnot))
   }
+
   val authorship: Option[Authorship] = namesGroup.flatMap { ng =>
     val infraspeciesAuthorship = ng.name.infraspecies.map { _.group.last.authorship }
     val speciesAuthorship = ng.name.species.map { _.authorship }
@@ -35,6 +39,7 @@ case class ScientificName(
     val authorship = infraspeciesAuthorship <+> speciesAuthorship <+> uninomialAuthorship
     authorship.flatten
   }
+
   val year: Option[Year] = namesGroup.flatMap { ng =>
     val infraspeciesYear = ng.name.infraspecies.flatMap {
       _.group.last.authorship.flatMap { _.authors.year }
@@ -46,7 +51,12 @@ case class ScientificName(
 }
 
 case class NamesGroup(name: Name,
-                      hybridParts: Seq[(HybridChar, Option[Name])]) extends AstNode {
+                      hybridParts: Seq[(HybridChar, Option[Name])],
+                      leadingHybridChar: Option[HybridChar]) extends AstNode {
+  val namedHybrid: Boolean = leadingHybridChar.isDefined
+
+  assert(!(hybridParts.nonEmpty && namedHybrid))
+
   val names: Seq[Option[Name]] = name.some +: hybridParts.map { _._2 }
   val pos: CapturePosition = {
     val end =
