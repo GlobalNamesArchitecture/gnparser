@@ -85,7 +85,7 @@ Features
 --------
 
 -  Fast (~7x faster than biodiversity
-   gem <https://github.com/GlobalNamesArchitecture/biodiversity>`_),
+   `gem <https://github.com/GlobalNamesArchitecture/biodiversity>`_),
    rock solid and elegant
 -  Extracts all elements from a name, not only a canonical form
 -  Works with very complex scientific names, including hybrids
