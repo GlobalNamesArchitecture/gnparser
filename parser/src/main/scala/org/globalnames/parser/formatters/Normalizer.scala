@@ -15,11 +15,9 @@ trait Normalizer { parsedResult: ScientificNameParser.Result =>
         case hybs =>
           val nameNormal = normalizedName(namesGroup.name, None)
           val hybsNormal = hybs.map { case (hc, nOpt) =>
-            val normal =
-              if (namesEqual(namesGroup.name, nOpt.get)) {
-                normalizedName(nOpt.get, namesGroup.name.uninomial.some)
-              } else normalizedName(nOpt.get, None)
-            normal.map { " × " + _ }
+              normalizedName(nOpt.get,
+                        namesEqual(namesGroup.name, nOpt.get).option { namesGroup.name.uninomial })
+                .map { " × " + _ }
           }
           val parts = nameNormal +: hybsNormal
           parts.reduce { _ |+| _ }

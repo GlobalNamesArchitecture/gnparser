@@ -24,9 +24,8 @@ trait Canonizer { parsedResult: ScientificNameParser.Result =>
         case hybs =>
           val nameCanonical = canonizedName(namesGroup.name, None)
           val hybsCanonical = hybs.map { case (_, n) =>
-            if (namesEqual(namesGroup.name, n.get)) {
-              canonizedName(n.get, namesGroup.name.uninomial.some)
-            } else canonizedName(n.get, None)
+            canonizedName(n.get,
+                          namesEqual(namesGroup.name, n.get).option { namesGroup.name.uninomial })
           }
           (nameCanonical +: hybsCanonical).mkString(" × ")
       }
