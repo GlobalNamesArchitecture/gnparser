@@ -1,3 +1,17 @@
+Version 0.3.3 (2016-10-05)
+--------------------------
+
+- add optionally showing canonical name UUID
+- API change: no more AST node ID
+- add year range to ast node
+- improve benchmarks
+- parse names ending on hybrid sign (#88)
+- fix: sometimes warning ids are broken (#147)
+- hybrid abbreviation expansions (#310)
+- raw hybrid formula parsing (#311)
+- move to CircleCI
+- minor improvements
+
 Version 0.3.2 (2016-07-20)
 --------------------------
 
@@ -9,7 +23,7 @@ Version 0.3.1 (2016-06-06)
 
 - fix authors' prefix parsing bug (#301)
 - add JSON pretty rendering method
-- dandle punctuation in the end of a name (#302)
+- handle punctuation in the end of a name (#302)
 
 Version 0.3.0 (2016-05-23)
 --------------------------
