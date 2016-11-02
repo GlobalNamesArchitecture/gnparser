@@ -1,8 +1,25 @@
 ####
 # Global Names Parser Test
 #
-# This test consists of a pipe delimited input (scientific name) and parsed
-# output in JSON format
+# This test consists of a line-delimited input (scientific name), detailed
+# parsed output in JSON format and simplified parsed output in
+# pipe-delimited format
+#
+# Test Structure
+#
+# The first line in every test is a scientific name to parse
+# The second line corresponds to detailed JSON output from the gnparser
+# The third line corresponds to pipe-delimited "simple" output. Simple output
+# consists of name-string UUID v5, verbatim name-string, canonical form without
+# ranks, canonical form with ranks, authorship of the most junior clade, year,
+# parsing quality number
+#
+# Parsing quality
+#
+# 1: parsed without problems
+# 2: parsed with minor problems,
+# 3: parsed with significant problems
+# "parsed: false"
 ####
 
 ### Uninomials
