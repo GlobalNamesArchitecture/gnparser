@@ -33,6 +33,8 @@ tags
 *.pyc
 output.json
 logs/
+.ensime*
+.vim.custom
 
 # Play Framework
 RUNNING_PID
