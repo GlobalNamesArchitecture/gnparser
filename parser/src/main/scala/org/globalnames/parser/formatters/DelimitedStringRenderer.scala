@@ -21,7 +21,7 @@ trait DelimitedStringRenderer {
       parserResult.scientificName.authorship.flatMap { normalizedAuthorship }
     }.flatten
 
-  protected[globalnames] val yearDelimited: Option[String] =
+  val yearDelimited: Option[String] =
     (!ambiguousAuthorship).option {
       parserResult.scientificName.year.map { normalizedYear }
     }.flatten
@@ -41,5 +41,24 @@ trait DelimitedStringRenderer {
     val quality = parserResult.scientificName.quality
     Seq(uuid, verbatim, canonical, canonicalExtended,
         authorshipDelimited.orZero, yearDelimited.orZero, quality).mkString(delimiter)
+  }
+
+  /**
+    * List of authors of author words:
+    * "Nothoprodontia boliviana MONNÉ Miguel Ángel, MONNÉ Marcela Laura, 2004" authorship names as
+    * Seq(Seq(MONNÉ, Miguel, Ángel), Seq(MONNÉ, Marcela, Laura))
+    */
+  val authorshipNames: Seq[Seq[String]] = {
+    if (ambiguousAuthorship) {
+      Seq()
+    } else {
+      parserResult.scientificName.authorship.map { as =>
+        val authorsNames = as.authors.authors.authors.map { a => a.words.map { w => stringOf(w) } }
+        val authorsExNames = as.authors.authorsEx.map { at => at.authors.map { a =>
+          a.words.map { w => stringOf(w) }
+        }}.getOrElse(Seq())
+        authorsNames ++ authorsExNames
+      }.getOrElse(Seq())
+    }
   }
 }
