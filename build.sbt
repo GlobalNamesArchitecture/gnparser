@@ -3,7 +3,7 @@ import sbt.Keys._
 val commonSettings = Seq(
   version := "0.3.3.1",
   scalaVersion := "2.11.8",
-  organization := "org.globalnames",
+  organization in ThisBuild := "org.globalnames",
   homepage := Some(new URL("http://globalnames.org/")),
   description := "Fast and elegant parser for taxonomic scientific names",
   startYear := Some(2008),
