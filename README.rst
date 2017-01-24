@@ -319,7 +319,7 @@ To test the socket connection with command line:
 When you see your telnet prompt, enter a name and press ``Enter``.
 
 To use (TCP/IP) socket server in your code find a ``socket`` library for
-your language, there is a good chance it is included with in the language's
+your language. There is a good chance it is included in the language's
 core.
 
 Usage as a REST API Interface
