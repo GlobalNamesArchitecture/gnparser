@@ -74,8 +74,8 @@ to deal with the most complex scientific name strings.
 
 ``gnparser`` takes a name string like
 ``Drosophila (Sophophora) melanogaster Meigen, 1830`` and returns back
-parsed components in JSON format. We supply an informal `description of
-the output fields </JSON_FIELDS.md>`_. Parser's behavior is defined in
+parsed components in JSON format. We supply a `description of
+the output fields as JSON schema <http://globalnames.org/schemas/gnparser.json>`_. Parser's behavior is defined in
 its tests and the `test
 file <https://raw.githubusercontent.com/GlobalNamesArchitecture/gnparser/master/parser/src/test/resources/test_data.txt>`_
 is a good source of information about parser's capabilities, its input
