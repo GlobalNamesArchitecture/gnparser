@@ -313,6 +313,7 @@ is the default port.
 To test the socket connection with command line:
 
 ::
+
     telnet localhost 1234
 
 When you see your telnet prompt, enter a name and press ``Enter``.
