@@ -310,8 +310,16 @@ is the default port.
 
     gnparse socket --port 1234
 
-To test the socket connection use ``telnet localhost 1234``, enter a
-name and press ``Enter``
+To test the socket connection with command line:
+
+::
+    telnet localhost 1234
+
+When you see your telnet prompt, enter a name and press ``Enter``.
+
+To use (TCP/IP) socket server in your code find a ``socket`` library for
+your language, there is a good chance it is included with in the language's
+core.
 
 Usage as a REST API Interface
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
