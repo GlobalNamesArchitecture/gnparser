@@ -81,6 +81,22 @@ file <https://raw.githubusercontent.com/GlobalNamesArchitecture/gnparser/master/
 is a good source of information about parser's capabilities, its input
 and output.
 
+Speed
+-----
+
+Millions of names parsed per hour on a i7-4930K CPU
+(6 cores, 12 threads, at 3.4 GHz), parser v0.3.1
+
+========  ================
+Threads   Millions/hr
+========  ================
+1         29.44
+2         50.85
+4         90.45
+8         120.75
+12        130.9
+========  ================
+
 Features
 --------
 
