@@ -100,7 +100,7 @@ Threads   Millions/hr
 Features
 --------
 
--  Fast (~7x faster than biodiversity
+-  Fast (~8x faster than biodiversity
    `gem <https://github.com/GlobalNamesArchitecture/biodiversity>`_),
    rock solid and elegant
 -  Extracts all elements from a name, not only a canonical form
