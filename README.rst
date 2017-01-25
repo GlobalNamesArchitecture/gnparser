@@ -320,7 +320,14 @@ When you see your telnet prompt, enter a name and press ``Enter``.
 
 To use (TCP/IP) socket server in your code find a ``socket`` library for
 your language. There is a good chance it is included in the language's
-core.
+core. For example in Ruby it would be:
+
+.. code:: ruby
+
+    require "socket"
+    s = TCPSocket.open("0.0.0.0", 1234)
+    s.puts("Homo sapiens")
+    s.gets
 
 Usage as a REST API Interface
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
