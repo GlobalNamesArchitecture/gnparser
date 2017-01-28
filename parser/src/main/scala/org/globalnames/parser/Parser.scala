@@ -294,7 +294,7 @@ class Parser(val input: ParserInput,
   }
 
   def twoLetterGenera: RuleNodeMeta[UninomialWord] = rule {
-    capturePos("Ca" | "Ea" | "Ge" | "Ia" | "Io" | "Io" | "Ix" | "Lo" | "Oa" |
+    capturePos("Ca" | "Ea" | "Ge" | "Ia" | "Io" | "Ix" | "Lo" | "Oa" |
       "Ra" | "Ty" | "Ua" | "Aa" | "Ja" | "Zu" | "La" | "Qu" | "As" | "Ba") ~>
     { (p: CapturePosition) => FactoryAST.uninomialWord(p) }
   }
