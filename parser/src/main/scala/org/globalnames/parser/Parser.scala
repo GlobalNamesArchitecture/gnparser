@@ -535,7 +535,7 @@ class Parser(val input: ParserInput,
   def authorPre: RuleNodeMeta[AuthorWord] = rule {
     capturePos("ab" | "af" | "bis" | "da" | "der" | "des" |
                "den" | "della" | "dela" | "de" | "di" | "du" |
-               "la" | "ter" | "van" | "von" | "d'") ~ &(spaceCharsEOI) ~> {
+               "la" | "ter" | "van" | "von" | "v." | "d'") ~ &(spaceCharsEOI) ~> {
       (pos: CapturePosition) => FactoryAST.authorWord(pos)
     }
   }
