@@ -379,12 +379,15 @@ class Parser(val input: ParserInput,
 
   def combinedAuthorship1: RuleNodeMeta[Authorship] = rule {
     basionymAuthorship ~ authorEx ~ authorship1 ~> {
-      (bauM: NodeMeta[Authorship], exauM: NodeMeta[Authorship]) =>
+      (bauM: NodeMeta[Authorship], exM: NodeMeta[AuthorWord], exauM: NodeMeta[Authorship]) =>
         val authors1M = for { bau <- bauM; exau <- exauM }
                         yield bau.authors.copy(authorsEx = exau.authors.authors.some)
-        val bau1M = bauM.map { bau => bau.copy(authors = authors1M.node) }
+        val bau1M = for { bau <- bauM; authors1 <- authors1M; _ <- exM }
+                    yield bau.copy(authors = authors1)
+
         bau1M.add(warnings = Seq((2, "Ex authors are not required")))
-             .changeWarningsRef((bauM.node.authors, authors1M.node), (bauM.node, bau1M.node))
+             .changeWarningsRef((bauM.node.authors, authors1M.node), (bauM.node, bau1M.node),
+                                (exM.node, bau1M.node))
     }
   }
 
@@ -441,11 +444,12 @@ class Parser(val input: ParserInput,
   }
 
   def authorsGroup: RuleNodeMeta[AuthorsGroup] = rule {
-    authorsTeam ~ (authorEx ~ authorsTeam).? ~> {
-      (a: NodeMeta[AuthorsTeam], exAu: Option[NodeMeta[AuthorsTeam]]) =>
-        val ag = FactoryAST.authorsGroup(a, exAu)
-        val warns = exAu.map { _ => (2, "Ex authors are not required") }.toVector
-        ag.add(warnings = warns)
+    authorsTeam ~ (authorEx ~ authorsTeam ~> {
+      (exM: NodeMeta[AuthorWord], atM: NodeMeta[AuthorsTeam]) => atM.add(exM.rawWarnings) }).? ~> {
+        (a: NodeMeta[AuthorsTeam], exAu: Option[NodeMeta[AuthorsTeam]]) =>
+          val ag = FactoryAST.authorsGroup(a, exAu)
+          val warns = exAu.map { _ => (2, "Ex authors are not required") }.toVector
+          ag.add(warnings = warns)
     }
   }
 
@@ -457,7 +461,13 @@ class Parser(val input: ParserInput,
 
   def authorSep: Rule0 = rule { softSpace ~ ("," | "&" | "and" | "et") ~ softSpace }
 
-  def authorEx: Rule0 = rule { space ~ ("ex" | "in") ~ space }
+  def authorEx: RuleNodeMeta[AuthorWord] = rule {
+    space ~ capturePos("ex" ~ '.'.? | "in") ~ space ~> { (pos: CapturePosition) =>
+      val aw = FactoryAST.authorWord(pos)
+      val warns = (input.charAt(pos.end - 1) == '.').option { (3, "`ex` ends with dot") }.toVector
+      aw.add(warnings = warns)
+    }
+  }
 
   def author: RuleNodeMeta[Author] = rule {
     (author1 | author2 | unknownAuthor) ~> { (auM: NodeMeta[Author]) =>
@@ -654,6 +664,8 @@ object Parser {
 
   case class NodeMeta[T <: AstNode](node: T, warnings: Vector[Warning] = Vector.empty)
     extends NodeMetaBase[T] {
+
+    val rawWarnings = warnings.map { w => (w.level, w.message) }
 
     def changeWarningsRef(substitutions: (AstNode, AstNode)*): NodeMeta[T] = {
       val substWarnsMap = substitutions.toMap
