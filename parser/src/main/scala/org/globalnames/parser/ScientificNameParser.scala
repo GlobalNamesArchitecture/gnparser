@@ -139,7 +139,7 @@ object ScientificNameParser {
 
   private object RemoveJunk extends Poly2 {
     implicit def default =
-      at[String, Pattern]{ (str, ptrn) => ptrn.matcher(str).replaceFirst("") }
+      at[String, Pattern] { (str, ptrn) => ptrn.matcher(str).replaceFirst("") }
   }
 
   def removeJunk(input: String): String = {
