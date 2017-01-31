@@ -20,6 +20,7 @@ object Util {
         case 'Œ' => output.append("Oe")
         case 'æ' => output.append("ae")
         case 'œ' => output.append("oe")
+        case 'Ö' => output.append("Oe")
         case '\'' =>
         case _ =>
           val index = charFrom.indexOf(chr)

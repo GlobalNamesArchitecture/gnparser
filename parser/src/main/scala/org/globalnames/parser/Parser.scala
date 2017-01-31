@@ -689,7 +689,7 @@ object Parser {
   private final val spaceCharsEOI = spaceChars ++ EOI ++ ";"
   private final val wordBorderChar = spaceChars ++ CharPredicate(";.,:()]")
   private final val sciCharsExtended = "æœſàâåãäáçčéèíìïňññóòôøõöúùüŕřŗššşž"
-  private final val sciUpperCharExtended = "ÆŒ"
+  private final val sciUpperCharExtended = "ÆŒÖ"
   private final val authCharUpperStr =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝĆČĎİĶĹĺĽľŁłŅŌŐŒŘŚŜŞŠŸŹŻŽƒǾȘȚ"
   private final val authCharMiscoded = '�'

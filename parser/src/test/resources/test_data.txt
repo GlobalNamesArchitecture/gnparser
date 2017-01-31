@@ -1125,6 +1125,10 @@ f9689237-693f-5d6e-b62e-b1622214863e|Cerambyx thomæ GMELIN J. F., 1790|Cerambyx
 Campethera cailliautii fülleborni
 {"name_string_id":"6a47e9c0-908f-5141-be93-76490af08606","parsed":true,"quality":2,"quality_warnings":[[2,"Non-standard characters in canonical"]],"parser_version":"test_version","verbatim":"Campethera cailliautii fülleborni","normalized":"Campethera cailliautii fulleborni","canonical_name":{"value":"Campethera cailliautii fulleborni"},"hybrid":false,"surrogate":false,"virus":false,"details":[{"genus":{"value":"Campethera"},"specific_epithet":{"value":"cailliautii"},"infraspecific_epithets":[{"value":"fulleborni"}]}],"positions":[["genus",0,10],["specific_epithet",11,22],["infraspecific_epithet",23,33]]}
 6a47e9c0-908f-5141-be93-76490af08606|Campethera cailliautii fülleborni|Campethera cailliautii fulleborni|Campethera cailliautii fulleborni|||2
+
+Östrupia Heiden ex Hustedt, 1935
+{"name_string_id":"940aba5b-2334-5846-98ba-ce29c7305734","parsed":true,"quality":2,"quality_warnings":[[2,"Ex authors are not required"],[2,"Non-standard characters in canonical"]],"parser_version":"test_version","verbatim":"Östrupia Heiden ex Hustedt, 1935","normalized":"Oestrupia Heiden ex Hustedt 1935","canonical_name":{"value":"Oestrupia"},"hybrid":false,"surrogate":false,"virus":false,"details":[{"uninomial":{"value":"Oestrupia","authorship":{"value":"Heiden ex Hustedt 1935","basionym_authorship":{"authors":["Heiden"],"year":{"value":"1935"},"ex_authors":["Hustedt"]}}}}],"positions":[["uninomial",0,8],["author_word",9,15],["author_word",19,26],["year",28,32]]}
+940aba5b-2334-5846-98ba-ce29c7305734|Östrupia Heiden ex Hustedt, 1935|Oestrupia|Oestrupia|Heiden ex Hustedt 1935|1935|2
 #>
 
 #SECTION: Epithets with an apostrophe<
