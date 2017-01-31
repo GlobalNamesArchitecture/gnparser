@@ -384,6 +384,7 @@ class Parser(val input: ParserInput,
                         yield bau.authors.copy(authorsEx = exau.authors.authors.some)
         val bau1M = for { bau <- bauM; authors1 <- authors1M; _ <- exM }
                     yield bau.copy(authors = authors1)
+
         bau1M.add(warnings = Seq((2, "Ex authors are not required")))
              .changeWarningsRef((bauM.node.authors, authors1M.node), (bauM.node, bau1M.node),
                                 (exM.node, bau1M.node))
@@ -393,12 +394,8 @@ class Parser(val input: ParserInput,
   def combinedAuthorship2: RuleNodeMeta[Authorship] = rule {
     basionymAuthorship ~ softSpace ~ authorship1 ~> {
       (bauM: NodeMeta[Authorship], cauM: NodeMeta[Authorship]) =>
-        val bau1 = bauM.node.copy(combination = cauM.node.authors.some, basionymParsed = true)
-        val warns = bauM.warnings ++ cauM.warnings
-        NodeMeta(bau1, warns).changeWarningsRef((bauM.node, bau1))
-
         val r = for { bau <- bauM; cau <- cauM }
-          yield bau.copy(combination = cau.authors.some, basionymParsed = true)
+                yield bau.copy(combination = cau.authors.some, basionymParsed = true)
         r.changeWarningsRef((bauM.node, r.node))
     }
   }
@@ -462,7 +459,7 @@ class Parser(val input: ParserInput,
     }
   }
 
-  def authorSep = rule { softSpace ~ ("," | "&" | "and" | "et") ~ softSpace }
+  def authorSep: Rule0 = rule { softSpace ~ ("," | "&" | "and" | "et") ~ softSpace }
 
   def authorEx: RuleNodeMeta[AuthorWord] = rule {
     space ~ capturePos("ex" ~ '.'.? | "in") ~ space ~> { (pos: CapturePosition) =>
@@ -488,7 +485,7 @@ class Parser(val input: ParserInput,
   }
 
   def author2: RuleNodeMeta[Author] = rule {
-    authorWord ~ zeroOrMore(authorWordSep) ~ !(':') ~> {
+    authorWord ~ zeroOrMore(authorWordSep) ~ !':' ~> {
       (auM: NodeMeta[AuthorWord], ausM: Seq[NodeMeta[AuthorWord]]) =>
         for { au <- auM; aus <- lift(ausM) } yield Author(au +: aus)
     }
@@ -548,7 +545,7 @@ class Parser(val input: ParserInput,
   def authorPre: RuleNodeMeta[AuthorWord] = rule {
     capturePos("ab" | "af" | "bis" | "da" | "der" | "des" |
                "den" | "della" | "dela" | "de" | "di" | "du" |
-               "la" | "ter" | "van" | "von" | "d'") ~ &(spaceCharsEOI) ~> {
+               "la" | "ter" | "van" | "von" | "v." | "d'") ~ &(spaceCharsEOI) ~> {
       (pos: CapturePosition) => FactoryAST.authorWord(pos)
     }
   }
@@ -614,13 +611,9 @@ class Parser(val input: ParserInput,
     }
   }
 
-  def softSpace = rule {
-    zeroOrMore(spaceChars)
-  }
+  def softSpace: Rule0 = rule { zeroOrMore(spaceChars) }
 
-  def space = rule {
-    oneOrMore(spaceChars)
-  }
+  def space: Rule0 = rule { oneOrMore(spaceChars) }
 }
 
 object Parser {
@@ -702,22 +695,22 @@ object Parser {
     }
   }
 
-  final val dash = '-'
-  final val spaceMiscoded = "　 \t\r\n\f_"
-  final val spaceChars = CharPredicate(" " + spaceMiscoded)
-  final val spaceCharsEOI = spaceChars ++ EOI ++ ";"
-  final val wordBorderChar = spaceChars ++ CharPredicate(";.,:()]")
-  final val sciCharsExtended = "æœſàâåãäáçčéèíìïňññóòôøõöúùüŕřŗššşž"
-  final val sciUpperCharExtended = "ÆŒ"
-  final val authCharUpperStr =
+  private final val dash = '-'
+  private final val spaceMiscoded = "　 \t\r\n\f_"
+  private final val spaceChars = CharPredicate(" " + spaceMiscoded)
+  private final val spaceCharsEOI = spaceChars ++ EOI ++ ";"
+  private final val wordBorderChar = spaceChars ++ CharPredicate(";.,:()]")
+  private final val sciCharsExtended = "æœſàâåãäáçčéèíìïňññóòôøõöúùüŕřŗššşž"
+  private final val sciUpperCharExtended = "ÆŒ"
+  private final val authCharUpperStr =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝĆČĎİĶĹĺĽľŁłŅŌŐŒŘŚŜŞŠŸŹŻŽƒǾȘȚ"
-  final val authCharMiscoded = '�'
-  final val apostr = '\''
-  final val doubleSpacePattern = Pattern.compile("""[\s_]{2}""")
-  final val authCharLower = LowerAlpha ++
+  private final val authCharMiscoded = '�'
+  private final val apostr = '\''
+  private final val doubleSpacePattern = Pattern.compile("""[\s_]{2}""")
+  private final val authCharLower = LowerAlpha ++
     "àáâãäåæçèéêëìíîïðñòóóôõöøùúûüýÿāăąćĉčďđ'-ēĕėęěğīĭİıĺľłńņňŏőœŕřśşšţťũūŭůűźżžſǎǔǧșțȳß"
-  final val authCharUpper = CharPredicate(authCharUpperStr + authCharMiscoded)
-  final val upperChar = UpperAlpha ++ "Ë" ++ sciUpperCharExtended
-  final val lowerChar = LowerAlpha ++ "ë" ++ sciCharsExtended
-  final val anyVisible = upperChar ++ lowerChar ++ CharPredicate.Visible
+  private final val authCharUpper = CharPredicate(authCharUpperStr + authCharMiscoded)
+  private final val upperChar = UpperAlpha ++ "Ë" ++ sciUpperCharExtended
+  private final val lowerChar = LowerAlpha ++ "ë" ++ sciCharsExtended
+  private final val anyVisible = upperChar ++ lowerChar ++ CharPredicate.Visible
 }

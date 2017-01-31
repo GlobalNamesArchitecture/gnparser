@@ -139,16 +139,20 @@ object ScientificNameParser {
 
   private object RemoveJunk extends Poly2 {
     implicit def default =
-      at[String, Pattern]{ (str, ptrn) => ptrn.matcher(str).replaceFirst("") }
+      at[String, Pattern] { (str, ptrn) => ptrn.matcher(str).replaceFirst("") }
   }
 
   def removeJunk(input: String): String = {
     substitutionsPatterns.foldLeft(input)(RemoveJunk)
   }
 
-  private val hybridPattern = Pattern.compile("""(^)[Xx](\p{Lu})|(\b)[Xx](\b)""")
+  private val hybridPattern1 = Pattern.compile("""(^)[Xx](\p{Lu})""")
+  private val hybridPattern2 = Pattern.compile("""(\b)[Xx](\s|$)""")
 
   def normalizeHybridChar(input: String): String = {
-    hybridPattern.matcher(input).replaceAll("$1×$2")
+    val normalizedHybridChar = "$1×$2"
+    hybridPattern2.matcher(
+      hybridPattern1.matcher(input).replaceAll(normalizedHybridChar)
+    ).replaceAll(normalizedHybridChar)
   }
 }

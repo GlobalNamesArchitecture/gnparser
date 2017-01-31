@@ -231,6 +231,10 @@ Aëtosaurus ferratus
 #>
 
 #SECTION: Binomial with an author<
+Orthosia kindermannii Fischer v. Roslerstamm, 1837
+{"name_string_id":"53abecc3-4083-5cdc-966c-09648fe9383d","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Orthosia kindermannii Fischer v. Roslerstamm, 1837","normalized":"Orthosia kindermannii Fischer v. Roslerstamm 1837","canonical_name":{"value":"Orthosia kindermannii"},"hybrid":false,"surrogate":false,"virus":false,"details":[{"genus":{"value":"Orthosia"},"specific_epithet":{"value":"kindermannii","authorship":{"value":"Fischer v. Roslerstamm 1837","basionym_authorship":{"authors":["Fischer v. Roslerstamm"],"year":{"value":"1837"}}}}}],"positions":[["genus",0,8],["specific_epithet",9,21],["author_word",22,29],["author_word",30,32],["author_word",33,44],["year",46,50]]}
+53abecc3-4083-5cdc-966c-09648fe9383d|Orthosia kindermannii Fischer v. Roslerstamm, 1837|Orthosia kindermannii|Orthosia kindermannii|Fischer v. Roslerstamm 1837|1837|1
+
 Nereidavus kulkovi Kul'kov in Kul'kov & Obut, 1973
 {"name_string_id":"4aa8305f-884f-5515-9bdc-f586e037028c","parsed":true,"quality":2,"quality_warnings":[[2,"Ex authors are not required"]],"parser_version":"test_version","verbatim":"Nereidavus kulkovi Kul'kov in Kul'kov & Obut, 1973","normalized":"Nereidavus kulkovi Kul'kov ex Kul'kov & Obut 1973","canonical_name":{"value":"Nereidavus kulkovi"},"hybrid":false,"surrogate":false,"virus":false,"details":[{"genus":{"value":"Nereidavus"},"specific_epithet":{"value":"kulkovi","authorship":{"value":"Kul'kov ex Kul'kov & Obut 1973","basionym_authorship":{"authors":["Kul'kov"],"year":{"value":"1973"},"ex_authors":["Kul'kov","Obut"]}}}}],"positions":[["genus",0,10],["specific_epithet",11,18],["author_word",19,26],["author_word",30,37],["author_word",40,44],["year",46,50]]}
 4aa8305f-884f-5515-9bdc-f586e037028c|Nereidavus kulkovi Kul'kov in Kul'kov & Obut, 1973|Nereidavus kulkovi|Nereidavus kulkovi|Kul'kov ex Kul'kov & Obut 1973|1973|2
@@ -673,6 +677,11 @@ Brassica oleracea L. subsp. capitata (L.) DC. convar. fruticosa (Metzg.) Alef. �
 Ambystoma laterale × A. texanum × A. tigrinum
 {"name_string_id":"ae91df82-158b-5307-83eb-f448044acec5","parsed":true,"quality":3,"quality_warnings":[[3,"Abbreviated uninomial word"],[2,"Hybrid formula"]],"parser_version":"test_version","verbatim":"Ambystoma laterale × A. texanum × A. tigrinum","normalized":"Ambystoma laterale × Ambystoma texanum × Ambystoma tigrinum","canonical_name":{"value":"Ambystoma laterale × Ambystoma texanum × Ambystoma tigrinum"},"hybrid":true,"surrogate":false,"virus":false,"details":[{"genus":{"value":"Ambystoma"},"specific_epithet":{"value":"laterale"}},{"genus":{"value":"Ambystoma"},"specific_epithet":{"value":"texanum"}},{"genus":{"value":"Ambystoma"},"specific_epithet":{"value":"tigrinum"}}],"positions":[["genus",0,9],["specific_epithet",10,18],["hybrid_char",19,20],["genus",21,23],["specific_epithet",24,31],["hybrid_char",32,33],["genus",34,36],["specific_epithet",37,45]]}
 ae91df82-158b-5307-83eb-f448044acec5|Ambystoma laterale × A. texanum × A. tigrinum|Ambystoma laterale × Ambystoma texanum × Ambystoma tigrinum|Ambystoma laterale × Ambystoma texanum × Ambystoma tigrinum|||3
+
+# NOTE: handle 'X' in author name correctly
+Pseudocercospora broussonetiae (Chupp & Linder) X.J. Liu & Y.L. Guo 1989
+{"name_string_id":"64f92545-9139-5e53-9ba5-c5c9edb51be5","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Pseudocercospora broussonetiae (Chupp & Linder) X.J. Liu & Y.L. Guo 1989","normalized":"Pseudocercospora broussonetiae (Chupp & Linder) X. J. Liu & Y. L. Guo 1989","canonical_name":{"value":"Pseudocercospora broussonetiae"},"hybrid":false,"surrogate":false,"virus":false,"details":[{"genus":{"value":"Pseudocercospora"},"specific_epithet":{"value":"broussonetiae","authorship":{"value":"(Chupp & Linder) X. J. Liu & Y. L. Guo 1989","basionym_authorship":{"authors":["Chupp","Linder"]},"combination_authorship":{"authors":["X. J. Liu","Y. L. Guo"],"year":{"value":"1989"}}}}}],"positions":[["genus",0,16],["specific_epithet",17,30],["author_word",32,37],["author_word",40,46],["author_word",48,50],["author_word",50,52],["author_word",53,56],["author_word",59,61],["author_word",61,63],["author_word",64,67],["year",68,72]]}
+64f92545-9139-5e53-9ba5-c5c9edb51be5|Pseudocercospora broussonetiae (Chupp & Linder) X.J. Liu & Y.L. Guo 1989|Pseudocercospora broussonetiae|Pseudocercospora broussonetiae|(Chupp & Linder) X. J. Liu & Y. L. Guo 1989||1
 #>
 
 ### Special Cases
