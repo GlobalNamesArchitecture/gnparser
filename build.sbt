@@ -76,7 +76,7 @@ val lang3            = "org.apache.commons" %  "commons-lang3"                  
 val parboiled        = "org.globalnames"    %% "parboiled"                         % "2.1.2.2"
 val scalaz           = "org.scalaz"         %% "scalaz-core"                       % "7.2.7"
 val scopt            = "com.github.scopt"   %% "scopt"                             % "3.5.0"
-val specs2core       = "org.specs2"         %% "specs2-core"                       % "3.8.7" % Test
+val specs2core       = "org.specs2"         %% "specs2-core"                       % "3.8.7-20170202003034-3739406" % Test
 val akkaHttpTestkit  = "com.typesafe.akka"  %% "akka-http-testkit"                 % akkaV   % Test
 val scalatest        = "org.scalatest"      %% "scalatest"                         % "2.2.6" % Test
 
