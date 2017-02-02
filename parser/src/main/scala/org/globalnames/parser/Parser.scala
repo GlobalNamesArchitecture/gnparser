@@ -286,10 +286,12 @@ class Parser(val input: ParserInput,
   }
 
   def capWord2: RuleNodeMeta[UninomialWord] = rule {
-    capWord1 ~ '-' ~ word1 ~> {
-      (uwM: NodeMeta[UninomialWord], wPos: CapturePosition) =>
-        val uw1M = uwM.map { uw => uw.copy(pos = CapturePosition(uwM.node.pos.start, wPos.end)) }
-        uw1M.changeWarningsRef((uwM.node, uw1M.node))
+    capWord1 ~ '-' ~ (capWord1 |
+                      word1 ~> { (w: CapturePosition) => FactoryAST.uninomialWord(w) }) ~> {
+      (uwM: NodeMeta[UninomialWord], wM: NodeMeta[UninomialWord]) =>
+        val uw1M = for { uw <- uwM; w <- wM }
+                   yield uw.copy(pos = CapturePosition(uw.pos.start, w.pos.end))
+        uw1M.changeWarningsRef((uwM.node, uw1M.node), (wM.node, uw1M.node))
     }
   }
 
