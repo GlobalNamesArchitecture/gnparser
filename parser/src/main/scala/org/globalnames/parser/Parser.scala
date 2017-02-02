@@ -201,7 +201,7 @@ class Parser(val input: ParserInput,
   }
 
   def rankVar: RuleNodeMeta[Rank] = rule {
-    capturePos("[var.]" | ("var" ~ (&(spaceCharsEOI) | '.'))) ~> {
+    capturePos("variety" | "[var.]" | ("var" ~ (&(spaceCharsEOI) | '.'))) ~> {
       (p: CapturePosition) => FactoryAST.rank(p, "var.".some)
     }
   }
