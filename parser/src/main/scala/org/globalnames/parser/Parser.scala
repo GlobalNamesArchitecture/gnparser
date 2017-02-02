@@ -357,8 +357,7 @@ class Parser(val input: ParserInput,
       }
   }
 
-  def approxName2: Rule[NodeMeta[Uninomial] :: HNil,
-                        NodeMeta[Name] :: HNil] = rule {
+  def approxName2: Rule[NodeMeta[Uninomial] :: HNil, NodeMeta[Name] :: HNil] = rule {
     word ~ space ~ approximation ~ approxNameIgnored ~> {
       (u: NodeMeta[Uninomial], sw: NodeMeta[SpeciesWord],
        appr: NodeMeta[Approximation], ign: Option[String]) =>
