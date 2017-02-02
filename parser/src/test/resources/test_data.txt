@@ -84,6 +84,10 @@ f3b90050-32f2-5009-ae9d-705fc58e45c4|Rhynchonellidae d'Orbigny 1847|Rhynchonelli
 Ataladoris Iredale & O'Donoghue 1923
 {"name_string_id":"dbb90380-0552-5237-82ef-8a8b07e42049","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Ataladoris Iredale & O'Donoghue 1923","normalized":"Ataladoris Iredale & O'Donoghue 1923","canonical_name":{"value":"Ataladoris"},"hybrid":false,"surrogate":false,"virus":false,"details":[{"uninomial":{"value":"Ataladoris","authorship":{"value":"Iredale & O'Donoghue 1923","basionym_authorship":{"authors":["Iredale","O'Donoghue"],"year":{"value":"1923"}}}}}],"positions":[["uninomial",0,10],["author_word",11,18],["author_word",21,31],["year",32,36]]}
 dbb90380-0552-5237-82ef-8a8b07e42049|Ataladoris Iredale & O'Donoghue 1923|Ataladoris|Ataladoris|Iredale & O'Donoghue 1923|1923|1
+
+Saxo-Fridericia R. H. Schomb.
+{"name_string_id":"f11d6164-5f08-5bb3-8432-5f07d1ee3bd4","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Saxo-Fridericia R. H. Schomb.","normalized":"Saxo-Fridericia R. H. Schomb.","canonical_name":{"value":"Saxo-Fridericia"},"hybrid":false,"surrogate":false,"virus":false,"details":[{"uninomial":{"value":"Saxo-Fridericia","authorship":{"value":"R. H. Schomb.","basionym_authorship":{"authors":["R. H. Schomb."]}}}}],"positions":[["uninomial",0,15],["author_word",16,18],["author_word",19,21],["author_word",22,29]]}
+f11d6164-5f08-5bb3-8432-5f07d1ee3bd4|Saxo-Fridericia R. H. Schomb.|Saxo-Fridericia|Saxo-Fridericia|R. H. Schomb.||1
 #>
 
 #SECTION: Two-letter genus names (legacy genera, not allowed anymore)<
