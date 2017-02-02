@@ -88,7 +88,7 @@ object ScientificNameParser {
     val lastWordJunk  = """(?ix)(,\s*|\s+)
                     (var\.?|von|van|ined\.?|
                      sensu|new|non|nec|nudum|
-                     ssp\.?|subsp|subgen|hybrid|hort\.?)\??\s*$"""
+                     ssp\.?|subsp|subgen|hybrid|hort\.?|cf\.?)\??\s*$"""
     object PatternCompile extends Poly1 {
       implicit def default = at[String] { x => Pattern.compile(x) }
     }
