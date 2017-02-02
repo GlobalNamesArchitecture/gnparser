@@ -5,7 +5,7 @@ import java.util.regex.Pattern
 import org.parboiled2.CharPredicate.{Alpha, Digit, LowerAlpha, UpperAlpha}
 import org.parboiled2._
 
-import scalaz._
+import scalaz.{Name => _, _}
 import Scalaz._
 
 import shapeless._
@@ -133,16 +133,27 @@ class Parser(val input: ParserInput,
   }
 
   def name3: RuleNodeMeta[Name] = rule {
-    uninomialWord ~ (softSpace ~ subGenus).? ~ softSpace ~
-    species ~ (space ~ infraspeciesGroup).? ~> {
-      (uw: NodeMeta[UninomialWord], maybeSubGenus: Option[NodeMeta[SubGenus]],
-       species: NodeMeta[Species], maybeInfraspeciesGroup: Option[NodeMeta[InfraspeciesGroup]]) =>
-         val u1 = FactoryAST.uninomial(uw)
-         val name = FactoryAST.name(u1,
-                                    maybeSubGenus,
-                                    species = species.some,
-                                    infraspecies = maybeInfraspeciesGroup)
-         name.changeWarningsRef((uw.node, u1.node))
+    uninomialWord ~ (softSpace ~
+      (subGenus ~> { Left(_: NodeMeta[SubGenus]) } |
+       (subGenusOrSuperspecies ~> { Right(_: NodeMeta[SpeciesWord]) }))).? ~
+    softSpace ~ species ~ (space ~ infraspeciesGroup).? ~> {
+      (uwM: NodeMeta[UninomialWord],
+       eitherGenusSuperspeciesM: Option[Either[NodeMeta[SubGenus], NodeMeta[SpeciesWord]]],
+       speciesM: NodeMeta[Species], maybeInfraspeciesGroupM: Option[NodeMeta[InfraspeciesGroup]]) =>
+         val uM1 = FactoryAST.uninomial(uwM)
+         val name = eitherGenusSuperspeciesM match {
+           case None => FactoryAST.name(uM1, species = speciesM.some,
+                                        infraspecies = maybeInfraspeciesGroupM)
+           case Some(Left(sgM)) =>
+             FactoryAST.name(uM1, sgM.some, species = speciesM.some,
+                             infraspecies = maybeInfraspeciesGroupM)
+           case Some(Right(ssM)) =>
+             val nm = for { _ <- ssM; u1 <- uM1; species <- speciesM;
+                              infrOpt <- lift(maybeInfraspeciesGroupM) }
+                        yield Name(u1, species = species.some, infraspecies = infrOpt)
+             nm.changeWarningsRef((ssM.node, uM1.node))
+         }
+         name.changeWarningsRef((uwM.node, uM1.node))
     }
   }
 
@@ -215,6 +226,12 @@ class Parser(val input: ParserInput,
   def rankSsp: RuleNodeMeta[Rank] = rule {
     capturePos(("ssp" | "subsp") ~ (&(spaceCharsEOI) | '.')) ~> {
       (p: CapturePosition) => FactoryAST.rank(p, "ssp.".some)
+    }
+  }
+
+  def subGenusOrSuperspecies: RuleNodeMeta[SpeciesWord] = rule {
+    ('(' ~ softSpace ~ word ~ softSpace ~ ')') ~> { (wM: NodeMeta[SpeciesWord]) =>
+      wM.add(Seq((2, "Ambiguity: subgenus or superspecies found")))
     }
   }
 
@@ -303,7 +320,7 @@ class Parser(val input: ParserInput,
 
   def word: RuleNodeMeta[SpeciesWord] = rule {
     !(authorPre | rankUninomial | approximation) ~ (word3 | word2 | word1) ~
-    &(spaceCharsEOI ++ "(.,:;") ~> {
+    &(spaceCharsEOI ++ "().,:;") ~> {
       (pos: CapturePosition) =>
         val word = input.sliceString(pos.start, pos.end)
         val warns = Vector(
