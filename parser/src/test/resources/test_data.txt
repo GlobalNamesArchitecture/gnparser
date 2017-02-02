@@ -242,6 +242,10 @@ Nereidavus kulkovi Kul'kov in Kul'kov & Obut, 1973
 Xylaria potentillae A S. Xu
 {"name_string_id":"6bc4bb61-e0b9-5c22-a9b6-46c45757f2c2","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Xylaria potentillae A S. Xu","normalized":"Xylaria potentillae A S. Xu","canonical_name":{"value":"Xylaria potentillae"},"hybrid":false,"surrogate":false,"virus":false,"details":[{"genus":{"value":"Xylaria"},"specific_epithet":{"value":"potentillae","authorship":{"value":"A S. Xu","basionym_authorship":{"authors":["A S. Xu"]}}}}],"positions":[["genus",0,7],["specific_epithet",8,19],["author_word",20,21],["author_word",22,24],["author_word",25,27]]}
 6bc4bb61-e0b9-5c22-a9b6-46c45757f2c2|Xylaria potentillae A S. Xu|Xylaria potentillae|Xylaria potentillae|A S. Xu||1
+
+Pseudocyrtopora el Hajjaji 1987
+{"name_string_id":"61db186c-cbf4-5949-9fd1-79efe7157873","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Pseudocyrtopora el Hajjaji 1987","normalized":"Pseudocyrtopora el Hajjaji 1987","canonical_name":{"value":"Pseudocyrtopora"},"hybrid":false,"surrogate":false,"virus":false,"details":[{"uninomial":{"value":"Pseudocyrtopora","authorship":{"value":"el Hajjaji 1987","basionym_authorship":{"authors":["el Hajjaji"],"year":{"value":"1987"}}}}}],"positions":[["uninomial",0,15],["author_word",16,18],["author_word",19,26],["year",27,31]]}
+61db186c-cbf4-5949-9fd1-79efe7157873|Pseudocyrtopora el Hajjaji 1987|Pseudocyrtopora|Pseudocyrtopora|el Hajjaji 1987|1987|1
 #>
 
 #SECTION: Binomial with an author and a year<
