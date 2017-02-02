@@ -115,11 +115,19 @@ class Parser(val input: ParserInput,
   }
 
   def name: RuleNodeMeta[Name] = rule {
-    name2 | name3 | name1
+    name2 | name3 | name4 | name1
   }
 
   def name1: RuleNodeMeta[Name] = rule {
     (uninomialCombo | uninomial) ~> { (u: NodeMeta[Uninomial]) => FactoryAST.name(u) }
+  }
+
+  def name4: RuleNodeMeta[Name] = rule {
+    uninomialWord ~ space ~ approximation ~ (space ~ species).? ~> {
+      (uM: NodeMeta[UninomialWord], apprM: NodeMeta[Approximation],
+       spM: Option[NodeMeta[Species]]) =>
+        FactoryAST.name(FactoryAST.uninomial(uM), approximation = apprM.some, species = spM)
+    }
   }
 
   def name2: RuleNodeMeta[Name] = rule {
