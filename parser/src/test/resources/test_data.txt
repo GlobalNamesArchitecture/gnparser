@@ -24,6 +24,12 @@
 
 ### Uninomials
 
+#SECTION: TODO<
+Acanthoderes (acanthoderes) satanas Aurivillius, 1923
+{"name_string_id":"f1082b19-d13f-54a2-95a9-6e342f2a9e6b","parsed":true,"quality":2,"quality_warnings":[[2,"Ambiguity: subgenus or superspecies found"]],"parser_version":"test_version","verbatim":"Acanthoderes (acanthoderes) satanas Aurivillius, 1923","normalized":"Acanthoderes satanas Aurivillius 1923","canonical_name":{"value":"Acanthoderes satanas"},"hybrid":false,"surrogate":false,"virus":false,"details":[{"genus":{"value":"Acanthoderes"},"specific_epithet":{"value":"satanas","authorship":{"value":"Aurivillius 1923","basionym_authorship":{"authors":["Aurivillius"],"year":{"value":"1923"}}}}}],"positions":[["genus",0,12],["specific_epithet",28,35],["author_word",36,47],["year",49,53]]}
+f1082b19-d13f-54a2-95a9-6e342f2a9e6b|Acanthoderes (acanthoderes) satanas Aurivillius, 1923|Acanthoderes satanas|Acanthoderes satanas|Aurivillius 1923|1923|2
+#>
+
 #SECTION: Uninomial<
 Pseudocercospora
 {"name_string_id":"9c1167ca-79e7-53de-b4c3-fcdb68410527","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Pseudocercospora","normalized":"Pseudocercospora","canonical_name":{"value":"Pseudocercospora"},"hybrid":false,"surrogate":false,"virus":false,"details":[{"uninomial":{"value":"Pseudocercospora"}}],"positions":[["uninomial",0,16]]}
