@@ -86,9 +86,9 @@ object ScientificNameParser {
     val taxonConcepts3 = """(?i)(,\s*|\s+)(pro parte|p\.\s?p\.)\s*$"""
     val nomenConcepts  = """(?i)(,\s*|\s+)(\(?nomen|\(?nom\.|\(?comb\.).*$"""
     val lastWordJunk  = """(?ix)(,\s*|\s+)
-                    (var\.|var|von|van|ined\.|
-                     ined|sensu|new|non|nec|nudum|
-                     ssp\.|ssp|subsp|subgen|hybrid|hort\.|hort)\??\s*$"""
+                    (var\.?|von|van|ined\.?|
+                     sensu|new|non|nec|nudum|
+                     ssp\.?|subsp|subgen|hybrid|hort\.?|cf\.?)\??\s*$"""
     object PatternCompile extends Poly1 {
       implicit def default = at[String] { x => Pattern.compile(x) }
     }
