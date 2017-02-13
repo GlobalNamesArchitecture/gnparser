@@ -96,8 +96,6 @@ object ScientificNameParser {
       nomenConcepts :: lastWordJunk :: HNil).map { PatternCompile }
   }
 
-  val uuidGenerator = UuidGenerator()
-
   final val instance = new ScientificNameParser {
     override final val version: String = BuildInfo.version
   }
@@ -132,7 +130,7 @@ object ScientificNameParser {
       (preprocessed, isPreprocessed)
     }
 
-    val id: UUID = uuidGenerator.generate(verbatim)
+    val id: UUID = UuidGenerator.generate(verbatim)
 
     def verbatimPosAt(pos: Int): Int = UNESCAPE_HTML4.at(pos)
   }

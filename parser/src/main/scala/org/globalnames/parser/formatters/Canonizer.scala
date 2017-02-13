@@ -1,4 +1,6 @@
-package org.globalnames.parser.formatters
+package org.globalnames
+package parser
+package formatters
 
 import java.util.UUID
 
@@ -8,7 +10,7 @@ import scalaz.{Name => _, _}
 import Scalaz._
 
 case class Canonical(value: String) extends AnyVal {
-  def id: UUID = ScientificNameParser.uuidGenerator.generate(value)
+  def id: UUID = UuidGenerator.generate(value)
 }
 
 trait Canonizer { parsedResult: ScientificNameParser.Result =>
