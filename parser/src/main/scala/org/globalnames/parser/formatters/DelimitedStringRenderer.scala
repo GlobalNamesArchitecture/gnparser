@@ -34,8 +34,8 @@ trait DelimitedStringRenderer {
     * @return fields concatenated to single string with delimiter
     */
   def delimitedString(delimiter: String = "\t"): String = {
-    val uuid = parserResult.input.id
-    val verbatim = parserResult.input.verbatim
+    val uuid = parserResult.preprocessorResult.id
+    val verbatim = parserResult.preprocessorResult.verbatim
     val canonical = parserResult.canonized().orZero
     val canonicalExtended = parserResult.canonized(showRanks = true).orZero
     val quality = parserResult.scientificName.quality

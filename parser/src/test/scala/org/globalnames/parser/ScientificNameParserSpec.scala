@@ -60,8 +60,8 @@ class ScientificNameParserSpec extends Specification {
       s"parse correctly delimited string: '${expectedName.verbatim}'" in {
         val pr = scientificNameParser.fromString(expectedName.verbatim)
 
-        uuid              === pr.input.id.toString
-        verbatim          === pr.input.verbatim
+        uuid              === pr.preprocessorResult.id.toString
+        verbatim          === pr.preprocessorResult.verbatim
         canonical         === pr.canonized().orZero
         canonicalExtended === pr.canonized(showRanks = true).orZero
         authorship        === pr.authorshipDelimited.orZero

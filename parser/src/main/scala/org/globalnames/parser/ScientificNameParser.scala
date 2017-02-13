@@ -42,13 +42,13 @@ object ScientificNameParser {
     override final val version: String = BuildInfo.version
   }
 
-  case class Result(input: Preprocessor.Result, scientificName: ScientificName,
+  case class Result(preprocessorResult: Preprocessor.Result, scientificName: ScientificName,
                     version: String, warnings: Vector[Warning] = Vector.empty)
     extends JsonRenderer with DelimitedStringRenderer with Details
        with Positions with Normalizer with Canonizer {
 
     private[parser] def stringOf(astNode: AstNode): String =
-      input.unescaped.substring(astNode.pos.start, astNode.pos.end)
+      preprocessorResult.unescaped.substring(astNode.pos.start, astNode.pos.end)
 
     private[parser] def namesEqual(name1: Name, name2: Name): Boolean = {
       val name1str = stringOf(name1)
