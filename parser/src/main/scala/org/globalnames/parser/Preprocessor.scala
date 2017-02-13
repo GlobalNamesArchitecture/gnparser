@@ -8,9 +8,12 @@ import shapeless._
 
 import scala.util.matching.Regex
 
+import scalaz._
+import Scalaz._
+
 object Preprocessor {
-  case class Result(verbatim: String, unescaped: String,
-                    preprocessed: Boolean, virus: Boolean, noParse: Boolean,
+  case class Result(verbatim: String, unescaped: String, warnings: Seq[WarningInfo],
+                    virus: Boolean, noParse: Boolean,
                     private val UNESCAPE_HTML4: TrackingPositionsUnescapeHtml4Translator) {
     val id: UUID = UuidGenerator.generate(verbatim)
 
@@ -98,10 +101,12 @@ object Preprocessor {
     val isPreprocessed =
       !UNESCAPE_HTML4.identity || unescaped.length != preprocessed.length
 
-    Result(verbatim = input, unescaped = preprocessed,
-           preprocessed = isPreprocessed,
-           virus = checkVirus(input),
-           noParse = noParse(input),
+    val warnings = isPreprocessed.option {
+      WarningInfo(2, "Name had to be changed by preprocessing")
+    }.toVector
+
+    Result(verbatim = input, unescaped = preprocessed, warnings = warnings,
+           virus = checkVirus(input), noParse = noParse(input),
            UNESCAPE_HTML4)
   }
 }

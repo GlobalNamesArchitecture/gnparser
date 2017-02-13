@@ -11,7 +11,7 @@ import Scalaz._
 import shapeless._
 
 class Parser(val input: ParserInput,
-             preprocessChanges: Boolean,
+             preprocessorWarnings: Seq[WarningInfo],
              collectErrors: Boolean)
   extends org.parboiled2.Parser(collectErrors = collectErrors) {
 
@@ -35,21 +35,15 @@ class Parser(val input: ParserInput,
           Warning(3, "Incorrect conversion to UTF-8", ng.node)
         },
         unparsedTail.map {
-          case g if g.trim.isEmpty =>
-            Warning(2, "Trailing whitespace", ng.node)
-          case _ =>
-            Warning(3, "Unparseable tail", ng.node)
-        },
-        preprocessChanges.option {
-          Warning(2, "Name had to be changed by preprocessing", ng.node)
+          case g if g.trim.isEmpty => Warning(2, "Trailing whitespace", ng.node)
+          case _                   => Warning(3, "Unparseable tail", ng.node)
         }
-      ).flatten ++ ng.warnings
+      ).flatten ++ ng.warnings ++ preprocessorWarnings.map { wi => Warning(wi, ng.node) }
 
-      val worstLevel = if (warnings.isEmpty) 1
-                       else warnings.maxBy { _.level }.level
-
-      ScientificName(namesGroup = ng.node.some, unparsedTail = unparsedTail,
-                     quality = worstLevel) :: warnings :: HNil
+      val worstLevel = warnings.isEmpty ? 1 | warnings.maxBy { _.level }.level
+      val sn = ScientificName(namesGroup = ng.node.some, unparsedTail = unparsedTail,
+                              quality = worstLevel)
+      sn :: warnings :: HNil
     }
   }
 

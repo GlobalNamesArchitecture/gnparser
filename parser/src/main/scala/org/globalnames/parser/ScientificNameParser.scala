@@ -22,7 +22,8 @@ abstract class ScientificNameParser {
       Result(preprocessorResult, ScientificName(), version)
     } else {
       val parser = new Parser(preprocessorResult.unescaped,
-                              preprocessorResult.preprocessed, collectParsingErrors)
+                              preprocessorResult.warnings,
+                              collectParsingErrors)
       parser.sciName.run() match {
         case Success(scientificName :: warnings :: HNil) =>
           Result(preprocessorResult, scientificName, version, warnings)
