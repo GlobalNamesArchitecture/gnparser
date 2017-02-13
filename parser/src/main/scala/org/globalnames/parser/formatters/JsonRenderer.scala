@@ -54,7 +54,7 @@ trait JsonRenderer { parserResult: ScientificNameParser.Result =>
       ("hybrid" -> parserResult.scientificName.isHybrid) ~
       ("surrogate" -> parserResult.scientificName.surrogate) ~
       ("unparsed_tail" -> parserResult.scientificName.unparsedTail) ~
-      ("virus" -> parserResult.scientificName.isVirus) ~
+      ("virus" -> parserResult.input.virus) ~
       ("details" -> parserResult.detailed) ~
       ("positions" -> positionsJson))
   }

@@ -13,7 +13,6 @@ trait AstNode {
 case class ScientificName(
   pos: CapturePosition = CapturePosition.empty,
   namesGroup: Option[NamesGroup] = None,
-  isVirus: Boolean = false,
   quality: Int = 1,
   unparsedTail: Option[String] = None) extends AstNode {
 
