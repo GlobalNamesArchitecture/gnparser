@@ -21,9 +21,7 @@ abstract class ScientificNameParser {
     if (preprocessorResult.virus || preprocessorResult.noParse) {
       Result(preprocessorResult, ScientificName(), version)
     } else {
-      val parser = new Parser(preprocessorResult.unescaped,
-                              preprocessorResult.warnings,
-                              collectParsingErrors)
+      val parser = new Parser(preprocessorResult, collectParsingErrors)
       parser.sciName.run() match {
         case Success(scientificName :: warnings :: HNil) =>
           Result(preprocessorResult, scientificName, version, warnings)

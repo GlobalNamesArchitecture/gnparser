@@ -13,7 +13,7 @@ import Scalaz._
 
 object Preprocessor {
   case class Result(verbatim: String, unescaped: String, warnings: Seq[WarningInfo],
-                    virus: Boolean, noParse: Boolean,
+                    virus: Boolean, noParse: Boolean, surrogate: Option[Boolean] = None,
                     private val UNESCAPE_HTML4: TrackingPositionsUnescapeHtml4Translator) {
     val id: UUID = UuidGenerator.generate(verbatim)
 
@@ -25,16 +25,16 @@ object Preprocessor {
                    species\s+complex|group|author)\b.*$"""
     val taxonConcepts1 = """(?i)\s+(sensu|auct|sec|near)\.?\b.*$"""
     val taxonConcepts2 = """(?x)(,\s*|\s+)
-                       (\(?s\.\s?s\.|
-                       \(?s\.\s?l\.|
-                       \(?s\.\s?str\.|
-                       \(?s\.\s?lat\.).*$"""
+                            (\(?s\.\s?s\.|
+                            \(?s\.\s?l\.|
+                            \(?s\.\s?str\.|
+                            \(?s\.\s?lat\.).*$"""
     val taxonConcepts3 = """(?i)(,\s*|\s+)(pro parte|p\.\s?p\.)\s*$"""
-    val nomenConcepts  = """(?i)(,\s*|\s+)(\(?nomen|\(?nom\.|\(?comb\.).*$"""
-    val lastWordJunk  = """(?ix)(,\s*|\s+)
-                    (var\.?|von|van|ined\.?|
-                     sensu|new|non|nec|nudum|
-                     ssp\.?|subsp|subgen|hybrid|hort\.?|cf\.?)\??\s*$"""
+    val nomenConcepts = """(?i)(,\s*|\s+)(\(?nomen|\(?nom\.|\(?comb\.).*$"""
+    val lastWordJunk = """(?ix)(,\s*|\s+)
+                          (var\.?|von|van|ined\.?|
+                          sensu|new|non|nec|nudum|
+                          ssp\.?|subsp|subgen|hybrid|hort\.?|cf\.?)\??\s*$"""
     object PatternCompile extends Poly1 {
       implicit def default = at[String] { x => Pattern.compile(x) }
     }
@@ -92,21 +92,32 @@ object Preprocessor {
     !noParsePatterns.foldLeft(true)(PatternMatch)
   }
 
+  private final val comparisonPattern = """(?ix)(,\s*|\s+)cf\.?\s*$""".r
+
   def process(input: String): Result = {
     val UNESCAPE_HTML4 = new TrackingPositionsUnescapeHtml4Translator
 
     val unescaped = UNESCAPE_HTML4.translate(input)
-    val preprocessed = normalizeHybridChar(removeJunk(unescaped))
+
+    val (comparisonCleaned, isComparisonRemoved) = {
+      val matches = comparisonPattern.findFirstIn(unescaped).isDefined
+      (matches ? comparisonPattern.replaceAllIn(unescaped, "") | unescaped, matches)
+    }
+
+    val preprocessed = normalizeHybridChar(removeJunk(comparisonCleaned))
 
     val isPreprocessed =
       !UNESCAPE_HTML4.identity || unescaped.length != preprocessed.length
 
-    val warnings = isPreprocessed.option {
+    val warnings = (isComparisonRemoved || isPreprocessed).option {
       WarningInfo(2, "Name had to be changed by preprocessing")
+    }.toVector ++ isComparisonRemoved.option {
+      WarningInfo(3, "Name comparison")
     }.toVector
 
     Result(verbatim = input, unescaped = preprocessed, warnings = warnings,
            virus = checkVirus(input), noParse = noParse(input),
+           surrogate = isComparisonRemoved.option { true },
            UNESCAPE_HTML4)
   }
 }

@@ -10,14 +10,15 @@ import Scalaz._
 
 import shapeless._
 
-class Parser(val input: ParserInput,
-             preprocessorWarnings: Seq[WarningInfo],
+class Parser(preprocessorResult: Preprocessor.Result,
              collectErrors: Boolean)
   extends org.parboiled2.Parser(collectErrors = collectErrors) {
 
   import Parser._
 
   type RuleNodeMeta[T <: AstNode] = Rule1[NodeMeta[T]]
+
+  override val input: ParserInput = preprocessorResult.unescaped
 
   def sciName: Rule2[ScientificName, Vector[Warning]] = rule {
     capturePos(softSpace ~ sciName1) ~ unparsed ~ EOI ~> {
@@ -38,11 +39,13 @@ class Parser(val input: ParserInput,
           case g if g.trim.isEmpty => Warning(2, "Trailing whitespace", ng.node)
           case _                   => Warning(3, "Unparseable tail", ng.node)
         }
-      ).flatten ++ ng.warnings ++ preprocessorWarnings.map { wi => Warning(wi, ng.node) }
+      ).flatten ++ ng.warnings ++ preprocessorResult.warnings.map { wi => Warning(wi, ng.node) }
 
       val worstLevel = warnings.isEmpty ? 1 | warnings.maxBy { _.level }.level
+      val surrogatePreprocessed = preprocessorResult.surrogate.getOrElse(false)
       val sn = ScientificName(namesGroup = ng.node.some, unparsedTail = unparsedTail,
-                              quality = worstLevel)
+                              quality = worstLevel,
+                              surrogatePreprocessed = surrogatePreprocessed)
       sn :: warnings :: HNil
     }
   }
