@@ -9,7 +9,9 @@ val commonSettings = Seq(
   startYear := Some(2008),
   licenses := Seq("MIT" -> new URL("https://github.com/GlobalNamesArchitecture/gnparser/blob/master/LICENSE")),
   resolvers ++= Seq(
-    "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
+      "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
+    //, "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
+    , "Sonatype OSS Releases" at "https://oss.sonatype.org/content/repositories/releases/"
   ),
   javacOptions ++= Seq(
     "-encoding", "UTF-8",
@@ -73,7 +75,7 @@ val shapeless        = "com.chuusai"        %% "shapeless"                      
 val json4s           = "org.json4s"         %% "json4s-jackson"                    % "3.2.11"
 val javaUuid         = "com.fasterxml.uuid" %  "java-uuid-generator"               % "3.1.4"
 val lang3            = "org.apache.commons" %  "commons-lang3"                     % "3.5"
-val parboiled        = "org.globalnames"    %% "parboiled"                         % "2.1.2.2"
+val parboiled        = "org.globalnames"    %% "parboiled"                         % "2.1.4.1"
 val scalaz           = "org.scalaz"         %% "scalaz-core"                       % "7.2.7"
 val scopt            = "com.github.scopt"   %% "scopt"                             % "3.5.0"
 val specs2core       = "org.specs2"         %% "specs2-core"                       % "3.8.7-20170202003034-3739406" % Test
@@ -86,7 +88,7 @@ lazy val `gnparser-root` = project.in(file("."))
   .aggregate(parser, exampleJavaScala, runner, sparkPython)
   .settings(noPublishingSettings: _*)
   .settings(
-    crossScalaVersions := Seq("2.10.6", "2.11.8")
+    crossScalaVersions := Seq("2.11.8", "2.12.1")
   )
 
 lazy val parser = (project in file("./parser"))
@@ -95,7 +97,7 @@ lazy val parser = (project in file("./parser"))
   .settings(publishingSettings: _*)
   .settings(
     name := "gnparser",
-    crossScalaVersions := Seq("2.10.6", "2.11.8"),
+    crossScalaVersions := Seq("2.11.8", "2.12.1"),
 
     buildInfoKeys := Seq[BuildInfoKey](version),
     buildInfoPackage := "org.globalnames.parser",
@@ -133,7 +135,7 @@ lazy val runner = (project in file("./runner"))
   .settings(
     name := "gnparser-runner",
     executableScriptName := "gnparse",
-    crossScalaVersions := Seq("2.11.8"),
+    crossScalaVersions := Seq("2.11.8", "2.12.1"),
     packageName := "gnparser",
     bashScriptExtraDefines := Seq(
       s"""declare -r script_name="${executableScriptName.value}""""

@@ -13,11 +13,13 @@ import shapeless._
 class Parser(val input: ParserInput,
              preprocessChanges: Boolean,
              collectErrors: Boolean)
-  extends org.parboiled2.Parser(collectErrors = collectErrors) {
+  extends org.parboiled2.Parser() {
 
   import Parser._
 
   type RuleNodeMeta[T <: AstNode] = Rule1[NodeMeta[T]]
+
+  override def errorTraceCollectionLimit: Int = 0
 
   def sciName: Rule2[ScientificName, Vector[Warning]] = rule {
     capturePos(softSpace ~ sciName1) ~ unparsed ~ EOI ~> {
