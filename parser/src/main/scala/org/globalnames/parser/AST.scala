@@ -13,23 +13,27 @@ trait AstNode {
 case class ScientificName(
   pos: CapturePosition = CapturePosition.empty,
   namesGroup: Option[NamesGroup] = None,
-  isVirus: Boolean = false,
   quality: Int = 1,
-  unparsedTail: Option[String] = None) extends AstNode {
+  unparsedTail: Option[String] = None,
+  surrogatePreprocessed: Boolean = false) extends AstNode {
 
   val isHybrid: Option[Boolean] = namesGroup.map { ng =>
     ng.namedHybrid || ng.hybridParts.nonEmpty
   }
 
   val surrogate: Boolean = {
-    val isBold = unparsedTail.map {
-      g => Disj(g.contains("BOLD") || g.contains("Bold"))
+    if (surrogatePreprocessed) true
+    else {
+      val isBold = unparsedTail.map {
+        g => Disj(g.contains("BOLD") || g.contains("Bold"))
+      }
+      val isAnnot = namesGroup.map { ng =>
+        Disj(ng.names.exists { n =>
+          n.isDefined && (n.get.approximation.isDefined || n.get.comparison.isDefined)
+        })
+      }
+      Disj.unwrap(~(isBold |+| isAnnot))
     }
-    val isAnnot = namesGroup.map { ng => Disj(ng.names.exists { n =>
-        n.isDefined && (n.get.approximation.isDefined || n.get.comparison.isDefined)
-      })
-    }
-    Disj.unwrap(~(isBold |+| isAnnot))
   }
 
   val authorship: Option[Authorship] = namesGroup.flatMap { ng =>

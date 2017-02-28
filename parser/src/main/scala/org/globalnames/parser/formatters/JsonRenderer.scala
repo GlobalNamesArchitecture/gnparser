@@ -37,24 +37,24 @@ trait JsonRenderer { parserResult: ScientificNameParser.Result =>
     val positionsJson: Option[JArray] = parsed.option {
       parserResult.positioned.map { position =>
         JArray(List(position.nodeName,
-          parserResult.input.verbatimPosAt(position.start),
-          parserResult.input.verbatimPosAt(position.end)))
+          parserResult.preprocessorResult.verbatimPosAt(position.start),
+          parserResult.preprocessorResult.verbatimPosAt(position.end)))
       }
     }
 
     JsonMethods.render(
-      ("name_string_id" -> parserResult.input.id.toString) ~
+      ("name_string_id" -> parserResult.preprocessorResult.id.toString) ~
       ("parsed" -> parsed) ~
       ("quality" -> quality) ~
       ("quality_warnings" -> qualityWarnings) ~
       ("parser_version" -> version) ~
-      ("verbatim" -> parserResult.input.verbatim) ~
+      ("verbatim" -> parserResult.preprocessorResult.verbatim) ~
       ("normalized" -> parserResult.normalized) ~
       ("canonical_name" -> canonicalName) ~
       ("hybrid" -> parserResult.scientificName.isHybrid) ~
       ("surrogate" -> parserResult.scientificName.surrogate) ~
       ("unparsed_tail" -> parserResult.scientificName.unparsedTail) ~
-      ("virus" -> parserResult.scientificName.isVirus) ~
+      ("virus" -> parserResult.preprocessorResult.virus) ~
       ("details" -> parserResult.detailed) ~
       ("positions" -> positionsJson))
   }

@@ -10,14 +10,15 @@ import Scalaz._
 
 import shapeless._
 
-class Parser(val input: ParserInput,
-             preprocessChanges: Boolean,
+class Parser(preprocessorResult: Preprocessor.Result,
              collectErrors: Boolean)
   extends org.parboiled2.Parser() {
 
   import Parser._
 
   type RuleNodeMeta[T <: AstNode] = Rule1[NodeMeta[T]]
+
+  override val input: ParserInput = preprocessorResult.unescaped
 
   override def errorTraceCollectionLimit: Int = 0
 
@@ -37,21 +38,17 @@ class Parser(val input: ParserInput,
           Warning(3, "Incorrect conversion to UTF-8", ng.node)
         },
         unparsedTail.map {
-          case g if g.trim.isEmpty =>
-            Warning(2, "Trailing whitespace", ng.node)
-          case _ =>
-            Warning(3, "Unparseable tail", ng.node)
-        },
-        preprocessChanges.option {
-          Warning(2, "Name had to be changed by preprocessing", ng.node)
+          case g if g.trim.isEmpty => Warning(2, "Trailing whitespace", ng.node)
+          case _                   => Warning(3, "Unparseable tail", ng.node)
         }
-      ).flatten ++ ng.warnings
+      ).flatten ++ ng.warnings ++ preprocessorResult.warnings.map { wi => Warning(wi, ng.node) }
 
-      val worstLevel = if (warnings.isEmpty) 1
-                       else warnings.maxBy { _.level }.level
-
-      ScientificName(namesGroup = ng.node.some, unparsedTail = unparsedTail,
-                     quality = worstLevel) :: warnings :: HNil
+      val worstLevel = warnings.isEmpty ? 1 | warnings.maxBy { _.level }.level
+      val surrogatePreprocessed = preprocessorResult.surrogate.getOrElse(false)
+      val sn = ScientificName(namesGroup = ng.node.some, unparsedTail = unparsedTail,
+                              quality = worstLevel,
+                              surrogatePreprocessed = surrogatePreprocessed)
+      sn :: warnings :: HNil
     }
   }
 

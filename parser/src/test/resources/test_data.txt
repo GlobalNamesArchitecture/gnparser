@@ -1325,16 +1325,16 @@ Xenodon sp.
 77b6718f-a26e-5ddf-a4cf-119e972cd015|Xenodon sp.|Xenodon|Xenodon|||3
 
 Formicidae cf.
-{"name_string_id":"61f9ebc4-346e-5857-ab45-38808ff1c960","parsed":true,"quality":2,"quality_warnings":[[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Formicidae cf.","normalized":"Formicidae","canonical_name":{"value":"Formicidae"},"hybrid":false,"surrogate":false,"virus":false,"details":[{"uninomial":{"value":"Formicidae"}}],"positions":[["uninomial",0,10]]}
-61f9ebc4-346e-5857-ab45-38808ff1c960|Formicidae cf.|Formicidae|Formicidae|||2
+{"name_string_id":"61f9ebc4-346e-5857-ab45-38808ff1c960","parsed":true,"quality":3,"quality_warnings":[[3,"Name comparison"],[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Formicidae cf.","normalized":"Formicidae","canonical_name":{"value":"Formicidae"},"hybrid":false,"surrogate":true,"virus":false,"details":[{"uninomial":{"value":"Formicidae"}}],"positions":[["uninomial",0,10]]}
+61f9ebc4-346e-5857-ab45-38808ff1c960|Formicidae cf.|Formicidae|Formicidae|||3
 
 Formicidae cf
-{"name_string_id":"90473425-7ce1-5ec6-8160-737646816ea7","parsed":true,"quality":2,"quality_warnings":[[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Formicidae cf","normalized":"Formicidae","canonical_name":{"value":"Formicidae"},"hybrid":false,"surrogate":false,"virus":false,"details":[{"uninomial":{"value":"Formicidae"}}],"positions":[["uninomial",0,10]]}
-90473425-7ce1-5ec6-8160-737646816ea7|Formicidae cf|Formicidae|Formicidae|||2
+{"name_string_id":"90473425-7ce1-5ec6-8160-737646816ea7","parsed":true,"quality":3,"quality_warnings":[[3,"Name comparison"],[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Formicidae cf","normalized":"Formicidae","canonical_name":{"value":"Formicidae"},"hybrid":false,"surrogate":true,"virus":false,"details":[{"uninomial":{"value":"Formicidae"}}],"positions":[["uninomial",0,10]]}
+90473425-7ce1-5ec6-8160-737646816ea7|Formicidae cf|Formicidae|Formicidae|||3
 
 Arctostaphylos preglauca cf.
-{"name_string_id":"246b43d4-9786-5157-8d35-b81a470e6379","parsed":true,"quality":2,"quality_warnings":[[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Arctostaphylos preglauca cf.","normalized":"Arctostaphylos preglauca","canonical_name":{"value":"Arctostaphylos preglauca"},"hybrid":false,"surrogate":false,"virus":false,"details":[{"genus":{"value":"Arctostaphylos"},"specific_epithet":{"value":"preglauca"}}],"positions":[["genus",0,14],["specific_epithet",15,24]]}
-246b43d4-9786-5157-8d35-b81a470e6379|Arctostaphylos preglauca cf.|Arctostaphylos preglauca|Arctostaphylos preglauca|||2
+{"name_string_id":"246b43d4-9786-5157-8d35-b81a470e6379","parsed":true,"quality":3,"quality_warnings":[[3,"Name comparison"],[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Arctostaphylos preglauca cf.","normalized":"Arctostaphylos preglauca","canonical_name":{"value":"Arctostaphylos preglauca"},"hybrid":false,"surrogate":true,"virus":false,"details":[{"genus":{"value":"Arctostaphylos"},"specific_epithet":{"value":"preglauca"}}],"positions":[["genus",0,14],["specific_epithet",15,24]]}
+246b43d4-9786-5157-8d35-b81a470e6379|Arctostaphylos preglauca cf.|Arctostaphylos preglauca|Arctostaphylos preglauca|||3
 
 Acastoides spp.
 {"name_string_id":"9853f0a4-6324-5a7d-8108-e910578e612b","parsed":true,"quality":3,"quality_warnings":[[3,"Name is approximate"]],"parser_version":"test_version","verbatim":"Acastoides spp.","normalized":"Acastoides","canonical_name":{"value":"Acastoides"},"hybrid":false,"surrogate":true,"virus":false,"details":[{"genus":{"value":"Acastoides"},"annotation_identification":"spp."}],"positions":[["genus",0,10],["annotation_identification",11,15]]}
