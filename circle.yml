@@ -15,6 +15,8 @@ dependencies:
     - "project/target/streams"
   pre:
     - rvm install jruby-9.1.7.0
+    - sudo apt-get install libossp-uuid-dev libssl-dev
+    - bash ./circleci/install-jython-2.7.0.sh
   override:
     - sbt test:compile parser/assembly
 
