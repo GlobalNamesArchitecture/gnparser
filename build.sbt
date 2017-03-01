@@ -88,7 +88,7 @@ lazy val `gnparser-root` = project.in(file("."))
   .aggregate(parser, exampleJavaScala, runner, sparkPython)
   .settings(noPublishingSettings: _*)
   .settings(
-    crossScalaVersions := Seq("2.11.8", "2.12.1")
+    crossScalaVersions := Seq("2.11.8")
   )
 
 lazy val parser = (project in file("./parser"))
@@ -97,7 +97,7 @@ lazy val parser = (project in file("./parser"))
   .settings(publishingSettings: _*)
   .settings(
     name := "gnparser",
-    crossScalaVersions := Seq("2.11.8", "2.12.1"),
+    crossScalaVersions := Seq("2.11.8"),
 
     buildInfoKeys := Seq[BuildInfoKey](version),
     buildInfoPackage := "org.globalnames.parser",
@@ -135,7 +135,7 @@ lazy val runner = (project in file("./runner"))
   .settings(
     name := "gnparser-runner",
     executableScriptName := "gnparse",
-    crossScalaVersions := Seq("2.11.8", "2.12.1"),
+    crossScalaVersions := Seq("2.11.8"),
     packageName := "gnparser",
     bashScriptExtraDefines := Seq(
       s"""declare -r script_name="${executableScriptName.value}""""
