@@ -126,7 +126,8 @@ class Parser(val input: ParserInput,
     uninomialWord ~ space ~ approximation ~ (space ~ species).? ~> {
       (uM: NodeMeta[UninomialWord], apprM: NodeMeta[Approximation],
        spM: Option[NodeMeta[Species]]) =>
-        FactoryAST.name(FactoryAST.uninomial(uM), approximation = apprM.some, species = spM)
+        FactoryAST.name(FactoryAST.uninomial(uM), approximation = apprM.some)
+                  .add(warnings = Seq((3, "Name is approximate")))
     }
   }
 
