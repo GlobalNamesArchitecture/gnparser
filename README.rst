@@ -443,7 +443,7 @@ be installed. To run it execute the command:
 
 ::
 
-    Rscript /opt/gnparser/examples/R/parser.R
+    Rscript examples/R/parser.R
 
 JRuby
 ~~~~~
