@@ -1,6 +1,14 @@
+install.packages("jsonlite", repos="http://cran.r-project.org")
+
 require("rJava")
-pathToGnParserAssembly='${GnParser_PATH}/gnparser/parser/target/scala-2.11/global-names-parser-assembly-0.1.0-SNAPSHOT.jar'
+library(jsonlite)
+
+pathToGnParserAssembly='parser/target/scala-2.11/gnparser-assembly-0.3.4-SNAPSHOT.jar'
 .jinit(classpath=pathToGnParserAssembly)
+
 snp=J('org.globalnames.parser.ScientificNameParser','instance')
-result=snp$fromString("Homo sapiens L.")$renderCompactJson
-print(result)
+result=snp$fromString("Homo sapiens L.")$renderCompactJson()
+jsonResult=fromJSON(result)
+
+stopifnot(jsonResult$parsed)
+stopifnot(jsonResult$canonical_name$value == "Homo sapiens")

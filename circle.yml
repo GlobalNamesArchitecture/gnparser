@@ -2,6 +2,9 @@ machine:
   timezone: UTC
   java:
     version: oraclejdk8
+  ruby:
+    version:
+      2.4.0
 
 dependencies:
   cache_directories:
@@ -10,8 +13,12 @@ dependencies:
     - "target/streams"
     - "project/target/resolution-cache"
     - "project/target/streams"
+  pre:
+    - rvm install jruby-9.1.7.0
+    - sudo apt-get install r-base r-cran-rjava
+    - bash ./circleci/install-jython-2.7.0.sh
   override:
-    - sbt test:compile
+    - sbt test:compile parser/assembly
 
 notify:
   webhooks:
@@ -20,3 +27,5 @@ notify:
 test:
   override:
     - sbt "very test"
+    - rvm-exec jruby bash -c "ruby -J-classpath parser/target/scala-2.11/gnparser-assembly-*.jar examples/jruby/parser.rb"
+    - sudo Rscript examples/R/parser.R
