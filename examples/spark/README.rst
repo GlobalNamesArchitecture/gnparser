@@ -35,7 +35,7 @@ Python
     def parse(names):
         from pyspark.mllib.common import _py2java, _java2py
         parser = sc._jvm.org.globalnames.parser.spark.Parser()
-        result = parser.parse(_py2java(sc, names))
+        result = parser.parse(_py2java(sc, names), False, False)
         return _java2py(sc, result)
 
 4. now scientific name strings can be parsed in your program as follows:
