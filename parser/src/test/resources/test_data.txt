@@ -1264,6 +1264,10 @@ d2f6423b-7a8f-5389-a286-c074fb634c5a|Amphisbæna fuliginoſa Linnaeus 1758|Amphi
 ### Open Nomenclature ('approximate' names)
 
 #SECTION: Open nomenclature -- cf., aff., sp., etc.<
+Solygia ? distanti
+{"name_string_id":"b9e3508f-1c0e-554c-8642-dd1cfd02631c","parsed":true,"quality":3,"quality_warnings":[[3,"Name is approximate"]],"parser_version":"test_version","verbatim":"Solygia ? distanti","normalized":"Solygia","canonical_name":{"value":"Solygia"},"hybrid":false,"surrogate":true,"virus":false,"details":[{"genus":{"value":"Solygia"},"annotation_identification":"?"}],"positions":[["genus",0,7],["annotation_identification",8,9]]}
+b9e3508f-1c0e-554c-8642-dd1cfd02631c|Solygia ? distanti|Solygia|Solygia|||3
+
 Buteo borealis ? ventralis
 {"name_string_id":"d26a4791-4858-5239-8a57-c88957d40919","parsed":true,"quality":3,"quality_warnings":[[3,"Name is approximate"]],"parser_version":"test_version","verbatim":"Buteo borealis ? ventralis","normalized":"Buteo borealis","canonical_name":{"value":"Buteo borealis"},"hybrid":false,"surrogate":true,"virus":false,"details":[{"genus":{"value":"Buteo"},"specific_epithet":{"value":"borealis"},"annotation_identification":"?","ignored":{"value":"ventralis"}}],"positions":[["genus",0,5],["specific_epithet",6,14],["annotation_identification",15,16]]}
 d26a4791-4858-5239-8a57-c88957d40919|Buteo borealis ? ventralis|Buteo borealis|Buteo borealis|||3
