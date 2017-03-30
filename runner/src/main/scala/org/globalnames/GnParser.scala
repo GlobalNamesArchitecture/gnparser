@@ -22,7 +22,7 @@ object GnParser {
   case object WebServerMode extends Mode
   case object NameParsing extends Mode
 
-  case class Config(mode: Option[Mode] = Some(WebServerMode),
+  case class Config(mode: Option[Mode] = Some(InputFileParsing),
                     inputFile: Option[String] = None,
                     outputFile: Option[String] = None,
                     host: String = "0.0.0.0",
