@@ -1,5 +1,6 @@
 package org.globalnames.parser
-package runner.web
+package runner
+package web
 package controllers
 
 import akka.actor.ActorSystem
@@ -81,11 +82,12 @@ object WebServer extends Service {
   override implicit val materializer = ActorMaterializer()
   override implicit val executor = system.dispatcher
 
-  def run(host: String, port: Int): Unit = {
-    Http().bindAndHandle(route, host, port)
+  private def run(host: String, port: Int): Unit = {
     println(s"Server online at http://$host:$port/")
+    Http().bindAndHandle(route, host, port)
   }
 
-  def main(args: Array[String]): Unit =
-    run("0.0.0.0", 8080)
+  def run(config: GnParser.Config): Unit = run(config.host, config.port)
+
+  def main(args: Array[String]): Unit = run("0.0.0.0", 8080)
 }
