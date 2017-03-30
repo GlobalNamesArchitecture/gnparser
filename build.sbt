@@ -64,7 +64,8 @@ val noPublishingSettings = Seq(
 
 /////////////////////// DEPENDENCIES /////////////////////////
 
-val akkaV        = "2.4.11"
+val akkaV            = "2.4.11"
+val specs2V          = "3.8.9"
 
 val akkaHttpCore     = "com.typesafe.akka"  %% "akka-http-core"                    % akkaV
 val akkaHttp         = "com.typesafe.akka"  %% "akka-http-experimental"            % akkaV
@@ -79,7 +80,8 @@ val parboiled        = "org.globalnames"    %% "parboiled"                      
 val scalaz           = "org.scalaz"         %% "scalaz-core"                       % "7.2.7"
 val scalaArm         = "com.jsuereth"       %% "scala-arm"                         % "2.0"
 val scopt            = "com.github.scopt"   %% "scopt"                             % "3.5.0"
-val specs2core       = "org.specs2"         %% "specs2-core"                       % "3.8.7-20170202003034-3739406" % Test
+val specs2core       = "org.specs2"         %% "specs2-core"                       % specs2V % Test
+val specs2extra      = "org.specs2"         %% "specs2-matcher-extra"              % specs2V % Test
 val akkaHttpTestkit  = "com.typesafe.akka"  %% "akka-http-testkit"                 % akkaV   % Test
 val scalatest        = "org.scalatest"      %% "scalatest"                         % "2.2.6" % Test
 
@@ -142,7 +144,7 @@ lazy val runner = (project in file("./runner"))
       s"""declare -r script_name="${executableScriptName.value}""""
     ),
     libraryDependencies ++= Seq(scopt, akkaHttp, akkaHttpCore, akkaActor, scalaArm,
-                                akkaJson, akkaHttpTestkit, scalatest),
+                                akkaJson, akkaHttpTestkit, scalatest, specs2core, specs2extra),
     mainClass in Compile := Some("org.globalnames.parser.runner.GnParser"),
     mainClass in reStart :=
       Some("org.globalnames.parser.runner.web.controllers.WebServer"),
