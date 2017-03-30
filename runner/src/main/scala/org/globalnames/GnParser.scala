@@ -1,19 +1,20 @@
 package org.globalnames
 
 import java.io.{BufferedWriter, FileWriter}
+import java.util.concurrent.atomic.AtomicInteger
 
-import parser.ScientificNameParser.{instance ⇒ scientificNameParser}
-import parser.runner.web.controllers.WebServer
+import parser.ScientificNameParser.{Result, instance => scientificNameParser}
 import parser.runner.tcp.TcpServer
+import parser.runner.web.controllers.WebServer
 import runner.BuildInfo
+import resource._
 
 import scala.collection.parallel.ForkJoinTaskSupport
+import scala.collection.parallel.immutable.ParVector
 import scala.concurrent.forkjoin.ForkJoinPool
-import scala.io.Source
-import scala.util.{Failure, Success, Try}
-
+import scala.io.{Source, StdIn}
+import scalaz.Scalaz._
 import scalaz._
-import Scalaz._
 
 object GnParser {
   sealed trait Mode
@@ -69,8 +70,7 @@ object GnParser {
 
     parser.parse(args, Config()) match {
       case Some(cfg) if cfg.mode.get == InputFileParsing =>
-        startFileParse(cfg.inputFile.get, cfg.outputFile.get,
-                       cfg.threadsNumber, cfg.simpleFormat)
+        startFileParse(cfg.inputFile, cfg.outputFile, cfg.threadsNumber, cfg.simpleFormat)
       case Some(cfg) if cfg.mode.get == TcpServerMode =>
         TcpServer.run(cfg.host, cfg.port, cfg.simpleFormat)
       case Some(cfg) if cfg.mode.get == WebServerMode =>
@@ -86,33 +86,45 @@ object GnParser {
     }
   }
 
-  def startFileParse(inputFilePath: String,
-                     outputFilePath: String,
-                     threadsNumber: Option[Int],
-                     simpleFormat: Boolean) =
-    Try(Source.fromFile(inputFilePath)) match {
-      case Failure(e) => Console.err.println(s"No such file: $inputFilePath")
-      case Success(f) =>
-        val parallelism =
-          threadsNumber.getOrElse(ForkJoinPool.getCommonPoolParallelism)
-        println(s"running with parallelism: $parallelism")
-        val parsedNamesCount = new java.util.concurrent.atomic.AtomicInteger()
-        val namesInput = f.getLines().toVector.par
-        namesInput.tasksupport =
-          new ForkJoinTaskSupport(new ForkJoinPool(parallelism))
-        val namesParsed = namesInput.map { name ⇒
+  def startFileParse(inputFilePathMaybe: Option[String], outputFilePathMaybe: Option[String],
+                     threadsNumber: Option[Int], simpleFormat: Boolean): Unit = {
+    val inputIteratorEither = inputFilePathMaybe match {
+      case None =>
+        println("Enter scientific names line by line")
+        val iterator = Iterator.continually(StdIn.readLine())
+        iterator.takeWhile { str => str != null && str.trim.nonEmpty }.right
+      case Some(fp) =>
+        \/.fromEither(managed(Source.fromFile(fp)).map { _.getLines }.either.either)
+    }
+
+    val namesParsed = inputIteratorEither match {
+      case -\/(errors) =>
+        Console.err.println(errors.map { _.getMessage }.mkString("\n"))
+        ParVector.empty[String]
+      case \/-(res) =>
+        val parallelism = threadsNumber.getOrElse(ForkJoinPool.getCommonPoolParallelism)
+        val namesInputPar = res.toVector.par
+        namesInputPar.tasksupport = new ForkJoinTaskSupport(new ForkJoinPool(parallelism))
+        val parsedNamesCount = new AtomicInteger()
+
+        println(s"Running with parallelism: $parallelism")
+        for (name <- namesInputPar) yield {
           val currentParsedCount = parsedNamesCount.incrementAndGet()
           if (currentParsedCount % 10000 == 0) {
-            println(s"Parsed $currentParsedCount of ${namesInput.size} lines")
+            println(s"Parsed $currentParsedCount of ${namesInputPar.size} lines")
           }
           val result = scientificNameParser.fromString(name.trim)
           if (simpleFormat) result.delimitedString()
           else result.renderCompactJson
         }
-        val writer = new BufferedWriter(new FileWriter(outputFilePath))
-        namesParsed.seq.foreach { name ⇒
-          writer.write(name + System.lineSeparator)
-        }
-        writer.close()
     }
+
+    outputFilePathMaybe match {
+      case Some(fp) =>
+        for { writer <- managed(new BufferedWriter(new FileWriter(fp))) } {
+          namesParsed.seq.foreach { name => writer.write(name + System.lineSeparator) }
+        }
+      case None => namesParsed.seq.foreach { name => println(name) }
+    }
+  }
 }

@@ -77,6 +77,7 @@ val javaUuid         = "com.fasterxml.uuid" %  "java-uuid-generator"            
 val lang3            = "org.apache.commons" %  "commons-lang3"                     % "3.5"
 val parboiled        = "org.globalnames"    %% "parboiled"                         % "2.1.4.1"
 val scalaz           = "org.scalaz"         %% "scalaz-core"                       % "7.2.7"
+val scalaArm         = "com.jsuereth"       %% "scala-arm"                         % "2.0"
 val scopt            = "com.github.scopt"   %% "scopt"                             % "3.5.0"
 val specs2core       = "org.specs2"         %% "specs2-core"                       % "3.8.7-20170202003034-3739406" % Test
 val akkaHttpTestkit  = "com.typesafe.akka"  %% "akka-http-testkit"                 % akkaV   % Test
@@ -140,7 +141,7 @@ lazy val runner = (project in file("./runner"))
     bashScriptExtraDefines := Seq(
       s"""declare -r script_name="${executableScriptName.value}""""
     ),
-    libraryDependencies ++= Seq(scopt, akkaHttp, akkaHttpCore, akkaActor,
+    libraryDependencies ++= Seq(scopt, akkaHttp, akkaHttpCore, akkaActor, scalaArm,
                                 akkaJson, akkaHttpTestkit, scalatest),
     mainClass in Compile := Some("org.globalnames.GnParser"),
     mainClass in reStart :=
