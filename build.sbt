@@ -143,7 +143,7 @@ lazy val runner = (project in file("./runner"))
     ),
     libraryDependencies ++= Seq(scopt, akkaHttp, akkaHttpCore, akkaActor, scalaArm,
                                 akkaJson, akkaHttpTestkit, scalatest),
-    mainClass in Compile := Some("org.globalnames.GnParser"),
+    mainClass in Compile := Some("org.globalnames.parser.runner.GnParser"),
     mainClass in reStart :=
       Some("org.globalnames.parser.runner.web.controllers.WebServer"),
     buildInfoKeys := Seq[BuildInfoKey](version),

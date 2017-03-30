@@ -1,13 +1,15 @@
 package org.globalnames
+package parser
+package runner
 
 import java.io.{BufferedWriter, FileWriter}
 import java.util.concurrent.atomic.AtomicInteger
 
-import parser.ScientificNameParser.{Result, instance => scientificNameParser}
-import parser.runner.tcp.TcpServer
-import parser.runner.web.controllers.WebServer
-import runner.BuildInfo
+import ScientificNameParser.{instance => scientificNameParser}
+import tcp.TcpServer
+import web.controllers.WebServer
 import resource._
+import parser.BuildInfo
 
 import scala.collection.parallel.ForkJoinTaskSupport
 import scala.collection.parallel.immutable.ParVector
