@@ -1,5 +1,7 @@
-package org.globalnames.parser
-package runner.tcp
+package org.globalnames
+package parser
+package runner
+package tcp
 
 import java.net.InetSocketAddress
 
@@ -12,14 +14,15 @@ import scala.collection.immutable.Queue
 import scala.concurrent.duration._
 
 import ScientificNameParser.{instance => snp}
+import GnParser.Config
 
 object TcpServer {
-  def run(host: String, port: Int, simpleFormat: Boolean): Unit = {
+  def run(config: Config): Unit = {
     implicit val system = ActorSystem("global-names-tcp-system")
-    val server = system.actorOf(Props(new TcpServiceActor(simpleFormat)),
+    val server = system.actorOf(Props(new TcpServiceActor(config)),
                                 name = "global-names-tcp-actor")
 
-    val endpoint = new InetSocketAddress(host, port)
+    val endpoint = new InetSocketAddress(config.host, config.port)
     implicit val bindingTimeout = Timeout(1.second)
     import system.dispatcher
 
@@ -28,21 +31,21 @@ object TcpServer {
     boundFuture.onSuccess { case Tcp.Bound(address) =>
       println(
         s"""Bound Global Names TCP server to $address
-           |Run `telnet $host $port`, type something and press RETURN
+           |Run `telnet ${config.host} ${config.port}`, type something and press RETURN
            |Type `STOP` to exit
            |""".stripMargin)
     }
   }
 }
 
-class TcpServiceActor(simpleFormat: Boolean) extends Actor with ActorLogging {
+class TcpServiceActor(config: Config) extends Actor with ActorLogging {
   var childrenCount = 0
 
   def receive = {
     case Tcp.Connected(_, _) =>
       val tcpConnection = sender
       val newChild = context.watch(context.actorOf(Props(
-        new TcpServiceConnection(tcpConnection, simpleFormat))))
+        new TcpServiceConnection(tcpConnection, config))))
       childrenCount += 1
       sender ! Tcp.Register(newChild)
       log.debug("Registered for new connection")
@@ -58,7 +61,7 @@ class TcpServiceActor(simpleFormat: Boolean) extends Actor with ActorLogging {
   }
 }
 
-class TcpServiceConnection(tcpConnection: ActorRef, simpleFormat: Boolean)
+class TcpServiceConnection(tcpConnection: ActorRef, config: Config)
   extends Actor with ActorLogging {
 
   context.watch(tcpConnection)
@@ -79,8 +82,7 @@ class TcpServiceConnection(tcpConnection: ActorRef, simpleFormat: Boolean)
       } else {
         val parsedNames = inputNames.map { name =>
           val result = snp.fromString(name)
-          if (simpleFormat) result.delimitedString("|")
-          else result.renderCompactJson
+          config.renderResult(result)
         }
         parsedNames.mkString("", "\n", "\n")
       }

@@ -5,7 +5,7 @@ package runner
 import java.io.{BufferedWriter, FileWriter}
 import java.util.concurrent.atomic.AtomicInteger
 
-import ScientificNameParser.{instance => scientificNameParser}
+import ScientificNameParser.{Result, instance => scientificNameParser}
 import tcp.TcpServer
 import web.controllers.WebServer
 import resource._
@@ -31,8 +31,12 @@ object GnParser {
                     host: String = "0.0.0.0",
                     port: Int = 4334,
                     name: String = "",
-                    simpleFormat: Boolean = false,
-                    threadsNumber: Option[Int] = None)
+                    private val simpleFormat: Boolean = false,
+                    private val threadsNumber: Option[Int] = None) {
+    val parallelism: Int = threadsNumber.getOrElse(ForkJoinPool.getCommonPoolParallelism)
+    def renderResult(result: Result): String =
+      simpleFormat ? result.delimitedString() | result.renderCompactJson
+  }
 
   def main(args: Array[String]): Unit = {
     val parser = new scopt.OptionParser[Config]("gnparse") {
@@ -71,26 +75,21 @@ object GnParser {
     }
 
     parser.parse(args, Config()) match {
-      case Some(cfg) if cfg.mode.get == InputFileParsing =>
-        startFileParse(cfg.inputFile, cfg.outputFile, cfg.threadsNumber, cfg.simpleFormat)
-      case Some(cfg) if cfg.mode.get == TcpServerMode =>
-        TcpServer.run(cfg.host, cfg.port, cfg.simpleFormat)
-      case Some(cfg) if cfg.mode.get == WebServerMode =>
-        WebServer.run(cfg.host, cfg.port)
-      case Some(cfg) if cfg.mode.get == NameParsing =>
-        val result = scientificNameParser.fromString(cfg.name)
-        println {
-          if (cfg.simpleFormat) result.delimitedString()
-          else result.renderCompactJson
-        }
+      case Some(cfg) => cfg.mode.get match {
+        case InputFileParsing => startFileParse(cfg)
+        case TcpServerMode => TcpServer.run(cfg)
+        case WebServerMode => WebServer.run(cfg)
+        case NameParsing =>
+          val result = scientificNameParser.fromString(cfg.name)
+          println(cfg.renderResult(result))
+      }
       case None =>
         Console.err.println("Invalid configuration of parameters. Check --help")
     }
   }
 
-  def startFileParse(inputFilePathMaybe: Option[String], outputFilePathMaybe: Option[String],
-                     threadsNumber: Option[Int], simpleFormat: Boolean): Unit = {
-    val inputIteratorEither = inputFilePathMaybe match {
+  def startFileParse(config: Config): Unit = {
+    val inputIteratorEither = config.inputFile match {
       case None =>
         println("Enter scientific names line by line")
         val iterator = Iterator.continually(StdIn.readLine())
@@ -104,24 +103,22 @@ object GnParser {
         Console.err.println(errors.map { _.getMessage }.mkString("\n"))
         ParVector.empty[String]
       case \/-(res) =>
-        val parallelism = threadsNumber.getOrElse(ForkJoinPool.getCommonPoolParallelism)
         val namesInputPar = res.toVector.par
-        namesInputPar.tasksupport = new ForkJoinTaskSupport(new ForkJoinPool(parallelism))
+        namesInputPar.tasksupport = new ForkJoinTaskSupport(new ForkJoinPool(config.parallelism))
         val parsedNamesCount = new AtomicInteger()
 
-        println(s"Running with parallelism: $parallelism")
+        println(s"Running with parallelism: ${config.parallelism}")
         for (name <- namesInputPar) yield {
           val currentParsedCount = parsedNamesCount.incrementAndGet()
           if (currentParsedCount % 10000 == 0) {
             println(s"Parsed $currentParsedCount of ${namesInputPar.size} lines")
           }
           val result = scientificNameParser.fromString(name.trim)
-          if (simpleFormat) result.delimitedString()
-          else result.renderCompactJson
+          config.renderResult(result)
         }
     }
 
-    outputFilePathMaybe match {
+    config.outputFile match {
       case Some(fp) =>
         for { writer <- managed(new BufferedWriter(new FileWriter(fp))) } {
           namesParsed.seq.foreach { name => writer.write(name + System.lineSeparator) }
