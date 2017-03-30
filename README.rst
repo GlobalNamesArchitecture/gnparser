@@ -292,7 +292,7 @@ Installation on Windows
 Usage of Executable
 ~~~~~~~~~~~~~~~~~~~
 
-Note that ``gnparser`` loads Java run environment every time it is
+Note that ``gnparser`` loads Java runtime environment every time it is
 called. As a result parsing one name at a time is **much** slower than
 parsing many names from a file. When parsing large file expect rates of
 3000-6000 name strings per second on one CPU.
@@ -303,11 +303,17 @@ To parse one name
 
     gnparser name "Parus major Linnaeus, 1788"
 
-To parse names from a file (one name per line).
+To parse names from a file (one name per line)
 
 ::
 
     gnparser file --input file_with_names.txt [--output output_file.json --threads 8]
+
+``file`` is default command if no command is given. To parse names from STDIN to STDOUT:
+
+::
+
+    cat file_with_names.txt | gnparser > file_with_parsed_names.txt
 
 To see help
 

@@ -41,19 +41,21 @@ object GnParser {
   def main(args: Array[String]): Unit = {
     val parser = new scopt.OptionParser[Config]("gnparser") {
       head("gnparser", BuildInfo.version)
+      note("NOTE: if no command is provided then `file` is executed by default\n")
       help("help").text("prints this usage text")
       opt[Unit]('s', "simple").text("return simple CSV format instead of JSON")
         .optional.action { (x, c) => c.copy(simpleFormat = true) }
       cmd("name").action { (_, c) => c.copy(mode = NameParsing.some) }
                  .text("parse single scientific name").children(
-        arg[String]("<scientific_name>").required
-          .action { (x, c) => c.copy(name = x) }
+        arg[String]("<scientific_name>").required.action { (x, c) => c.copy(name = x) }
       )
       cmd("file").action { (_, c) => c.copy(mode = InputFileParsing.some) }
                  .text("parse scientific names from input file").children(
-        opt[String]('i', "input").required.valueName("<path_to_input_file>")
+        opt[String]('i', "input").text("if not present then input from <stdin>")
+          .optional.valueName("<path_to_input_file>")
           .action { (x, c) => c.copy(inputFile = x.some) },
-        opt[String]('o', "output").required.valueName("<path_to_output_file>")
+        opt[String]('o', "output").optional.text("if not present then output to <stdout>")
+          .valueName("<path_to_output_file>")
           .action { (x, c) => c.copy(outputFile = x.some) },
         opt[Int]('t', "threads").valueName("<threads_number>")
           .action { (x, c) => c.copy(threadsNumber = x.some)}
