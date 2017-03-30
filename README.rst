@@ -26,10 +26,10 @@ Try it as a command line tool under Linux/Mac:
     unzip gnparser-0.3.3.zip
     sudo rm -rf /opt/gnparser
     sudo mv gnparser-0.3.3 /opt/gnparser
-    sudo rm -f /usr/local/bin/gnparse
-    sudo ln -s /opt/gnparser/bin/gnparse /usr/local/bin
-    gnparse name "Homo sapiens Linnaeus"
-    gnparse --help
+    sudo rm -f /usr/local/bin/gnparser
+    sudo ln -s /opt/gnparser/bin/gnparser /usr/local/bin
+    gnparser name "Homo sapiens Linnaeus"
+    gnparser --help
 
 ``gnparser`` is also `dockerized <https://hub.docker.com/r/gnames/gnparser>`_:
 
@@ -145,7 +145,7 @@ split them into "name part" and "authorship part". Such practice is not
 very effective for names like "*Prosthechea cochleata* (L.) W.E.Higgins
 *var. grandiflora* (Mutel) Christenson". Combination of
 ``canonical_extended`` with the ``authorship`` from the lowest taxon
-will do the job better. You can also use ``--simple`` flag for ``gnparse``
+will do the job better. You can also use ``--simple`` flag for ``gnparser``
 command line tool
 
 Figuring out if names are well-formed
@@ -275,8 +275,8 @@ Installation on Linux/Mac
     unzip gnparser-0.3.3.zip
     sudo rm -rf /opt/gnparser
     sudo mv gnparser-0.3.3 /opt/gnparser
-    sudo rm -f /usr/local/bin/gnparse
-    sudo ln -s /opt/gnparser/bin/gnparse /usr/local/bin
+    sudo rm -f /usr/local/bin/gnparser
+    sudo ln -s /opt/gnparser/bin/gnparser /usr/local/bin
 
 Installation on Windows
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -286,13 +286,13 @@ Installation on Windows
 2. Extract it to a place where you usually store program files
 3. Update your `PATH <https://java.com/en/download/help/path.xml>`_ to
    point to bin subdirectory
-4. Now you can use ``gnparse`` command provided by ``gnparse.bat``
+4. Now you can use ``gnparser`` command provided by ``gnparser.bat``
    script from CMD
 
 Usage of Executable
 ~~~~~~~~~~~~~~~~~~~
 
-Note that ``gnparse`` loads Java run environment every time it is
+Note that ``gnparser`` loads Java run environment every time it is
 called. As a result parsing one name at a time is **much** slower than
 parsing many names from a file. When parsing large file expect rates of
 3000-6000 name strings per second on one CPU.
@@ -301,19 +301,19 @@ To parse one name
 
 ::
 
-    gnparse name "Parus major Linnaeus, 1788"
+    gnparser name "Parus major Linnaeus, 1788"
 
 To parse names from a file (one name per line).
 
 ::
 
-    gnparse file --input file_with_names.txt [--output output_file.json --threads 8]
+    gnparser file --input file_with_names.txt [--output output_file.json --threads 8]
 
 To see help
 
 ::
 
-    gnparse --help
+    gnparser --help
 
 Usage as a Socket Server
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -324,7 +324,7 @@ is the default port.
 
 ::
 
-    gnparse socket --port 1234
+    gnparser socket --port 1234
 
 To test the socket connection with command line:
 
@@ -354,7 +354,7 @@ http://0.0.0.0:9000
 
 ::
 
-    gnparse web --port 9000
+    gnparser web --port 9000
 
 Make sure to CGI-escape name strings for GET requests. An '&' character
 needs to be converted to '%26'

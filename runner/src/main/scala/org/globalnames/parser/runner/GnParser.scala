@@ -39,8 +39,8 @@ object GnParser {
   }
 
   def main(args: Array[String]): Unit = {
-    val parser = new scopt.OptionParser[Config]("gnparse") {
-      head("gnparse", BuildInfo.version)
+    val parser = new scopt.OptionParser[Config]("gnparser") {
+      head("gnparser", BuildInfo.version)
       help("help").text("prints this usage text")
       opt[Unit]('s', "simple").text("return simple CSV format instead of JSON")
         .optional.action { (x, c) => c.copy(simpleFormat = true) }

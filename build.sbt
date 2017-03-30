@@ -135,7 +135,7 @@ lazy val runner = (project in file("./runner"))
   .settings(noPublishingSettings: _*)
   .settings(
     name := "gnparser-runner",
-    executableScriptName := "gnparse",
+    executableScriptName := "gnparser",
     crossScalaVersions := Seq("2.11.8"),
     packageName := "gnparser",
     bashScriptExtraDefines := Seq(
