@@ -59,7 +59,7 @@ Introduction
 Global Names Parser or ``gnparser`` is a Scala library for breaking up
 scientific names into their different elements. The elements are classified.
 It is based on `parboiled2 <http://parboiled2.org>`_ -- a Parsing Expression
-Grammar (PEG) library. The gnparser project evolved from another PEG-based
+Grammar (PEG) library. The ``gnparser`` project evolved from another PEG-based
 scientific names parser --
 `biodiversity <https://github.com/GlobalNamesArchitecture/biodiversity>`_
 written in Ruby. Both projects were developed as a part of `Global Names
