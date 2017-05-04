@@ -81,6 +81,7 @@ case class Name(
   comparison: Option[Comparison] = None,
   approximation: Option[Approximation] = None,
   ignored: Option[String] = None,
+  bacteria: Boolean = false,
   private val genusParsed: Boolean = false) extends AstNode {
 
   val genus: Boolean = genusParsed || species.isDefined || approximation.isDefined

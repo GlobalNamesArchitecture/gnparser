@@ -22,6 +22,13 @@
 # "parsed: false"
 ####
 
+###
+# TODO: bacteria name homonyms
+###
+Actinomyces cardiffensis
+{"name_string_id":"fc1def53-81ba-5d2f-9f4c-0d9ac591cd13","parsed":true,"quality":2,"quality_warnings":[[2,"Genus is bacteria name homonym"]],"parser_version":"test_version","verbatim":"Actinomyces cardiffensis","normalized":"Actinomyces cardiffensis","canonical_name":{"value":"Actinomyces cardiffensis"},"hybrid":false,"surrogate":false,"virus":false,"details":[{"genus":{"value":"Actinomyces"},"specific_epithet":{"value":"cardiffensis"},"bacteria":true}],"positions":[["genus",0,11],["specific_epithet",12,24]]}
+fc1def53-81ba-5d2f-9f4c-0d9ac591cd13|Actinomyces cardiffensis|Actinomyces cardiffensis|Actinomyces cardiffensis|||2
+
 ### Uninomials
 
 #SECTION: Uninomial<
@@ -859,7 +866,7 @@ Mycosphaerella eryngii (Fr. Duby) ex. Oudem. 1897
 90b58aa2-f018-50cf-9a3e-69957fe4eb7a|Mycosphaerella eryngii (Fr. Duby) ex. Oudem. 1897|Mycosphaerella eryngii|Mycosphaerella eryngii|(Fr. Duby ex Oudem.)||3
 
 Salmonella werahensis (Castellani) Hauduroy and Ehringer in Hauduroy 1937
-{"name_string_id":"bb6e2a9f-6813-5b00-9a3f-e12a085e515e","parsed":true,"quality":2,"quality_warnings":[[2,"Ex authors are not required"]],"parser_version":"test_version","verbatim":"Salmonella werahensis (Castellani) Hauduroy and Ehringer in Hauduroy 1937","normalized":"Salmonella werahensis (Castellani) Hauduroy & Ehringer ex Hauduroy 1937","canonical_name":{"value":"Salmonella werahensis"},"hybrid":false,"surrogate":false,"virus":false,"details":[{"genus":{"value":"Salmonella"},"specific_epithet":{"value":"werahensis","authorship":{"value":"(Castellani) Hauduroy & Ehringer ex Hauduroy 1937","basionym_authorship":{"authors":["Castellani"]},"combination_authorship":{"authors":["Hauduroy","Ehringer"],"year":{"value":"1937"},"ex_authors":["Hauduroy"]}}}}],"positions":[["genus",0,10],["specific_epithet",11,21],["author_word",23,33],["author_word",35,43],["author_word",48,56],["author_word",60,68],["year",69,73]]}
+{"name_string_id":"bb6e2a9f-6813-5b00-9a3f-e12a085e515e","parsed":true,"quality":2,"quality_warnings":[[2,"Ex authors are not required"]],"parser_version":"test_version","verbatim":"Salmonella werahensis (Castellani) Hauduroy and Ehringer in Hauduroy 1937","normalized":"Salmonella werahensis (Castellani) Hauduroy & Ehringer ex Hauduroy 1937","canonical_name":{"value":"Salmonella werahensis"},"hybrid":false,"surrogate":false,"virus":false,"details":[{"genus":{"value":"Salmonella"},"specific_epithet":{"value":"werahensis","authorship":{"value":"(Castellani) Hauduroy & Ehringer ex Hauduroy 1937","basionym_authorship":{"authors":["Castellani"]},"combination_authorship":{"authors":["Hauduroy","Ehringer"],"year":{"value":"1937"},"ex_authors":["Hauduroy"]}}},"bacteria":true}],"positions":[["genus",0,10],["specific_epithet",11,21],["author_word",23,33],["author_word",35,43],["author_word",48,56],["author_word",60,68],["year",69,73]]}
 bb6e2a9f-6813-5b00-9a3f-e12a085e515e|Salmonella werahensis (Castellani) Hauduroy and Ehringer in Hauduroy 1937|Salmonella werahensis|Salmonella werahensis|(Castellani) Hauduroy & Ehringer ex Hauduroy 1937||2
 #>
 
@@ -981,7 +988,7 @@ Senecio legionensis sensu Samp., non Lange
 948d73b7-499b-5060-ace4-dd061f2f4373|Senecio legionensis sensu Samp., non Lange|Senecio legionensis|Senecio legionensis|||2
 
 Pseudomonas methanica (Söhngen 1906) sensu. Dworkin and Foster 1956
-{"name_string_id":"f4261966-4f80-52c1-a3ff-8eaece507964","parsed":true,"quality":2,"quality_warnings":[[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Pseudomonas methanica (Söhngen 1906) sensu. Dworkin and Foster 1956","normalized":"Pseudomonas methanica (Söhngen 1906)","canonical_name":{"value":"Pseudomonas methanica"},"hybrid":false,"surrogate":false,"virus":false,"details":[{"genus":{"value":"Pseudomonas"},"specific_epithet":{"value":"methanica","authorship":{"value":"(Söhngen 1906)","basionym_authorship":{"authors":["Söhngen"],"year":{"value":"1906"}}}}}],"positions":[["genus",0,11],["specific_epithet",12,21],["author_word",23,30],["year",31,35]]}
+{"name_string_id":"f4261966-4f80-52c1-a3ff-8eaece507964","parsed":true,"quality":2,"quality_warnings":[[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Pseudomonas methanica (Söhngen 1906) sensu. Dworkin and Foster 1956","normalized":"Pseudomonas methanica (Söhngen 1906)","canonical_name":{"value":"Pseudomonas methanica"},"hybrid":false,"surrogate":false,"virus":false,"details":[{"genus":{"value":"Pseudomonas"},"specific_epithet":{"value":"methanica","authorship":{"value":"(Söhngen 1906)","basionym_authorship":{"authors":["Söhngen"],"year":{"value":"1906"}}}},"bacteria":true}],"positions":[["genus",0,11],["specific_epithet",12,21],["author_word",23,30],["year",31,35]]}
 f4261966-4f80-52c1-a3ff-8eaece507964|Pseudomonas methanica (Söhngen 1906) sensu. Dworkin and Foster 1956|Pseudomonas methanica|Pseudomonas methanica|(Söhngen 1906)|1906|2
 
 Abarema scutifera sensu auct., non (Blanco)Kosterm.
@@ -1345,7 +1352,7 @@ Acastoides spp.
 9853f0a4-6324-5a7d-8108-e910578e612b|Acastoides spp.|Acastoides|Acastoides|||3
 
 Sphingomonas sp. 37
-{"name_string_id":"1daffd3a-f4de-58d9-91e3-ae4d08a50ce0","parsed":true,"quality":3,"quality_warnings":[[3,"Name is approximate"]],"parser_version":"test_version","verbatim":"Sphingomonas sp. 37","normalized":"Sphingomonas","canonical_name":{"value":"Sphingomonas"},"hybrid":false,"surrogate":true,"virus":false,"details":[{"genus":{"value":"Sphingomonas"},"annotation_identification":"sp.","ignored":{"value":"37"}}],"positions":[["genus",0,12],["annotation_identification",13,16]]}
+{"name_string_id":"1daffd3a-f4de-58d9-91e3-ae4d08a50ce0","parsed":true,"quality":3,"quality_warnings":[[3,"Name is approximate"]],"parser_version":"test_version","verbatim":"Sphingomonas sp. 37","normalized":"Sphingomonas","canonical_name":{"value":"Sphingomonas"},"hybrid":false,"surrogate":true,"virus":false,"details":[{"genus":{"value":"Sphingomonas"},"annotation_identification":"sp.","bacteria":true,"ignored":{"value":"37"}}],"positions":[["genus",0,12],["annotation_identification",13,16]]}
 1daffd3a-f4de-58d9-91e3-ae4d08a50ce0|Sphingomonas sp. 37|Sphingomonas|Sphingomonas|||3
 
 #TODO figure out what is a better way for cases like above
@@ -1774,7 +1781,7 @@ Agropyron pectiniforme var. karabaljikji ined.?
 e951b7d4-0009-54df-9de6-efbb392dc8d6|Agropyron pectiniforme var. karabaljikji ined.?|Agropyron pectiniforme karabaljikji|Agropyron pectiniforme var. karabaljikji|||2
 
 Staphylococcus hyicus chromogenes Devriese et al. 1978 (Approved Lists 1980).
-{"name_string_id":"ec17eb44-742c-5325-aca6-e33a0888ef0d","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Staphylococcus hyicus chromogenes Devriese et al. 1978 (Approved Lists 1980).","normalized":"Staphylococcus hyicus chromogenes Devriese et al. 1978","canonical_name":{"value":"Staphylococcus hyicus chromogenes"},"hybrid":false,"surrogate":false,"unparsed_tail":" (Approved Lists 1980).","virus":false,"details":[{"genus":{"value":"Staphylococcus"},"specific_epithet":{"value":"hyicus"},"infraspecific_epithets":[{"value":"chromogenes","authorship":{"value":"Devriese et al. 1978","basionym_authorship":{"authors":["Devriese et al."],"year":{"value":"1978"}}}}]}],"positions":[["genus",0,14],["specific_epithet",15,21],["infraspecific_epithet",22,33],["author_word",34,42],["author_word",43,49],["year",50,54]]}
+{"name_string_id":"ec17eb44-742c-5325-aca6-e33a0888ef0d","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Staphylococcus hyicus chromogenes Devriese et al. 1978 (Approved Lists 1980).","normalized":"Staphylococcus hyicus chromogenes Devriese et al. 1978","canonical_name":{"value":"Staphylococcus hyicus chromogenes"},"hybrid":false,"surrogate":false,"unparsed_tail":" (Approved Lists 1980).","virus":false,"details":[{"genus":{"value":"Staphylococcus"},"specific_epithet":{"value":"hyicus"},"infraspecific_epithets":[{"value":"chromogenes","authorship":{"value":"Devriese et al. 1978","basionym_authorship":{"authors":["Devriese et al."],"year":{"value":"1978"}}}}],"bacteria":true}],"positions":[["genus",0,14],["specific_epithet",15,21],["infraspecific_epithet",22,33],["author_word",34,42],["author_word",43,49],["year",50,54]]}
 ec17eb44-742c-5325-aca6-e33a0888ef0d|Staphylococcus hyicus chromogenes Devriese et al. 1978 (Approved Lists 1980).|Staphylococcus hyicus chromogenes|Staphylococcus hyicus chromogenes|Devriese et al. 1978|1978|3
 #>
 

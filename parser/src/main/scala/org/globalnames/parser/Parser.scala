@@ -18,7 +18,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
 
   type RuleNodeMeta[T <: AstNode] = Rule1[NodeMeta[T]]
 
-  override val input: ParserInput = preprocessorResult.unescaped
+  override implicit val input: ParserInput = preprocessorResult.unescaped
 
   override def errorTraceCollectionLimit: Int = 0
 
