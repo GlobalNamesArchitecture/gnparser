@@ -83,13 +83,12 @@ case class Name(
   ignored: Option[String] = None,
   private val genusParsed: Boolean = false) extends AstNode {
 
-  val genus: Boolean = genusParsed || species.isDefined ||
-                       approximation.isDefined
+  val genus: Boolean = genusParsed || species.isDefined || approximation.isDefined
   val pos: CapturePosition = {
     val nodes = Vector(uninomial.some, subgenus, species,
                        infraspecies, comparison, approximation).flatten
-    CapturePosition(nodes.sortBy { _.pos.start }.head.pos.start,
-               nodes.sortBy { -_.pos.end }.last.pos.end)
+    CapturePosition(nodes.minBy(_.pos.start).pos.start,
+                    nodes.maxBy(-_.pos.end).pos.end)
   }
 }
 
