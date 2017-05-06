@@ -40,7 +40,6 @@ trait Details { parsedResult: ScientificNameParser.Result =>
         ("annotation_identification" ->
           (nm.approximation.map { stringOf } |+|
             nm.comparison.map { stringOf })) ~
-        ("bacteria" -> (nm.bacteria ? true.some | None)) ~
         ignoredObj
     }
 

@@ -41,7 +41,7 @@ object FactoryAST {
                     infraspecies.map { _.node }, comparison.map { _.node },
                     approximation.map { _.node }, ignored, bacteria, genusParsed)
     val bacteriaHomonymWarning = bacteriaHomonymsGenera.contains(genus).option {
-      Vector(Warning(2, "Genus is bacteria name homonym", name))
+      Vector(Warning(1, "The genus is a homonym of a bacterial genus", name))
     }.getOrElse(Vector())
     val warns = uninomial.warnings ++ subgenus.map { _.warnings }.orZero ++
                 species.map { _.warnings }.orZero ++ infraspecies.map { _.warnings }.orZero ++

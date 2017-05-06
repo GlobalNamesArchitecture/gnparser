@@ -21,6 +21,12 @@ case class ScientificName(
     ng.namedHybrid || ng.hybridParts.nonEmpty
   }
 
+  val bacteria: Boolean = namesGroup.exists { ng =>
+    val nameBacteria = ng.name.bacteria
+    val nameRestBacteria = ng.names.map { nOpt => nOpt.exists { _.bacteria } }.exists(identity)
+    nameBacteria || nameRestBacteria
+  }
+
   val surrogate: Boolean = {
     if (surrogatePreprocessed) true
     else {
