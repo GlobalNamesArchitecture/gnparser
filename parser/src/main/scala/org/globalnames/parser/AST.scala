@@ -21,6 +21,12 @@ case class ScientificName(
     ng.namedHybrid || ng.hybridParts.nonEmpty
   }
 
+  val bacteria: Boolean = namesGroup.exists { ng =>
+    val nameBacteria = ng.name.bacteria
+    val nameRestBacteria = ng.names.map { nOpt => nOpt.exists { _.bacteria } }.exists(identity)
+    nameBacteria || nameRestBacteria
+  }
+
   val surrogate: Boolean = {
     if (surrogatePreprocessed) true
     else {
@@ -81,15 +87,15 @@ case class Name(
   comparison: Option[Comparison] = None,
   approximation: Option[Approximation] = None,
   ignored: Option[String] = None,
+  bacteria: Boolean = false,
   private val genusParsed: Boolean = false) extends AstNode {
 
-  val genus: Boolean = genusParsed || species.isDefined ||
-                       approximation.isDefined
+  val genus: Boolean = genusParsed || species.isDefined || approximation.isDefined
   val pos: CapturePosition = {
     val nodes = Vector(uninomial.some, subgenus, species,
                        infraspecies, comparison, approximation).flatten
-    CapturePosition(nodes.sortBy { _.pos.start }.head.pos.start,
-               nodes.sortBy { -_.pos.end }.last.pos.end)
+    CapturePosition(nodes.minBy(_.pos.start).pos.start,
+                    nodes.maxBy(-_.pos.end).pos.end)
   }
 }
 
