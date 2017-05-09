@@ -9,10 +9,9 @@ trait DelimitedStringRenderer {
 
   protected[globalnames] val ambiguousAuthorship: Boolean = {
     val isAmbiguousOpt = for {
-      isHybrid <- parserResult.scientificName.isHybrid
+      hybrid <- parserResult.scientificName.hybrid
       ng <- parserResult.scientificName.namesGroup
-      isNamedHybrid = ng.namedHybrid
-    } yield isHybrid && !isNamedHybrid
+    } yield hybrid && !ng.namedHybrid
     isAmbiguousOpt.getOrElse(false)
   }
 

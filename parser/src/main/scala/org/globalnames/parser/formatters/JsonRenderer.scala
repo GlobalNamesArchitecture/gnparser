@@ -51,7 +51,7 @@ trait JsonRenderer { parserResult: ScientificNameParser.Result =>
       ("verbatim" -> parserResult.preprocessorResult.verbatim) ~
       ("normalized" -> parserResult.normalized) ~
       ("canonical_name" -> canonicalName) ~
-      ("hybrid" -> parserResult.scientificName.isHybrid) ~
+      ("hybrid" -> parserResult.scientificName.hybrid) ~
       ("surrogate" -> parserResult.scientificName.surrogate) ~
       ("unparsed_tail" -> parserResult.scientificName.unparsedTail) ~
       ("virus" -> parserResult.preprocessorResult.virus) ~

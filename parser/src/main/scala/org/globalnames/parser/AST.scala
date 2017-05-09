@@ -17,7 +17,7 @@ case class ScientificName(
   unparsedTail: Option[String] = None,
   surrogatePreprocessed: Boolean = false) extends AstNode {
 
-  val isHybrid: Option[Boolean] = namesGroup.map { ng =>
+  val hybrid: Option[Boolean] = namesGroup.map { ng =>
     ng.namedHybrid || ng.hybridParts.nonEmpty
   }
 
