@@ -75,8 +75,7 @@ class TcpServiceConnection(tcpConnection: ActorRef, config: Config)
       tcpConnection ! Tcp.Close
 
     case Tcp.Received(data) =>
-      val inputNames = data.utf8String.trim
-                           .split("\r\n").filterNot { _.isEmpty }
+      val inputNames = data.utf8String.split("\n").map { _.trim }.filterNot { _.isEmpty }
       val result = if (inputNames.isEmpty) {
         "No name provided?\n"
       } else {
