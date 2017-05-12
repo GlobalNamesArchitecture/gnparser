@@ -214,9 +214,8 @@ class Parser(preprocessorResult: Preprocessor.Result,
   def rankOther: RuleNodeMeta[Rank] = rule {
     capturePos("morph." | "nothosubsp." | "convar." | "pseudovar." | "sect." | "ser." | "subvar." |
                "subf." | "race" | "α" | "ββ" | "β" | "γ" | "δ" | "ε" | "φ" | "θ" | "μ" | "a." |
-               "b." | "c." | "d." | "e." | "g." | "k.") ~ &(spaceCharsEOI) ~> {
-      (p: CapturePosition) => FactoryAST.rank(p)
-    }
+               "b." | "c." | "d." | "e." | "g." | "k." | "pv." | "pathovar.") ~
+      &(spaceCharsEOI) ~> { (p: CapturePosition) => FactoryAST.rank(p) }
   }
 
   def rankVar: RuleNodeMeta[Rank] = rule {
