@@ -7,8 +7,8 @@ Global Names Parser
 Brief Intro
 -----------
 
-``gnparser`` splits scientific names into elements with meta information. For example,
-``"Homo sapiens Linnaeus"`` is decomposed to human readable information as follows:
+``gnparser`` splits scientific names into their component elements with associated meta information.
+For example, ``"Homo sapiens Linnaeus"`` is parsed into human readable information as follows:
 
 ========  ================  ========
 Element   Meaning           Position
@@ -56,30 +56,29 @@ Finally, run it right from your SBT console:
 Introduction
 ------------
 
-Global Names Parser or ``gnparser`` is a Scala library for breaking
-scientific names into meaningful elements. It is based on
-`parboiled2 <http://parboiled2.org>`_ -- a Parsing Expression Grammar
-(PEG) library. The ``gnparser`` project evolved from another PEG-based
+Global Names Parser or ``gnparser`` is a Scala library for breaking up
+scientific names into their different elements. The elements are classified.
+It is based on `parboiled2 <http://parboiled2.org>`_ -- a Parsing Expression
+Grammar (PEG) library. The ``gnparser`` project evolved from another PEG-based
 scientific names parser --
 `biodiversity <https://github.com/GlobalNamesArchitecture/biodiversity>`_
 written in Ruby. Both projects were developed as a part of `Global Names
 Architecture <http://globalnames.org>`_.
 
-It is common to use regular expressions for parsing scientific names, and this
-approach works well at extracting canonical forms in simple cases. However for
-complex scientific names and for breaking names into their semantic elements an
-approach using regular expressions often fails, unable to overcome the
-recursive nature of data embedded in names. By contrast, ``gnparser`` is able
-to deal with the most complex scientific name strings.
+Many other parsing algorithms for scientific names use regular expressions.
+This approach works well for extracting canonical forms in simple cases.
+However, for complex scientific names and to parse scientific names into
+all semantic elements regular expressions often fail, unable to overcome
+the recursive nature of data embedded in names. By contrast, ``gnparser``
+is able to deal with the most complex scientific name strings.
 
 ``gnparser`` takes a name string like
-``Drosophila (Sophophora) melanogaster Meigen, 1830`` and returns back
-parsed components in JSON format. We supply a `description of
-the output fields as JSON schema <http://globalnames.org/schemas/gnparser.json>`_. Parser's behavior is defined in
-its tests and the `test
+``Drosophila (Sophophora) melanogaster Meigen, 1830`` and returns parsed
+components in JSON format. We supply a `description of
+the output fields as JSON schema <http://globalnames.org/schemas/gnparser.json>`_.
+This parser's behavior is defined in its tests and the `test
 file <https://raw.githubusercontent.com/GlobalNamesArchitecture/gnparser/master/parser/src/test/resources/test_data.txt>`_
-is a good source of information about parser's capabilities, its input
-and output.
+is a good source of information about parser's capabilities, its input and output.
 
 Speed
 -----
@@ -103,7 +102,7 @@ Features
 -  Fast (~8x faster than biodiversity
    `gem <https://github.com/GlobalNamesArchitecture/biodiversity>`_),
    rock solid and elegant
--  Extracts all elements from a name, not only a canonical form
+-  Extracts all elements from a name, not only canonical forms
 -  Works with very complex scientific names, including hybrids
 -  Can be used directly in any language that can call Java -- Scala,
    Java, R, Python, Ruby etc.
@@ -120,9 +119,10 @@ Use Cases
 Getting the simplest possible canonical form
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Canonical forms are great for matching names despite alternative
-spellings. Use ``canonical_form`` field from parsing results for this use
-case.
+Canonical forms of a scientific name are the latinized components without
+annotations, authors or dates. They are great for matching names despite
+alternative spellings. Use the ``canonical_form`` field from parsing
+results for this use case.
 
 Getting canonical form with infraspecies ranks
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -133,27 +133,27 @@ In botany infraspecific ranks play an important role. Use
 Normalizing name strings
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-There are many inconsistencies in writing of scientific names. Use
-``normalized`` field to bring them all to a common form in spelling,
-empty spaces, ranks.
+There are many inconsistencies in how scientific names may be written.
+Use ``normalized`` field to bring them all to a common form (spelling, spacing,
+ranks).
 
 Removing authorships in the middle of the name
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Many data administrators store their name strings in two columns and
-split them into "name part" and "authorship part". Such practice is not
-very effective for names like "*Prosthechea cochleata* (L.) W.E.Higgins
-*var. grandiflora* (Mutel) Christenson". Combination of
-``canonical_extended`` with the ``authorship`` from the lowest taxon
-will do the job better. You can also use ``--simple`` flag for ``gnparser``
-command line tool
+Many data administrators store name strings in two columns and split
+them into "name part" and "authorship part". This practice misses some
+information when dealing with names like
+"*Prosthechea cochleata* (L.) W.E.Higgins *var. grandiflora*
+(Mutel) Christenson". However, if this is the use case, a combination of
+``canonical_extended`` with the authorship from the lowest taxon will do
+the job. You can also use ``--simple`` flag for ``gnparse`` command line tool.
 
 Figuring out if names are well-formed
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If there are problems with parsing a name, parser generates
 ``quality_warning`` messages and lowers parsing ``quality`` of the name.
-Quality means the following:
+Quality values mean the following:
 
 -  ``"quality": 1`` - No problems were detected
 -  ``"quality": 2`` - There were small problems, normalized result
@@ -166,11 +166,11 @@ Quality means the following:
 Creating stable GUIDs for name strings
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Parser uses UUID version 5 to generate its ``id`` field. There is
-algorithmic 1:1 relationship between the name string and the UUID.
+``gnparser`` uses UUID version 5 to generate its ``id`` field.
+There is algorithmic 1:1 relationship between the name string and the UUID.
 Moreover the same algorithm can be used in any popular language to
-generate the same UUID. Such IDs can be used to globally connect
-information about name strings.
+generate the same UUID. Such IDs can be used to globally connect information
+about name strings or information associated with name-strings.
 
 More information about UUID version 5 can be found in the `Global Names
 blog <http://globalnames.org/news/2015/05/31/gn-uuid-0-5-0/>`_.
@@ -181,12 +181,12 @@ You can also use UUID calculation library in your code as it is shown in
 Assembling canonical forms etc. from original spelling
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Parser tries to correct problems with spelling, but sometimes it is
-important to keep original spellings in canonical forms or authorships.
+``gnparser`` tries to correct problems with spelling, but sometimes it is
+important to keep original spelling of the canonical forms or authorships.
 The ``positions`` field attaches semantic meaning to every word in the
-original name string and allows to create canonical forms or other
-combinations using verbatim spelling of the words. Each element in
-``positions`` contains 3 parts:
+original name string and allows users to create canonical forms or other
+combinations using the original verbatim spelling of the words. Each element
+in ``positions`` contains 3 parts:
 
 1. semantic meaning of a word
 2. start position of the word
@@ -230,7 +230,7 @@ Release Package
 `Release
 package <https://github.com/GlobalNamesArchitecture/gnparser/releases/tag/release-0.3.3>`_
 should be sufficient for all usages but development. It is not needed
-for including parser into Java or Scala code -- `declare dependency
+for including ``gnparser`` into Java or Scala code -- `declare dependency
 instead <#dependency-declaration-for-java-or-scala>`_.
 
 Requirements
@@ -255,7 +255,7 @@ Fat Jar
 -------
 
 Sometimes it is beneficial to have a jar that contains everything
-necessary to run a program. Such jar would include Scala and all
+necessary to run a program. Such a jar would include Scala and all
 required libraries.
 
 `Fat
@@ -295,7 +295,7 @@ Usage of Executable
 Note that ``gnparser`` loads Java runtime environment every time it is
 called. As a result parsing one name at a time is **much** slower than
 parsing many names from a file. When parsing large file expect rates of
-3000-6000 name strings per second on one CPU.
+6000-9000 name strings per second on one CPU.
 
 To parse one name
 
@@ -324,7 +324,7 @@ To see help
 Usage as a Socket Server
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Use socket (TCP/IP) server when ``gnparser`` library cannot be imported
+Use socket (TCP/IP) server when the ``gnparser`` library cannot be imported
 directly by a programming language. Setting ``--port`` is optional, 4334
 is the default port.
 
@@ -372,7 +372,7 @@ Usage as a Library
 ------------------
 
 Several languages are supported either natively or by running their
-JVM-based versions. `Examples folder </examples>`_ provides scientific
+JVM-based versions. The `examples folder </examples>`_ provides scientific
 name parsing code snippets for Scala, Java, Jython, JRuby and R
 languages.
 
