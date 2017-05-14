@@ -347,9 +347,12 @@ core. For example in Ruby it would be:
 .. code:: ruby
 
     require "socket"
-    s = TCPSocket.open("0.0.0.0", 1234)
-    s.puts("Homo sapiens")
-    s.gets
+    names.each do |name|
+      s = TCPSocket.open("0.0.0.0", 1234)
+      s.puts(name)
+      parsed = s.gets
+      s.close
+    end
 
 Usage as a REST API Interface
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
