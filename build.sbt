@@ -71,6 +71,8 @@ val akkaHttpCore     = "com.typesafe.akka"  %% "akka-http-core"                 
 val akkaHttp         = "com.typesafe.akka"  %% "akka-http-experimental"            % akkaV
 val akkaActor        = "com.typesafe.akka"  %% "akka-actor"                        % akkaV
 val akkaJson         = "com.typesafe.akka"  %% "akka-http-spray-json-experimental" % akkaV
+val akkaSlf4j        = "com.typesafe.akka"  %% "akka-slf4j"                        % akkaV
+val logbackClassic   = "ch.qos.logback"     %  "logback-classic"                   % "1.1.3"
 val spark            = "org.apache.spark"   %% "spark-core"                        % "2.1.0" % Provided
 val shapeless        = "com.chuusai"        %% "shapeless"                         % "2.3.2"
 val json4s           = "org.json4s"         %% "json4s-jackson"                    % "3.4.2"
@@ -143,8 +145,9 @@ lazy val runner = (project in file("./runner"))
     bashScriptExtraDefines := Seq(
       s"""declare -r script_name="${executableScriptName.value}""""
     ),
-    libraryDependencies ++= Seq(scopt, akkaHttp, akkaHttpCore, akkaActor, scalaArm,
-                                akkaJson, akkaHttpTestkit, scalatest, specs2core, specs2extra),
+    libraryDependencies ++= Seq(scopt, akkaHttp, akkaHttpCore, akkaActor, akkaSlf4j,
+                                logbackClassic, scalaArm, akkaJson,
+                                akkaHttpTestkit, scalatest, specs2core, specs2extra),
     mainClass in Compile := Some("org.globalnames.parser.runner.GnParser"),
     mainClass in reStart :=
       Some("org.globalnames.parser.runner.web.controllers.WebServer"),
