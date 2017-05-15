@@ -22,30 +22,6 @@
 # "parsed: false"
 ####
 
-###
-# TODO: bacteria name homonyms
-###
-Actinomyces cardiffensis
-{"name_string_id":"fc1def53-81ba-5d2f-9f4c-0d9ac591cd13","parsed":true,"quality":1,"quality_warnings":[[1,"The genus is a homonym of a bacterial genus"]],"parser_version":"test_version","verbatim":"Actinomyces cardiffensis","normalized":"Actinomyces cardiffensis","canonical_name":{"value":"Actinomyces cardiffensis"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":true,"details":[{"genus":{"value":"Actinomyces"},"specific_epithet":{"value":"cardiffensis"}}],"positions":[["genus",0,11],["specific_epithet",12,24]]}
-fc1def53-81ba-5d2f-9f4c-0d9ac591cd13|Actinomyces cardiffensis|Actinomyces cardiffensis|Actinomyces cardiffensis|||1
-
-Xanthomonas axonopodis pv. phaseoli
-{"name_string_id":"ea35594e-41c7-5706-b3b8-bb1b94d11a77","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Xanthomonas axonopodis pv. phaseoli","normalized":"Xanthomonas axonopodis pv. phaseoli","canonical_name":{"value":"Xanthomonas axonopodis phaseoli","extended":"Xanthomonas axonopodis pv. phaseoli"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":true,"details":[{"genus":{"value":"Xanthomonas"},"specific_epithet":{"value":"axonopodis"},"infraspecific_epithets":[{"value":"phaseoli","rank":"pv."}]}],"positions":[["genus",0,11],["specific_epithet",12,22],["rank",23,26],["infraspecific_epithet",27,35]]}
-ea35594e-41c7-5706-b3b8-bb1b94d11a77|Xanthomonas axonopodis pv. phaseoli|Xanthomonas axonopodis phaseoli|Xanthomonas axonopodis pv. phaseoli|||1
-
-# Names just for testing purposes
-Xanthomonas axonopodis pathovar. phaseoli
-{"name_string_id":"816ce2bc-4cdc-59ab-8900-e4414e8d2125","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Xanthomonas axonopodis pathovar. phaseoli","normalized":"Xanthomonas axonopodis pathovar. phaseoli","canonical_name":{"value":"Xanthomonas axonopodis phaseoli","extended":"Xanthomonas axonopodis pathovar. phaseoli"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":true,"details":[{"genus":{"value":"Xanthomonas"},"specific_epithet":{"value":"axonopodis"},"infraspecific_epithets":[{"value":"phaseoli","rank":"pathovar."}]}],"positions":[["genus",0,11],["specific_epithet",12,22],["rank",23,32],["infraspecific_epithet",33,41]]}
-816ce2bc-4cdc-59ab-8900-e4414e8d2125|Xanthomonas axonopodis pathovar. phaseoli|Xanthomonas axonopodis phaseoli|Xanthomonas axonopodis pathovar. phaseoli|||1
-
-Xanthomonas axonopodis pathovar.
-{"name_string_id":"851a86de-df67-5fba-b3f7-73937a5edbce","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Xanthomonas axonopodis pathovar.","normalized":"Xanthomonas axonopodis","canonical_name":{"value":"Xanthomonas axonopodis"},"hybrid":false,"surrogate":false,"unparsed_tail":" pathovar.","virus":false,"bacteria":true,"details":[{"genus":{"value":"Xanthomonas"},"specific_epithet":{"value":"axonopodis"}}],"positions":[["genus",0,11],["specific_epithet",12,22]]}
-851a86de-df67-5fba-b3f7-73937a5edbce|Xanthomonas axonopodis pathovar.|Xanthomonas axonopodis|Xanthomonas axonopodis|||3
-
-Xanthomonas axonopodis pv.
-{"name_string_id":"0c0ce6dd-e5ea-5c17-8be3-c381ff662f12","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Xanthomonas axonopodis pv.","normalized":"Xanthomonas axonopodis","canonical_name":{"value":"Xanthomonas axonopodis"},"hybrid":false,"surrogate":false,"unparsed_tail":" pv.","virus":false,"bacteria":true,"details":[{"genus":{"value":"Xanthomonas"},"specific_epithet":{"value":"axonopodis"}}],"positions":[["genus",0,11],["specific_epithet",12,22]]}
-0c0ce6dd-e5ea-5c17-8be3-c381ff662f12|Xanthomonas axonopodis pv.|Xanthomonas axonopodis|Xanthomonas axonopodis|||3
-
 ### Uninomials
 
 #SECTION: Uninomial<
@@ -881,10 +857,6 @@ e5a49f2e-c7a2-5ebf-9349-8a36a410ec77|Mycosphaerella eryngii (Fr. Duby) ex Oudem.
 Mycosphaerella eryngii (Fr. Duby) ex. Oudem. 1897
 {"name_string_id":"90b58aa2-f018-50cf-9a3e-69957fe4eb7a","parsed":true,"quality":3,"quality_warnings":[[3,"`ex` ends with dot"],[2,"Ex authors are not required"]],"parser_version":"test_version","verbatim":"Mycosphaerella eryngii (Fr. Duby) ex. Oudem. 1897","normalized":"Mycosphaerella eryngii (Fr. Duby ex Oudem.)","canonical_name":{"value":"Mycosphaerella eryngii"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Mycosphaerella"},"specific_epithet":{"value":"eryngii","authorship":{"value":"(Fr. Duby ex Oudem.)","basionym_authorship":{"authors":["Fr. Duby"],"ex_authors":["Oudem."]}}}}],"positions":[["genus",0,14],["specific_epithet",15,22],["author_word",24,27],["author_word",28,32],["author_word",38,44]]}
 90b58aa2-f018-50cf-9a3e-69957fe4eb7a|Mycosphaerella eryngii (Fr. Duby) ex. Oudem. 1897|Mycosphaerella eryngii|Mycosphaerella eryngii|(Fr. Duby ex Oudem.)||3
-
-Salmonella werahensis (Castellani) Hauduroy and Ehringer in Hauduroy 1937
-{"name_string_id":"bb6e2a9f-6813-5b00-9a3f-e12a085e515e","parsed":true,"quality":2,"quality_warnings":[[2,"Ex authors are not required"]],"parser_version":"test_version","verbatim":"Salmonella werahensis (Castellani) Hauduroy and Ehringer in Hauduroy 1937","normalized":"Salmonella werahensis (Castellani) Hauduroy & Ehringer ex Hauduroy 1937","canonical_name":{"value":"Salmonella werahensis"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":true,"details":[{"genus":{"value":"Salmonella"},"specific_epithet":{"value":"werahensis","authorship":{"value":"(Castellani) Hauduroy & Ehringer ex Hauduroy 1937","basionym_authorship":{"authors":["Castellani"]},"combination_authorship":{"authors":["Hauduroy","Ehringer"],"year":{"value":"1937"},"ex_authors":["Hauduroy"]}}}}],"positions":[["genus",0,10],["specific_epithet",11,21],["author_word",23,33],["author_word",35,43],["author_word",48,56],["author_word",60,68],["year",69,73]]}
-bb6e2a9f-6813-5b00-9a3f-e12a085e515e|Salmonella werahensis (Castellani) Hauduroy and Ehringer in Hauduroy 1937|Salmonella werahensis|Salmonella werahensis|(Castellani) Hauduroy & Ehringer ex Hauduroy 1937||2
 #>
 
 #SECTION: Empty spaces<
@@ -1372,7 +1344,6 @@ Sphingomonas sp. 37
 {"name_string_id":"1daffd3a-f4de-58d9-91e3-ae4d08a50ce0","parsed":true,"quality":3,"quality_warnings":[[3,"Name is approximate"]],"parser_version":"test_version","verbatim":"Sphingomonas sp. 37","normalized":"Sphingomonas","canonical_name":{"value":"Sphingomonas"},"hybrid":false,"surrogate":true,"virus":false,"bacteria":true,"details":[{"genus":{"value":"Sphingomonas"},"annotation_identification":"sp.","ignored":{"value":"37"}}],"positions":[["genus",0,12],["annotation_identification",13,16]]}
 1daffd3a-f4de-58d9-91e3-ae4d08a50ce0|Sphingomonas sp. 37|Sphingomonas|Sphingomonas|||3
 
-#TODO figure out what is a better way for cases like above
 Thryothorus leucotis spp. bogotensis
 {"name_string_id":"d2cb7212-ff62-5e31-9ab9-31214a9782d5","parsed":true,"quality":3,"quality_warnings":[[3,"Name is approximate"]],"parser_version":"test_version","verbatim":"Thryothorus leucotis spp. bogotensis","normalized":"Thryothorus leucotis","canonical_name":{"value":"Thryothorus leucotis"},"hybrid":false,"surrogate":true,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Thryothorus"},"specific_epithet":{"value":"leucotis"},"annotation_identification":"spp.","ignored":{"value":"bogotensis"}}],"positions":[["genus",0,11],["specific_epithet",12,20],["annotation_identification",21,25]]}
 d2cb7212-ff62-5e31-9ab9-31214a9782d5|Thryothorus leucotis spp. bogotensis|Thryothorus leucotis|Thryothorus leucotis|||3
@@ -1569,6 +1540,38 @@ aa113505-61a1-58fe-92f3-8fd511dcfd61|Calathus (Lindrothius) KURNAKOV 1961|Lindro
 Fakus prioni
 {"name_string_id":"f2561b5b-37ed-592d-9c12-4ef96d09f554","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Fakus prioni","normalized":"Fakus prioni","canonical_name":{"value":"Fakus prioni"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Fakus"},"specific_epithet":{"value":"prioni"}}],"positions":[["genus",0,5],["specific_epithet",6,12]]}
 f2561b5b-37ed-592d-9c12-4ef96d09f554|Fakus prioni|Fakus prioni|Fakus prioni|||1
+#>
+
+### Bacterial names
+
+#SECTION: Bacterial genus<
+Salmonella werahensis (Castellani) Hauduroy and Ehringer in Hauduroy 1937
+{"name_string_id":"bb6e2a9f-6813-5b00-9a3f-e12a085e515e","parsed":true,"quality":2,"quality_warnings":[[2,"Ex authors are not required"]],"parser_version":"test_version","verbatim":"Salmonella werahensis (Castellani) Hauduroy and Ehringer in Hauduroy 1937","normalized":"Salmonella werahensis (Castellani) Hauduroy & Ehringer ex Hauduroy 1937","canonical_name":{"value":"Salmonella werahensis"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":true,"details":[{"genus":{"value":"Salmonella"},"specific_epithet":{"value":"werahensis","authorship":{"value":"(Castellani) Hauduroy & Ehringer ex Hauduroy 1937","basionym_authorship":{"authors":["Castellani"]},"combination_authorship":{"authors":["Hauduroy","Ehringer"],"year":{"value":"1937"},"ex_authors":["Hauduroy"]}}}}],"positions":[["genus",0,10],["specific_epithet",11,21],["author_word",23,33],["author_word",35,43],["author_word",48,56],["author_word",60,68],["year",69,73]]}
+bb6e2a9f-6813-5b00-9a3f-e12a085e515e|Salmonella werahensis (Castellani) Hauduroy and Ehringer in Hauduroy 1937|Salmonella werahensis|Salmonella werahensis|(Castellani) Hauduroy & Ehringer ex Hauduroy 1937||2
+#>
+
+#SECTION: Bacteria genus homonym<
+Actinomyces cardiffensis
+{"name_string_id":"fc1def53-81ba-5d2f-9f4c-0d9ac591cd13","parsed":true,"quality":1,"quality_warnings":[[1,"The genus is a homonym of a bacterial genus"]],"parser_version":"test_version","verbatim":"Actinomyces cardiffensis","normalized":"Actinomyces cardiffensis","canonical_name":{"value":"Actinomyces cardiffensis"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":true,"details":[{"genus":{"value":"Actinomyces"},"specific_epithet":{"value":"cardiffensis"}}],"positions":[["genus",0,11],["specific_epithet",12,24]]}
+fc1def53-81ba-5d2f-9f4c-0d9ac591cd13|Actinomyces cardiffensis|Actinomyces cardiffensis|Actinomyces cardiffensis|||1
+#>
+
+#SECTION: Bacteria with pathovar rank<
+Xanthomonas axonopodis pv. phaseoli
+{"name_string_id":"ea35594e-41c7-5706-b3b8-bb1b94d11a77","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Xanthomonas axonopodis pv. phaseoli","normalized":"Xanthomonas axonopodis pv. phaseoli","canonical_name":{"value":"Xanthomonas axonopodis phaseoli","extended":"Xanthomonas axonopodis pv. phaseoli"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":true,"details":[{"genus":{"value":"Xanthomonas"},"specific_epithet":{"value":"axonopodis"},"infraspecific_epithets":[{"value":"phaseoli","rank":"pv."}]}],"positions":[["genus",0,11],["specific_epithet",12,22],["rank",23,26],["infraspecific_epithet",27,35]]}
+ea35594e-41c7-5706-b3b8-bb1b94d11a77|Xanthomonas axonopodis pv. phaseoli|Xanthomonas axonopodis phaseoli|Xanthomonas axonopodis pv. phaseoli|||1
+
+Xanthomonas axonopodis pathovar. phaseoli
+{"name_string_id":"816ce2bc-4cdc-59ab-8900-e4414e8d2125","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Xanthomonas axonopodis pathovar. phaseoli","normalized":"Xanthomonas axonopodis pathovar. phaseoli","canonical_name":{"value":"Xanthomonas axonopodis phaseoli","extended":"Xanthomonas axonopodis pathovar. phaseoli"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":true,"details":[{"genus":{"value":"Xanthomonas"},"specific_epithet":{"value":"axonopodis"},"infraspecific_epithets":[{"value":"phaseoli","rank":"pathovar."}]}],"positions":[["genus",0,11],["specific_epithet",12,22],["rank",23,32],["infraspecific_epithet",33,41]]}
+816ce2bc-4cdc-59ab-8900-e4414e8d2125|Xanthomonas axonopodis pathovar. phaseoli|Xanthomonas axonopodis phaseoli|Xanthomonas axonopodis pathovar. phaseoli|||1
+
+Xanthomonas axonopodis pathovar.
+{"name_string_id":"851a86de-df67-5fba-b3f7-73937a5edbce","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Xanthomonas axonopodis pathovar.","normalized":"Xanthomonas axonopodis","canonical_name":{"value":"Xanthomonas axonopodis"},"hybrid":false,"surrogate":false,"unparsed_tail":" pathovar.","virus":false,"bacteria":true,"details":[{"genus":{"value":"Xanthomonas"},"specific_epithet":{"value":"axonopodis"}}],"positions":[["genus",0,11],["specific_epithet",12,22]]}
+851a86de-df67-5fba-b3f7-73937a5edbce|Xanthomonas axonopodis pathovar.|Xanthomonas axonopodis|Xanthomonas axonopodis|||3
+
+Xanthomonas axonopodis pv.
+{"name_string_id":"0c0ce6dd-e5ea-5c17-8be3-c381ff662f12","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Xanthomonas axonopodis pv.","normalized":"Xanthomonas axonopodis","canonical_name":{"value":"Xanthomonas axonopodis"},"hybrid":false,"surrogate":false,"unparsed_tail":" pv.","virus":false,"bacteria":true,"details":[{"genus":{"value":"Xanthomonas"},"specific_epithet":{"value":"axonopodis"}}],"positions":[["genus",0,11],["specific_epithet",12,22]]}
+0c0ce6dd-e5ea-5c17-8be3-c381ff662f12|Xanthomonas axonopodis pv.|Xanthomonas axonopodis|Xanthomonas axonopodis|||3
 #>
 
 ### Miscellaneous Inconsistencies
