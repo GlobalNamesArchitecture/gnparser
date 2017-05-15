@@ -348,8 +348,53 @@ core. For example in Ruby it would be:
 
     require "socket"
     s = TCPSocket.open("0.0.0.0", 1234)
-    s.puts("Homo sapiens")
+    s.write("Homo sapiens\n")
     s.gets
+
+``gnparser`` TCP server can parse new-line delimited string in a single run.
+For example if you have a file ``names.txt`` with many name-strings:
+
+.. code:: text
+    Dicalix glomeratus (King ex C.B.Clarke) Migo
+    Mongoliolites Bondarenko & Minzhin 1977
+    Spalacopsis macra Monn� & Giesbert 1994
+    Scaphiodon Heckel 1843 sec. Eschmeyer 1998
+    Cinnamomum calcareum Y.K.Li
+    Eleala
+    Haemanota abdominalis (Rothschild 1909)
+    Astronidium anomalum Merr. & L.M. Perry
+    Setaria chrysochaeta T. Durand & Schinz
+    Metalimnobia flavobdominalis
+    Clinopodium calamintha
+    ...
+
+it is more efficient to send several new-line delimited names at once through
+the socket.  ``gnparser`` server returns a string which contains new-line
+delimited chunks, where each line is a JSON string for a corresponding input
+name.
+
+Example below also includes a safeguard for "back pressure" cases, where a
+client application sends strings too fast.  TCP server stores data temporarily
+in buffers before processing, and buffers might get over-filled.  At such
+moment TCP server stops receiving new packets ("back pressure" situation) until
+it empties its inner queue of messages. Because of that a client application
+should monitor the count of sent bytes:
+
+.. code:: ruby
+
+    require "socket"
+    require "json"
+
+    socket = TCPSocket.open("0.0.0.0", 4334)
+
+    open("names.txt").each_slice(100) do |slice|
+      text = slice.join("")
+      until socket.write(text) == text.bytes.size
+        puts("Reading of a slice starting with #{slice[0]} failed. Retrying")
+        str = socket.recv(10)  until str.nil?
+      end
+      slice.each { puts(socket.gets) }
+    end
 
 Usage as a REST API Interface
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
