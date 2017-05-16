@@ -1552,7 +1552,7 @@ bb6e2a9f-6813-5b00-9a3f-e12a085e515e|Salmonella werahensis (Castellani) Hauduroy
 
 #SECTION: Bacteria genus homonym<
 Actinomyces cardiffensis
-{"name_string_id":"fc1def53-81ba-5d2f-9f4c-0d9ac591cd13","parsed":true,"quality":1,"quality_warnings":[[1,"The genus is a homonym of a bacterial genus"]],"parser_version":"test_version","verbatim":"Actinomyces cardiffensis","normalized":"Actinomyces cardiffensis","canonical_name":{"value":"Actinomyces cardiffensis"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":true,"details":[{"genus":{"value":"Actinomyces"},"specific_epithet":{"value":"cardiffensis"}}],"positions":[["genus",0,11],["specific_epithet",12,24]]}
+{"name_string_id":"fc1def53-81ba-5d2f-9f4c-0d9ac591cd13","parsed":true,"quality":1,"quality_warnings":[[1,"The genus is a homonym of a bacterial genus"]],"parser_version":"test_version","verbatim":"Actinomyces cardiffensis","normalized":"Actinomyces cardiffensis","canonical_name":{"value":"Actinomyces cardiffensis"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Actinomyces"},"specific_epithet":{"value":"cardiffensis"}}],"positions":[["genus",0,11],["specific_epithet",12,24]]}
 fc1def53-81ba-5d2f-9f4c-0d9ac591cd13|Actinomyces cardiffensis|Actinomyces cardiffensis|Actinomyces cardiffensis|||1
 #>
 
