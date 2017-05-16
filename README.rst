@@ -369,13 +369,13 @@ For example if you have a file ``names.txt`` with many name-strings:
     ...
 
 it is more efficient to send several new-line delimited names at once through
-the socket.  ``gnparser`` server returns a string which contains new-line
+the socket. ``gnparser`` server returns a string which contains new-line
 delimited chunks, where each line is a JSON string for a corresponding input
 name.
 
 Example below also includes a safeguard for "back pressure" cases, where a
-client application sends strings too fast.  TCP server stores data temporarily
-in buffers before processing, and buffers might get over-filled.  At such
+client application sends strings too fast. TCP server stores data temporarily
+in buffers before processing, and buffers might get over-filled. At such
 moment TCP server stops receiving new packets ("back pressure" situation) until
 it empties its inner queue of messages. Because of that a client application
 should monitor the count of sent bytes:
@@ -388,10 +388,10 @@ should monitor the count of sent bytes:
     socket = TCPSocket.open("0.0.0.0", 4334)
 
     open("names.txt").each_slice(100) do |slice|
-      text = slice.join("")
+      text = slice.join
       until socket.write(text) == text.bytes.size
         puts("Reading of a slice starting with #{slice[0]} failed. Retrying")
-        str = socket.recv(10)  until str.nil?
+        str = socket.recv(10) until str.nil?
       end
       slice.each { puts(socket.gets) }
     end
