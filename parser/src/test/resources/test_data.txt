@@ -22,6 +22,42 @@
 # "parsed: false"
 ####
 
+### TODO<
+
+Scilla rupestris v.d. Merwe
+{"name_string_id":"72ec3a37-8a80-5a82-97dd-b6a67a52d209","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Scilla rupestris v.d. Merwe","normalized":"Scilla rupestris v.d. Merwe","canonical_name":{"value":"Scilla rupestris"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Scilla"},"specific_epithet":{"value":"rupestris","authorship":{"value":"v.d. Merwe","basionym_authorship":{"authors":["v.d. Merwe"]}}}}],"positions":[["genus",0,6],["specific_epithet",7,16],["author_word",17,21],["author_word",22,27]]}
+72ec3a37-8a80-5a82-97dd-b6a67a52d209|Scilla rupestris v.d. Merwe|Scilla rupestris|Scilla rupestris|v.d. Merwe||1
+
+Bembix bidentata v.d.L.
+{"name_string_id":"6f226f43-dfa0-5d61-8a3f-200b2277fcf2","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Bembix bidentata v.d.L.","normalized":"Bembix bidentata v.d. L.","canonical_name":{"value":"Bembix bidentata"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Bembix"},"specific_epithet":{"value":"bidentata","authorship":{"value":"v.d. L.","basionym_authorship":{"authors":["v.d. L."]}}}}],"positions":[["genus",0,6],["specific_epithet",7,16],["author_word",17,21],["author_word",21,23]]}
+6f226f43-dfa0-5d61-8a3f-200b2277fcf2|Bembix bidentata v.d.L.|Bembix bidentata|Bembix bidentata|v.d. L.||1
+
+Pompilus cinctellus v. d. L.
+{"name_string_id":"8954c0f2-eab4-561d-9f94-6cebd4f8024d","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Pompilus cinctellus v. d. L.","normalized":"Pompilus cinctellus v. d. L.","canonical_name":{"value":"Pompilus cinctellus"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Pompilus"},"specific_epithet":{"value":"cinctellus","authorship":{"value":"v. d. L.","basionym_authorship":{"authors":["v. d. L."]}}}}],"positions":[["genus",0,8],["specific_epithet",9,19],["author_word",20,25],["author_word",26,28]]}
+8954c0f2-eab4-561d-9f94-6cebd4f8024d|Pompilus cinctellus v. d. L.|Pompilus cinctellus|Pompilus cinctellus|v. d. L.||1
+
+Setaphis viridis v. d.G.
+{"name_string_id":"19792117-31fc-52d7-9990-e89b67c459d3","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Setaphis viridis v. d.G.","normalized":"Setaphis viridis v. d. G.","canonical_name":{"value":"Setaphis viridis"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Setaphis"},"specific_epithet":{"value":"viridis","authorship":{"value":"v. d. G.","basionym_authorship":{"authors":["v. d. G."]}}}}],"positions":[["genus",0,8],["specific_epithet",9,16],["author_word",17,22],["author_word",22,24]]}
+19792117-31fc-52d7-9990-e89b67c459d3|Setaphis viridis v. d.G.|Setaphis viridis|Setaphis viridis|v. d. G.||1
+
+Coleophora mendica Baldizzone & v. d.Wolf 2000
+{"name_string_id":"982affab-249b-5858-8ea1-ba226378c233","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Coleophora mendica Baldizzone & v. d.Wolf 2000","normalized":"Coleophora mendica Baldizzone & v. d. Wolf 2000","canonical_name":{"value":"Coleophora mendica"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Coleophora"},"specific_epithet":{"value":"mendica","authorship":{"value":"Baldizzone & v. d. Wolf 2000","basionym_authorship":{"authors":["Baldizzone","v. d. Wolf"],"year":{"value":"2000"}}}}}],"positions":[["genus",0,10],["specific_epithet",11,18],["author_word",19,29],["author_word",32,37],["author_word",37,41],["year",42,46]]}
+982affab-249b-5858-8ea1-ba226378c233|Coleophora mendica Baldizzone & v. d.Wolf 2000|Coleophora mendica|Coleophora mendica|Baldizzone & v. d. Wolf 2000|2000|1
+
+Psoronaias semigranosa von dem Busch in Philippi, 1845
+{"name_string_id":"948809ee-be49-598d-a755-fded9ba496c5","parsed":true,"quality":2,"quality_warnings":[[2,"Ex authors are not required"]],"parser_version":"test_version","verbatim":"Psoronaias semigranosa von dem Busch in Philippi, 1845","normalized":"Psoronaias semigranosa von dem Busch ex Philippi 1845","canonical_name":{"value":"Psoronaias semigranosa"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Psoronaias"},"specific_epithet":{"value":"semigranosa","authorship":{"value":"von dem Busch ex Philippi 1845","basionym_authorship":{"authors":["von dem Busch"],"year":{"value":"1845"},"ex_authors":["Philippi"]}}}}],"positions":[["genus",0,10],["specific_epithet",11,22],["author_word",23,30],["author_word",31,36],["author_word",40,48],["year",50,54]]}
+948809ee-be49-598d-a755-fded9ba496c5|Psoronaias semigranosa von dem Busch in Philippi, 1845|Psoronaias semigranosa|Psoronaias semigranosa|von dem Busch ex Philippi 1845|1845|2
+
+Phora sororcula v d Wulp 1871
+{"name_string_id":"dad2ef8b-4f74-5de5-844b-29b6ee09ce68","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Phora sororcula v d Wulp 1871","normalized":"Phora sororcula v d Wulp 1871","canonical_name":{"value":"Phora sororcula"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Phora"},"specific_epithet":{"value":"sororcula","authorship":{"value":"v d Wulp 1871","basionym_authorship":{"authors":["v d Wulp"],"year":{"value":"1871"}}}}}],"positions":[["genus",0,5],["specific_epithet",6,15],["author_word",16,19],["author_word",20,24],["year",25,29]]}
+dad2ef8b-4f74-5de5-844b-29b6ee09ce68|Phora sororcula v d Wulp 1871|Phora sororcula|Phora sororcula|v d Wulp 1871|1871|1
+
+Micropleura v Linstow 1906
+{"name_string_id":"94f99223-2631-52a9-9497-a29452387980","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Micropleura v Linstow 1906","normalized":"Micropleura v Linstow 1906","canonical_name":{"value":"Micropleura"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"uninomial":{"value":"Micropleura","authorship":{"value":"v Linstow 1906","basionym_authorship":{"authors":["v Linstow"],"year":{"value":"1906"}}}}}],"positions":[["uninomial",0,11],["author_word",12,13],["author_word",14,21],["year",22,26]]}
+94f99223-2631-52a9-9497-a29452387980|Micropleura v Linstow 1906|Micropleura|Micropleura|v Linstow 1906|1906|1
+
+###>
+
 ### Uninomials
 
 #SECTION: Uninomial<
@@ -1753,8 +1789,8 @@ Labeotropheus trewavasae albino'
 f190cdee-14f0-5174-947d-476dab6baeff|Labeotropheus trewavasae albino'|Labeotropheus trewavasae|Labeotropheus trewavasae|||3
 
 Phedimus takesimensis (Nakai) 't Hart
-{"name_string_id":"14379aa4-1eb9-5ef7-b355-7e3ef3c1fe5e","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Phedimus takesimensis (Nakai) 't Hart","normalized":"Phedimus takesimensis (Nakai)","canonical_name":{"value":"Phedimus takesimensis"},"hybrid":false,"surrogate":false,"unparsed_tail":" 't Hart","virus":false,"bacteria":false,"details":[{"genus":{"value":"Phedimus"},"specific_epithet":{"value":"takesimensis","authorship":{"value":"(Nakai)","basionym_authorship":{"authors":["Nakai"]}}}}],"positions":[["genus",0,8],["specific_epithet",9,21],["author_word",23,28]]}
-14379aa4-1eb9-5ef7-b355-7e3ef3c1fe5e|Phedimus takesimensis (Nakai) 't Hart|Phedimus takesimensis|Phedimus takesimensis|(Nakai)||3
+{"name_string_id":"14379aa4-1eb9-5ef7-b355-7e3ef3c1fe5e","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Phedimus takesimensis (Nakai) 't Hart","normalized":"Phedimus takesimensis (Nakai) 't Hart","canonical_name":{"value":"Phedimus takesimensis"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Phedimus"},"specific_epithet":{"value":"takesimensis","authorship":{"value":"(Nakai) 't Hart","basionym_authorship":{"authors":["Nakai"]},"combination_authorship":{"authors":["'t Hart"]}}}}],"positions":[["genus",0,8],["specific_epithet",9,21],["author_word",23,28],["author_word",30,32],["author_word",33,37]]}
+14379aa4-1eb9-5ef7-b355-7e3ef3c1fe5e|Phedimus takesimensis (Nakai) 't Hart|Phedimus takesimensis|Phedimus takesimensis|(Nakai) 't Hart||1
 #>
 
 #SECTION: Discard apostrophe with dash (rare, needs further investigation)<

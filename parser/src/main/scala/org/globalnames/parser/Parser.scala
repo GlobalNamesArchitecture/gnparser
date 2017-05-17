@@ -568,9 +568,11 @@ class Parser(preprocessorResult: Preprocessor.Result,
   }
 
   def authorPre: RuleNodeMeta[AuthorWord] = rule {
-    capturePos("ab" | "af" | "bis" | "da" | "der" | "des" | "den" | "della" | "dela" | "de" | "di" |
-               "du" | "el" | "la" | "ter" | "van" | "von" | "v." | "d'") ~
-      &(spaceCharsEOI) ~> { (pos: CapturePosition) => FactoryAST.authorWord(pos)
+    capturePos((("ab" | "af" | "bis" | "da" | "der" | "des" | "den" | "della" | "dela" | "de" |
+                 "di" | "du" | "el" | "la" | "ter" | "van" | ("von" ~ (space ~ "dem").?) |
+                 ("v" ~ (space ~ "d").?) | "d'" | "in't") ~ &(spaceCharsEOI)) |
+      ("v." ~ (space.? ~ "d.").?) | "'t") ~> {
+      (pos: CapturePosition) => FactoryAST.authorWord(pos)
     }
   }
 
