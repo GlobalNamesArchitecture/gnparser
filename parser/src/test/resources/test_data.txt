@@ -22,41 +22,6 @@
 # "parsed: false"
 ####
 
-### TODO<
-
-Scilla rupestris v.d. Merwe
-{"name_string_id":"72ec3a37-8a80-5a82-97dd-b6a67a52d209","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Scilla rupestris v.d. Merwe","normalized":"Scilla rupestris v.d. Merwe","canonical_name":{"value":"Scilla rupestris"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Scilla"},"specific_epithet":{"value":"rupestris","authorship":{"value":"v.d. Merwe","basionym_authorship":{"authors":["v.d. Merwe"]}}}}],"positions":[["genus",0,6],["specific_epithet",7,16],["author_word",17,21],["author_word",22,27]]}
-72ec3a37-8a80-5a82-97dd-b6a67a52d209|Scilla rupestris v.d. Merwe|Scilla rupestris|Scilla rupestris|v.d. Merwe||1
-
-Bembix bidentata v.d.L.
-{"name_string_id":"6f226f43-dfa0-5d61-8a3f-200b2277fcf2","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Bembix bidentata v.d.L.","normalized":"Bembix bidentata v.d. L.","canonical_name":{"value":"Bembix bidentata"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Bembix"},"specific_epithet":{"value":"bidentata","authorship":{"value":"v.d. L.","basionym_authorship":{"authors":["v.d. L."]}}}}],"positions":[["genus",0,6],["specific_epithet",7,16],["author_word",17,21],["author_word",21,23]]}
-6f226f43-dfa0-5d61-8a3f-200b2277fcf2|Bembix bidentata v.d.L.|Bembix bidentata|Bembix bidentata|v.d. L.||1
-
-Pompilus cinctellus v. d. L.
-{"name_string_id":"8954c0f2-eab4-561d-9f94-6cebd4f8024d","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Pompilus cinctellus v. d. L.","normalized":"Pompilus cinctellus v. d. L.","canonical_name":{"value":"Pompilus cinctellus"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Pompilus"},"specific_epithet":{"value":"cinctellus","authorship":{"value":"v. d. L.","basionym_authorship":{"authors":["v. d. L."]}}}}],"positions":[["genus",0,8],["specific_epithet",9,19],["author_word",20,25],["author_word",26,28]]}
-8954c0f2-eab4-561d-9f94-6cebd4f8024d|Pompilus cinctellus v. d. L.|Pompilus cinctellus|Pompilus cinctellus|v. d. L.||1
-
-Setaphis viridis v. d.G.
-{"name_string_id":"19792117-31fc-52d7-9990-e89b67c459d3","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Setaphis viridis v. d.G.","normalized":"Setaphis viridis v. d. G.","canonical_name":{"value":"Setaphis viridis"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Setaphis"},"specific_epithet":{"value":"viridis","authorship":{"value":"v. d. G.","basionym_authorship":{"authors":["v. d. G."]}}}}],"positions":[["genus",0,8],["specific_epithet",9,16],["author_word",17,22],["author_word",22,24]]}
-19792117-31fc-52d7-9990-e89b67c459d3|Setaphis viridis v. d.G.|Setaphis viridis|Setaphis viridis|v. d. G.||1
-
-Coleophora mendica Baldizzone & v. d.Wolf 2000
-{"name_string_id":"982affab-249b-5858-8ea1-ba226378c233","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Coleophora mendica Baldizzone & v. d.Wolf 2000","normalized":"Coleophora mendica Baldizzone & v. d. Wolf 2000","canonical_name":{"value":"Coleophora mendica"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Coleophora"},"specific_epithet":{"value":"mendica","authorship":{"value":"Baldizzone & v. d. Wolf 2000","basionym_authorship":{"authors":["Baldizzone","v. d. Wolf"],"year":{"value":"2000"}}}}}],"positions":[["genus",0,10],["specific_epithet",11,18],["author_word",19,29],["author_word",32,37],["author_word",37,41],["year",42,46]]}
-982affab-249b-5858-8ea1-ba226378c233|Coleophora mendica Baldizzone & v. d.Wolf 2000|Coleophora mendica|Coleophora mendica|Baldizzone & v. d. Wolf 2000|2000|1
-
-Psoronaias semigranosa von dem Busch in Philippi, 1845
-{"name_string_id":"948809ee-be49-598d-a755-fded9ba496c5","parsed":true,"quality":2,"quality_warnings":[[2,"Ex authors are not required"]],"parser_version":"test_version","verbatim":"Psoronaias semigranosa von dem Busch in Philippi, 1845","normalized":"Psoronaias semigranosa von dem Busch ex Philippi 1845","canonical_name":{"value":"Psoronaias semigranosa"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Psoronaias"},"specific_epithet":{"value":"semigranosa","authorship":{"value":"von dem Busch ex Philippi 1845","basionym_authorship":{"authors":["von dem Busch"],"year":{"value":"1845"},"ex_authors":["Philippi"]}}}}],"positions":[["genus",0,10],["specific_epithet",11,22],["author_word",23,30],["author_word",31,36],["author_word",40,48],["year",50,54]]}
-948809ee-be49-598d-a755-fded9ba496c5|Psoronaias semigranosa von dem Busch in Philippi, 1845|Psoronaias semigranosa|Psoronaias semigranosa|von dem Busch ex Philippi 1845|1845|2
-
-Phora sororcula v d Wulp 1871
-{"name_string_id":"dad2ef8b-4f74-5de5-844b-29b6ee09ce68","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Phora sororcula v d Wulp 1871","normalized":"Phora sororcula v d Wulp 1871","canonical_name":{"value":"Phora sororcula"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Phora"},"specific_epithet":{"value":"sororcula","authorship":{"value":"v d Wulp 1871","basionym_authorship":{"authors":["v d Wulp"],"year":{"value":"1871"}}}}}],"positions":[["genus",0,5],["specific_epithet",6,15],["author_word",16,19],["author_word",20,24],["year",25,29]]}
-dad2ef8b-4f74-5de5-844b-29b6ee09ce68|Phora sororcula v d Wulp 1871|Phora sororcula|Phora sororcula|v d Wulp 1871|1871|1
-
-Micropleura v Linstow 1906
-{"name_string_id":"94f99223-2631-52a9-9497-a29452387980","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Micropleura v Linstow 1906","normalized":"Micropleura v Linstow 1906","canonical_name":{"value":"Micropleura"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"uninomial":{"value":"Micropleura","authorship":{"value":"v Linstow 1906","basionym_authorship":{"authors":["v Linstow"],"year":{"value":"1906"}}}}}],"positions":[["uninomial",0,11],["author_word",12,13],["author_word",14,21],["year",22,26]]}
-94f99223-2631-52a9-9497-a29452387980|Micropleura v Linstow 1906|Micropleura|Micropleura|v Linstow 1906|1906|1
-
-###>
 
 ### Uninomials
 
@@ -66,7 +31,7 @@ Pseudocercospora
 9c1167ca-79e7-53de-b4c3-fcdb68410527|Pseudocercospora|Pseudocercospora|Pseudocercospora|||1
 #>
 
-#SECTION: Uninomial with an author<
+#SECTION: Uninomial with authorship<
 Pseudocercospora Speg.
 {"name_string_id":"ccc7780b-c68b-53c6-9166-6b2d4902923e","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Pseudocercospora Speg.","normalized":"Pseudocercospora Speg.","canonical_name":{"value":"Pseudocercospora"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"uninomial":{"value":"Pseudocercospora","authorship":{"value":"Speg.","basionym_authorship":{"authors":["Speg."]}}}}],"positions":[["uninomial",0,16],["author_word",17,22]]}
 ccc7780b-c68b-53c6-9166-6b2d4902923e|Pseudocercospora Speg.|Pseudocercospora|Pseudocercospora|Speg.||1
@@ -90,9 +55,11 @@ Abbottia F. von Mueller, 1875
 Abella von Heyden, 1826
 {"name_string_id":"7dc5b624-1232-5072-bc4c-8eebde6c48b2","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Abella von Heyden, 1826","normalized":"Abella von Heyden 1826","canonical_name":{"value":"Abella"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"uninomial":{"value":"Abella","authorship":{"value":"von Heyden 1826","basionym_authorship":{"authors":["von Heyden"],"year":{"value":"1826"}}}}}],"positions":[["uninomial",0,6],["author_word",7,10],["author_word",11,17],["year",19,23]]}
 7dc5b624-1232-5072-bc4c-8eebde6c48b2|Abella von Heyden, 1826|Abella|Abella|von Heyden 1826|1826|1
-#>
 
-#SECTION: Uninomial with an author and a year<
+Micropleura v Linstow 1906
+{"name_string_id":"94f99223-2631-52a9-9497-a29452387980","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Micropleura v Linstow 1906","normalized":"Micropleura v Linstow 1906","canonical_name":{"value":"Micropleura"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"uninomial":{"value":"Micropleura","authorship":{"value":"v Linstow 1906","basionym_authorship":{"authors":["v Linstow"],"year":{"value":"1906"}}}}}],"positions":[["uninomial",0,11],["author_word",12,13],["author_word",14,21],["year",22,26]]}
+94f99223-2631-52a9-9497-a29452387980|Micropleura v Linstow 1906|Micropleura|Micropleura|v Linstow 1906|1906|1
+
 Pseudocercospora Speg. 1910
 {"name_string_id":"eac97817-869a-5400-8b1e-0a125876189d","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Pseudocercospora Speg. 1910","normalized":"Pseudocercospora Speg. 1910","canonical_name":{"value":"Pseudocercospora"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"uninomial":{"value":"Pseudocercospora","authorship":{"value":"Speg. 1910","basionym_authorship":{"authors":["Speg."],"year":{"value":"1910"}}}}}],"positions":[["uninomial",0,16],["author_word",17,22],["year",23,27]]}
 eac97817-869a-5400-8b1e-0a125876189d|Pseudocercospora Speg. 1910|Pseudocercospora|Pseudocercospora|Speg. 1910|1910|1
@@ -270,7 +237,35 @@ Aëtosaurus ferratus
 9d95ffa0-0203-541f-854a-77ca7ff187fa|Aëtosaurus ferratus|Aetosaurus ferratus|Aetosaurus ferratus|||1
 #>
 
-#SECTION: Binomial with an author<
+#SECTION: Binomial with authorship<
+Scilla rupestris v.d. Merwe
+{"name_string_id":"72ec3a37-8a80-5a82-97dd-b6a67a52d209","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Scilla rupestris v.d. Merwe","normalized":"Scilla rupestris v.d. Merwe","canonical_name":{"value":"Scilla rupestris"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Scilla"},"specific_epithet":{"value":"rupestris","authorship":{"value":"v.d. Merwe","basionym_authorship":{"authors":["v.d. Merwe"]}}}}],"positions":[["genus",0,6],["specific_epithet",7,16],["author_word",17,21],["author_word",22,27]]}
+72ec3a37-8a80-5a82-97dd-b6a67a52d209|Scilla rupestris v.d. Merwe|Scilla rupestris|Scilla rupestris|v.d. Merwe||1
+
+Bembix bidentata v.d.L.
+{"name_string_id":"6f226f43-dfa0-5d61-8a3f-200b2277fcf2","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Bembix bidentata v.d.L.","normalized":"Bembix bidentata v.d. L.","canonical_name":{"value":"Bembix bidentata"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Bembix"},"specific_epithet":{"value":"bidentata","authorship":{"value":"v.d. L.","basionym_authorship":{"authors":["v.d. L."]}}}}],"positions":[["genus",0,6],["specific_epithet",7,16],["author_word",17,21],["author_word",21,23]]}
+6f226f43-dfa0-5d61-8a3f-200b2277fcf2|Bembix bidentata v.d.L.|Bembix bidentata|Bembix bidentata|v.d. L.||1
+
+Pompilus cinctellus v. d. L.
+{"name_string_id":"8954c0f2-eab4-561d-9f94-6cebd4f8024d","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Pompilus cinctellus v. d. L.","normalized":"Pompilus cinctellus v. d. L.","canonical_name":{"value":"Pompilus cinctellus"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Pompilus"},"specific_epithet":{"value":"cinctellus","authorship":{"value":"v. d. L.","basionym_authorship":{"authors":["v. d. L."]}}}}],"positions":[["genus",0,8],["specific_epithet",9,19],["author_word",20,25],["author_word",26,28]]}
+8954c0f2-eab4-561d-9f94-6cebd4f8024d|Pompilus cinctellus v. d. L.|Pompilus cinctellus|Pompilus cinctellus|v. d. L.||1
+
+Setaphis viridis v. d.G.
+{"name_string_id":"19792117-31fc-52d7-9990-e89b67c459d3","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Setaphis viridis v. d.G.","normalized":"Setaphis viridis v. d. G.","canonical_name":{"value":"Setaphis viridis"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Setaphis"},"specific_epithet":{"value":"viridis","authorship":{"value":"v. d. G.","basionym_authorship":{"authors":["v. d. G."]}}}}],"positions":[["genus",0,8],["specific_epithet",9,16],["author_word",17,22],["author_word",22,24]]}
+19792117-31fc-52d7-9990-e89b67c459d3|Setaphis viridis v. d.G.|Setaphis viridis|Setaphis viridis|v. d. G.||1
+
+Coleophora mendica Baldizzone & v. d.Wolf 2000
+{"name_string_id":"982affab-249b-5858-8ea1-ba226378c233","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Coleophora mendica Baldizzone & v. d.Wolf 2000","normalized":"Coleophora mendica Baldizzone & v. d. Wolf 2000","canonical_name":{"value":"Coleophora mendica"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Coleophora"},"specific_epithet":{"value":"mendica","authorship":{"value":"Baldizzone & v. d. Wolf 2000","basionym_authorship":{"authors":["Baldizzone","v. d. Wolf"],"year":{"value":"2000"}}}}}],"positions":[["genus",0,10],["specific_epithet",11,18],["author_word",19,29],["author_word",32,37],["author_word",37,41],["year",42,46]]}
+982affab-249b-5858-8ea1-ba226378c233|Coleophora mendica Baldizzone & v. d.Wolf 2000|Coleophora mendica|Coleophora mendica|Baldizzone & v. d. Wolf 2000|2000|1
+
+Psoronaias semigranosa von dem Busch in Philippi, 1845
+{"name_string_id":"948809ee-be49-598d-a755-fded9ba496c5","parsed":true,"quality":2,"quality_warnings":[[2,"Ex authors are not required"]],"parser_version":"test_version","verbatim":"Psoronaias semigranosa von dem Busch in Philippi, 1845","normalized":"Psoronaias semigranosa von dem Busch ex Philippi 1845","canonical_name":{"value":"Psoronaias semigranosa"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Psoronaias"},"specific_epithet":{"value":"semigranosa","authorship":{"value":"von dem Busch ex Philippi 1845","basionym_authorship":{"authors":["von dem Busch"],"year":{"value":"1845"},"ex_authors":["Philippi"]}}}}],"positions":[["genus",0,10],["specific_epithet",11,22],["author_word",23,30],["author_word",31,36],["author_word",40,48],["year",50,54]]}
+948809ee-be49-598d-a755-fded9ba496c5|Psoronaias semigranosa von dem Busch in Philippi, 1845|Psoronaias semigranosa|Psoronaias semigranosa|von dem Busch ex Philippi 1845|1845|2
+
+Phora sororcula v d Wulp 1871
+{"name_string_id":"dad2ef8b-4f74-5de5-844b-29b6ee09ce68","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Phora sororcula v d Wulp 1871","normalized":"Phora sororcula v d Wulp 1871","canonical_name":{"value":"Phora sororcula"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Phora"},"specific_epithet":{"value":"sororcula","authorship":{"value":"v d Wulp 1871","basionym_authorship":{"authors":["v d Wulp"],"year":{"value":"1871"}}}}}],"positions":[["genus",0,5],["specific_epithet",6,15],["author_word",16,19],["author_word",20,24],["year",25,29]]}
+dad2ef8b-4f74-5de5-844b-29b6ee09ce68|Phora sororcula v d Wulp 1871|Phora sororcula|Phora sororcula|v d Wulp 1871|1871|1
+
 Orthosia kindermannii Fischer v. Roslerstamm, 1837
 {"name_string_id":"53abecc3-4083-5cdc-966c-09648fe9383d","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Orthosia kindermannii Fischer v. Roslerstamm, 1837","normalized":"Orthosia kindermannii Fischer v. Roslerstamm 1837","canonical_name":{"value":"Orthosia kindermannii"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Orthosia"},"specific_epithet":{"value":"kindermannii","authorship":{"value":"Fischer v. Roslerstamm 1837","basionym_authorship":{"authors":["Fischer v. Roslerstamm"],"year":{"value":"1837"}}}}}],"positions":[["genus",0,8],["specific_epithet",9,21],["author_word",22,29],["author_word",30,32],["author_word",33,44],["year",46,50]]}
 53abecc3-4083-5cdc-966c-09648fe9383d|Orthosia kindermannii Fischer v. Roslerstamm, 1837|Orthosia kindermannii|Orthosia kindermannii|Fischer v. Roslerstamm 1837|1837|1
@@ -286,9 +281,7 @@ Xylaria potentillae A S. Xu
 Pseudocyrtopora el Hajjaji 1987
 {"name_string_id":"61db186c-cbf4-5949-9fd1-79efe7157873","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Pseudocyrtopora el Hajjaji 1987","normalized":"Pseudocyrtopora el Hajjaji 1987","canonical_name":{"value":"Pseudocyrtopora"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"uninomial":{"value":"Pseudocyrtopora","authorship":{"value":"el Hajjaji 1987","basionym_authorship":{"authors":["el Hajjaji"],"year":{"value":"1987"}}}}}],"positions":[["uninomial",0,15],["author_word",16,18],["author_word",19,26],["year",27,31]]}
 61db186c-cbf4-5949-9fd1-79efe7157873|Pseudocyrtopora el Hajjaji 1987|Pseudocyrtopora|Pseudocyrtopora|el Hajjaji 1987|1987|1
-#>
 
-#SECTION: Binomial with an author and a year<
 Abacetus laevicollis de Chaudoir, 1869
 {"name_string_id":"8d81b939-695f-5a38-86c7-0f6efd1cacf3","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Abacetus laevicollis de Chaudoir, 1869","normalized":"Abacetus laevicollis de Chaudoir 1869","canonical_name":{"value":"Abacetus laevicollis"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Abacetus"},"specific_epithet":{"value":"laevicollis","authorship":{"value":"de Chaudoir 1869","basionym_authorship":{"authors":["de Chaudoir"],"year":{"value":"1869"}}}}}],"positions":[["genus",0,8],["specific_epithet",9,20],["author_word",21,23],["author_word",24,32],["year",34,38]]}
 8d81b939-695f-5a38-86c7-0f6efd1cacf3|Abacetus laevicollis de Chaudoir, 1869|Abacetus laevicollis|Abacetus laevicollis|de Chaudoir 1869|1869|1
