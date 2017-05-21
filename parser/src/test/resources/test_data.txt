@@ -22,8 +22,6 @@
 # "parsed: false"
 ####
 
-
-
 ### Uninomials
 
 #SECTION: Uninomial<
@@ -1594,6 +1592,12 @@ aa113505-61a1-58fe-92f3-8fd511dcfd61|Calathus (Lindrothius) KURNAKOV 1961|Lindro
 Fakus prioni
 {"name_string_id":"f2561b5b-37ed-592d-9c12-4ef96d09f554","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Fakus prioni","normalized":"Fakus prioni","canonical_name":{"value":"Fakus prioni"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Fakus"},"specific_epithet":{"value":"prioni"}}],"positions":[["genus",0,5],["specific_epithet",6,12]]}
 f2561b5b-37ed-592d-9c12-4ef96d09f554|Fakus prioni|Fakus prioni|Fakus prioni|||1
+#>
+
+#SECTION: Names with "satellite" as a substring<
+Crassatellites fulvida
+{"name_string_id":"089171ac-f672-5973-950a-9419651e6b0e","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Crassatellites fulvida","normalized":"Crassatellites fulvida","canonical_name":{"value":"Crassatellites fulvida"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Crassatellites"},"specific_epithet":{"value":"fulvida"}}],"positions":[["genus",0,14],["specific_epithet",15,22]]}
+089171ac-f672-5973-950a-9419651e6b0e|Crassatellites fulvida|Crassatellites fulvida|Crassatellites fulvida|||1
 #>
 
 ### Bacterial names

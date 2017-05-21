@@ -66,7 +66,8 @@ object Preprocessor {
       """(?ix)\b(virus|viruses|particle|particles|
                phage|phages|viroid|viroids|virophage|
                prion|prions|NPV)\b""".r ::
-      """\b[A-Za-z]*(satellite[s]?|NPV)\b""".r :: HNil
+      """\b(alpha|beta)?satellites?\b""".r ::
+      """\b[A-Za-z]*NPV\b""".r :: HNil
 
   private final val noParsePatterns = {
     val incertaeSedis1 = """(?i).*incertae\s+sedis.*""".r
