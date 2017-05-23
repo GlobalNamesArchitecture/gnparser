@@ -3,7 +3,7 @@ install.packages("jsonlite", repos="http://cran.r-project.org")
 require("rJava")
 library(jsonlite)
 
-pathToGnParserAssembly='parser/target/scala-2.11/gnparser-assembly-0.3.4-SNAPSHOT.jar'
+pathToGnParserAssembly='parser/target/scala-2.11/gnparser-assembly-0.4.0.jar'
 .jinit(classpath=pathToGnParserAssembly)
 
 snp=J('org.globalnames.parser.ScientificNameParser','instance')
