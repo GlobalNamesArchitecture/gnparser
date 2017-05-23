@@ -23,6 +23,7 @@
 ####
 
 
+
 ### Uninomials
 
 #SECTION: Uninomial<
@@ -325,6 +326,30 @@ Platypus bicaudatulus Schedl, 1935h
 Rotalina cultrata d'Orb. 1840
 {"name_string_id":"085048a9-a6b8-525e-95ad-ae715b8c00ca","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Rotalina cultrata d'Orb. 1840","normalized":"Rotalina cultrata d'Orb. 1840","canonical_name":{"value":"Rotalina cultrata"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Rotalina"},"specific_epithet":{"value":"cultrata","authorship":{"value":"d'Orb. 1840","basionym_authorship":{"authors":["d'Orb."],"year":{"value":"1840"}}}}}],"positions":[["genus",0,8],["specific_epithet",9,17],["author_word",18,24],["year",25,29]]}
 085048a9-a6b8-525e-95ad-ae715b8c00ca|Rotalina cultrata d'Orb. 1840|Rotalina cultrata|Rotalina cultrata|d'Orb. 1840|1840|1
+
+Stylosanthes guianensis (Aubl.) Sw. var. robusta L.'t Mannetje
+{"name_string_id":"fa16f59c-69a2-50cc-a4f6-bf4e8891eb9a","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Stylosanthes guianensis (Aubl.) Sw. var. robusta L.'t Mannetje","normalized":"Stylosanthes guianensis (Aubl.) Sw. var. robusta L. 't Mannetje","canonical_name":{"value":"Stylosanthes guianensis robusta","extended":"Stylosanthes guianensis var. robusta"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Stylosanthes"},"specific_epithet":{"value":"guianensis","authorship":{"value":"(Aubl.) Sw.","basionym_authorship":{"authors":["Aubl."]},"combination_authorship":{"authors":["Sw."]}}},"infraspecific_epithets":[{"value":"robusta","rank":"var.","authorship":{"value":"L. 't Mannetje","basionym_authorship":{"authors":["L. 't Mannetje"]}}}]}],"positions":[["genus",0,12],["specific_epithet",13,23],["author_word",25,30],["author_word",32,35],["rank",36,40],["infraspecific_epithet",41,48],["author_word",49,51],["author_word",51,53],["author_word",54,62]]}
+fa16f59c-69a2-50cc-a4f6-bf4e8891eb9a|Stylosanthes guianensis (Aubl.) Sw. var. robusta L.'t Mannetje|Stylosanthes guianensis robusta|Stylosanthes guianensis var. robusta|L. 't Mannetje||1
+
+Doxander vittatus entropi (Man in 't Veld & Visser, 1993)
+{"name_string_id":"1b3da2cb-82db-511d-86f5-4421966e3b65","parsed":true,"quality":2,"quality_warnings":[[2,"Ex authors are not required"]],"parser_version":"test_version","verbatim":"Doxander vittatus entropi (Man in 't Veld & Visser, 1993)","normalized":"Doxander vittatus entropi (Man ex 't Veld & Visser 1993)","canonical_name":{"value":"Doxander vittatus entropi"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Doxander"},"specific_epithet":{"value":"vittatus"},"infraspecific_epithets":[{"value":"entropi","authorship":{"value":"(Man ex 't Veld & Visser 1993)","basionym_authorship":{"authors":["Man"],"year":{"value":"1993"},"ex_authors":["'t Veld","Visser"]}}}]}],"positions":[["genus",0,8],["specific_epithet",9,17],["infraspecific_epithet",18,25],["author_word",27,30],["author_word",34,36],["author_word",37,41],["author_word",44,50],["year",52,56]]}
+1b3da2cb-82db-511d-86f5-4421966e3b65|Doxander vittatus entropi (Man in 't Veld & Visser, 1993)|Doxander vittatus entropi|Doxander vittatus entropi|(Man ex 't Veld & Visser 1993)|1993|2
+
+Elaeagnus triflora Roxb. var. brevilimbatus E.'t Hart
+{"name_string_id":"e3b3f47c-856a-5c21-bfa7-ac8c89453232","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Elaeagnus triflora Roxb. var. brevilimbatus E.'t Hart","normalized":"Elaeagnus triflora Roxb. var. brevilimbatus E. 't Hart","canonical_name":{"value":"Elaeagnus triflora brevilimbatus","extended":"Elaeagnus triflora var. brevilimbatus"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Elaeagnus"},"specific_epithet":{"value":"triflora","authorship":{"value":"Roxb.","basionym_authorship":{"authors":["Roxb."]}}},"infraspecific_epithets":[{"value":"brevilimbatus","rank":"var.","authorship":{"value":"E. 't Hart","basionym_authorship":{"authors":["E. 't Hart"]}}}]}],"positions":[["genus",0,9],["specific_epithet",10,18],["author_word",19,24],["rank",25,29],["infraspecific_epithet",30,43],["author_word",44,46],["author_word",46,48],["author_word",49,53]]}
+e3b3f47c-856a-5c21-bfa7-ac8c89453232|Elaeagnus triflora Roxb. var. brevilimbatus E.'t Hart|Elaeagnus triflora brevilimbatus|Elaeagnus triflora var. brevilimbatus|E. 't Hart||1
+
+Laevistrombus guidoi (Man in't Veld & De Turck, 1998)
+{"name_string_id":"e3ff94a0-92d0-5894-8599-f288e92077c8","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Laevistrombus guidoi (Man in't Veld & De Turck, 1998)","normalized":"Laevistrombus guidoi (Man in't Veld & De Turck 1998)","canonical_name":{"value":"Laevistrombus guidoi"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Laevistrombus"},"specific_epithet":{"value":"guidoi","authorship":{"value":"(Man in't Veld & De Turck 1998)","basionym_authorship":{"authors":["Man in't Veld","De Turck"],"year":{"value":"1998"}}}}}],"positions":[["genus",0,13],["specific_epithet",14,20],["author_word",22,25],["author_word",26,30],["author_word",31,35],["author_word",38,40],["author_word",41,46],["year",48,52]]}
+e3ff94a0-92d0-5894-8599-f288e92077c8|Laevistrombus guidoi (Man in't Veld & De Turck, 1998)|Laevistrombus guidoi|Laevistrombus guidoi|(Man in't Veld & De Turck 1998)|1998|1
+
+Strombus guidoi Man in't Veld & De Turck, 1998
+{"name_string_id":"100d3b6e-62d3-51ad-baf6-60408babc574","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Strombus guidoi Man in't Veld & De Turck, 1998","normalized":"Strombus guidoi Man in't Veld & De Turck 1998","canonical_name":{"value":"Strombus guidoi"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Strombus"},"specific_epithet":{"value":"guidoi","authorship":{"value":"Man in't Veld & De Turck 1998","basionym_authorship":{"authors":["Man in't Veld","De Turck"],"year":{"value":"1998"}}}}}],"positions":[["genus",0,8],["specific_epithet",9,15],["author_word",16,19],["author_word",20,24],["author_word",25,29],["author_word",32,34],["author_word",35,40],["year",42,46]]}
+100d3b6e-62d3-51ad-baf6-60408babc574|Strombus guidoi Man in't Veld & De Turck, 1998|Strombus guidoi|Strombus guidoi|Man in't Veld & De Turck 1998|1998|1
+
+Strombus vittatus entropi Man in't Veld & Visser, 1993
+{"name_string_id":"c74691e3-0f71-576b-81ea-6173bdae9817","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Strombus vittatus entropi Man in't Veld & Visser, 1993","normalized":"Strombus vittatus entropi Man in't Veld & Visser 1993","canonical_name":{"value":"Strombus vittatus entropi"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Strombus"},"specific_epithet":{"value":"vittatus"},"infraspecific_epithets":[{"value":"entropi","authorship":{"value":"Man in't Veld & Visser 1993","basionym_authorship":{"authors":["Man in't Veld","Visser"],"year":{"value":"1993"}}}}]}],"positions":[["genus",0,8],["specific_epithet",9,17],["infraspecific_epithet",18,25],["author_word",26,29],["author_word",30,34],["author_word",35,39],["author_word",42,48],["year",50,54]]}
+c74691e3-0f71-576b-81ea-6173bdae9817|Strombus vittatus entropi Man in't Veld & Visser, 1993|Strombus vittatus entropi|Strombus vittatus entropi|Man in't Veld & Visser 1993|1993|1
 #>
 
 #SECTION: Binomial with an abbreviated genus<
