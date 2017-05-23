@@ -1,3 +1,21 @@
+Version 0.4.0 (2017-06-01)
+--------------------------
+
+- support bacteria names parsing (#322)
+- support hyphenated genus name with capitalized part (#320)
+- support `Oe` unicode character (#321)
+- handle lowercase subgenus (#328)
+- support input from STDIN and output to STDOUT (#346)
+- add `el` as author's prefix (#305)
+- support author with `'t` (#252, #255)
+- `pv.` (for `pathovar.`) is parsed as rank (#353)
+- socket usage (Ruby example) documentation is improved (#355)
+- parse `von dem` and `v.` (for `von`) as author prefix (#249, #329)
+- names with "satellite(s)" in the end are not parsed as viruses (#246)
+- handle `variety` for rank (#233)
+- all examples are tested during CircleCI build
+- parsing bugs fixes (#332, #330, #327, #326)
+
 Version 0.3.3 (2016-10-05)
 --------------------------
 
