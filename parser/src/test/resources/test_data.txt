@@ -918,6 +918,15 @@ b736628c-0c76-5fdf-88d6-77e14b10bd28|    Asplenium       X inexpectatum(E. L. Br
 #>
 
 #SECTION: Names with a dash <
+
+Sanogasta x-signata (Keyserling,1891)
+{"name_string_id":"ffe6799d-387a-53d8-8fdd-be73cdc681b8","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Sanogasta x-signata (Keyserling,1891)","normalized":"Sanogasta x-signata (Keyserling 1891)","canonical_name":{"value":"Sanogasta x-signata"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Sanogasta"},"specific_epithet":{"value":"x-signata","authorship":{"value":"(Keyserling 1891)","basionym_authorship":{"authors":["Keyserling"],"year":{"value":"1891"}}}}}],"positions":[["genus",0,9],["specific_epithet",10,19],["author_word",21,31],["year",32,36]]}
+ffe6799d-387a-53d8-8fdd-be73cdc681b8|Sanogasta x-signata (Keyserling,1891)|Sanogasta x-signata|Sanogasta x-signata|(Keyserling 1891)|1891|1
+
+Aedes w-albus (Theobald, 1905)
+{"name_string_id":"7b0dd259-10ae-5b47-95ca-2685d4c323ce","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Aedes w-albus (Theobald, 1905)","normalized":"Aedes w-albus (Theobald 1905)","canonical_name":{"value":"Aedes w-albus"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Aedes"},"specific_epithet":{"value":"w-albus","authorship":{"value":"(Theobald 1905)","basionym_authorship":{"authors":["Theobald"],"year":{"value":"1905"}}}}}],"positions":[["genus",0,5],["specific_epithet",6,13],["author_word",15,23],["year",25,29]]}
+7b0dd259-10ae-5b47-95ca-2685d4c323ce|Aedes w-albus (Theobald, 1905)|Aedes w-albus|Aedes w-albus|(Theobald 1905)|1905|1
+
 Abryna regis-petri Paiva, 1860
 {"name_string_id":"27ad601d-bb92-515b-9c45-1faa55cdf7f3","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Abryna regis-petri Paiva, 1860","normalized":"Abryna regis-petri Paiva 1860","canonical_name":{"value":"Abryna regis-petri"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Abryna"},"specific_epithet":{"value":"regis-petri","authorship":{"value":"Paiva 1860","basionym_authorship":{"authors":["Paiva"],"year":{"value":"1860"}}}}}],"positions":[["genus",0,6],["specific_epithet",7,18],["author_word",19,24],["year",26,30]]}
 27ad601d-bb92-515b-9c45-1faa55cdf7f3|Abryna regis-petri Paiva, 1860|Abryna regis-petri|Abryna regis-petri|Paiva 1860|1860|1
@@ -1816,13 +1825,15 @@ Phedimus takesimensis (Nakai) 't Hart
 #>
 
 #SECTION: Discard apostrophe with dash (rare, needs further investigation)<
+#incorrectly parsed, but we will live with it for now
 Solanum tuberosum wila-k'oy
 {"name_string_id":"3d40713c-3b98-5b38-a3e8-555698722078","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Solanum tuberosum wila-k'oy","normalized":"Solanum tuberosum","canonical_name":{"value":"Solanum tuberosum"},"hybrid":false,"surrogate":false,"unparsed_tail":" wila-k'oy","virus":false,"bacteria":false,"details":[{"genus":{"value":"Solanum"},"specific_epithet":{"value":"tuberosum"}}],"positions":[["genus",0,7],["specific_epithet",8,17]]}
 3d40713c-3b98-5b38-a3e8-555698722078|Solanum tuberosum wila-k'oy|Solanum tuberosum|Solanum tuberosum|||3
 
+# correctly parsed
 Solanum × juzepczukii janck'o-ckaisalla
-{"name_string_id":"0a9a6259-9e05-5665-9961-5e25478a68c0","parsed":true,"quality":3,"quality_warnings":[[3,"Incomplete hybrid formula"],[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Solanum × juzepczukii janck'o-ckaisalla","normalized":"Solanum × juzepczukii","canonical_name":{"value":"Solanum × juzepczukii"},"hybrid":true,"surrogate":false,"unparsed_tail":" janck'o-ckaisalla","virus":false,"bacteria":false,"details":[{"genus":{"value":"Solanum"}},{"specific_epithet":{"value":"juzepczukii"}}],"positions":[["genus",0,7],["hybrid_char",8,9],["specific_epithet",10,21]]}
-0a9a6259-9e05-5665-9961-5e25478a68c0|Solanum × juzepczukii janck'o-ckaisalla|Solanum × juzepczukii|Solanum × juzepczukii|||3
+{"name_string_id":"0a9a6259-9e05-5665-9961-5e25478a68c0","parsed":true,"quality":3,"quality_warnings":[[3,"Apostrophe is not allowed in canonical"],[3,"Incomplete hybrid formula"]],"parser_version":"test_version","verbatim":"Solanum × juzepczukii janck'o-ckaisalla","normalized":"Solanum × juzepczukii jancko-ckaisalla","canonical_name":{"value":"Solanum × juzepczukii jancko-ckaisalla"},"hybrid":true,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Solanum"}},{"specific_epithet":{"value":"juzepczukii"},"infraspecific_epithets":[{"value":"jancko-ckaisalla"}]}],"positions":[["genus",0,7],["hybrid_char",8,9],["specific_epithet",10,21],["infraspecific_epithet",22,39]]}
+0a9a6259-9e05-5665-9961-5e25478a68c0|Solanum × juzepczukii janck'o-ckaisalla|Solanum × juzepczukii jancko-ckaisalla|Solanum × juzepczukii jancko-ckaisalla|||3
 #>
 
 #SECTION: Possible canonical<
