@@ -63,9 +63,8 @@ object Preprocessor {
 
   private final val virusPatterns =
     """\sICTV\s*$""".r :: """[A-Z]?[a-z]+virus\b""".r ::
-      """(?ix)\b(virus|viruses|particle|particles|
-               phage|phages|viroid|viroids|virophage|
-               prion|prions|NPV)\b""".r ::
+      """(?ix)\b(virus(es)?|particles?|(bacterio|viro)?phages?|
+               viroids?|prions?|NPV)\b""".r ::
       """\b(alpha|beta)?satellites?\b""".r ::
       """\b[A-Za-z]*NPV\b""".r :: HNil
 

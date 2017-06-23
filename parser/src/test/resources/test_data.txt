@@ -1558,6 +1558,14 @@ Zamilon virophage
 Sputnik virophage 3
 {"name_string_id":"b206bb35-01bf-59a7-8dad-bc8f99ca0a2a","parsed":false,"parser_version":"test_version","verbatim":"Sputnik virophage 3","surrogate":false,"virus":true,"bacteria":false}
 b206bb35-01bf-59a7-8dad-bc8f99ca0a2a|Sputnik virophage 3|||||1
+
+Bacteriophage PH75
+{"name_string_id":"605f428e-a4a3-57a2-9dfa-a6a3d99b801d","parsed":false,"parser_version":"test_version","verbatim":"Bacteriophage PH75","surrogate":false,"virus":true,"bacteria":false}
+605f428e-a4a3-57a2-9dfa-a6a3d99b801d|Bacteriophage PH75|||||1
+
+Escherichia coli bacteriophage
+{"name_string_id":"c01315c2-e1cc-58c2-b113-2d756985d64b","parsed":false,"parser_version":"test_version","verbatim":"Escherichia coli bacteriophage","surrogate":false,"virus":true,"bacteria":false}
+c01315c2-e1cc-58c2-b113-2d756985d64b|Escherichia coli bacteriophage|||||1
 #>
 
 #SECTION: No parsing -- name-strings with RNA word<
