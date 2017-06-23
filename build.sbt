@@ -1,8 +1,8 @@
 import sbt.Keys._
 
 val commonSettings = Seq(
-  version := "0.4.0",
-  scalaVersion := "2.11.8",
+  version := "0.4.1-SNAPSHOT",
+  scalaVersion := "2.11.11",
   organization in ThisBuild := "org.globalnames",
   homepage := Some(new URL("http://globalnames.org/")),
   description := "Fast and elegant parser for taxonomic scientific names",
@@ -10,8 +10,8 @@ val commonSettings = Seq(
   licenses := Seq("MIT" -> new URL("https://github.com/GlobalNamesArchitecture/gnparser/blob/master/LICENSE")),
   resolvers ++= Seq(
       "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
-    //, "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
-    , "Sonatype OSS Releases" at "https://oss.sonatype.org/content/repositories/releases/"
+    // , Resolver.typesafeRepo("snapshots")
+    , Resolver.typesafeRepo("releases")
   ),
   javacOptions ++= Seq(
     "-encoding", "UTF-8",
@@ -64,28 +64,25 @@ val noPublishingSettings = Seq(
 
 /////////////////////// DEPENDENCIES /////////////////////////
 
-val akkaV            = "2.4.11"
-val specs2V          = "3.8.9"
+val akkaV            = "10.0.8"
+val specs2V          = "3.9.1"
 
-val akkaHttpCore     = "com.typesafe.akka"  %% "akka-http-core"                    % akkaV
-val akkaHttp         = "com.typesafe.akka"  %% "akka-http-experimental"            % akkaV
-val akkaActor        = "com.typesafe.akka"  %% "akka-actor"                        % akkaV
-val akkaJson         = "com.typesafe.akka"  %% "akka-http-spray-json-experimental" % akkaV
-val akkaSlf4j        = "com.typesafe.akka"  %% "akka-slf4j"                        % akkaV
-val logbackClassic   = "ch.qos.logback"     %  "logback-classic"                   % "1.1.3"
-val spark            = "org.apache.spark"   %% "spark-core"                        % "2.1.0" % Provided
-val shapeless        = "com.chuusai"        %% "shapeless"                         % "2.3.2"
-val json4s           = "org.json4s"         %% "json4s-jackson"                    % "3.4.2"
-val javaUuid         = "com.fasterxml.uuid" %  "java-uuid-generator"               % "3.1.4"
-val lang3            = "org.apache.commons" %  "commons-lang3"                     % "3.5"
-val parboiled        = "org.globalnames"    %% "parboiled"                         % "2.1.4.1"
-val scalaz           = "org.scalaz"         %% "scalaz-core"                       % "7.2.7"
-val scalaArm         = "com.jsuereth"       %% "scala-arm"                         % "2.0"
-val scopt            = "com.github.scopt"   %% "scopt"                             % "3.5.0"
-val specs2core       = "org.specs2"         %% "specs2-core"                       % specs2V % Test
-val specs2extra      = "org.specs2"         %% "specs2-matcher-extra"              % specs2V % Test
-val akkaHttpTestkit  = "com.typesafe.akka"  %% "akka-http-testkit"                 % akkaV   % Test
-val scalatest        = "org.scalatest"      %% "scalatest"                         % "2.2.6" % Test
+val akkaHttp         = "com.typesafe.akka"          %% "akka-http"                         % akkaV
+val akkaJson         = "com.typesafe.akka"          %% "akka-http-spray-json"              % akkaV
+val logbackClassic   = "ch.qos.logback"             %  "logback-classic"                   % "1.2.3"
+val spark            = "org.apache.spark"           %% "spark-core"                        % "2.1.1"        % Provided
+val shapeless        = "com.chuusai"                %% "shapeless"                         % "2.3.2"
+val json4s           = "org.json4s"                 %% "json4s-jackson"                    % "3.5.2"
+val javaUuid         = "com.fasterxml.uuid"         %  "java-uuid-generator"               % "3.1.4"
+val commonsText      = "org.apache.commons"         %  "commons-text"                      % "1.1"
+val parboiled        = "org.globalnames"            %% "parboiled"                         % "2.1.4.1"
+val scalaz           = "org.scalaz"                 %% "scalaz-core"                       % "7.2.13"
+val scalaArm         = "com.jsuereth"               %% "scala-arm"                         % "2.0"
+val scopt            = "com.github.scopt"           %% "scopt"                             % "3.6.0"
+val specs2core       = "org.specs2"                 %% "specs2-core"                       % specs2V        % Test
+val specs2extra      = "org.specs2"                 %% "specs2-matcher-extra"              % specs2V        % Test
+val akkaHttpTestkit  = "com.typesafe.akka"          %% "akka-http-testkit"                 % akkaV      % Test
+val scalatest        = "org.scalatest"              %% "scalatest"                         % "3.0.3"        % Test
 
 /////////////////////// PROJECTS /////////////////////////
 
@@ -93,7 +90,7 @@ lazy val `gnparser-root` = project.in(file("."))
   .aggregate(parser, exampleJavaScala, runner, sparkPython)
   .settings(noPublishingSettings: _*)
   .settings(
-    crossScalaVersions := Seq("2.11.8")
+    crossScalaVersions := Seq("2.11.11")
   )
 
 lazy val parser = (project in file("./parser"))
@@ -102,14 +99,14 @@ lazy val parser = (project in file("./parser"))
   .settings(publishingSettings: _*)
   .settings(
     name := "gnparser",
-    crossScalaVersions := Seq("2.11.8"),
+    crossScalaVersions := Seq("2.11.11"),
 
     buildInfoKeys := Seq[BuildInfoKey](version),
     buildInfoPackage := "org.globalnames.parser",
     test in assembly := {},
 
     libraryDependencies ++= {
-      Seq(shapeless, json4s, javaUuid, lang3, parboiled, scalaz, specs2core)
+      Seq(shapeless, json4s, javaUuid, commonsText, parboiled, scalaz, specs2core)
     },
 
     scalacOptions in Test ++= Seq("-Yrangepos"),
@@ -140,17 +137,16 @@ lazy val runner = (project in file("./runner"))
   .settings(
     name := "gnparser-runner",
     executableScriptName := "gnparser",
-    crossScalaVersions := Seq("2.11.8"),
+    crossScalaVersions := Seq("2.11.11"),
     packageName := "gnparser",
     bashScriptExtraDefines := Seq(
       s"""declare -r script_name="${executableScriptName.value}""""
     ),
-    libraryDependencies ++= Seq(scopt, akkaHttp, akkaHttpCore, akkaActor, akkaSlf4j,
+    libraryDependencies ++= Seq(scopt, akkaHttp,
                                 logbackClassic, scalaArm, akkaJson,
                                 akkaHttpTestkit, scalatest, specs2core, specs2extra),
     mainClass in Compile := Some("org.globalnames.parser.runner.GnParser"),
-    mainClass in reStart :=
-      Some("org.globalnames.parser.runner.web.controllers.WebServer"),
+    mainClass in reStart := Some("org.globalnames.parser.runner.web.controllers.WebServer"),
     buildInfoKeys := Seq[BuildInfoKey](version),
     buildInfoPackage := "org.globalnames.runner",
     dockerRepository := Some("gnames")
