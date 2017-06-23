@@ -2,15 +2,13 @@ package org.globalnames.parser.runner
 package web
 package controllers
 
-import org.scalatest.{Matchers, WordSpec}
+import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
+import akka.http.scaladsl.model.ContentTypes._
 import akka.http.scaladsl.model.HttpEntity
 import akka.http.scaladsl.model.StatusCodes._
-import akka.http.scaladsl.model.ContentTypes._
 import akka.http.scaladsl.testkit.ScalatestRouteTest
-import akka.http.scaladsl.server._
-import Directives._
 import models.NamesResponse
-import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
+import org.scalatest.{Matchers, WordSpec}
 
 class WebServerSpec extends WordSpec with Matchers
                     with ScalatestRouteTest with Service {
@@ -18,7 +16,16 @@ class WebServerSpec extends WordSpec with Matchers
     "handle 'GET /'" in {
       Get("/?q=Aus+bus") ~> route ~> check {
         status shouldBe OK
-        responseAs[String] should include ("&quot;parsed&quot;: true")
+        val response = responseAs[String]
+        withClue("has no `parsed: true` in result") {
+          response should include("&quot;parsed&quot;: true")
+        }
+        withClue("has no input name in result") {
+          response should include("&quot;verbatim&quot;: &quot;Aus bus&quot;,")
+        }
+        withClue("has `Parse` button on page") {
+          response should include("""<input type="submit" value="Parse"/>""")
+        }
       }
     }
 
