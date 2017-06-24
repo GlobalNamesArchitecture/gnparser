@@ -23,7 +23,8 @@ jobs:
             - scala-sbt-v4-{{ checksum "build.sbt" }}
       - run:
           command: |
-            # CircleCI 2.0 is in bet. `sbt any_command` just hangs. So, `cat /dev/null` is required
+            # CircleCI 2.0 is in bet. `sbt any_command` just hangs on waiting for input.
+            # So, `cat /dev/null` is required to pass build
             # https://discuss.circleci.com/t/too-long-with-no-output-while-building-docker-image/12275/11
             cat /dev/null | sbt ";test:compile ;test ;parser/assembly"
       - save_cache:
