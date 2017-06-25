@@ -479,11 +479,8 @@ To run it execute the command:
 
 .. code:: bash
 
-    java -jar $JYTHON_HOME/jython.jar \
-      -Dpython.path=/path/to/gnparser-assembly-0.4.0.jar \
-      examples/jython/parser.py
-
-(JYTHON\_HOME needs to be defined or replaced by path to Jython jar)
+    GNPARSER_JAR_PATH=/path/to/gnparser-assembly-0.4.0.jar \
+      jython examples/jython/parser.py
 
 R
 ~
