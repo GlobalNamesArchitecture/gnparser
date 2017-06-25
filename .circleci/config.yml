@@ -81,6 +81,20 @@ jobs:
       - run: |
           jython examples/jython/parser.py
 
+  rlang-example:
+    docker:
+      - image: cardcorp/r-java
+    working_directory: /root/gnparser
+    environment:
+      GNPARSER_JAR_PATH: /root/gnparser/parser/target/scala-2.11/gnparser-assembly-0.4.1-SNAPSHOT.jar
+    steps:
+      - checkout
+      - attach_workspace:
+          at: parser/target/scala-2.11
+      - run: |
+          Rscript examples/R/parser.R
+
+
 workflows:
   version: 2
   build-and-deploy:
@@ -89,7 +103,13 @@ workflows:
       - assembly
       - jruby-example:
           requires:
+            - build-test
             - assembly
       - jython-example:
           requires:
+            - build-test
+            - assembly
+      - rlang-example:
+          requires:
+            - build-test
             - assembly
