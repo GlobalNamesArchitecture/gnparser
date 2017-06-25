@@ -9,14 +9,14 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - scala-sbt-v4-{{ checksum "build.sbt" }}
+            - scala-sbt-v6-{{ checksum "build.sbt" }}
       - run: |
           # CircleCI 2.0 is in bet. `sbt any_command` just hangs on waiting for input.
           # So, `cat /dev/null` is required to pass build
           # https://discuss.circleci.com/t/too-long-with-no-output-while-building-docker-image/12275/11
           cat /dev/null | sbt ";test:compile ;test"
       - save_cache:
-          key: scala-sbt-v4-{{ checksum "build.sbt" }}
+          key: scala-sbt-v6-{{ checksum "build.sbt" }}
           paths:
             - "~/.sbt"
             - "~/.iv2/cache"
@@ -26,7 +26,6 @@ jobs:
             - "target/streams"
             - "project/target/resolution-cache"
             - "project/target/streams"
-
   assembly:
     # Alas, we have to use `machine` to assembly the project
     # https://github.com/GlobalNamesArchitecture/gnparser/issues/368
@@ -54,7 +53,7 @@ jobs:
             - "project/target/resolution-cache"
             - "project/target/streams"
       - persist_to_workspace:
-          root: parser/target/scala-2.11/
+          root: parser/target/scala-2.11
           paths:
             - \*.jar
 
@@ -69,6 +68,18 @@ jobs:
       - run: |
           jruby -J-classpath parser/target/scala-2.11/gnparser-assembly-*.jar examples/jruby/parser.rb
 
+  jython-example:
+    docker:
+      - image: seansummers/jython
+    working_directory: /root/gnparser
+    environment:
+      GNPARSER_JAR_PATH: /root/gnparser/parser/target/scala-2.11/gnparser-assembly-0.4.1-SNAPSHOT.jar
+    steps:
+      - checkout
+      - attach_workspace:
+          at: parser/target/scala-2.11
+      - run: |
+          jython examples/jython/parser.py
 
 workflows:
   version: 2
@@ -77,5 +88,8 @@ workflows:
       - build-test
       - assembly
       - jruby-example:
+          requires:
+            - assembly
+      - jython-example:
           requires:
             - assembly
