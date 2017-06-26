@@ -1,23 +1,31 @@
 version: 2
 
 jobs:
-  build:
+  checkout_code:
     docker:
       - image: gnames/scala-sbt-jdk:scala-2.11.11-sbt-0.13.15
-
     working_directory: ~/gnparser
+    steps:
+      - checkout
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
 
+  build-test-assembly:
+    docker:
+      - image: gnames/scala-sbt-jdk:scala-2.11.11-sbt-0.13.15
+    working_directory: ~/gnparser
     steps:
       - checkout
       - restore_cache:
           keys:
             - scala-sbt-v4-{{ checksum "build.sbt" }}
-
-      - run: |
-          # CircleCI 2.0 is in bet. `sbt any_command` just hangs. So, `cat /dev/null` is required
-          # https://discuss.circleci.com/t/too-long-with-no-output-while-building-docker-image/12275/11
-          cat /dev/null | sbt ";test:compile ;very test"
-
+      - run:
+          command: |
+            # CircleCI 2.0 is in bet. `sbt any_command` just hangs. So, `cat /dev/null` is required
+            # https://discuss.circleci.com/t/too-long-with-no-output-while-building-docker-image/12275/11
+            cat /dev/null | sbt ";test:compile ;very test"
       - save_cache:
           key: scala-sbt-v4-{{ checksum "build.sbt" }}
           paths:
@@ -29,3 +37,9 @@ jobs:
             - "target/streams"
             - "project/target/resolution-cache"
             - "project/target/streams"
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build-test-assembly
