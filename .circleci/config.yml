@@ -1,0 +1,115 @@
+version: 2
+
+jobs:
+  build-test:
+    docker:
+      - image: gnames/scala-sbt-jdk:scala-2.11.11-sbt-0.13.15
+    working_directory: /root/gnparser
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - scala-sbt-v6-{{ checksum "build.sbt" }}
+      - run: |
+          # CircleCI 2.0 is in bet. `sbt any_command` just hangs on waiting for input.
+          # So, `cat /dev/null` is required to pass build
+          # https://discuss.circleci.com/t/too-long-with-no-output-while-building-docker-image/12275/11
+          cat /dev/null | sbt ";test:compile ;test"
+      - save_cache:
+          key: scala-sbt-v6-{{ checksum "build.sbt" }}
+          paths:
+            - "~/.sbt"
+            - "~/.iv2/cache"
+            - "~/.m2"
+            - "~/.coursier/cache"
+            - "target/resolution-cache"
+            - "target/streams"
+            - "project/target/resolution-cache"
+            - "project/target/streams"
+  assembly:
+    # Alas, we have to use `machine` to assembly the project
+    # https://github.com/GlobalNamesArchitecture/gnparser/issues/368
+    machine: true
+    working_directory: /home/circleci/gnparser
+    environment:
+      SBT_VERSION: 0.13.15
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - machine-scala-sbt-v1-{{ checksum "build.sbt" }}
+      - run: |
+          curl -fsL http://dl.bintray.com/sbt/native-packages/sbt/$SBT_VERSION/sbt-$SBT_VERSION.tgz | tar xfz - -C ~/
+          cat /dev/null | ~/sbt/bin/sbt "parser/assembly"
+      - save_cache:
+          key: machine-scala-sbt-v1-{{ checksum "build.sbt" }}
+          paths:
+            - "~/.sbt"
+            - "~/.iv2/cache"
+            - "~/.m2"
+            - "~/.coursier/cache"
+            - "target/resolution-cache"
+            - "target/streams"
+            - "project/target/resolution-cache"
+            - "project/target/streams"
+      - persist_to_workspace:
+          root: parser/target/scala-2.11
+          paths:
+            - \*.jar
+
+  jruby-example:
+    docker:
+      - image: jruby:9.1
+    working_directory: /root/gnparser
+    steps:
+      - checkout
+      - attach_workspace:
+          at: parser/target/scala-2.11
+      - run: |
+          jruby -J-classpath parser/target/scala-2.11/gnparser-assembly-*.jar examples/jruby/parser.rb
+
+  jython-example:
+    docker:
+      - image: seansummers/jython
+    working_directory: /root/gnparser
+    environment:
+      GNPARSER_JAR_PATH: /root/gnparser/parser/target/scala-2.11/gnparser-assembly-0.4.1-SNAPSHOT.jar
+    steps:
+      - checkout
+      - attach_workspace:
+          at: parser/target/scala-2.11
+      - run: |
+          jython examples/jython/parser.py
+
+  rlang-example:
+    docker:
+      - image: cardcorp/r-java
+    working_directory: /root/gnparser
+    environment:
+      GNPARSER_JAR_PATH: /root/gnparser/parser/target/scala-2.11/gnparser-assembly-0.4.1-SNAPSHOT.jar
+    steps:
+      - checkout
+      - attach_workspace:
+          at: parser/target/scala-2.11
+      - run: |
+          Rscript examples/R/parser.R
+
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build-test
+      - assembly
+      - jruby-example:
+          requires:
+            - build-test
+            - assembly
+      - jython-example:
+          requires:
+            - build-test
+            - assembly
+      - rlang-example:
+          requires:
+            - build-test
+            - assembly
