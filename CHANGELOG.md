@@ -1,3 +1,10 @@
+Version 0.4.1 (2017-06-31)
+--------------------------
+
+- support dash in specific epithet (#361)
+- migrate to CircleCI 2.0
+- minor bug fixes and more test coverage
+
 Version 0.4.0 (2017-06-01)
 --------------------------
 

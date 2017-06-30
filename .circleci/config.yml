@@ -73,7 +73,7 @@ jobs:
       - image: seansummers/jython
     working_directory: /root/gnparser
     environment:
-      GNPARSER_JAR_PATH: /root/gnparser/parser/target/scala-2.11/gnparser-assembly-0.4.1-SNAPSHOT.jar
+      GNPARSER_JAR_PATH: /root/gnparser/parser/target/scala-2.11/gnparser-assembly-0.4.1.jar
     steps:
       - checkout
       - attach_workspace:
@@ -86,7 +86,7 @@ jobs:
       - image: cardcorp/r-java
     working_directory: /root/gnparser
     environment:
-      GNPARSER_JAR_PATH: /root/gnparser/parser/target/scala-2.11/gnparser-assembly-0.4.1-SNAPSHOT.jar
+      GNPARSER_JAR_PATH: /root/gnparser/parser/target/scala-2.11/gnparser-assembly-0.4.1.jar
     steps:
       - checkout
       - attach_workspace:
