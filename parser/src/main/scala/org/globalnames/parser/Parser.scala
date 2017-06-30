@@ -342,7 +342,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
   }
 
   def word1: Rule1[CapturePosition] = rule {
-    capturePos(lowerChar ~ oneOrMore(lowerChar))
+    capturePos((LowerAlpha ~ dash).? ~ lowerChar ~ oneOrMore(lowerChar))
   }
 
   def word2: Rule1[CapturePosition] = rule {
