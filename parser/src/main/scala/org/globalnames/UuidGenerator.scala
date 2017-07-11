@@ -10,5 +10,7 @@ object UuidGenerator {
     Generators.nameBasedGenerator(namespace)
   }
 
-  def generate(name: String) = uuidGenerator.generate(name)
+  def generate(name: String): UUID = uuidGenerator.generate(name)
+
+  val EmptyUuid: UUID = generate("")
 }
