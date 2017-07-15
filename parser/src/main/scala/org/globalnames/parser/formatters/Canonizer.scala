@@ -4,19 +4,29 @@ package formatters
 
 import java.util.UUID
 
-import scalaz.{Name => _, _}
-import Scalaz._
+import scalaz.Liskov._
+import scalaz.std.string._
+import scalaz.std.option._
+import scalaz.syntax.bind._
+import scalaz.syntax.semigroup._
+import scalaz.syntax.std.boolean._
+import scalaz.syntax.std.option._
 
 case class Canonical(value: String) extends AnyVal {
   def id: UUID = UuidGenerator.generate(value)
 }
 
 trait Canonizer { parsedResult: ScientificNameParser.Result =>
+  private val canonicalRanked = computeCanonical(showRanks = true)
+  private val canonicalRankedLess = computeCanonical(showRanks = false)
 
   def canonizedUuid(showRanks: Boolean = false): Option[Canonical] =
     canonized(showRanks).map { Canonical }
 
-  def canonized(showRanks: Boolean = false): Option[String] = {
+  def canonized(showRanks: Boolean = false): Option[String] =
+    showRanks ? canonicalRanked | canonicalRankedLess
+
+  private def computeCanonical(showRanks: Boolean): Option[String] = {
     def canonizedNamesGroup(namesGroup: NamesGroup): String = {
       val name = namesGroup.name
       if (namesGroup.namedHybrid) {
@@ -54,6 +64,7 @@ trait Canonizer { parsedResult: ScientificNameParser.Result =>
     parsedResult.scientificName.namesGroup.map(canonizedNamesGroup)
   }
 
+  private[formatters]
   def canonizedUninomial(uninomial: Uninomial,
                          showRanks: Boolean): Option[String] =
     (!uninomial.implied).option {
