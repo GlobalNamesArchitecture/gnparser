@@ -1,7 +1,12 @@
 import sbt.Keys._
 
 val commonSettings = Seq(
-  version := "0.4.2-SNAPSHOT",
+  version := {
+    val version = "0.4.2"
+    val release = sys.props.isDefinedAt("release")
+    if (release) version
+    else version + sys.props.get("buildNumber").map { "-" + _ }.getOrElse("") + "-SNAPSHOT"
+  },
   scalaVersion := "2.11.11",
   organization in ThisBuild := "org.globalnames",
   homepage := Some(new URL("http://globalnames.org/")),
