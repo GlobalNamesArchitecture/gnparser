@@ -17,7 +17,7 @@ abstract class ScientificNameParser {
 
   def fromString(input: String,
                  collectParsingErrors: Boolean): Result = {
-    val preprocessorResult = Preprocessor.process(input)
+    val preprocessorResult = Preprocessor.process(Option(input).getOrElse(""))
     if (preprocessorResult.virus || preprocessorResult.noParse) {
       Result(preprocessorResult, ScientificName(), version)
     } else {
