@@ -2,7 +2,7 @@ package org.globalnames
 package parser
 package runner
 
-import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
+import java.io.{Console => JavaConsole, _}
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Path}
 
@@ -51,14 +51,14 @@ class GnParserSpec extends Specification with StringMatchers with MatcherMacros 
       }
 
       "should have correct preamble" >> {
-        val lines = withInOut("", () => GnParser.main(Array("-s")))
+        val lines = withInOut("", () => gnparse("file -s"))
         lines should have size 2
         lines(0) should_== GnParser.welcomeMessage
         lines(1) must startWith("Running with parallelism")
       }
 
       "should parse single name from <stdin>" >> {
-        val lines = withInOut(name1, () => gnparse("-s"))
+        val lines = withInOut(name1, () => gnparse("file -s"))
         lines should have size 3
         lines(2) must startWith(name1uuid)
       }
@@ -66,7 +66,7 @@ class GnParserSpec extends Specification with StringMatchers with MatcherMacros 
       "should parse from <stdin> to <stdout> when no file is provided" >> {
         val input = s"""$name1
                        |$name2""".stripMargin
-        val lines = withInOut(input, () => gnparse("-s"))
+        val lines = withInOut(input, () => gnparse("file -s"))
         lines should have size 4
         lines.drop(2).toSeq must contain(exactly(startWith(name1uuid), startWith(name2uuid)))
       }
