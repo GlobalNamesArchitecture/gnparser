@@ -39,6 +39,7 @@ object GnParser {
   }
 
   private[runner] val gnParserVersion = BuildInfo.version
+  private[runner] val welcomeMessage = "Enter scientific names line by line"
 
   private val parser = new scopt.OptionParser[Config]("gnparser") {
     head("gnparser", gnParserVersion)
@@ -92,11 +93,13 @@ object GnParser {
   def startFileParse(config: Config): Unit = {
     val inputIteratorEither = config.inputFile match {
       case None =>
-        println("Enter scientific names line by line")
+        println(welcomeMessage)
         val iterator = Iterator.continually(StdIn.readLine())
         iterator.takeWhile { str => str != null && str.trim.nonEmpty }.right
       case Some(fp) =>
-        \/.fromEither(managed(Source.fromFile(fp)).map { _.getLines }.either.either)
+        val sourceFile = Source.fromFile(fp)
+        val inputLinesManaged = managed(sourceFile).map { _.getLines.toVector }
+        \/.fromEither(inputLinesManaged.either.either)
     }
 
     val namesParsed = inputIteratorEither match {
