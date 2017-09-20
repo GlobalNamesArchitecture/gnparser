@@ -49,13 +49,13 @@ trait Normalizer { parsedResult: ScientificNameParser.Result =>
       normalizedUninomialWord(sg.word)
 
     def normalizedSpecies(sp: Species): Option[String] = {
-      Util.norm(stringOf(sp)).some |+|
+      Util.normalize(stringOf(sp)).some |+|
         sp.authorship.flatMap(normalizedAuthorship).map { " " + _ }
     }
 
     def normalizedInfraspecies(is: Infraspecies): Option[String] = {
       is.rank.map { r => r.typ.getOrElse(stringOf(r)) + " " } |+|
-        Util.norm(stringOf(is)).some |+|
+        Util.normalize(stringOf(is)).some |+|
         is.authorship.flatMap(normalizedAuthorship).map { " " + _ }
     }
 
@@ -78,7 +78,7 @@ trait Normalizer { parsedResult: ScientificNameParser.Result =>
           case AuthorWordSeparator.Dash => sb.append("-")
           case AuthorWordSeparator.Space => sb.append(" ")
         }
-        sb.append(Util.normAuthWord(stringOf(aw)))
+        sb.append(Util.normalizeAuthorWord(stringOf(aw)))
       }
       (authorStr.toString.some |+| a.filius.map { _ => " f." }).orZero
     }

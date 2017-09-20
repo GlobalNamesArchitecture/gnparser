@@ -1,30 +1,33 @@
 package org.globalnames.parser
 
 object Util {
-  def normAuthWord(input: String): String = {
+  private val charMapping: Map[Char, String] = {
+    val charFrom = "ÀÂÅÃÄÁÇČËÉÈÍÌÏŇÑÑÓÒÔØÕÖÚÙÜŔŘŖŠŠŞŽàâåãäáçčëéèíìïňññóòôøõöúùüŕřŗſššşž"
+    val charTo   = "AAAAAACCEEEIIINNNOOOOOOUUURRRSSSZaaaaaacceeeiiinnnoooooouuurrrssssz"
+    assert(charFrom.length == charTo.length)
+    val mapping = charFrom.zip(charTo.map { _.toString }).toMap
+                          .updated('Æ', "Ae")
+                          .updated('Œ', "Oe")
+                          .updated('æ', "ae")
+                          .updated('œ', "oe")
+                          .updated('Ö', "Oe")
+                          .updated('\'', "")
+    mapping
+  }
+
+  def normalizeAuthorWord(input: String): String = {
     if (input.matches("""[\p{Lu}]{3,}[\p{Lu}-]*"""))
-      input.split("-").map(_.toLowerCase.capitalize).mkString("-")
+      input.split("-").map { _.toLowerCase.capitalize }.mkString("-")
     else input
   }
 
-  def norm(input: String): String = {
+  def normalize(input: String): String = {
     val output = new StringBuilder()
-    val charFrom = "ÀÂÅÃÄÁÇČËÉÈÍÌÏŇÑÑÓÒÔØÕÖÚÙÜŔŘŖŠŠŞŽ" +
-                   "àâåãäáçčëéèíìïňññóòôøõöúùüŕřŗſššşž"
-    val charTo   = "AAAAAACCEEEIIINNNOOOOOOUUURRRSSSZ" +
-                   "aaaaaacceeeiiinnnoooooouuurrrssssz"
-
     for (chr <- input) {
-      chr match {
-        case 'Æ' => output.append("Ae")
-        case 'Œ' => output.append("Oe")
-        case 'æ' => output.append("ae")
-        case 'œ' => output.append("oe")
-        case 'Ö' => output.append("Oe")
-        case '\'' =>
-        case _ =>
-          val index = charFrom.indexOf(chr)
-          output.append(if (index > -1) charTo(index) else chr)
+      if (charMapping.contains(chr)) {
+        output.append(charMapping(chr))
+      } else {
+        output.append(chr)
       }
     }
     val res = output.toString.replaceFirst("""\?$""", "")

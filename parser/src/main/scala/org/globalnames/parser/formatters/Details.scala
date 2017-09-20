@@ -45,23 +45,23 @@ trait Details { parsedResult: ScientificNameParser.Result =>
 
     def detailedUninomial(u: Uninomial, firstName: Option[Uninomial]): JValue = {
       val rankStr = u.rank.map { r => r.typ.getOrElse(stringOf(r)) }
-      val fnVal = firstName.map { fn => Util.norm(stringOf(fn)) }.getOrElse(Util.norm(stringOf(u)))
+      val fnVal = firstName.map { fn => Util.normalize(stringOf(fn)) }.getOrElse(Util.normalize(stringOf(u)))
       ("value" -> fnVal) ~
         ("rank" -> rankStr) ~
-        ("parent" -> u.parent.map { p => Util.norm(stringOf(p)) }) ~
+        ("parent" -> u.parent.map { p => Util.normalize(stringOf(p)) }) ~
         u.authorship.map(detailedAuthorship).getOrElse(JObject())
     }
 
     def detailedSubGenus(sg: SubGenus): JValue =
-      "value" -> Util.norm(stringOf(sg.word))
+      "value" -> Util.normalize(stringOf(sg.word))
 
     def detailedSpecies(sp: Species): JValue =
-      ("value" -> Util.norm(stringOf(sp))) ~
+      ("value" -> Util.normalize(stringOf(sp))) ~
         sp.authorship.map(detailedAuthorship).getOrElse(JObject())
 
     def detailedInfraspecies(is: Infraspecies): JValue = {
       val rankStr = is.rank.map { r => r.typ.getOrElse(stringOf(r)) }
-      ("value" -> Util.norm(stringOf(is))) ~
+      ("value" -> Util.normalize(stringOf(is))) ~
         ("rank" -> rankStr) ~
         is.authorship.map(detailedAuthorship).getOrElse(JObject())
     }

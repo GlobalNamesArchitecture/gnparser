@@ -50,12 +50,12 @@ trait Canonizer { parsedResult: ScientificNameParser.Result =>
         .flatten.mkString(" ")
 
     def canonizedSpecies(sp: Species): String =
-      Util.norm(stringOf(sp))
+      Util.normalize(stringOf(sp))
 
     def canonizedInfraspecies(is: Infraspecies): String = {
       val rankStrMaybe = showRanks.option {
         is.rank.map { r => r.typ.getOrElse(stringOf(r)) + " " }}.join
-      rankStrMaybe.orZero + Util.norm(stringOf(is))
+      rankStrMaybe.orZero + Util.normalize(stringOf(is))
     }
 
     def canonizedInfraspeciesGroup(isg: InfraspeciesGroup): String =
@@ -69,8 +69,8 @@ trait Canonizer { parsedResult: ScientificNameParser.Result =>
                          showRanks: Boolean): Option[String] =
     (!uninomial.implied).option {
       val rankStrMaybe = showRanks.option {
-        uninomial.parent.map { p => Util.norm(stringOf(p)) + " " } |+|
+        uninomial.parent.map { p => Util.normalize(stringOf(p)) + " " } |+|
         uninomial.rank.map { r => r.typ.getOrElse(stringOf(r)) }}.join
-      rankStrMaybe.map { _ + " " }.orZero + Util.norm(stringOf(uninomial))
+      rankStrMaybe.map { _ + " " }.orZero + Util.normalize(stringOf(uninomial))
     }
 }
