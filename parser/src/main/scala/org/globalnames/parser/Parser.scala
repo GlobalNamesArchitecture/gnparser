@@ -346,8 +346,9 @@ class Parser(preprocessorResult: Preprocessor.Result,
   }
 
   def word2: Rule1[CapturePosition] = rule {
-    capturePos(oneOrMore(lowerChar) | (1 to 2).times(CharPredicate(Digit))) ~ dash ~ word1 ~> {
-      (p1: CapturePosition, p2: CapturePosition) => CapturePosition(p1.start, p2.end)
+    capturePos(oneOrMore(lowerChar) | (1 to 2).times(CharPredicate(Digit))) ~
+      word2sep.? ~ word1 ~> {
+        (p1: CapturePosition, p2: CapturePosition) => CapturePosition(p1.start, p2.end)
     }
   }
 
@@ -721,6 +722,7 @@ object Parser {
     }
   }
 
+  private final val word2sep = CharPredicate("." + dash)
   private final val dash = '-'
   private final val spaceMiscoded = "　 \t\r\n\f_"
   private final val spaceChars = CharPredicate(" " + spaceMiscoded)
