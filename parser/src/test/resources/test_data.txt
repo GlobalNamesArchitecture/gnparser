@@ -22,6 +22,12 @@
 # "parsed: false"
 ####
 
+# TODO <<<
+Chlorobium phaeobacteroides Pfennig, 1968 emend. Imhoff, 2003
+{"name_string_id":"4513701d-e56b-54d6-84a7-941bf4b62e69","parsed":true,"quality":2,"quality_warnings":[[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Chlorobium phaeobacteroides Pfennig, 1968 emend. Imhoff, 2003","normalized":"Chlorobium phaeobacteroides Pfennig 1968","canonical_name":{"value":"Chlorobium phaeobacteroides","value_ranked":"Chlorobium phaeobacteroides"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":true,"details":[{"genus":{"value":"Chlorobium"},"specific_epithet":{"value":"phaeobacteroides","authorship":{"value":"Pfennig 1968","basionym_authorship":{"authors":["Pfennig"],"year":{"value":"1968"}}}}}],"positions":[["genus",0,10],["specific_epithet",11,27],["author_word",28,35],["year",37,41]]}
+4513701d-e56b-54d6-84a7-941bf4b62e69|Chlorobium phaeobacteroides Pfennig, 1968 emend. Imhoff, 2003|Chlorobium phaeobacteroides|Chlorobium phaeobacteroides|Pfennig 1968|1968|2
+# >>>
+
 ### Uninomials
 
 #SECTION: Uninomial<
