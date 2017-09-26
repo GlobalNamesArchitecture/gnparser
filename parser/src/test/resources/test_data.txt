@@ -1030,6 +1030,10 @@ d227da04-7c89-50f7-8cf1-de09bc5aa903|Acarospora cratericola cratericola Shenk 19
 Parus caeruleus species complex
 {"name_string_id":"f3752c09-242f-501c-8c8c-0feaf86c4693","parsed":true,"quality":2,"quality_warnings":[[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Parus caeruleus species complex","normalized":"Parus caeruleus","canonical_name":{"value":"Parus caeruleus","value_ranked":"Parus caeruleus"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Parus"},"specific_epithet":{"value":"caeruleus"}}],"positions":[["genus",0,5],["specific_epithet",6,15]]}
 f3752c09-242f-501c-8c8c-0feaf86c4693|Parus caeruleus species complex|Parus caeruleus|Parus caeruleus|||2
+
+Chlorobium phaeobacteroides Pfennig, 1968 emend. Imhoff, 2003
+{"name_string_id":"4513701d-e56b-54d6-84a7-941bf4b62e69","parsed":true,"quality":2,"quality_warnings":[[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Chlorobium phaeobacteroides Pfennig, 1968 emend. Imhoff, 2003","normalized":"Chlorobium phaeobacteroides Pfennig 1968","canonical_name":{"value":"Chlorobium phaeobacteroides","value_ranked":"Chlorobium phaeobacteroides"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":true,"details":[{"genus":{"value":"Chlorobium"},"specific_epithet":{"value":"phaeobacteroides","authorship":{"value":"Pfennig 1968","basionym_authorship":{"authors":["Pfennig"],"year":{"value":"1968"}}}}}],"positions":[["genus",0,10],["specific_epithet",11,27],["author_word",28,35],["year",37,41]]}
+4513701d-e56b-54d6-84a7-941bf4b62e69|Chlorobium phaeobacteroides Pfennig, 1968 emend. Imhoff, 2003|Chlorobium phaeobacteroides|Chlorobium phaeobacteroides|Pfennig 1968|1968|2
 #>
 
 #SECTION: Ignoring sensu sec<
