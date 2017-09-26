@@ -24,6 +24,12 @@
 
 ### Uninomials
 
+### TODO <<<
+Methanosarcina barkeri str. fusaro
+{"name_string_id":"b1d6747d-6aa3-5b7a-a8ed-7ca53c4b19ac","parsed":true,"quality":2,"quality_warnings":[[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Methanosarcina barkeri str. fusaro","normalized":"Methanosarcina barkeri","canonical_name":{"value":"Methanosarcina barkeri","value_ranked":"Methanosarcina barkeri"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Methanosarcina"},"specific_epithet":{"value":"barkeri"}}],"positions":[["genus",0,14],["specific_epithet",15,22]]}
+b1d6747d-6aa3-5b7a-a8ed-7ca53c4b19ac|Methanosarcina barkeri str. fusaro|Methanosarcina barkeri|Methanosarcina barkeri|||2
+### >>>
+
 #SECTION: Uninomial<
 Pseudocercospora
 {"name_string_id":"9c1167ca-79e7-53de-b4c3-fcdb68410527","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Pseudocercospora","normalized":"Pseudocercospora","canonical_name":{"value":"Pseudocercospora","value_ranked":"Pseudocercospora"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"uninomial":{"value":"Pseudocercospora"}}],"positions":[["uninomial",0,16]]}

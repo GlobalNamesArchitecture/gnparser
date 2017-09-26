@@ -22,12 +22,10 @@ object Preprocessor {
 
   private final val substitutionsPatterns = {
     val notes = """(?ix)\s+(species\s+group|species\s+complex|group|author|emend)\b.*$"""
-    val taxonConcepts1 = """(?i)\s+(sensu|auct|sec|near)\.?\b.*$"""
-    val taxonConcepts2 = """(?x)(,\s*|\s+)
-                            (\(?s\.\s?s\.|
-                            \(?s\.\s?l\.|
-                            \(?s\.\s?str\.|
-                            \(?s\.\s?lat\.).*$"""
+    val taxonConcepts1 = """(?i)\s+(sensu|auct|sec|near|str)\.?\b.*$"""
+    val taxonConcepts2 =
+      """(?x)(,\s*|\s+)
+        |(\(?s\.\s?s\.|\(?s\.\s?l\.|\(?s\.\s?str\.|\(?s\.\s?lat\.).*$""".stripMargin
     val taxonConcepts3 = """(?i)(,\s*|\s+)(pro parte|p\.\s?p\.)\s*$"""
     val nomenConcepts = """(?i)(,\s*|\s+)(\(?nomen|\(?nom\.|\(?comb\.).*$"""
     val lastWordJunk = """(?ix)(,\s*|\s+)
