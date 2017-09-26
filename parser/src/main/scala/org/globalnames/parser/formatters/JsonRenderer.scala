@@ -1,7 +1,7 @@
 package org.globalnames.parser.formatters
 
 import org.globalnames.parser.ScientificNameParser
-import org.json4s.JsonAST.{JArray, JNothing, JValue, JField, JObject}
+import org.json4s.JsonAST.{JArray, JNothing, JValue}
 import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods
 
@@ -16,13 +16,9 @@ trait JsonRenderer { parserResult: ScientificNameParser.Result =>
 
     val canonicalName: JValue =
       if (parsed) {
-        val minimal = {
-          ("id" -> showCanonicalUuid.option { canonizedUuid().map { _.id.toString } }.join) ~
-            ("value" -> canonical)
-        }
-        val canonicalExtended = parserResult.canonized(showRanks = true)
-        if (canonical == canonicalExtended) minimal
-        else minimal ~ ("extended" -> canonicalExtended)
+        ("id" -> showCanonicalUuid.option { canonizedUuid().map { _.id.toString } }.join) ~
+          ("value" -> canonical) ~
+          ("value_ranked" -> parserResult.canonized(showRanks = true))
       } else JNothing
 
     val quality = canonical.map { _ => parserResult.scientificName.quality }
