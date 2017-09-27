@@ -919,6 +919,10 @@ b736628c-0c76-5fdf-88d6-77e14b10bd28|    Asplenium       X inexpectatum(E. L. Br
 
 #SECTION: Names with a dash <
 
+Drosophila obscura-x Burla, 1951
+{"name_string_id":"778f9878-8e47-5c7a-a464-33805b6bf173","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Drosophila obscura-x Burla, 1951","normalized":"Drosophila obscura-x Burla 1951","canonical_name":{"value":"Drosophila obscura-x","value_ranked":"Drosophila obscura-x"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Drosophila"},"specific_epithet":{"value":"obscura-x","authorship":{"value":"Burla 1951","basionym_authorship":{"authors":["Burla"],"year":{"value":"1951"}}}}}],"positions":[["genus",0,10],["specific_epithet",11,20],["author_word",21,26],["year",28,32]]}
+778f9878-8e47-5c7a-a464-33805b6bf173|Drosophila obscura-x Burla, 1951|Drosophila obscura-x|Drosophila obscura-x|Burla 1951|1951|1
+
 Sanogasta x-signata (Keyserling,1891)
 {"name_string_id":"ffe6799d-387a-53d8-8fdd-be73cdc681b8","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Sanogasta x-signata (Keyserling,1891)","normalized":"Sanogasta x-signata (Keyserling 1891)","canonical_name":{"value":"Sanogasta x-signata","value_ranked":"Sanogasta x-signata"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Sanogasta"},"specific_epithet":{"value":"x-signata","authorship":{"value":"(Keyserling 1891)","basionym_authorship":{"authors":["Keyserling"],"year":{"value":"1891"}}}}}],"positions":[["genus",0,9],["specific_epithet",10,19],["author_word",21,31],["year",32,36]]}
 ffe6799d-387a-53d8-8fdd-be73cdc681b8|Sanogasta x-signata (Keyserling,1891)|Sanogasta x-signata|Sanogasta x-signata|(Keyserling 1891)|1891|1

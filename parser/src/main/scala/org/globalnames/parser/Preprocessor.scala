@@ -49,7 +49,7 @@ object Preprocessor {
   }
 
   private val hybridPattern1 = Pattern.compile("""(^)[Xx](\p{Lu})""")
-  private val hybridPattern2 = Pattern.compile("""(\b)[Xx](\s|$)""")
+  private val hybridPattern2 = Pattern.compile("""(\s|^)[Xx](\s|$)""")
 
   private def normalizeHybridChar(input: String): String = {
     val normalizedHybridChar = "$1×$2"
