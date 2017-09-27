@@ -66,11 +66,12 @@ object Preprocessor {
       """\b[A-Za-z]*NPV\b""".r :: HNil
 
   private final val noParsePatterns = {
+    val startsWithNot = """(?i)^not.*""".r
     val incertaeSedis1 = """(?i).*incertae\s+sedis.*""".r
     val incertaeSedis2 = """(?i)inc\.\s*sed\.""".r
     val phytoplasma = """(?i)phytoplasma\b""".r
     val rna = """[^A-Z]RNA[^A-Z]*""".r
-    incertaeSedis1 :: incertaeSedis2 :: phytoplasma :: rna :: HNil
+    startsWithNot :: incertaeSedis1 :: incertaeSedis2 :: phytoplasma :: rna :: HNil
   }
 
   private def checkVirus(input: String): Boolean = {
