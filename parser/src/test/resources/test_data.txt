@@ -1942,6 +1942,29 @@ inc.   sed.
 f5245bf6-a459-5602-9979-02ba9428cf17|inc.   sed.|||||1
 #>
 
+#SECTION: No parsing -- 'Not' phrases<
+
+not recorded
+{"name_string_id":"830df5b1-ef3b-5240-8ecf-4fd74c2fff72","parsed":false,"parser_version":"test_version","verbatim":"not recorded","surrogate":false,"virus":false,"bacteria":false}
+830df5b1-ef3b-5240-8ecf-4fd74c2fff72|not recorded|||||1
+
+NOT recorded
+{"name_string_id":"52b51d9e-29db-561c-84ac-cd1592c762c1","parsed":false,"parser_version":"test_version","verbatim":"NOT recorded","surrogate":false,"virus":false,"bacteria":false}
+52b51d9e-29db-561c-84ac-cd1592c762c1|NOT recorded|||||1
+
+Not recorded
+{"name_string_id":"025b92f4-2b2c-5593-a02b-66f121b0a42b","parsed":false,"parser_version":"test_version","verbatim":"Not recorded","surrogate":false,"virus":false,"bacteria":false}
+025b92f4-2b2c-5593-a02b-66f121b0a42b|Not recorded|||||1
+
+Not assigned
+{"name_string_id":"19bffdbe-f1c7-5d39-b7b6-3dc96a317c4b","parsed":false,"parser_version":"test_version","verbatim":"Not assigned","surrogate":false,"virus":false,"bacteria":false}
+19bffdbe-f1c7-5d39-b7b6-3dc96a317c4b|Not assigned|||||1
+
+Not_assigned_1234
+{"name_string_id":"7d1f8f17-026b-5a8c-b7a5-835bf1f696aa","parsed":false,"parser_version":"test_version","verbatim":"Not_assigned_1234","surrogate":false,"virus":false,"bacteria":false}
+7d1f8f17-026b-5a8c-b7a5-835bf1f696aa|Not_assigned_1234|||||1
+#>
+
 #SECTION: No parsing -- genus with apostrophe<
 Abbott's moray eel
 {"name_string_id":"6a870e4b-5cc5-5226-ac5d-b769521b640f","parsed":false,"parser_version":"test_version","verbatim":"Abbott's moray eel","surrogate":false,"virus":false,"bacteria":false}
