@@ -22,17 +22,6 @@
 # "parsed: false"
 ####
 
-### TODO <<<
-Gen. et n. sp. Kaimatira Pumice Sand, Marton N ~1 Ma
-{"name_string_id":"54d27b31-2fbd-56e1-85e1-1438970f8953","parsed":false,"parser_version":"test_version","verbatim":"Gen. et n. sp. Kaimatira Pumice Sand, Marton N ~1 Ma","surrogate":false,"virus":false,"bacteria":false}
-54d27b31-2fbd-56e1-85e1-1438970f8953|Gen. et n. sp. Kaimatira Pumice Sand, Marton N ~1 Ma|||||1
-
-Genn. et n. sp. Kaimatira Pumice Sand, Marton N ~1 Ma
-{"name_string_id":"8edd1515-a4a1-52c5-ad1b-df7f112e68a9","parsed":false,"parser_version":"test_version","verbatim":"Genn. et n. sp. Kaimatira Pumice Sand, Marton N ~1 Ma","surrogate":false,"virus":false,"bacteria":false}
-8edd1515-a4a1-52c5-ad1b-df7f112e68a9|Genn. et n. sp. Kaimatira Pumice Sand, Marton N ~1 Ma|||||1
-
-### >>>
-
 ### Uninomials
 
 #SECTION: Uninomial<
@@ -370,6 +359,7 @@ Mo. alpium (Osbeck, 1778)
 {"name_string_id":"1e9437b7-bf45-5b12-8da0-8966c6ea1c5c","parsed":true,"quality":3,"quality_warnings":[[3,"Abbreviated uninomial word"]],"parser_version":"test_version","verbatim":"Mo. alpium (Osbeck, 1778)","normalized":"Mo. alpium (Osbeck 1778)","canonical_name":{"value":"Mo. alpium","value_ranked":"Mo. alpium"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Mo."},"specific_epithet":{"value":"alpium","authorship":{"value":"(Osbeck 1778)","basionym_authorship":{"authors":["Osbeck"],"year":{"value":"1778"}}}}}],"positions":[["genus",0,3],["specific_epithet",4,10],["author_word",12,18],["year",20,24]]}
 1e9437b7-bf45-5b12-8da0-8966c6ea1c5c|Mo. alpium (Osbeck, 1778)|Mo. alpium|Mo. alpium|(Osbeck 1778)|1778|3
 
+# not parsed to get better precision/recall ratio
 Mom.alpium (Osbeck, 1778)
 {"name_string_id":"f1452bcf-b779-5d98-bfc8-56455105e3f5","parsed":false,"parser_version":"test_version","verbatim":"Mom.alpium (Osbeck, 1778)","surrogate":false,"virus":false,"bacteria":false}
 f1452bcf-b779-5d98-bfc8-56455105e3f5|Mom.alpium (Osbeck, 1778)|||||1
@@ -1930,6 +1920,16 @@ b1e37ace-3ca8-5274-bd93-7333aa3e5223|Abryna petri- Paiva, 1860|Abryna|Abryna|||3
 #>
 
 ### Unparseable
+
+# SECTION: No parsing -- Genera abbreviated to 3 letters (too rare)<
+Gen. et n. sp. Kaimatira Pumice Sand, Marton N ~1 Ma
+{"name_string_id":"54d27b31-2fbd-56e1-85e1-1438970f8953","parsed":false,"parser_version":"test_version","verbatim":"Gen. et n. sp. Kaimatira Pumice Sand, Marton N ~1 Ma","surrogate":false,"virus":false,"bacteria":false}
+54d27b31-2fbd-56e1-85e1-1438970f8953|Gen. et n. sp. Kaimatira Pumice Sand, Marton N ~1 Ma|||||1
+
+Genn. et n. sp. Kaimatira Pumice Sand, Marton N ~1 Ma
+{"name_string_id":"8edd1515-a4a1-52c5-ad1b-df7f112e68a9","parsed":false,"parser_version":"test_version","verbatim":"Genn. et n. sp. Kaimatira Pumice Sand, Marton N ~1 Ma","surrogate":false,"virus":false,"bacteria":false}
+8edd1515-a4a1-52c5-ad1b-df7f112e68a9|Genn. et n. sp. Kaimatira Pumice Sand, Marton N ~1 Ma|||||1
+#>
 
 #SECTION: No parsing -- incertae sedis<
 Incertae sedis
