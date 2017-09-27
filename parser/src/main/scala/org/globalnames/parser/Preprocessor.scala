@@ -58,12 +58,15 @@ object Preprocessor {
     ).replaceAll(normalizedHybridChar)
   }
 
-  private final val virusPatterns =
-    """\sICTV\s*$""".r :: """[A-Z]?[a-z]+virus\b""".r ::
-      """(?ix)\b(virus(es)?|particles?|(bacterio|viro)?phages?|
-               viroids?|prions?|NPV)\b""".r ::
-      """\b(alpha|beta)?satellites?\b""".r ::
-      """\b[A-Za-z]*NPV\b""".r :: HNil
+  private final val virusPatterns = {
+    val ictvPattern = """\sICTV\s*$""".r
+    val virusPattern = """[A-Z]?[a-z]+virus\b""".r
+    val variousPatterns =
+      """(?ix)\b(virus(es)?|particles?|(bacterio|viro)?phages?|viroids?|prions?|NPV)\b""".r
+    val sattelitesPattern = """\b(alpha|beta)?satellites?\b""".r
+    val npvPattern = """\b[A-Za-z]*NPV\b""".r
+    ictvPattern :: virusPattern :: variousPatterns :: sattelitesPattern :: npvPattern :: HNil
+  }
 
   private final val noParsePatterns = {
     val threeOrMoreLettersGenus = """(?i)^\w{3,}\.""".r
