@@ -284,7 +284,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
   }
 
   def abbrGenus: RuleNodeMeta[UninomialWord] = rule {
-    capturePos(upperChar ~ lowerChar.? ~ lowerChar.? ~ '.') ~> { (wp: CapturePosition) =>
+    capturePos(upperChar ~ lowerChar.? ~ '.') ~> { (wp: CapturePosition) =>
       FactoryAST.uninomialWord(wp).add(warnings = Seq((3, "Abbreviated uninomial word")))
     }
   }
