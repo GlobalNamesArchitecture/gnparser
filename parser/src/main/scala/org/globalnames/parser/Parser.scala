@@ -189,7 +189,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
   }
 
   def approximation: RuleNodeMeta[Approximation] = rule {
-    capturePos("sp.nr." | "sp. nr." | "sp.aff." | "sp. aff." | "monst." | "?" |
+    capturePos("sp." ~ spaceChars.? ~ "nr." | "sp." ~ spaceChars.? ~ "aff." | "monst." | "?" |
                (("spp" | "nr" | "sp" | "aff" | "species") ~ (&(spaceCharsEOI) | '.'))) ~> {
       (p: CapturePosition) => FactoryAST.approximation(p) }
   }
