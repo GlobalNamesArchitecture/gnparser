@@ -1,3 +1,14 @@
+Version 0.4.2 (2017-09-28)
+--------------------------
+
+- provide `EmptyUuid` for empty string in GN namespace
+- support `emend` in name (#382)
+- correctly parse `str.` for `strain` (#384)
+- parse `-x` in species names (#385)
+- names with `not` in uninomial/genus are not parsed (#379)
+- restrict abbreviated genera to 2 letters (#245)
+- minor optimisations, bug fixes (#380)
+
 Version 0.4.1 (2017-06-31)
 --------------------------
 
