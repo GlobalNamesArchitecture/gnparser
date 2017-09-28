@@ -4,6 +4,11 @@ Global Names Parser
 .. image:: https://circleci.com/gh/GlobalNamesArchitecture/gnparser.svg?style=svg
     :target: https://circleci.com/gh/GlobalNamesArchitecture/gnparser
 
+Schema Changes
+--------------
+
+``canonical_name.value_extended`` is renamed to ``canonical_name.value_ranked``.
+
 Brief Intro
 -----------
 
