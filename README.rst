@@ -4,10 +4,14 @@ Global Names Parser
 .. image:: https://circleci.com/gh/GlobalNamesArchitecture/gnparser.svg?style=svg
     :target: https://circleci.com/gh/GlobalNamesArchitecture/gnparser
 
-Schema Changes
---------------
+Important Changes
+-----------------
 
-``canonical_name.value_extended`` is renamed to ``canonical_name.value_ranked``.
+**The change as follows might break your code!** ``gnparser 0.4.1`` optionally returned
+``canonical_name.value_extended`` in output JSON. **Only** if input name contains ranks,
+the field contains a canonical name with ranks. Otherwise the field is ``null``. ``gnparser 0.4.2``
+renames the field to ``canonical_name.value_ranked``. Also it always returns it, even if input name
+doesn't contain ranks.
 
 Brief Intro
 -----------
