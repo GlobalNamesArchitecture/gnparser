@@ -1,6 +1,12 @@
 Version 0.4.2 (2017-09-28)
 --------------------------
 
+- BACKWARD INCOMPATIBILITY: gnparser 0.4.1 optionally returned
+  canonical_name.extended in output JSON. Only if input name contains
+  ranks, the field contains a canonical name with ranks. Otherwise the field is
+  null. gnparser 0.4.2 renames the field to canonical_name.value_ranked. Also
+  it always returns it, even if input name doesn't contain ranks.
+
 - provide `EmptyUuid` for empty string in GN namespace
 - support `emend` in name (#382)
 - correctly parse `str.` for `strain` (#384)
@@ -8,6 +14,7 @@ Version 0.4.2 (2017-09-28)
 - names with `not` in uninomial/genus are not parsed (#379)
 - restrict abbreviated genera to 2 letters (#245)
 - minor optimisations, bug fixes (#380)
+
 
 Version 0.4.1 (2017-06-31)
 --------------------------
@@ -81,7 +88,7 @@ Version 0.2.0 (2015-11-26)
 - parallel input file parsing (#35)
 - clearify JSON fields (#198, #202)
 - add JSON schema (#205)
-- support dashed authors' names (#218) 
+- support dashed authors' names (#218)
 
 Version 0.1.0 (2015-10-29)
 --------------------------
