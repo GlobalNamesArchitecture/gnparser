@@ -78,8 +78,9 @@ object Preprocessor {
     val phytoplasma = """(?i)phytoplasma\b""".r
     val plasmid = """(?i)plasmids?""".r
     val rna = """[^A-Z]RNA[^A-Z]*""".r
-    threeOrMoreLettersGenus :: startsWithNot ::
-      incertaeSedis1 :: incertaeSedis2 :: phytoplasma :: plasmid :: rna :: HNil
+    val containsOf = """(?i)\bof\b""".r
+    threeOrMoreLettersGenus :: startsWithNot :: incertaeSedis1 :: incertaeSedis2 :: phytoplasma ::
+      plasmid :: rna :: containsOf :: HNil
   }
 
   private def checkVirus(input: String): Boolean = {
