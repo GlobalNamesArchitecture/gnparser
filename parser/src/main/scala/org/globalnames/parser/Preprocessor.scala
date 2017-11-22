@@ -58,15 +58,17 @@ object Preprocessor {
     ).replaceAll(normalizedHybridChar)
   }
 
-  private final val virusPatterns = {
-    val ictvPattern = """\sICTV\s*$""".r
-    val virusPattern = """[A-Z]?[a-z]+virus\b""".r
-    val variousPatterns =
-      """(?ix)\b(virus(es)?|particles?|(bacterio|viro)?phages?|viroids?|prions?|NPV)\b""".r
-    val sattelitesPattern = """\b(alpha|beta)?satellites?\b""".r
-    val npvPattern = """\b[A-Za-z]*NPV\b""".r
-    ictvPattern :: virusPattern :: variousPatterns :: sattelitesPattern :: npvPattern :: HNil
-  }
+  private val virusPatterns =
+    """(?ix)\b
+      (ictv
+      |[a-z]*virus(es)?
+      |particles?
+      |vectors?
+      |(bacterio|viro)?phages?
+      |viroids?
+      |prions?
+      |[a-z]*npv
+      |(alpha|beta)?satellites?)\b""".r
 
   private final val noParsePatterns = {
     val threeOrMoreLettersGenus = """(?i)^\w{3,}\.""".r
@@ -74,17 +76,14 @@ object Preprocessor {
     val incertaeSedis1 = """(?i).*incertae\s+sedis.*""".r
     val incertaeSedis2 = """(?i)inc\.\s*sed\.""".r
     val phytoplasma = """(?i)phytoplasma\b""".r
+    val plasmid = """(?i)plasmids?""".r
     val rna = """[^A-Z]RNA[^A-Z]*""".r
     threeOrMoreLettersGenus :: startsWithNot ::
-      incertaeSedis1 :: incertaeSedis2 :: phytoplasma :: rna :: HNil
+      incertaeSedis1 :: incertaeSedis2 :: phytoplasma :: plasmid :: rna :: HNil
   }
 
   private def checkVirus(input: String): Boolean = {
-    object PatternMatch extends Poly2 {
-      implicit def default =
-        at[Boolean, Regex]{ _ && _.findFirstIn(input).isEmpty }
-    }
-    !virusPatterns.foldLeft(true)(PatternMatch)
+    virusPatterns.findFirstIn(input).isDefined
   }
 
   private def noParse(input: String): Boolean = {
