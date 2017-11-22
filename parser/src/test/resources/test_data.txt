@@ -1469,6 +1469,26 @@ Coleoptera Bold:AAV0432
 ### Viruses etc.
 
 #SECTION: No parsing -- viruses, plasmids, prions etc.<
+Turtle herpesviruses
+{"name_string_id":"44dc4404-0bb8-5eaa-b401-1609d98d3b30","parsed":false,"parser_version":"test_version","verbatim":"Turtle herpesviruses","surrogate":false,"virus":true,"bacteria":false}
+44dc4404-0bb8-5eaa-b401-1609d98d3b30|Turtle herpesviruses|||||1
+
+Cre expression vector
+{"name_string_id":"9a282683-c49b-52dc-817f-0281d5b4b831","parsed":false,"parser_version":"test_version","verbatim":"Cre expression vector","surrogate":false,"virus":true,"bacteria":false}
+9a282683-c49b-52dc-817f-0281d5b4b831|Cre expression vector|||||1
+
+Drosophila sturtevanti rhabdovirus
+{"name_string_id":"d3510f21-1d57-50e6-98bd-2252259b7052","parsed":false,"parser_version":"test_version","verbatim":"Drosophila sturtevanti rhabdovirus","surrogate":false,"virus":true,"bacteria":false}
+d3510f21-1d57-50e6-98bd-2252259b7052|Drosophila sturtevanti rhabdovirus|||||1
+
+Hydra expression vector
+{"name_string_id":"b22ca1ca-3186-5bc6-9f1a-57ef8c117f25","parsed":false,"parser_version":"test_version","verbatim":"Hydra expression vector","surrogate":false,"virus":true,"bacteria":false}
+b22ca1ca-3186-5bc6-9f1a-57ef8c117f25|Hydra expression vector|||||1
+
+Gateway destination plasmid
+{"name_string_id":"21946de0-1c80-543f-ab96-97b81f8d1516","parsed":false,"parser_version":"test_version","verbatim":"Gateway destination plasmid","surrogate":false,"virus":false,"bacteria":false}
+21946de0-1c80-543f-ab96-97b81f8d1516|Gateway destination plasmid|||||1
+
 Abutilon mosaic virus [X15983] [X15984] Abutilon mosaic virus ICTV
 {"name_string_id":"879da2ea-836c-5ad2-b837-81594a1a208d","parsed":false,"parser_version":"test_version","verbatim":"Abutilon mosaic virus [X15983] [X15984] Abutilon mosaic virus ICTV","surrogate":false,"virus":true,"bacteria":false}
 879da2ea-836c-5ad2-b837-81594a1a208d|Abutilon mosaic virus [X15983] [X15984] Abutilon mosaic virus ICTV|||||1
@@ -2030,11 +2050,6 @@ Oxytox[idae] Lindermann
 ScarabaeinGCsp.
 {"name_string_id":"c84b775e-cc80-588f-b7bb-0094bab2c6a2","parsed":false,"parser_version":"test_version","verbatim":"ScarabaeinGCsp.","surrogate":false,"virus":false,"bacteria":false}
 c84b775e-cc80-588f-b7bb-0094bab2c6a2|ScarabaeinGCsp.|||||1
-
-HaloTag control vector
-{"name_string_id":"0343bf04-3850-5410-92d4-484779684f8c","parsed":false,"parser_version":"test_version","verbatim":"HaloTag control vector","surrogate":false,"virus":false,"bacteria":false}
-0343bf04-3850-5410-92d4-484779684f8c|HaloTag control vector|||||1
-#>
 
 #SECTION: No parsing -- phytoplasma<
 Alfalfa witches'-broom phytoplasma
