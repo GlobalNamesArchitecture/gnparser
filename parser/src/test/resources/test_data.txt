@@ -1953,7 +1953,27 @@ inc.   sed.
 f5245bf6-a459-5602-9979-02ba9428cf17|inc.   sed.|||||1
 #>
 
-#SECTION: No parsing -- 'Not' phrases<
+#SECTION: No parsing -- 'Not', 'None', 'Unidentified'  phrases<
+
+None recorded
+{"name_string_id":"54d66439-b10d-50dc-a659-c9bce413ed5d","parsed":false,"parser_version":"test_version","verbatim":"None recorded","surrogate":false,"virus":false,"bacteria":false}
+54d66439-b10d-50dc-a659-c9bce413ed5d|None recorded|||||1
+
+NONE recorded
+{"name_string_id":"cedc6de2-aed6-58dc-904f-a14348588f8a","parsed":false,"parser_version":"test_version","verbatim":"NONE recorded","surrogate":false,"virus":false,"bacteria":false}
+cedc6de2-aed6-58dc-904f-a14348588f8a|NONE recorded|||||1
+
+NoNe recorded
+{"name_string_id":"39682f61-d0d0-5dc0-bf57-b73ffb97b3ef","parsed":false,"parser_version":"test_version","verbatim":"NoNe recorded","surrogate":false,"virus":false,"bacteria":false}
+39682f61-d0d0-5dc0-bf57-b73ffb97b3ef|NoNe recorded|||||1
+
+unidentified recorded
+{"name_string_id":"4c391bc1-d3f6-5e33-80df-262cbfb09dfe","parsed":false,"parser_version":"test_version","verbatim":"unidentified recorded","surrogate":false,"virus":false,"bacteria":false}
+4c391bc1-d3f6-5e33-80df-262cbfb09dfe|unidentified recorded|||||1
+
+UniDentiFied recorded
+{"name_string_id":"57b55b46-c874-59ae-b3d8-2888d8a3bc1c","parsed":false,"parser_version":"test_version","verbatim":"UniDentiFied recorded","surrogate":false,"virus":false,"bacteria":false}
+57b55b46-c874-59ae-b3d8-2888d8a3bc1c|UniDentiFied recorded|||||1
 
 not recorded
 {"name_string_id":"830df5b1-ef3b-5240-8ecf-4fd74c2fff72","parsed":false,"parser_version":"test_version","verbatim":"not recorded","surrogate":false,"virus":false,"bacteria":false}
