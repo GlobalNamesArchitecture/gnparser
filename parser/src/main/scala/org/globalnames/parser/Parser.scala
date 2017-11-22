@@ -326,7 +326,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
   }
 
   def word: RuleNodeMeta[SpeciesWord] = rule {
-    !(authorPre | rankUninomial | approximation) ~ (word3 | word2 | word1) ~
+    !(authorPrefix | rankUninomial | approximation) ~ (word3 | word2 | word1) ~
     &(spaceCharsEOI ++ "().,:;") ~> {
       (pos: CapturePosition) =>
         val word = input.sliceString(pos.start, pos.end)
@@ -542,7 +542,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
   }
 
   def authorWord: RuleNodeMeta[AuthorWord] = rule {
-    (authorWord1 | authorWord2 | authorPre) ~> {
+    (authorWord1 | authorWord2 | authorPrefix) ~> {
       (awM: NodeMeta[AuthorWord]) =>
         val word = input.sliceString(awM.node.pos.start, awM.node.pos.end)
         val authorIsUpperCase =
@@ -568,9 +568,9 @@ class Parser(preprocessorResult: Preprocessor.Result,
     capturePos("f." | "fil." | "filius") ~> { (pos: CapturePosition) => FactoryAST.authorWord(pos) }
   }
 
-  def authorPre: RuleNodeMeta[AuthorWord] = rule {
+  def authorPrefix: RuleNodeMeta[AuthorWord] = rule {
     capturePos((("ab" | "af" | "bis" | "da" | "der" | "des" | "den" | "della" | "dela" | "de" |
-                 "di" | "du" | "el" | "la" | "ter" | "van" | ("von" ~ (space ~ "dem").?) |
+                 "di" | "du" | "el" | "la" | "le" | "ter" | "van" | ("von" ~ (space ~ "dem").?) |
                  ("v" ~ (space ~ "d").?) | "d'" | "in't") ~ &(spaceCharsEOI)) |
       ("v." ~ (space.? ~ "d.").?) | "'t") ~> {
       (pos: CapturePosition) => FactoryAST.authorWord(pos)
