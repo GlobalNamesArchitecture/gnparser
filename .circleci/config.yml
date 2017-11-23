@@ -3,7 +3,7 @@ version: 2
 jobs:
   build-test:
     docker:
-      - image: gnames/scala-sbt-jdk:scala-2.11.11-sbt-0.13.15
+      - image: gnames/scala-sbt-jdk:scala-2.11.12-sbt-0.13.15
     working_directory: /root/gnparser
     steps:
       - checkout
