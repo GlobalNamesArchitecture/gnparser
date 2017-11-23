@@ -98,7 +98,7 @@ lazy val `gnparser-root` = project.in(file("."))
   .aggregate(parser, exampleJavaScala, runner, sparkPython)
   .settings(noPublishingSettings: _*)
   .settings(
-    crossScalaVersions := Seq(scalaV11, scalaV12)
+    crossScalaVersions := Seq()
   )
 
 lazy val parser = (project in file("./parser"))
