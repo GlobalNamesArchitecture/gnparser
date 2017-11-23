@@ -1,5 +1,8 @@
 import sbt.Keys._
 
+val scalaV11 = "2.11.12"
+val scalaV12 = "2.12.4"
+
 val commonSettings = Seq(
   version := {
     val version = "0.4.2"
@@ -7,7 +10,7 @@ val commonSettings = Seq(
     if (release) version
     else version + sys.props.get("buildNumber").map { "-" + _ }.getOrElse("") + "-SNAPSHOT"
   },
-  scalaVersion := "2.11.11",
+  scalaVersion := scalaV11,
   organization in ThisBuild := "org.globalnames",
   homepage := Some(new URL("http://globalnames.org/")),
   description := "Fast and elegant parser for taxonomic scientific names",
@@ -20,8 +23,8 @@ val commonSettings = Seq(
   ),
   javacOptions ++= Seq(
     "-encoding", "UTF-8",
-    "-source", "1.6",
-    "-target", "1.6",
+    "-source", "1.8",
+    "-target", "1.8",
     "-Xlint:unchecked",
     "-Xlint:deprecation"),
   scalacOptions ++= List(
@@ -31,7 +34,7 @@ val commonSettings = Seq(
     "-deprecation",
     "-Xlint",
     "-language:_",
-    "-target:jvm-1.6",
+    "-target:jvm-1.8",
     "-Xlog-reflective-calls"))
 
 val publishingSettings = Seq(
@@ -70,7 +73,7 @@ val noPublishingSettings = Seq(
 /////////////////////// DEPENDENCIES /////////////////////////
 
 val akkaV            = "10.0.8"
-val specs2V          = "3.9.5"
+val specs2V          = "4.0.1"
 
 val akkaHttp         = "com.typesafe.akka"          %% "akka-http"                         % akkaV
 val akkaJson         = "com.typesafe.akka"          %% "akka-http-spray-json"              % akkaV
@@ -95,7 +98,7 @@ lazy val `gnparser-root` = project.in(file("."))
   .aggregate(parser, exampleJavaScala, runner, sparkPython)
   .settings(noPublishingSettings: _*)
   .settings(
-    crossScalaVersions := Seq("2.11.11")
+    crossScalaVersions := Seq()
   )
 
 lazy val parser = (project in file("./parser"))
@@ -104,7 +107,7 @@ lazy val parser = (project in file("./parser"))
   .settings(publishingSettings: _*)
   .settings(
     name := "gnparser",
-    crossScalaVersions := Seq("2.11.11"),
+    crossScalaVersions := Seq(scalaV11, scalaV12),
 
     buildInfoKeys := Seq[BuildInfoKey](version),
     buildInfoPackage := "org.globalnames.parser",
@@ -142,7 +145,7 @@ lazy val runner = (project in file("./runner"))
   .settings(
     name := "gnparser-runner",
     executableScriptName := "gnparser",
-    crossScalaVersions := Seq("2.11.11"),
+    crossScalaVersions := Seq(scalaV11),
     packageName := "gnparser",
     bashScriptExtraDefines := Seq(
       s"""declare -r script_name="${executableScriptName.value}""""
@@ -162,7 +165,8 @@ lazy val exampleJavaScala = (project in file("./examples/java-scala"))
   .settings(commonSettings: _*)
   .settings(noPublishingSettings: _*)
   .settings(
-    name := "gnparser-examples"
+    name := "gnparser-examples",
+    crossScalaVersions := Seq(scalaV11)
   )
 
 lazy val exampleSpark = (project in file("./examples/spark"))
@@ -171,6 +175,7 @@ lazy val exampleSpark = (project in file("./examples/spark"))
   .settings(noPublishingSettings: _*)
   .settings(
     name := "gnparser-example-spark",
+    crossScalaVersions := Seq(scalaV11),
     libraryDependencies ++= Seq(spark)
   )
 
@@ -180,6 +185,7 @@ lazy val sparkPython = (project in file("./spark-python"))
   .settings(publishingSettings: _*)
   .settings(
     name := "gnparser-spark-python",
+    crossScalaVersions := Seq(scalaV11),
     libraryDependencies ++= Seq(spark),
     projectDependencies := Seq(
       (projectID in parser).value.exclude("org.json4s", "json4s-jackson_2.10")
