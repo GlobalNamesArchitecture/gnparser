@@ -90,6 +90,18 @@ dbb90380-0552-5237-82ef-8a8b07e42049|Ataladoris Iredale & O'Donoghue 1923|Atalad
 Saxo-Fridericia R. H. Schomb.
 {"name_string_id":"f11d6164-5f08-5bb3-8432-5f07d1ee3bd4","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Saxo-Fridericia R. H. Schomb.","normalized":"Saxo-Fridericia R. H. Schomb.","canonical_name":{"value":"Saxo-Fridericia","value_ranked":"Saxo-Fridericia"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"uninomial":{"value":"Saxo-Fridericia","authorship":{"value":"R. H. Schomb.","basionym_authorship":{"authors":["R. H. Schomb."]}}}}],"positions":[["uninomial",0,15],["author_word",16,18],["author_word",19,21],["author_word",22,29]]}
 f11d6164-5f08-5bb3-8432-5f07d1ee3bd4|Saxo-Fridericia R. H. Schomb.|Saxo-Fridericia|Saxo-Fridericia|R. H. Schomb.||1
+
+Anteplana le Renard 1995
+{"name_string_id":"6920744c-27e9-546f-96d9-c8859544ef78","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Anteplana le Renard 1995","normalized":"Anteplana le Renard 1995","canonical_name":{"value":"Anteplana","value_ranked":"Anteplana"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"uninomial":{"value":"Anteplana","authorship":{"value":"le Renard 1995","basionym_authorship":{"authors":["le Renard"],"year":{"value":"1995"}}}}}],"positions":[["uninomial",0,9],["author_word",10,12],["author_word",13,19],["year",20,24]]}
+6920744c-27e9-546f-96d9-c8859544ef78|Anteplana le Renard 1995|Anteplana|Anteplana|le Renard 1995|1995|1
+
+Candinia le Renard, Sabelli & Taviani 1996
+{"name_string_id":"2a92b7b1-4da8-5571-98de-9cd225526081","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Candinia le Renard, Sabelli & Taviani 1996","normalized":"Candinia le Renard, Sabelli & Taviani 1996","canonical_name":{"value":"Candinia","value_ranked":"Candinia"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"uninomial":{"value":"Candinia","authorship":{"value":"le Renard, Sabelli & Taviani 1996","basionym_authorship":{"authors":["le Renard","Sabelli","Taviani"],"year":{"value":"1996"}}}}}],"positions":[["uninomial",0,8],["author_word",9,11],["author_word",12,18],["author_word",20,27],["author_word",30,37],["year",38,42]]}
+2a92b7b1-4da8-5571-98de-9cd225526081|Candinia le Renard, Sabelli & Taviani 1996|Candinia|Candinia|le Renard, Sabelli & Taviani 1996|1996|1
+
+Polypodium le Sourdianum Fourn.
+{"name_string_id":"ea72f0d9-2f8a-5ba0-95c7-986075eda321","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Polypodium le Sourdianum Fourn.","normalized":"Polypodium le Sourdianum Fourn.","canonical_name":{"value":"Polypodium","value_ranked":"Polypodium"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"uninomial":{"value":"Polypodium","authorship":{"value":"le Sourdianum Fourn.","basionym_authorship":{"authors":["le Sourdianum Fourn."]}}}}],"positions":[["uninomial",0,10],["author_word",11,13],["author_word",14,24],["author_word",25,31]]}
+ea72f0d9-2f8a-5ba0-95c7-986075eda321|Polypodium le Sourdianum Fourn.|Polypodium|Polypodium|le Sourdianum Fourn.||1
 #>
 
 #SECTION: Two-letter genus names (legacy genera, not allowed anymore)<
