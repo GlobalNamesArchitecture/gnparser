@@ -1354,6 +1354,12 @@ d2f6423b-7a8f-5389-a286-c074fb634c5a|Amphisbæna fuliginoſa Linnaeus 1758|Amphi
 ### Open Nomenclature ('approximate' names)
 
 #SECTION: Open nomenclature -- cf., aff., sp., etc.<
+# should support https://goo.gl/S43CZo (does not yet)
+# aff.     -- new species that cannot yet be described (not enough data)
+# cf./?    -- uncertainty in identification or provisional identification
+# sp. spp. -- undetermined species/subspecies, sometimes with indication of
+#             a related species/subspecies
+
 Solygia ? distanti
 {"name_string_id":"b9e3508f-1c0e-554c-8642-dd1cfd02631c","parsed":true,"quality":3,"quality_warnings":[[3,"Name is approximate"]],"parser_version":"test_version","verbatim":"Solygia ? distanti","normalized":"Solygia","canonical_name":{"value":"Solygia","value_ranked":"Solygia"},"hybrid":false,"surrogate":true,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Solygia"},"annotation_identification":"?"}],"positions":[["genus",0,7],["annotation_identification",8,9]]}
 b9e3508f-1c0e-554c-8642-dd1cfd02631c|Solygia ? distanti|Solygia|Solygia|||3
