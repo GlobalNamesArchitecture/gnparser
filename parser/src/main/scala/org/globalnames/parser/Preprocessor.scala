@@ -78,9 +78,8 @@ object Preprocessor {
     val phytoplasma = """(?i)phytoplasma\b""".r
     val plasmid = """(?i)plasmids?""".r
     val rna = """[^A-Z]RNA[^A-Z]*""".r
-    val containsOf = """(?i)\bof\b""".r
     threeOrMoreLettersGenus :: startsWithNot :: incertaeSedis1 :: incertaeSedis2 :: phytoplasma ::
-      plasmid :: rna :: containsOf :: HNil
+      plasmid :: rna :: HNil
   }
 
   private def checkVirus(input: String): Boolean = {
@@ -96,6 +95,7 @@ object Preprocessor {
   }
 
   private final val comparisonPattern = """(?ix)(,\s*|\s+)cf\.?\s*$""".r
+  private final val stopWordsPattern = """(?ix)\s*\bof.*$""".r
 
   def process(input: String): Result = {
     val UNESCAPE_HTML4 = new TrackingPositionsUnescapeHtml4Translator
@@ -107,12 +107,17 @@ object Preprocessor {
       (matches ? comparisonPattern.replaceAllIn(unescaped, "") | unescaped, matches)
     }
 
-    val preprocessed = normalizeHybridChar(removeJunk(comparisonCleaned))
+    val (stopWordsCleaned, areStopWordsRemoved) = {
+      val matches = stopWordsPattern.findFirstIn(comparisonCleaned).isDefined
+      (matches ? stopWordsPattern.replaceAllIn(comparisonCleaned, "") | comparisonCleaned, matches)
+    }
+
+    val preprocessed = normalizeHybridChar(removeJunk(stopWordsCleaned))
 
     val isPreprocessed =
       !UNESCAPE_HTML4.identity || unescaped.length != preprocessed.length
 
-    val warnings = (isComparisonRemoved || isPreprocessed).option {
+    val warnings = (isComparisonRemoved || isPreprocessed || areStopWordsRemoved).option {
       WarningInfo(2, "Name had to be changed by preprocessing")
     }.toVector ++ isComparisonRemoved.option {
       WarningInfo(3, "Name comparison")

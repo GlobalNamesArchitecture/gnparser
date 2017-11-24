@@ -24,24 +24,24 @@
 
 #TODO<
 Musca capraria Trustees of the British Museum (Natural History), 1939
-{"name_string_id":"aa70cf4b-14bb-57a3-9fe1-0a9a544a16da","parsed":false,"parser_version":"test_version","verbatim":"Musca capraria Trustees of the British Museum (Natural History), 1939","surrogate":false,"virus":false,"bacteria":false}
-aa70cf4b-14bb-57a3-9fe1-0a9a544a16da|Musca capraria Trustees of the British Museum (Natural History), 1939|||||1
+{"name_string_id":"aa70cf4b-14bb-57a3-9fe1-0a9a544a16da","parsed":true,"quality":2,"quality_warnings":[[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Musca capraria Trustees of the British Museum (Natural History), 1939","normalized":"Musca capraria Trustees","canonical_name":{"value":"Musca capraria","value_ranked":"Musca capraria"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Musca"},"specific_epithet":{"value":"capraria","authorship":{"value":"Trustees","basionym_authorship":{"authors":["Trustees"]}}}}],"positions":[["genus",0,5],["specific_epithet",6,14],["author_word",15,23]]}
+aa70cf4b-14bb-57a3-9fe1-0a9a544a16da|Musca capraria Trustees of the British Museum (Natural History), 1939|Musca capraria|Musca capraria|Trustees||2
 
 Nassellarid genera of uncertain affinities
-{"name_string_id":"ca46eccc-6b42-5faf-be0f-aad069d3e3dd","parsed":false,"parser_version":"test_version","verbatim":"Nassellarid genera of uncertain affinities","surrogate":false,"virus":false,"bacteria":false}
-ca46eccc-6b42-5faf-be0f-aad069d3e3dd|Nassellarid genera of uncertain affinities|||||1
+{"name_string_id":"ca46eccc-6b42-5faf-be0f-aad069d3e3dd","parsed":true,"quality":2,"quality_warnings":[[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Nassellarid genera of uncertain affinities","normalized":"Nassellarid genera","canonical_name":{"value":"Nassellarid genera","value_ranked":"Nassellarid genera"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Nassellarid"},"specific_epithet":{"value":"genera"}}],"positions":[["genus",0,11],["specific_epithet",12,18]]}
+ca46eccc-6b42-5faf-be0f-aad069d3e3dd|Nassellarid genera of uncertain affinities|Nassellarid genera|Nassellarid genera|||2
 
 Natica of nidus
-{"name_string_id":"6a049500-f407-56e7-80b4-41ab91f64b8c","parsed":false,"parser_version":"test_version","verbatim":"Natica of nidus","surrogate":false,"virus":false,"bacteria":false}
-6a049500-f407-56e7-80b4-41ab91f64b8c|Natica of nidus|||||1
+{"name_string_id":"6a049500-f407-56e7-80b4-41ab91f64b8c","parsed":true,"quality":2,"quality_warnings":[[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Natica of nidus","normalized":"Natica","canonical_name":{"value":"Natica","value_ranked":"Natica"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"uninomial":{"value":"Natica"}}],"positions":[["uninomial",0,6]]}
+6a049500-f407-56e7-80b4-41ab91f64b8c|Natica of nidus|Natica|Natica|||2
 
 Neritina chemmoi Reeve var of cornea Linn
-{"name_string_id":"d6cbded0-dc9b-5da2-8fb9-8d8b124cc5b4","parsed":false,"parser_version":"test_version","verbatim":"Neritina chemmoi Reeve var of cornea Linn","surrogate":false,"virus":false,"bacteria":false}
-d6cbded0-dc9b-5da2-8fb9-8d8b124cc5b4|Neritina chemmoi Reeve var of cornea Linn|||||1
+{"name_string_id":"d6cbded0-dc9b-5da2-8fb9-8d8b124cc5b4","parsed":true,"quality":2,"quality_warnings":[[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Neritina chemmoi Reeve var of cornea Linn","normalized":"Neritina chemmoi Reeve","canonical_name":{"value":"Neritina chemmoi","value_ranked":"Neritina chemmoi"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Neritina"},"specific_epithet":{"value":"chemmoi","authorship":{"value":"Reeve","basionym_authorship":{"authors":["Reeve"]}}}}],"positions":[["genus",0,8],["specific_epithet",9,16],["author_word",17,22]]}
+d6cbded0-dc9b-5da2-8fb9-8d8b124cc5b4|Neritina chemmoi Reeve var of cornea Linn|Neritina chemmoi|Neritina chemmoi|Reeve||2
 
 Wolbachia endosymbiont of Leptogenys gracilis
-{"name_string_id":"ed4bbf5e-068a-518a-8eb3-42ead52b941b","parsed":false,"parser_version":"test_version","verbatim":"Wolbachia endosymbiont of Leptogenys gracilis","surrogate":false,"virus":false,"bacteria":false}
-ed4bbf5e-068a-518a-8eb3-42ead52b941b|Wolbachia endosymbiont of Leptogenys gracilis|||||1
+{"name_string_id":"ed4bbf5e-068a-518a-8eb3-42ead52b941b","parsed":true,"quality":2,"quality_warnings":[[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Wolbachia endosymbiont of Leptogenys gracilis","normalized":"Wolbachia endosymbiont","canonical_name":{"value":"Wolbachia endosymbiont","value_ranked":"Wolbachia endosymbiont"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":true,"details":[{"genus":{"value":"Wolbachia"},"specific_epithet":{"value":"endosymbiont"}}],"positions":[["genus",0,9],["specific_epithet",10,22]]}
+ed4bbf5e-068a-518a-8eb3-42ead52b941b|Wolbachia endosymbiont of Leptogenys gracilis|Wolbachia endosymbiont|Wolbachia endosymbiont|||2
 #>
 
 ### Uninomials
@@ -1861,16 +1861,16 @@ Negalasa fumalis. Next sentence
 ce740482-fa87-5d84-b335-1c063fd18de1|Negalasa fumalis. Next sentence|Negalasa fumalis|Negalasa fumalis|||3
 
 Negalasa fumalis, continuation of a sentence
-{"name_string_id":"7862a3d9-ba4d-5f53-a106-ea048e558f1a","parsed":false,"parser_version":"test_version","verbatim":"Negalasa fumalis, continuation of a sentence","surrogate":false,"virus":false,"bacteria":false}
-7862a3d9-ba4d-5f53-a106-ea048e558f1a|Negalasa fumalis, continuation of a sentence|||||1
+{"name_string_id":"7862a3d9-ba4d-5f53-a106-ea048e558f1a","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"],[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Negalasa fumalis, continuation of a sentence","normalized":"Negalasa fumalis","canonical_name":{"value":"Negalasa fumalis","value_ranked":"Negalasa fumalis"},"hybrid":false,"surrogate":false,"unparsed_tail":", continuation","virus":false,"bacteria":false,"details":[{"genus":{"value":"Negalasa"},"specific_epithet":{"value":"fumalis"}}],"positions":[["genus",0,8],["specific_epithet",9,16]]}
+7862a3d9-ba4d-5f53-a106-ea048e558f1a|Negalasa fumalis, continuation of a sentence|Negalasa fumalis|Negalasa fumalis|||3
 
 Negalasa fumalis Barnes; something else
 {"name_string_id":"6359dac4-1a88-5b41-86d3-9c01aaee4a2e","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Negalasa fumalis Barnes; something else","normalized":"Negalasa fumalis Barnes","canonical_name":{"value":"Negalasa fumalis","value_ranked":"Negalasa fumalis"},"hybrid":false,"surrogate":false,"unparsed_tail":"; something else","virus":false,"bacteria":false,"details":[{"genus":{"value":"Negalasa"},"specific_epithet":{"value":"fumalis","authorship":{"value":"Barnes","basionym_authorship":{"authors":["Barnes"]}}}}],"positions":[["genus",0,8],["specific_epithet",9,16],["author_word",17,23]]}
 6359dac4-1a88-5b41-86d3-9c01aaee4a2e|Negalasa fumalis Barnes; something else|Negalasa fumalis|Negalasa fumalis|Barnes||3
 
 Negaprion brevirostris Negaprion brevirostris, the rest of the sentence
-{"name_string_id":"619b95fa-017d-5b9b-b800-64ebd5ed433b","parsed":false,"parser_version":"test_version","verbatim":"Negaprion brevirostris Negaprion brevirostris, the rest of the sentence","surrogate":false,"virus":false,"bacteria":false}
-619b95fa-017d-5b9b-b800-64ebd5ed433b|Negaprion brevirostris Negaprion brevirostris, the rest of the sentence|||||1
+{"name_string_id":"619b95fa-017d-5b9b-b800-64ebd5ed433b","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"],[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Negaprion brevirostris Negaprion brevirostris, the rest of the sentence","normalized":"Negaprion brevirostris Negaprion brevirostris","canonical_name":{"value":"Negaprion brevirostris brevirostris","value_ranked":"Negaprion brevirostris brevirostris"},"hybrid":false,"surrogate":false,"unparsed_tail":", the rest","virus":false,"bacteria":false,"details":[{"genus":{"value":"Negaprion"},"specific_epithet":{"value":"brevirostris","authorship":{"value":"Negaprion","basionym_authorship":{"authors":["Negaprion"]}}},"infraspecific_epithets":[{"value":"brevirostris"}]}],"positions":[["genus",0,9],["specific_epithet",10,22],["author_word",23,32],["infraspecific_epithet",33,45]]}
+619b95fa-017d-5b9b-b800-64ebd5ed433b|Negaprion brevirostris Negaprion brevirostris, the rest of the sentence|Negaprion brevirostris brevirostris|Negaprion brevirostris brevirostris|||3
 
 Negaprion fronto (Jordan and Gilbert, 1882):
 {"name_string_id":"4bb6a543-d757-5fa5-ae8b-a5ac95722e1d","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Negaprion fronto (Jordan and Gilbert, 1882):","normalized":"Negaprion fronto (Jordan & Gilbert 1882)","canonical_name":{"value":"Negaprion fronto","value_ranked":"Negaprion fronto"},"hybrid":false,"surrogate":false,"unparsed_tail":":","virus":false,"bacteria":false,"details":[{"genus":{"value":"Negaprion"},"specific_epithet":{"value":"fronto","authorship":{"value":"(Jordan & Gilbert 1882)","basionym_authorship":{"authors":["Jordan","Gilbert"],"year":{"value":"1882"}}}}}],"positions":[["genus",0,9],["specific_epithet",10,16],["author_word",18,24],["author_word",29,36],["year",38,42]]}
