@@ -144,21 +144,27 @@ class Parser(preprocessorResult: Preprocessor.Result,
     uninomialWord ~ (softSpace ~
       (subGenus ~> { Left(_: NodeMeta[SubGenus]) } |
        (subGenusOrSuperspecies ~> { Right(_: NodeMeta[SpeciesWord]) }))).? ~
-    softSpace ~ species ~ (space ~ infraspeciesGroup).? ~> {
+    softSpace ~ species ~ (space ~ comparison).? ~ (space ~ infraspeciesGroup).? ~> {
       (uwM: NodeMeta[UninomialWord],
        eitherGenusSuperspeciesM: Option[Either[NodeMeta[SubGenus], NodeMeta[SpeciesWord]]],
-       speciesM: NodeMeta[Species], maybeInfraspeciesGroupM: Option[NodeMeta[InfraspeciesGroup]]) =>
+       speciesM: NodeMeta[Species],
+       maybeComparisonM: Option[NodeMeta[Comparison]],
+       maybeInfraspeciesGroupM: Option[NodeMeta[InfraspeciesGroup]]) =>
          val uM1 = FactoryAST.uninomial(uwM)
          val name = eitherGenusSuperspeciesM match {
            case None => FactoryAST.name(uM1, species = speciesM.some,
+                                        comparison = maybeComparisonM,
                                         infraspecies = maybeInfraspeciesGroupM)
            case Some(Left(sgM)) =>
              FactoryAST.name(uM1, sgM.some, species = speciesM.some,
+                             comparison = maybeComparisonM,
                              infraspecies = maybeInfraspeciesGroupM)
            case Some(Right(ssM)) =>
              val nm = for { _ <- ssM; u1 <- uM1; species <- speciesM;
+                            cmp <- lift(maybeComparisonM);
                               infrOpt <- lift(maybeInfraspeciesGroupM) }
-                        yield Name(u1, species = species.some, infraspecies = infrOpt)
+                        yield Name(u1, comparison = cmp,
+                                   species = species.some, infraspecies = infrOpt)
              nm.changeWarningsRef((ssM.node, uM1.node))
          }
          name.changeWarningsRef((uwM.node, uM1.node))
