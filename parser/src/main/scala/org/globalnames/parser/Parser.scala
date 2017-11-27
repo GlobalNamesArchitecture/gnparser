@@ -316,7 +316,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
   }
 
   def capWord2: RuleNodeMeta[UninomialWord] = rule {
-    capWord1 ~ '-' ~ (capWord1 |
+    capWord1 ~ dash ~ (capWord1 |
                       word1 ~> { (w: CapturePosition) => FactoryAST.uninomialWord(w) }) ~> {
       (uwM: NodeMeta[UninomialWord], wM: NodeMeta[UninomialWord]) =>
         val uw1M = for { uw <- uwM; w <- wM }
@@ -552,7 +552,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
       (awM: NodeMeta[AuthorWord]) =>
         val word = input.sliceString(awM.node.pos.start, awM.node.pos.end)
         val authorIsUpperCase =
-          word.length > 2 && word.forall { ch => ch == '-' || authCharUpperStr.indexOf(ch) >= 0 }
+          word.length > 2 && word.forall { ch => ch == dash || authCharUpperStr.indexOf(ch) >= 0 }
         val warns = authorIsUpperCase.option { (2, "Author in upper case") }.toVector
         awM.add(warnings = warns)
     }
@@ -588,7 +588,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
   }
 
   def yearRange: RuleNodeMeta[Year] = rule {
-    yearNumber ~ '-' ~ capturePos(oneOrMore(Digit)) ~ zeroOrMore(Alpha ++ "?") ~> {
+    yearNumber ~ dash ~ capturePos(oneOrMore(Digit)) ~ zeroOrMore(Alpha ++ "?") ~> {
       (yStartM: NodeMeta[Year], yEnd: CapturePosition) =>
         val yrM = yStartM.map { yStart => yStart.copy(approximate = true, rangeEnd = Some(yEnd)) }
         yrM.add(warnings = Seq((3, "Years range")))
@@ -728,8 +728,8 @@ object Parser {
     }
   }
 
-  private final val word2sep = CharPredicate("." + dash)
   private final val dash = '-'
+  private final val word2sep = CharPredicate("." + dash)
   private final val spaceMiscoded = "　 \t\r\n\f_"
   private final val spaceChars = CharPredicate(" " + spaceMiscoded)
   private final val spaceCharsEOI = spaceChars ++ EOI ++ ";"
