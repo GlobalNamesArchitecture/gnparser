@@ -1057,6 +1057,29 @@ Methanosarcina barkeri str. fusaro
 b1d6747d-6aa3-5b7a-a8ed-7ca53c4b19ac|Methanosarcina barkeri str. fusaro|Methanosarcina barkeri|Methanosarcina barkeri|||2
 #>
 
+#SECTION: Abbreviated words after a name
+Graphis scripta L. a.b pulverulenta
+{"name_string_id":"ecb4751f-7d9e-5868-8ef7-c96f6ef07f2d","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Graphis scripta L. a.b pulverulenta","normalized":"Graphis scripta L.","canonical_name":{"value":"Graphis scripta","value_ranked":"Graphis scripta"},"hybrid":false,"surrogate":false,"unparsed_tail":" a.b pulverulenta","virus":false,"bacteria":false,"details":[{"genus":{"value":"Graphis"},"specific_epithet":{"value":"scripta","authorship":{"value":"L.","basionym_authorship":{"authors":["L."]}}}}],"positions":[["genus",0,7],["specific_epithet",8,15],["author_word",16,18]]}
+ecb4751f-7d9e-5868-8ef7-c96f6ef07f2d|Graphis scripta L. a.b pulverulenta|Graphis scripta|Graphis scripta|L.||3
+
+Cetraria iberica a.crespo & barreno
+{"name_string_id":"233626eb-645c-5ca0-bb8b-6f410a078a85","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Cetraria iberica a.crespo & barreno","normalized":"Cetraria iberica","canonical_name":{"value":"Cetraria iberica","value_ranked":"Cetraria iberica"},"hybrid":false,"surrogate":false,"unparsed_tail":" a.crespo & barreno","virus":false,"bacteria":false,"details":[{"genus":{"value":"Cetraria"},"specific_epithet":{"value":"iberica"}}],"positions":[["genus",0,8],["specific_epithet",9,16]]}
+233626eb-645c-5ca0-bb8b-6f410a078a85|Cetraria iberica a.crespo & barreno|Cetraria iberica|Cetraria iberica|||3
+
+Lecanora achariana a.l.sm.
+{"name_string_id":"4393f813-14e9-5a26-aab0-bf7686463c6a","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Lecanora achariana a.l.sm.","normalized":"Lecanora achariana","canonical_name":{"value":"Lecanora achariana","value_ranked":"Lecanora achariana"},"hybrid":false,"surrogate":false,"unparsed_tail":" a.l.sm.","virus":false,"bacteria":false,"details":[{"genus":{"value":"Lecanora"},"specific_epithet":{"value":"achariana"}}],"positions":[["genus",0,8],["specific_epithet",9,18]]}
+4393f813-14e9-5a26-aab0-bf7686463c6a|Lecanora achariana a.l.sm.|Lecanora achariana|Lecanora achariana|||3
+
+Arthrosporum populorum a.massal.
+{"name_string_id":"88db792d-7061-512d-9275-b7fe81493665","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Arthrosporum populorum a.massal.","normalized":"Arthrosporum populorum","canonical_name":{"value":"Arthrosporum populorum","value_ranked":"Arthrosporum populorum"},"hybrid":false,"surrogate":false,"unparsed_tail":" a.massal.","virus":false,"bacteria":false,"details":[{"genus":{"value":"Arthrosporum"},"specific_epithet":{"value":"populorum"}}],"positions":[["genus",0,12],["specific_epithet",13,22]]}
+88db792d-7061-512d-9275-b7fe81493665|Arthrosporum populorum a.massal.|Arthrosporum populorum|Arthrosporum populorum|||3
+
+Eletica laeviceps ab.lateapicalis Pic
+{"name_string_id":"12389c9a-7aaf-56d1-8b8a-dffd4b74c58f","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Eletica laeviceps ab.lateapicalis Pic","normalized":"Eletica laeviceps","canonical_name":{"value":"Eletica laeviceps","value_ranked":"Eletica laeviceps"},"hybrid":false,"surrogate":false,"unparsed_tail":" ab.lateapicalis Pic","virus":false,"bacteria":false,"details":[{"genus":{"value":"Eletica"},"specific_epithet":{"value":"laeviceps"}}],"positions":[["genus",0,7],["specific_epithet",8,17]]}
+12389c9a-7aaf-56d1-8b8a-dffd4b74c58f|Eletica laeviceps ab.lateapicalis Pic|Eletica laeviceps|Eletica laeviceps|||3
+#>
+
+
 #SECTION: unparseable hort. annotations <
 Asplenium mayi ht.May; Gard.
 {"name_string_id":"74446da2-14ce-5951-95c6-054d29417131","parsed":true,"quality":2,"quality_warnings":[[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Asplenium mayi ht.May; Gard.","normalized":"Asplenium mayi","canonical_name":{"value":"Asplenium mayi","value_ranked":"Asplenium mayi"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Asplenium"},"specific_epithet":{"value":"mayi"}}],"positions":[["genus",0,9],["specific_epithet",10,14]]}
