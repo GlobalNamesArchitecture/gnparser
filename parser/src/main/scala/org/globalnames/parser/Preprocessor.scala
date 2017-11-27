@@ -59,7 +59,7 @@ object Preprocessor {
   }
 
   private val virusPatterns =
-    """(?ix)\b
+    """(?ix)(\b|\d)
       (ictv
       |[a-z]*virus(es)?
       |particles?

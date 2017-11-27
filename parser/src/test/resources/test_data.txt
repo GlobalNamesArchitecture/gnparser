@@ -1485,6 +1485,10 @@ Coleoptera Bold:AAV0432
 ### Viruses etc.
 
 #SECTION: No parsing -- viruses, plasmids, prions etc.<
+Arv1virus
+{"name_string_id":"25c7c012-6600-5073-8e8f-81fbcf841a66","parsed":false,"parser_version":"test_version","verbatim":"Arv1virus","surrogate":false,"virus":true,"bacteria":false}
+25c7c012-6600-5073-8e8f-81fbcf841a66|Arv1virus|||||1
+
 Turtle herpesviruses
 {"name_string_id":"44dc4404-0bb8-5eaa-b401-1609d98d3b30","parsed":false,"parser_version":"test_version","verbatim":"Turtle herpesviruses","surrogate":false,"virus":true,"bacteria":false}
 44dc4404-0bb8-5eaa-b401-1609d98d3b30|Turtle herpesviruses|||||1
