@@ -31,7 +31,7 @@ object Preprocessor {
     val lastWordJunk = """(?ix)(,\s*|\s+)
                           (var\.?|von|van|ined\.?|
                           sensu|new|non|nec|nudum|
-                          ssp\.?|subsp|subgen|hybrid|hort\.?|cf\.?)\??\s*$"""
+                          ssp\.?|subsp|subgen|hybrid|cf\.?)\??\s*$"""
     object PatternCompile extends Poly1 {
       implicit def default = at[String] { x => Pattern.compile(x) }
     }
@@ -95,7 +95,10 @@ object Preprocessor {
   }
 
   private final val comparisonPattern = """(?ix)(,\s*|\s+)cf\.?\s*$""".r
-  private final val stopWordsPattern = """(?ix)\s*\bof.*$""".r
+  private final val stopWordsPattern =
+    """(?ix)\s+(of
+               |\(?ht\.?[^\w]
+               |\(?hort\.?[^\w]).*$""".r
 
   def process(input: String): Result = {
     val UNESCAPE_HTML4 = new TrackingPositionsUnescapeHtml4Translator
