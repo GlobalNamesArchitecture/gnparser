@@ -1738,6 +1738,40 @@ Oxalis_barrelieri
 c57de7fd-b94e-54e1-a856-72b0668ab818|Oxalis_barrelieri  |Oxalis barrelieri|Oxalis barrelieri|||3
 #>
 
+#SECTION: numbers at the start/middle of names<
+Nesomyrmex madecassus_01m
+{"name_string_id":"30dd0028-1ad4-5f65-ba5e-3df4963825d2","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Nesomyrmex madecassus_01m","normalized":"Nesomyrmex madecassus","canonical_name":{"value":"Nesomyrmex madecassus","value_ranked":"Nesomyrmex madecassus"},"hybrid":false,"surrogate":false,"unparsed_tail":"_01m","virus":false,"bacteria":false,"details":[{"genus":{"value":"Nesomyrmex"},"specific_epithet":{"value":"madecassus"}}],"positions":[["genus",0,10],["specific_epithet",11,21]]}
+30dd0028-1ad4-5f65-ba5e-3df4963825d2|Nesomyrmex madecassus_01m|Nesomyrmex madecassus|Nesomyrmex madecassus|||3
+
+Hypochrys0des
+{"name_string_id":"859c6279-20ea-5e60-9b7d-0c5283e06377","parsed":false,"parser_version":"test_version","verbatim":"Hypochrys0des","surrogate":false,"virus":false,"bacteria":false}
+859c6279-20ea-5e60-9b7d-0c5283e06377|Hypochrys0des|||||1
+
+Hypochrys0des Leraut 1981
+{"name_string_id":"c053bbbf-de6c-5b22-a0f9-0803093b9b2d","parsed":false,"parser_version":"test_version","verbatim":"Hypochrys0des Leraut 1981","surrogate":false,"virus":false,"bacteria":false}
+c053bbbf-de6c-5b22-a0f9-0803093b9b2d|Hypochrys0des Leraut 1981|||||1
+
+Phyllodoce mucosa 0ersted, 1843
+{"name_string_id":"52695b7b-ebef-5624-9ccf-f9d07cd8133c","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Phyllodoce mucosa 0ersted, 1843","normalized":"Phyllodoce mucosa","canonical_name":{"value":"Phyllodoce mucosa","value_ranked":"Phyllodoce mucosa"},"hybrid":false,"surrogate":false,"unparsed_tail":" 0ersted, 1843","virus":false,"bacteria":false,"details":[{"genus":{"value":"Phyllodoce"},"specific_epithet":{"value":"mucosa"}}],"positions":[["genus",0,10],["specific_epithet",11,17]]}
+52695b7b-ebef-5624-9ccf-f9d07cd8133c|Phyllodoce mucosa 0ersted, 1843|Phyllodoce mucosa|Phyllodoce mucosa|||3
+
+Attelabus 0l.
+{"name_string_id":"b9edee54-a7ae-525a-a319-ffeed18cf88a","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Attelabus 0l.","normalized":"Attelabus","canonical_name":{"value":"Attelabus","value_ranked":"Attelabus"},"hybrid":false,"surrogate":false,"unparsed_tail":" 0l.","virus":false,"bacteria":false,"details":[{"uninomial":{"value":"Attelabus"}}],"positions":[["uninomial",0,9]]}
+b9edee54-a7ae-525a-a319-ffeed18cf88a|Attelabus 0l.|Attelabus|Attelabus|||3
+
+Acrobothrium 0lsson 1872
+{"name_string_id":"2edfbcca-af28-5498-a762-663e5d5b9f73","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Acrobothrium 0lsson 1872","normalized":"Acrobothrium","canonical_name":{"value":"Acrobothrium","value_ranked":"Acrobothrium"},"hybrid":false,"surrogate":false,"unparsed_tail":" 0lsson 1872","virus":false,"bacteria":false,"details":[{"uninomial":{"value":"Acrobothrium"}}],"positions":[["uninomial",0,12]]}
+2edfbcca-af28-5498-a762-663e5d5b9f73|Acrobothrium 0lsson 1872|Acrobothrium|Acrobothrium|||3
+
+Staphylinus haemrrhoidalis 0l. nec Gmel
+{"name_string_id":"3ef602da-08a5-5acf-8f8a-9c515373ccda","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Staphylinus haemrrhoidalis 0l. nec Gmel","normalized":"Staphylinus haemrrhoidalis","canonical_name":{"value":"Staphylinus haemrrhoidalis","value_ranked":"Staphylinus haemrrhoidalis"},"hybrid":false,"surrogate":false,"unparsed_tail":" 0l. nec Gmel","virus":false,"bacteria":false,"details":[{"genus":{"value":"Staphylinus"},"specific_epithet":{"value":"haemrrhoidalis"}}],"positions":[["genus",0,11],["specific_epithet",12,26]]}
+3ef602da-08a5-5acf-8f8a-9c515373ccda|Staphylinus haemrrhoidalis 0l. nec Gmel|Staphylinus haemrrhoidalis|Staphylinus haemrrhoidalis|||3
+
+Ea92virus
+{"name_string_id":"2465682c-cd5c-5408-859b-8bcc5489125f","parsed":false,"parser_version":"test_version","verbatim":"Ea92virus","surrogate":false,"virus":false,"bacteria":false}
+2465682c-cd5c-5408-859b-8bcc5489125f|Ea92virus|||||1
+#>
+
 #SECTION: Year without authorship<
 #TODO: collect year information
 Acarospora cratericola 1929
