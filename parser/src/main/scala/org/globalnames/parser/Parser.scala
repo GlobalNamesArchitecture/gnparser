@@ -537,7 +537,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
   }
 
   def unknownAuthor: RuleNodeMeta[Author] = rule {
-    capturePos("?" | (("auct" | "anon" | "ht" | "hort") ~ (&(spaceCharsEOI) | '.'))) ~> {
+    capturePos("?" | (("auct" | "anon") ~ (&(spaceCharsEOI) | '.'))) ~> {
       (authPos: CapturePosition) =>
         val endsWithQuestion = input.charAt(authPos.end - 1) == '?'
         val warns = Vector((2, "Author is unknown").some,
