@@ -144,7 +144,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
     uninomialWord ~ (softSpace ~
       (subGenus ~> { Left(_: NodeMeta[SubGenus]) } |
        (subGenusOrSuperspecies ~> { Right(_: NodeMeta[SpeciesWord]) }))).? ~
-    softSpace ~ species ~ (space ~ comparison).? ~ (space ~ infraspeciesGroup).? ~> {
+    space ~ species ~ (space ~ comparison).? ~ (space ~ infraspeciesGroup).? ~> {
       (uwM: NodeMeta[UninomialWord],
        eitherGenusSuperspeciesM: Option[Either[NodeMeta[SubGenus], NodeMeta[SpeciesWord]]],
        speciesM: NodeMeta[Species],
@@ -332,7 +332,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
   }
 
   def word: RuleNodeMeta[SpeciesWord] = rule {
-    !(authorPrefix | rankUninomial | approximation) ~ (word3 | word2 | word1) ~
+    !(authorPrefix | rankUninomial | approximation) ~ (word3 | word2StartDigit | word2 | word1) ~
     &(spaceCharsEOI ++ "().,:;") ~> {
       (pos: CapturePosition) =>
         val word = input.sliceString(pos.start, pos.end)
@@ -351,9 +351,15 @@ class Parser(preprocessorResult: Preprocessor.Result,
     capturePos((LowerAlpha ~ dash).? ~ oneOrMore(lowerChar))
   }
 
+  def word2StartDigit: Rule1[CapturePosition] = rule {
+    capturePos(digitNonZero ~ Digit.?) ~ word2sep.? ~
+      3.times(lowerChar) ~ capturePos(oneOrMore(lowerChar)) ~> {
+      (p1: CapturePosition, p2: CapturePosition) => CapturePosition(p1.start, p2.end)
+    }
+  }
+
   def word2: Rule1[CapturePosition] = rule {
-    capturePos(oneOrMore(lowerChar) | (1 to 2).times(CharPredicate(Digit))) ~
-      word2sep.? ~ word1 ~> {
+    capturePos(oneOrMore(lowerChar)) ~ dash.? ~ word1 ~> {
         (p1: CapturePosition, p2: CapturePosition) => CapturePosition(p1.start, p2.end)
     }
   }
@@ -728,6 +734,7 @@ object Parser {
     }
   }
 
+  private final val digitNonZero = Digit -- "0"
   private final val dash = '-'
   private final val word2sep = CharPredicate("." + dash)
   private final val spaceMiscoded = "　 \t\r\n\f_"
