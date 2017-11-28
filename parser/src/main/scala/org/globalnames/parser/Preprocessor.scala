@@ -95,7 +95,7 @@ object Preprocessor {
   }
 
   private final val comparisonPattern = """(?ix)(,\s*|\s+)cf\.?\s*$""".r
-  private final val stopWordsPattern = """(?ix)\s*\bof.*$""".r
+  private final val stopWordsPattern = """(?ix)\s*\b(of|spec\.|nov\s+spec).*$""".r
 
   def process(input: String): Result = {
     val UNESCAPE_HTML4 = new TrackingPositionsUnescapeHtml4Translator
