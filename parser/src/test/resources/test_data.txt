@@ -500,6 +500,19 @@ Caulerpa fastigiata confervoides P. L. Crouan & H. M. Crouan ex Weber-van Bosse
 #>
 
 #SECTION: Infraspecies with rank (ICN)<
+Crematogaster impressa st. brazzai Santschi 1937
+{"name_string_id":"853d0cff-b499-5d38-ae49-75b558f9ddf0","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Crematogaster impressa st. brazzai Santschi 1937","normalized":"Crematogaster impressa st. brazzai Santschi 1937","canonical_name":{"value":"Crematogaster impressa brazzai","value_ranked":"Crematogaster impressa st. brazzai"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Crematogaster"},"specific_epithet":{"value":"impressa"},"infraspecific_epithets":[{"value":"brazzai","rank":"st.","authorship":{"value":"Santschi 1937","basionym_authorship":{"authors":["Santschi"],"year":{"value":"1937"}}}}]}],"positions":[["genus",0,13],["specific_epithet",14,22],["rank",23,26],["infraspecific_epithet",27,34],["author_word",35,43],["year",44,48]]}
+853d0cff-b499-5d38-ae49-75b558f9ddf0|Crematogaster impressa st. brazzai Santschi 1937|Crematogaster impressa brazzai|Crematogaster impressa st. brazzai|Santschi 1937|1937|1
+
+# badly formed name, we do not deal with it for now
+Cibotium st.-johnii Krajina
+{"name_string_id":"6b34256d-6c3b-5870-a781-77eeac49b6c4","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Cibotium st.-johnii Krajina","normalized":"Cibotium st","canonical_name":{"value":"Cibotium st","value_ranked":"Cibotium st"},"hybrid":false,"surrogate":false,"unparsed_tail":".-johnii Krajina","virus":false,"bacteria":false,"details":[{"genus":{"value":"Cibotium"},"specific_epithet":{"value":"st"}}],"positions":[["genus",0,8],["specific_epithet",9,11]]}
+6b34256d-6c3b-5870-a781-77eeac49b6c4|Cibotium st.-johnii Krajina|Cibotium st|Cibotium st|||3
+
+Camponotus conspicuus st. zonatus
+{"name_string_id":"67364c72-53e0-54d3-9795-f04fd1938d75","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Camponotus conspicuus st. zonatus","normalized":"Camponotus conspicuus st. zonatus","canonical_name":{"value":"Camponotus conspicuus zonatus","value_ranked":"Camponotus conspicuus st. zonatus"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Camponotus"},"specific_epithet":{"value":"conspicuus"},"infraspecific_epithets":[{"value":"zonatus","rank":"st."}]}],"positions":[["genus",0,10],["specific_epithet",11,21],["rank",22,25],["infraspecific_epithet",26,33]]}
+67364c72-53e0-54d3-9795-f04fd1938d75|Camponotus conspicuus st. zonatus|Camponotus conspicuus zonatus|Camponotus conspicuus st. zonatus|||1
+
 Fagus sylvatica subsp. orientalis (Lipsky) Greuter & Burdet
 {"name_string_id":"f0bff1a3-0923-58d1-807f-c5da5b85531e","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Fagus sylvatica subsp. orientalis (Lipsky) Greuter & Burdet","normalized":"Fagus sylvatica ssp. orientalis (Lipsky) Greuter & Burdet","canonical_name":{"value":"Fagus sylvatica orientalis","value_ranked":"Fagus sylvatica ssp. orientalis"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Fagus"},"specific_epithet":{"value":"sylvatica"},"infraspecific_epithets":[{"value":"orientalis","rank":"ssp.","authorship":{"value":"(Lipsky) Greuter & Burdet","basionym_authorship":{"authors":["Lipsky"]},"combination_authorship":{"authors":["Greuter","Burdet"]}}}]}],"positions":[["genus",0,5],["specific_epithet",6,15],["rank",16,22],["infraspecific_epithet",23,33],["author_word",35,41],["author_word",43,50],["author_word",53,59]]}
 f0bff1a3-0923-58d1-807f-c5da5b85531e|Fagus sylvatica subsp. orientalis (Lipsky) Greuter & Burdet|Fagus sylvatica orientalis|Fagus sylvatica ssp. orientalis|(Lipsky) Greuter & Burdet||1
@@ -608,6 +621,14 @@ Calicium furfuraceum * furfuraceum (L.) Pers. 1797
 Polyrhachis orsyllus nat musculus Forel 1901
 {"name_string_id":"3392132e-3dba-5b7e-a7c9-e4a68954c8b2","parsed":true,"quality":3,"quality_warnings":[[3,"Uncommon rank"]],"parser_version":"test_version","verbatim":"Polyrhachis orsyllus nat musculus Forel 1901","normalized":"Polyrhachis orsyllus nat musculus Forel 1901","canonical_name":{"value":"Polyrhachis orsyllus musculus","value_ranked":"Polyrhachis orsyllus nat musculus"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Polyrhachis"},"specific_epithet":{"value":"orsyllus"},"infraspecific_epithets":[{"value":"musculus","rank":"nat","authorship":{"value":"Forel 1901","basionym_authorship":{"authors":["Forel"],"year":{"value":"1901"}}}}]}],"positions":[["genus",0,11],["specific_epithet",12,20],["rank",21,24],["infraspecific_epithet",25,33],["author_word",34,39],["year",40,44]]}
 3392132e-3dba-5b7e-a7c9-e4a68954c8b2|Polyrhachis orsyllus nat musculus Forel 1901|Polyrhachis orsyllus musculus|Polyrhachis orsyllus nat musculus|Forel 1901|1901|3
+
+Acidalia remutaria ab. n. undularia
+{"name_string_id":"ac834e3e-b861-5fbf-9cf9-197ad3effb99","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Acidalia remutaria ab. n. undularia","normalized":"Acidalia remutaria ab. n. undularia","canonical_name":{"value":"Acidalia remutaria undularia","value_ranked":"Acidalia remutaria ab. n. undularia"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Acidalia"},"specific_epithet":{"value":"remutaria"},"infraspecific_epithets":[{"value":"undularia","rank":"ab. n."}]}],"positions":[["genus",0,8],["specific_epithet",9,18],["rank",19,25],["infraspecific_epithet",26,35]]}
+ac834e3e-b861-5fbf-9cf9-197ad3effb99|Acidalia remutaria ab. n. undularia|Acidalia remutaria undularia|Acidalia remutaria ab. n. undularia|||1
+
+Acmaeops (Pseudodinoptera) bivittata ab. fusciceps Aurivillius, 1912
+{"name_string_id":"3f3dfc38-f660-56d6-a4f8-568f84a6878a","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Acmaeops (Pseudodinoptera) bivittata ab. fusciceps Aurivillius, 1912","normalized":"Acmaeops (Pseudodinoptera) bivittata ab. fusciceps Aurivillius 1912","canonical_name":{"value":"Acmaeops bivittata fusciceps","value_ranked":"Acmaeops bivittata ab. fusciceps"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Acmaeops"},"specific_epithet":{"value":"bivittata"},"infrageneric_epithet":{"value":"Pseudodinoptera"},"infraspecific_epithets":[{"value":"fusciceps","rank":"ab.","authorship":{"value":"Aurivillius 1912","basionym_authorship":{"authors":["Aurivillius"],"year":{"value":"1912"}}}}]}],"positions":[["genus",0,8],["infrageneric_epithet",10,25],["specific_epithet",27,36],["rank",37,40],["infraspecific_epithet",41,50],["author_word",51,62],["year",64,68]]}
+3f3dfc38-f660-56d6-a4f8-568f84a6878a|Acmaeops (Pseudodinoptera) bivittata ab. fusciceps Aurivillius, 1912|Acmaeops bivittata fusciceps|Acmaeops bivittata ab. fusciceps|Aurivillius 1912|1912|1
 #>
 
 #SECTION: Infraspecies_multiple (ICN)<
@@ -1757,7 +1778,7 @@ Xanthomonas axonopodis pv.
 
 ### Miscellaneous Inconsistencies
 
-#SECTION: Names with spec., nov spec
+#SECTION: Names with spec., nov spec<
 Lampona spec Platnick, 2000
 {"name_string_id":"d05d7916-4868-57f6-a97b-c46886f29cd8","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Lampona spec Platnick, 2000","normalized":"Lampona spec Platnick 2000","canonical_name":{"value":"Lampona spec","value_ranked":"Lampona spec"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Lampona"},"specific_epithet":{"value":"spec","authorship":{"value":"Platnick 2000","basionym_authorship":{"authors":["Platnick"],"year":{"value":"2000"}}}}}],"positions":[["genus",0,7],["specific_epithet",8,12],["author_word",13,21],["year",23,27]]}
 d05d7916-4868-57f6-a97b-c46886f29cd8|Lampona spec Platnick, 2000|Lampona spec|Lampona spec|Platnick 2000|2000|1
@@ -1972,6 +1993,19 @@ Negaprion fronto (Jordan and Gilbert, 1882):
 4bb6a543-d757-5fa5-ae8b-a5ac95722e1d|Negaprion fronto (Jordan and Gilbert, 1882):|Negaprion fronto|Negaprion fronto|(Jordan & Gilbert 1882)|1882|3
 #>
 
+#SECTION names with 'ex' as sp. epithet<
+
+# not dealing with this misspelling...
+Acanthochiton ex quisitus
+{"name_string_id":"00392ae2-1bd9-5a14-bea9-9d26f1107892","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Acanthochiton ex quisitus","normalized":"Acanthochiton ex quisitus","canonical_name":{"value":"Acanthochiton ex quisitus","value_ranked":"Acanthochiton ex quisitus"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Acanthochiton"},"specific_epithet":{"value":"ex"},"infraspecific_epithets":[{"value":"quisitus"}]}],"positions":[["genus",0,13],["specific_epithet",14,16],["infraspecific_epithet",17,25]]}
+00392ae2-1bd9-5a14-bea9-9d26f1107892|Acanthochiton ex quisitus|Acanthochiton ex quisitus|Acanthochiton ex quisitus|||1
+
+# not dealing with ex. gr for now
+Acastella ex gr. rouaulti
+{"name_string_id":"c1864b52-848a-5de7-8f2d-a3cfe2025c40","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Acastella ex gr. rouaulti","normalized":"Acastella ex gr","canonical_name":{"value":"Acastella ex gr","value_ranked":"Acastella ex gr"},"hybrid":false,"surrogate":false,"unparsed_tail":". rouaulti","virus":false,"bacteria":false,"details":[{"genus":{"value":"Acastella"},"specific_epithet":{"value":"ex"},"infraspecific_epithets":[{"value":"gr"}]}],"positions":[["genus",0,9],["specific_epithet",10,12],["infraspecific_epithet",13,15]]}
+c1864b52-848a-5de7-8f2d-a3cfe2025c40|Acastella ex gr. rouaulti|Acastella ex gr|Acastella ex gr|||3
+#>
+
 ### Unparseable Tail
 
 #SECTION: Names with unparsed_tail at the end<
@@ -2068,7 +2102,7 @@ Abryna petri- Paiva, 1860
 b1e37ace-3ca8-5274-bd93-7333aa3e5223|Abryna petri- Paiva, 1860|Abryna|Abryna|||3
 #>
 
-#Section: names that contain "of"<
+#SECTION: names that contain "of"<
 Musca capraria Trustees of the British Museum (Natural History), 1939
 {"name_string_id":"aa70cf4b-14bb-57a3-9fe1-0a9a544a16da","parsed":true,"quality":2,"quality_warnings":[[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Musca capraria Trustees of the British Museum (Natural History), 1939","normalized":"Musca capraria Trustees","canonical_name":{"value":"Musca capraria","value_ranked":"Musca capraria"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Musca"},"specific_epithet":{"value":"capraria","authorship":{"value":"Trustees","basionym_authorship":{"authors":["Trustees"]}}}}],"positions":[["genus",0,5],["specific_epithet",6,14],["author_word",15,23]]}
 aa70cf4b-14bb-57a3-9fe1-0a9a544a16da|Musca capraria Trustees of the British Museum (Natural History), 1939|Musca capraria|Musca capraria|Trustees||2
@@ -2090,9 +2124,24 @@ Wolbachia endosymbiont of Leptogenys gracilis
 ed4bbf5e-068a-518a-8eb3-42ead52b941b|Wolbachia endosymbiont of Leptogenys gracilis|Wolbachia endosymbiont|Wolbachia endosymbiont|||2
 #>
 
+#SECTION: names that contain "cv" (cultivar)<
+
+Phyllostachys vivax cv aureocaulis
+{"name_string_id":"56f7057d-9c5c-5ac7-bc7a-f631fb58f5d6","parsed":true,"quality":2,"quality_warnings":[[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Phyllostachys vivax cv aureocaulis","normalized":"Phyllostachys vivax","canonical_name":{"value":"Phyllostachys vivax","value_ranked":"Phyllostachys vivax"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Phyllostachys"},"specific_epithet":{"value":"vivax"}}],"positions":[["genus",0,13],["specific_epithet",14,19]]}
+56f7057d-9c5c-5ac7-bc7a-f631fb58f5d6|Phyllostachys vivax cv aureocaulis|Phyllostachys vivax|Phyllostachys vivax|||2
+
+Rhododendron cv Cilpinense
+{"name_string_id":"abd299df-e4b2-533c-86eb-a4a5e273b934","parsed":true,"quality":2,"quality_warnings":[[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Rhododendron cv Cilpinense","normalized":"Rhododendron","canonical_name":{"value":"Rhododendron","value_ranked":"Rhododendron"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"uninomial":{"value":"Rhododendron"}}],"positions":[["uninomial",0,12]]}
+abd299df-e4b2-533c-86eb-a4a5e273b934|Rhododendron cv Cilpinense|Rhododendron|Rhododendron|||2
+
+Ligusticum sinense cv 'chuanxiong' S.H. Qiu & et al.
+{"name_string_id":"73f015c2-6679-5428-b418-6f4487af419d","parsed":true,"quality":2,"quality_warnings":[[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Ligusticum sinense cv 'chuanxiong' S.H. Qiu & et al.","normalized":"Ligusticum sinense","canonical_name":{"value":"Ligusticum sinense","value_ranked":"Ligusticum sinense"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Ligusticum"},"specific_epithet":{"value":"sinense"}}],"positions":[["genus",0,10],["specific_epithet",11,18]]}
+73f015c2-6679-5428-b418-6f4487af419d|Ligusticum sinense cv 'chuanxiong' S.H. Qiu & et al.|Ligusticum sinense|Ligusticum sinense|||2
+#>
+
 ### Unparseable
 
-# SECTION: No parsing -- Genera abbreviated to 3 letters (too rare)<
+#SECTION: No parsing -- Genera abbreviated to 3 letters (too rare)<
 Gen. et n. sp. Kaimatira Pumice Sand, Marton N ~1 Ma
 {"name_string_id":"54d27b31-2fbd-56e1-85e1-1438970f8953","parsed":false,"parser_version":"test_version","verbatim":"Gen. et n. sp. Kaimatira Pumice Sand, Marton N ~1 Ma","surrogate":false,"virus":false,"bacteria":false}
 54d27b31-2fbd-56e1-85e1-1438970f8953|Gen. et n. sp. Kaimatira Pumice Sand, Marton N ~1 Ma|||||1

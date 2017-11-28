@@ -100,7 +100,8 @@ object Preprocessor {
                |\(?ht\.?[^\w]
                |\(?hort\.?[^\w]
                |spec\.
-               |nov\s+spec).*$""".r
+               |nov\s+spec
+               |cv).*$""".r
 
   def process(input: String): Result = {
     val UNESCAPE_HTML4 = new TrackingPositionsUnescapeHtml4Translator
