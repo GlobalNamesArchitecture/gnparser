@@ -332,8 +332,8 @@ class Parser(preprocessorResult: Preprocessor.Result,
   }
 
   def word: RuleNodeMeta[SpeciesWord] = rule {
-    !(authorPrefix | rankUninomial | approximation) ~ (word3 | word2StartDigit | word2 | word1) ~
-    &(spaceCharsEOI ++ "().,:;") ~> {
+    !(authorPrefix | rankUninomial | approximation | word4) ~
+      (word3 | word2StartDigit | word2 | word1) ~ &(spaceCharsEOI ++ "().,:;") ~> {
       (pos: CapturePosition) =>
         val word = input.sliceString(pos.start, pos.end)
         val warns = Vector(
@@ -347,25 +347,27 @@ class Parser(preprocessorResult: Preprocessor.Result,
     }
   }
 
+  def word4: Rule0 = rule {
+    oneOrMore(lowerChar) ~ '.' ~ lowerChar
+  }
+
   def word1: Rule1[CapturePosition] = rule {
-    capturePos((LowerAlpha ~ dash).? ~ oneOrMore(lowerChar))
+    capturePos((LowerAlpha ~ dash).? ~ lowerChar ~ oneOrMore(lowerChar))
   }
 
   def word2StartDigit: Rule1[CapturePosition] = rule {
-    capturePos(digitNonZero ~ Digit.?) ~ word2sep.? ~
+    capturePos(digitNonZero) ~ Digit.? ~ word2sep.? ~
       3.times(lowerChar) ~ capturePos(oneOrMore(lowerChar)) ~> {
       (p1: CapturePosition, p2: CapturePosition) => CapturePosition(p1.start, p2.end)
     }
   }
 
   def word2: Rule1[CapturePosition] = rule {
-    capturePos(oneOrMore(lowerChar)) ~ dash.? ~ word1 ~> {
-        (p1: CapturePosition, p2: CapturePosition) => CapturePosition(p1.start, p2.end)
-    }
+    capturePos(oneOrMore(lowerChar) ~ dash.? ~ oneOrMore(lowerChar))
   }
 
   def word3: Rule1[CapturePosition] = rule {
-    capturePos(oneOrMore(lowerChar)) ~ apostr ~ word1 ~> {
+    capturePos(lowerChar) ~ zeroOrMore(lowerChar) ~ apostr ~ word1 ~> {
       (p1: CapturePosition, p2: CapturePosition) => CapturePosition(p1.start, p2.end)
     }
   }
