@@ -31,7 +31,7 @@ object Preprocessor {
     val lastWordJunk = """(?ix)(,\s*|\s+)
                           (var\.?|von|van|ined\.?|
                           sensu|new|non|nec|nudum|
-                          ssp\.?|subsp|subgen|hybrid|cf\.?)\??\s*$"""
+                          ssp\.?|subsp|subgen|hybrid)\??\s*$"""
     object PatternCompile extends Poly1 {
       implicit def default = at[String] { x => Pattern.compile(x) }
     }
