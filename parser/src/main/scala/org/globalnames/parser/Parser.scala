@@ -220,7 +220,8 @@ class Parser(preprocessorResult: Preprocessor.Result,
   def rankOther: RuleNodeMeta[Rank] = rule {
     capturePos("morph." | "nothosubsp." | "convar." | "pseudovar." | "sect." | "ser." | "subvar." |
                "subf." | "race" | "α" | "ββ" | "β" | "γ" | "δ" | "ε" | "φ" | "θ" | "μ" | "a." |
-               "b." | "c." | "d." | "e." | "g." | "k." | "pv." | "pathovar.") ~
+               "b." | "c." | "d." | "e." | "g." | "k." | "pv." | "pathovar." |
+               ("ab." ~ (softSpace ~ "n.").?) | "st.") ~
       &(spaceCharsEOI) ~> { (p: CapturePosition) => FactoryAST.rank(p) }
   }
 
@@ -584,7 +585,8 @@ class Parser(preprocessorResult: Preprocessor.Result,
 
   def authorPrefix: RuleNodeMeta[AuthorWord] = rule {
     capturePos((("ab" | "af" | "bis" | "da" | "der" | "des" | "den" | "della" | "dela" | "de" |
-                 "di" | "du" | "el" | "la" | "le" | "ter" | "van" | ("von" ~ (space ~ "dem").?) |
+                 "di" | "du" | "el" | "la" | "le" | "ter" | "van" |
+                 ("von" ~ (space ~ "dem").?) |
                  ("v" ~ (space ~ "d").?) | "d'" | "in't") ~ &(spaceCharsEOI)) |
       ("v." ~ (space.? ~ "d.").?) | "'t") ~> {
       (pos: CapturePosition) => FactoryAST.authorWord(pos)
