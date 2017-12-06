@@ -5,7 +5,7 @@ val scalaV12 = "2.12.4"
 
 val commonSettings = Seq(
   version := {
-    val version = "0.4.2"
+    val version = "0.4.3"
     val release = sys.props.isDefinedAt("release")
     if (release) version
     else version + sys.props.get("buildNumber").map { "-" + _ }.getOrElse("") + "-SNAPSHOT"

@@ -1,3 +1,21 @@
+Version 0.4.3 (2017-12-06)
+--------------------------
+
+- Fix #396: don’t parse forbidden strings
+- Fix #403: fix viruses patterns
+- Fix #404: handle ‘le’ as author prefix
+- Fix #402: don’t parse name with ‘of’ word inside (#417)
+- Fix #248: handle sp. correctly (#419)
+- Fix #405: handle `ht` and `hort`
+- Fix #415: don’t parse `spec.` and `nov spec` (#424)
+- Fix #408: fix virus pattern (#423)
+- Fix #399: fix handling numbers in beginning of word
+- Fix #400: don’t parse epithets with ‘.’
+- Fix #401: add more ranks and two-letter abbreviations
+- Fix #426: cleanup redundant comparison
+- improve speed of Util object
+- bugs fixes (#380)
+
 Version 0.4.2 (2017-09-28)
 --------------------------
 
