@@ -22,6 +22,12 @@
 # "parsed: false"
 ####
 
+# TODO<
+Impatiens nomenyae Eb.Fisch. & Raheliv.
+{"name_string_id":"6452d4ac-738b-5773-8d69-50232e2842a1","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Impatiens nomenyae Eb.Fisch. & Raheliv.","normalized":"Impatiens nomenyae Eb. Fisch. & Raheliv.","canonical_name":{"value":"Impatiens nomenyae","value_ranked":"Impatiens nomenyae"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Impatiens"},"specific_epithet":{"value":"nomenyae","authorship":{"value":"Eb. Fisch. & Raheliv.","basionym_authorship":{"authors":["Eb. Fisch.","Raheliv."]}}}}],"positions":[["genus",0,9],["specific_epithet",10,18],["author_word",19,22],["author_word",22,28],["author_word",31,39]]}
+6452d4ac-738b-5773-8d69-50232e2842a1|Impatiens nomenyae Eb.Fisch. & Raheliv.|Impatiens nomenyae|Impatiens nomenyae|Eb. Fisch. & Raheliv.||1
+# >
+
 ### Uninomials
 
 #SECTION: Uninomial<
