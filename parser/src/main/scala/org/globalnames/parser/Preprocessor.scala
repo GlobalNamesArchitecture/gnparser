@@ -27,7 +27,7 @@ object Preprocessor {
       """(?x)(,\s*|\s+)
         |(\(?s\.\s?s\.|\(?s\.\s?l\.|\(?s\.\s?str\.|\(?s\.\s?lat\.).*$""".stripMargin
     val taxonConcepts3 = """(?i)(,\s*|\s+)(pro parte|p\.\s?p\.)\s*$"""
-    val nomenConcepts = """(?i)(,\s*|\s+)(\(?nomen|\(?nom\.|\(?comb\.).*$"""
+    val nomenConcepts = """(?i)(,\s*|\s+)(\(?(nomen|nom\.|comb\.)(\s.*)?)$"""
     val lastWordJunk = """(?ix)(,\s*|\s+)
                           (var\.?|von|van|ined\.?|
                           sensu|new|non|nec|nudum|
