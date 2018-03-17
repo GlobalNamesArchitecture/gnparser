@@ -568,7 +568,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
   }
 
   def authorWord1: RuleNodeMeta[AuthorWord] = rule {
-    capturePos("arg." | "et al.{?}" | "et al." | "et al") ~> {
+    capturePos("arg." | "et al.{?}" | ("et" | "&") ~ " al" ~ '.'.?) ~> {
       (pos: CapturePosition) => FactoryAST.authorWord(pos)
     }
   }

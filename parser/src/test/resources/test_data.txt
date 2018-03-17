@@ -22,12 +22,6 @@
 # "parsed: false"
 ####
 
-# TODO<
-Impatiens nomenyae Eb.Fisch. & Raheliv.
-{"name_string_id":"6452d4ac-738b-5773-8d69-50232e2842a1","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Impatiens nomenyae Eb.Fisch. & Raheliv.","normalized":"Impatiens nomenyae Eb. Fisch. & Raheliv.","canonical_name":{"value":"Impatiens nomenyae","value_ranked":"Impatiens nomenyae"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Impatiens"},"specific_epithet":{"value":"nomenyae","authorship":{"value":"Eb. Fisch. & Raheliv.","basionym_authorship":{"authors":["Eb. Fisch.","Raheliv."]}}}}],"positions":[["genus",0,9],["specific_epithet",10,18],["author_word",19,22],["author_word",22,28],["author_word",31,39]]}
-6452d4ac-738b-5773-8d69-50232e2842a1|Impatiens nomenyae Eb.Fisch. & Raheliv.|Impatiens nomenyae|Impatiens nomenyae|Eb. Fisch. & Raheliv.||1
-# >
-
 ### Uninomials
 
 #SECTION: Uninomial<
@@ -455,6 +449,10 @@ a35b47c6-6716-5750-ab81-a19aed44143b|Pseudocercospora dendrobii(H.C.     Burnett
 Sedella pumila (Benth.) Britton & Rose
 {"name_string_id":"393cedba-6ff1-5e5c-83f0-21e32f031ab7","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Sedella pumila (Benth.) Britton & Rose","normalized":"Sedella pumila (Benth.) Britton & Rose","canonical_name":{"value":"Sedella pumila","value_ranked":"Sedella pumila"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Sedella"},"specific_epithet":{"value":"pumila","authorship":{"value":"(Benth.) Britton & Rose","basionym_authorship":{"authors":["Benth."]},"combination_authorship":{"authors":["Britton","Rose"]}}}}],"positions":[["genus",0,7],["specific_epithet",8,14],["author_word",16,22],["author_word",24,31],["author_word",34,38]]}
 393cedba-6ff1-5e5c-83f0-21e32f031ab7|Sedella pumila (Benth.) Britton & Rose|Sedella pumila|Sedella pumila|(Benth.) Britton & Rose||1
+
+Impatiens nomenyae Eb.Fisch. & Raheliv.
+{"name_string_id":"6452d4ac-738b-5773-8d69-50232e2842a1","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Impatiens nomenyae Eb.Fisch. & Raheliv.","normalized":"Impatiens nomenyae Eb. Fisch. & Raheliv.","canonical_name":{"value":"Impatiens nomenyae","value_ranked":"Impatiens nomenyae"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Impatiens"},"specific_epithet":{"value":"nomenyae","authorship":{"value":"Eb. Fisch. & Raheliv.","basionym_authorship":{"authors":["Eb. Fisch.","Raheliv."]}}}}],"positions":[["genus",0,9],["specific_epithet",10,18],["author_word",19,22],["author_word",22,28],["author_word",31,39]]}
+6452d4ac-738b-5773-8d69-50232e2842a1|Impatiens nomenyae Eb.Fisch. & Raheliv.|Impatiens nomenyae|Impatiens nomenyae|Eb. Fisch. & Raheliv.||1
 #>
 
 ### Polynomials
@@ -2090,6 +2088,24 @@ e951b7d4-0009-54df-9de6-efbb392dc8d6|Agropyron pectiniforme var. karabaljikji in
 Staphylococcus hyicus chromogenes Devriese et al. 1978 (Approved Lists 1980).
 {"name_string_id":"ec17eb44-742c-5325-aca6-e33a0888ef0d","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Staphylococcus hyicus chromogenes Devriese et al. 1978 (Approved Lists 1980).","normalized":"Staphylococcus hyicus chromogenes Devriese et al. 1978","canonical_name":{"value":"Staphylococcus hyicus chromogenes","value_ranked":"Staphylococcus hyicus chromogenes"},"hybrid":false,"surrogate":false,"unparsed_tail":" (Approved Lists 1980).","virus":false,"bacteria":true,"details":[{"genus":{"value":"Staphylococcus"},"specific_epithet":{"value":"hyicus"},"infraspecific_epithets":[{"value":"chromogenes","authorship":{"value":"Devriese et al. 1978","basionym_authorship":{"authors":["Devriese et al."],"year":{"value":"1978"}}}}]}],"positions":[["genus",0,14],["specific_epithet",15,21],["infraspecific_epithet",22,33],["author_word",34,42],["author_word",43,49],["year",50,54]]}
 ec17eb44-742c-5325-aca6-e33a0888ef0d|Staphylococcus hyicus chromogenes Devriese et al. 1978 (Approved Lists 1980).|Staphylococcus hyicus chromogenes|Staphylococcus hyicus chromogenes|Devriese et al. 1978|1978|3
+#>
+
+#SECTION: Treating `& al` as `et al`
+Adonis cyllenea Boiss. & al.
+{"name_string_id":"a7c2cb28-2ec2-55b5-88a2-6cfd633cbd00","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Adonis cyllenea Boiss. & al.","normalized":"Adonis cyllenea Boiss. et al.","canonical_name":{"value":"Adonis cyllenea","value_ranked":"Adonis cyllenea"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Adonis"},"specific_epithet":{"value":"cyllenea","authorship":{"value":"Boiss. et al.","basionym_authorship":{"authors":["Boiss. et al."]}}}}],"positions":[["genus",0,6],["specific_epithet",7,15],["author_word",16,22],["author_word",23,28]]}
+a7c2cb28-2ec2-55b5-88a2-6cfd633cbd00|Adonis cyllenea Boiss. & al.|Adonis cyllenea|Adonis cyllenea|Boiss. et al.||1
+
+Adonis cyllenea Boiss. & al
+{"name_string_id":"85e122ea-f581-5d4b-a29f-b87c48d0a716","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Adonis cyllenea Boiss. & al","normalized":"Adonis cyllenea Boiss. et al","canonical_name":{"value":"Adonis cyllenea","value_ranked":"Adonis cyllenea"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Adonis"},"specific_epithet":{"value":"cyllenea","authorship":{"value":"Boiss. et al","basionym_authorship":{"authors":["Boiss. et al"]}}}}],"positions":[["genus",0,6],["specific_epithet",7,15],["author_word",16,22],["author_word",23,27]]}
+85e122ea-f581-5d4b-a29f-b87c48d0a716|Adonis cyllenea Boiss. & al|Adonis cyllenea|Adonis cyllenea|Boiss. et al||1
+
+Adonis cyllenea Boiss. & al. var. paryadrica Boiss.
+{"name_string_id":"6bc790ae-210d-518e-9e20-2d4d517a08ef","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Adonis cyllenea Boiss. & al. var. paryadrica Boiss.","normalized":"Adonis cyllenea Boiss. et al. var. paryadrica Boiss.","canonical_name":{"value":"Adonis cyllenea paryadrica","value_ranked":"Adonis cyllenea var. paryadrica"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Adonis"},"specific_epithet":{"value":"cyllenea","authorship":{"value":"Boiss. et al.","basionym_authorship":{"authors":["Boiss. et al."]}}},"infraspecific_epithets":[{"value":"paryadrica","rank":"var.","authorship":{"value":"Boiss.","basionym_authorship":{"authors":["Boiss."]}}}]}],"positions":[["genus",0,6],["specific_epithet",7,15],["author_word",16,22],["author_word",23,28],["rank",29,33],["infraspecific_epithet",34,44],["author_word",45,51]]}
+6bc790ae-210d-518e-9e20-2d4d517a08ef|Adonis cyllenea Boiss. & al. var. paryadrica Boiss.|Adonis cyllenea paryadrica|Adonis cyllenea var. paryadrica|Boiss.||1
+
+Adonis cyllenea Boiss. & al var. paryadrica Boiss.
+{"name_string_id":"eb7aee15-e462-5189-8335-a3a323be6907","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Adonis cyllenea Boiss. & al var. paryadrica Boiss.","normalized":"Adonis cyllenea Boiss. et al var. paryadrica Boiss.","canonical_name":{"value":"Adonis cyllenea paryadrica","value_ranked":"Adonis cyllenea var. paryadrica"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Adonis"},"specific_epithet":{"value":"cyllenea","authorship":{"value":"Boiss. et al","basionym_authorship":{"authors":["Boiss. et al"]}}},"infraspecific_epithets":[{"value":"paryadrica","rank":"var.","authorship":{"value":"Boiss.","basionym_authorship":{"authors":["Boiss."]}}}]}],"positions":[["genus",0,6],["specific_epithet",7,15],["author_word",16,22],["author_word",23,27],["rank",28,32],["infraspecific_epithet",33,43],["author_word",44,50]]}
+eb7aee15-e462-5189-8335-a3a323be6907|Adonis cyllenea Boiss. & al var. paryadrica Boiss.|Adonis cyllenea paryadrica|Adonis cyllenea var. paryadrica|Boiss.||1
 #>
 
 #SECTION: Authors do not start with apostrophe<

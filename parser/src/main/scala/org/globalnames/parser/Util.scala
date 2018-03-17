@@ -16,9 +16,13 @@ object Util {
   }
 
   def normalizeAuthorWord(input: String): String = {
-    if (input.matches("""[\p{Lu}]{3,}[\p{Lu}-]*"""))
+    if (input.matches("""[\p{Lu}]{3,}[\p{Lu}-]*""")) {
       input.split("-").map { _.toLowerCase.capitalize }.mkString("-")
-    else input
+    } else if (input.matches("""& al\.?""")) {
+      input.replace("&", "et")
+    } else {
+      input
+    }
   }
 
   def normalize(input: String): String = {
