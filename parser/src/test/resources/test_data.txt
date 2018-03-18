@@ -453,6 +453,10 @@ Sedella pumila (Benth.) Britton & Rose
 Impatiens nomenyae Eb.Fisch. & Raheliv.
 {"name_string_id":"6452d4ac-738b-5773-8d69-50232e2842a1","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Impatiens nomenyae Eb.Fisch. & Raheliv.","normalized":"Impatiens nomenyae Eb. Fisch. & Raheliv.","canonical_name":{"value":"Impatiens nomenyae","value_ranked":"Impatiens nomenyae"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Impatiens"},"specific_epithet":{"value":"nomenyae","authorship":{"value":"Eb. Fisch. & Raheliv.","basionym_authorship":{"authors":["Eb. Fisch.","Raheliv."]}}}}],"positions":[["genus",0,9],["specific_epithet",10,18],["author_word",19,22],["author_word",22,28],["author_word",31,39]]}
 6452d4ac-738b-5773-8d69-50232e2842a1|Impatiens nomenyae Eb.Fisch. & Raheliv.|Impatiens nomenyae|Impatiens nomenyae|Eb. Fisch. & Raheliv.||1
+
+Armeria carpetana ssp. carpetana H. del Villar
+{"name_string_id":"4b16116e-549d-56bf-959a-ff11edb25021","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Armeria carpetana ssp. carpetana H. del Villar","normalized":"Armeria carpetana ssp. carpetana H. del Villar","canonical_name":{"value":"Armeria carpetana carpetana","value_ranked":"Armeria carpetana ssp. carpetana"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Armeria"},"specific_epithet":{"value":"carpetana"},"infraspecific_epithets":[{"value":"carpetana","rank":"ssp.","authorship":{"value":"H. del Villar","basionym_authorship":{"authors":["H. del Villar"]}}}]}],"positions":[["genus",0,7],["specific_epithet",8,17],["rank",18,22],["infraspecific_epithet",23,32],["author_word",33,35],["author_word",36,39],["author_word",40,46]]}
+4b16116e-549d-56bf-959a-ff11edb25021|Armeria carpetana ssp. carpetana H. del Villar|Armeria carpetana carpetana|Armeria carpetana ssp. carpetana|H. del Villar||1
 #>
 
 ### Polynomials
