@@ -22,6 +22,12 @@
 # "parsed: false"
 ####
 
+# todo<
+Armeria carpetana ssp. carpetana H. del Villar
+{"name_string_id":"4b16116e-549d-56bf-959a-ff11edb25021","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Armeria carpetana ssp. carpetana H. del Villar","normalized":"Armeria carpetana ssp. carpetana H. del Villar","canonical_name":{"value":"Armeria carpetana carpetana","value_ranked":"Armeria carpetana ssp. carpetana"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Armeria"},"specific_epithet":{"value":"carpetana"},"infraspecific_epithets":[{"value":"carpetana","rank":"ssp.","authorship":{"value":"H. del Villar","basionym_authorship":{"authors":["H. del Villar"]}}}]}],"positions":[["genus",0,7],["specific_epithet",8,17],["rank",18,22],["infraspecific_epithet",23,32],["author_word",33,35],["author_word",36,39],["author_word",40,46]]}
+4b16116e-549d-56bf-959a-ff11edb25021|Armeria carpetana ssp. carpetana H. del Villar|Armeria carpetana carpetana|Armeria carpetana ssp. carpetana|H. del Villar||1
+# >
+
 ### Uninomials
 
 #SECTION: Uninomial<
