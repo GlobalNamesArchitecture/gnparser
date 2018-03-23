@@ -514,8 +514,8 @@ Crematogaster impressa st. brazzai Santschi 1937
 
 # badly formed name, we do not deal with it for now
 Cibotium st.-johnii Krajina
-{"name_string_id":"6b34256d-6c3b-5870-a781-77eeac49b6c4","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Cibotium st.-johnii Krajina","normalized":"Cibotium st","canonical_name":{"value":"Cibotium st","value_ranked":"Cibotium st"},"hybrid":false,"surrogate":false,"unparsed_tail":".-johnii Krajina","virus":false,"bacteria":false,"details":[{"genus":{"value":"Cibotium"},"specific_epithet":{"value":"st"}}],"positions":[["genus",0,8],["specific_epithet",9,11]]}
-6b34256d-6c3b-5870-a781-77eeac49b6c4|Cibotium st.-johnii Krajina|Cibotium st|Cibotium st|||3
+{"name_string_id":"6b34256d-6c3b-5870-a781-77eeac49b6c4","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Cibotium st.-johnii Krajina","normalized":"Cibotium","canonical_name":{"value":"Cibotium","value_ranked":"Cibotium"},"hybrid":false,"surrogate":false,"unparsed_tail":" st.-johnii Krajina","virus":false,"bacteria":false,"details":[{"uninomial":{"value":"Cibotium"}}],"positions":[["uninomial",0,8]]}
+6b34256d-6c3b-5870-a781-77eeac49b6c4|Cibotium st.-johnii Krajina|Cibotium|Cibotium|||3
 
 Camponotus conspicuus st. zonatus
 {"name_string_id":"67364c72-53e0-54d3-9795-f04fd1938d75","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Camponotus conspicuus st. zonatus","normalized":"Camponotus conspicuus st. zonatus","canonical_name":{"value":"Camponotus conspicuus zonatus","value_ranked":"Camponotus conspicuus st. zonatus"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Camponotus"},"specific_epithet":{"value":"conspicuus"},"infraspecific_epithets":[{"value":"zonatus","rank":"st."}]}],"positions":[["genus",0,10],["specific_epithet",11,21],["rank",22,25],["infraspecific_epithet",26,33]]}
@@ -1981,24 +1981,24 @@ Negalasa fumalis Barnes & McDunnough 1913. Next sentence
 45b7343f-d42a-52d5-b0a4-25956d46427b|Negalasa fumalis Barnes & McDunnough 1913. Next sentence|Negalasa fumalis|Negalasa fumalis|Barnes & McDunnough 1913|1913|3
 
 Negalasa fumalis. Next sentence
-{"name_string_id":"ce740482-fa87-5d84-b335-1c063fd18de1","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Negalasa fumalis. Next sentence","normalized":"Negalasa fumalis","canonical_name":{"value":"Negalasa fumalis","value_ranked":"Negalasa fumalis"},"hybrid":false,"surrogate":false,"unparsed_tail":". Next sentence","virus":false,"bacteria":false,"details":[{"genus":{"value":"Negalasa"},"specific_epithet":{"value":"fumalis"}}],"positions":[["genus",0,8],["specific_epithet",9,16]]}
-ce740482-fa87-5d84-b335-1c063fd18de1|Negalasa fumalis. Next sentence|Negalasa fumalis|Negalasa fumalis|||3
+{"name_string_id":"ce740482-fa87-5d84-b335-1c063fd18de1","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Negalasa fumalis. Next sentence","normalized":"Negalasa","canonical_name":{"value":"Negalasa","value_ranked":"Negalasa"},"hybrid":false,"surrogate":false,"unparsed_tail":" fumalis. Next sentence","virus":false,"bacteria":false,"details":[{"uninomial":{"value":"Negalasa"}}],"positions":[["uninomial",0,8]]}
+ce740482-fa87-5d84-b335-1c063fd18de1|Negalasa fumalis. Next sentence|Negalasa|Negalasa|||3
 
 Negalasa fumalis, continuation of a sentence
-{"name_string_id":"7862a3d9-ba4d-5f53-a106-ea048e558f1a","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"],[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Negalasa fumalis, continuation of a sentence","normalized":"Negalasa fumalis","canonical_name":{"value":"Negalasa fumalis","value_ranked":"Negalasa fumalis"},"hybrid":false,"surrogate":false,"unparsed_tail":", continuation","virus":false,"bacteria":false,"details":[{"genus":{"value":"Negalasa"},"specific_epithet":{"value":"fumalis"}}],"positions":[["genus",0,8],["specific_epithet",9,16]]}
-7862a3d9-ba4d-5f53-a106-ea048e558f1a|Negalasa fumalis, continuation of a sentence|Negalasa fumalis|Negalasa fumalis|||3
+{"name_string_id":"7862a3d9-ba4d-5f53-a106-ea048e558f1a","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"],[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Negalasa fumalis, continuation of a sentence","normalized":"Negalasa","canonical_name":{"value":"Negalasa","value_ranked":"Negalasa"},"hybrid":false,"surrogate":false,"unparsed_tail":" fumalis, continuation","virus":false,"bacteria":false,"details":[{"uninomial":{"value":"Negalasa"}}],"positions":[["uninomial",0,8]]}
+7862a3d9-ba4d-5f53-a106-ea048e558f1a|Negalasa fumalis, continuation of a sentence|Negalasa|Negalasa|||3
 
 Negalasa fumalis Barnes; something else
 {"name_string_id":"6359dac4-1a88-5b41-86d3-9c01aaee4a2e","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Negalasa fumalis Barnes; something else","normalized":"Negalasa fumalis Barnes","canonical_name":{"value":"Negalasa fumalis","value_ranked":"Negalasa fumalis"},"hybrid":false,"surrogate":false,"unparsed_tail":"; something else","virus":false,"bacteria":false,"details":[{"genus":{"value":"Negalasa"},"specific_epithet":{"value":"fumalis","authorship":{"value":"Barnes","basionym_authorship":{"authors":["Barnes"]}}}}],"positions":[["genus",0,8],["specific_epithet",9,16],["author_word",17,23]]}
 6359dac4-1a88-5b41-86d3-9c01aaee4a2e|Negalasa fumalis Barnes; something else|Negalasa fumalis|Negalasa fumalis|Barnes||3
 
 Negaprion brevirostris Negaprion brevirostris, the rest of the sentence
-{"name_string_id":"619b95fa-017d-5b9b-b800-64ebd5ed433b","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"],[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Negaprion brevirostris Negaprion brevirostris, the rest of the sentence","normalized":"Negaprion brevirostris Negaprion brevirostris","canonical_name":{"value":"Negaprion brevirostris brevirostris","value_ranked":"Negaprion brevirostris brevirostris"},"hybrid":false,"surrogate":false,"unparsed_tail":", the rest","virus":false,"bacteria":false,"details":[{"genus":{"value":"Negaprion"},"specific_epithet":{"value":"brevirostris","authorship":{"value":"Negaprion","basionym_authorship":{"authors":["Negaprion"]}}},"infraspecific_epithets":[{"value":"brevirostris"}]}],"positions":[["genus",0,9],["specific_epithet",10,22],["author_word",23,32],["infraspecific_epithet",33,45]]}
-619b95fa-017d-5b9b-b800-64ebd5ed433b|Negaprion brevirostris Negaprion brevirostris, the rest of the sentence|Negaprion brevirostris brevirostris|Negaprion brevirostris brevirostris|||3
+{"name_string_id":"619b95fa-017d-5b9b-b800-64ebd5ed433b","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"],[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Negaprion brevirostris Negaprion brevirostris, the rest of the sentence","normalized":"Negaprion brevirostris Negaprion","canonical_name":{"value":"Negaprion brevirostris","value_ranked":"Negaprion brevirostris"},"hybrid":false,"surrogate":false,"unparsed_tail":" brevirostris, the rest","virus":false,"bacteria":false,"details":[{"genus":{"value":"Negaprion"},"specific_epithet":{"value":"brevirostris","authorship":{"value":"Negaprion","basionym_authorship":{"authors":["Negaprion"]}}}}],"positions":[["genus",0,9],["specific_epithet",10,22],["author_word",23,32]]}
+619b95fa-017d-5b9b-b800-64ebd5ed433b|Negaprion brevirostris Negaprion brevirostris, the rest of the sentence|Negaprion brevirostris|Negaprion brevirostris|Negaprion||3
 
 Negaprion fronto (Jordan and Gilbert, 1882):
-{"name_string_id":"4bb6a543-d757-5fa5-ae8b-a5ac95722e1d","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Negaprion fronto (Jordan and Gilbert, 1882):","normalized":"Negaprion fronto (Jordan & Gilbert 1882)","canonical_name":{"value":"Negaprion fronto","value_ranked":"Negaprion fronto"},"hybrid":false,"surrogate":false,"unparsed_tail":":","virus":false,"bacteria":false,"details":[{"genus":{"value":"Negaprion"},"specific_epithet":{"value":"fronto","authorship":{"value":"(Jordan & Gilbert 1882)","basionym_authorship":{"authors":["Jordan","Gilbert"],"year":{"value":"1882"}}}}}],"positions":[["genus",0,9],["specific_epithet",10,16],["author_word",18,24],["author_word",29,36],["year",38,42]]}
-4bb6a543-d757-5fa5-ae8b-a5ac95722e1d|Negaprion fronto (Jordan and Gilbert, 1882):|Negaprion fronto|Negaprion fronto|(Jordan & Gilbert 1882)|1882|3
+{"name_string_id":"4bb6a543-d757-5fa5-ae8b-a5ac95722e1d","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Negaprion fronto (Jordan and Gilbert, 1882):","normalized":"Negaprion","canonical_name":{"value":"Negaprion","value_ranked":"Negaprion"},"hybrid":false,"surrogate":false,"unparsed_tail":" fronto (Jordan and Gilbert, 1882):","virus":false,"bacteria":false,"details":[{"uninomial":{"value":"Negaprion"}}],"positions":[["uninomial",0,9]]}
+4bb6a543-d757-5fa5-ae8b-a5ac95722e1d|Negaprion fronto (Jordan and Gilbert, 1882):|Negaprion|Negaprion|||3
 #>
 
 #SECTION names with 'ex' as sp. epithet<
@@ -2010,8 +2010,8 @@ Acanthochiton ex quisitus
 
 # not dealing with ex. gr for now
 Acastella ex gr. rouaulti
-{"name_string_id":"c1864b52-848a-5de7-8f2d-a3cfe2025c40","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Acastella ex gr. rouaulti","normalized":"Acastella ex gr","canonical_name":{"value":"Acastella ex gr","value_ranked":"Acastella ex gr"},"hybrid":false,"surrogate":false,"unparsed_tail":". rouaulti","virus":false,"bacteria":false,"details":[{"genus":{"value":"Acastella"},"specific_epithet":{"value":"ex"},"infraspecific_epithets":[{"value":"gr"}]}],"positions":[["genus",0,9],["specific_epithet",10,12],["infraspecific_epithet",13,15]]}
-c1864b52-848a-5de7-8f2d-a3cfe2025c40|Acastella ex gr. rouaulti|Acastella ex gr|Acastella ex gr|||3
+{"name_string_id":"c1864b52-848a-5de7-8f2d-a3cfe2025c40","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Acastella ex gr. rouaulti","normalized":"Acastella ex","canonical_name":{"value":"Acastella ex","value_ranked":"Acastella ex"},"hybrid":false,"surrogate":false,"unparsed_tail":" gr. rouaulti","virus":false,"bacteria":false,"details":[{"genus":{"value":"Acastella"},"specific_epithet":{"value":"ex"}}],"positions":[["genus",0,9],["specific_epithet",10,12]]}
+c1864b52-848a-5de7-8f2d-a3cfe2025c40|Acastella ex gr. rouaulti|Acastella ex|Acastella ex|||3
 #>
 
 ### Unparseable Tail
