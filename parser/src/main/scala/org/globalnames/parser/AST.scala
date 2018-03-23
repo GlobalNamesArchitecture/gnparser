@@ -113,7 +113,7 @@ case class Uninomial(
   rank: Option[Rank] = None,
   parent: Option[Uninomial] = None,
   implied: Boolean = false) extends AstNode {
-  val pos = word.pos
+  val pos: CapturePosition = word.pos
 }
 
 case class UninomialWord(pos: CapturePosition) extends AstNode
@@ -121,18 +121,18 @@ case class UninomialWord(pos: CapturePosition) extends AstNode
 case class SpeciesWord(pos: CapturePosition) extends AstNode
 
 case class SubGenus(word: UninomialWord) extends AstNode {
-  val pos = word.pos
+  val pos: CapturePosition = word.pos
 }
 
 case class Species(word: SpeciesWord,
                    authorship: Option[Authorship] = None) extends AstNode {
-  val pos = word.pos
+  val pos: CapturePosition = word.pos
 }
 
 case class Infraspecies(word: SpeciesWord,
                         rank: Option[Rank] = None,
                         authorship: Option[Authorship]) extends AstNode {
-  val pos = word.pos
+  val pos: CapturePosition = word.pos
 }
 
 case class InfraspeciesGroup(group: Seq[Infraspecies]) extends AstNode {
@@ -143,7 +143,7 @@ case class Year(pos: CapturePosition,
                 alpha: Option[CapturePosition] = None,
                 rangeEnd: Option[CapturePosition] = None,
                 approximate: Boolean = false) extends AstNode {
-  val isRange = rangeEnd.isDefined
+  val isRange: Boolean = rangeEnd.isDefined
 }
 
 sealed trait AuthorWordSeparator
@@ -160,7 +160,7 @@ case class Author(words: Seq[AuthorWord],
                   anon: Boolean = false,
                   filius: Option[AuthorWord] = None) extends AstNode {
 
-  val pos = {
+  val pos: CapturePosition = {
     val end = filius.getOrElse(words.last).pos.end
     CapturePosition(words.head.pos.start, end)
   }
@@ -169,8 +169,8 @@ case class Author(words: Seq[AuthorWord],
 case class AuthorsTeam(authors: Seq[Author]) extends AstNode {
 
   val pos: CapturePosition = {
-    CapturePosition(authors.sortBy { _.pos.start }.head.pos.start,
-                    authors.sortBy { _.pos.end }.head.pos.start)
+    CapturePosition(authors.minBy { _.pos.start }.pos.start,
+                    authors.minBy { _.pos.end }.pos.start)
   }
 }
 
@@ -180,8 +180,8 @@ case class AuthorsGroup(authors: AuthorsTeam,
 
   val pos: CapturePosition = {
     val nodes = Vector(authors.some, authorsEx, year).flatten
-    CapturePosition(nodes.sortBy { _.pos.start }.head.pos.start,
-                    nodes.sortBy { _.pos.end }.last.pos.end)
+    CapturePosition(nodes.minBy { _.pos.start }.pos.start,
+                    nodes.maxBy { _.pos.end }.pos.end)
   }
 }
 
@@ -192,8 +192,8 @@ case class Authorship(authors: AuthorsGroup,
 
   val pos: CapturePosition = {
     val nodes = Vector(authors.some, combination).flatten
-    CapturePosition(nodes.sortBy { _.pos.start }.head.pos.start,
-                    nodes.sortBy { _.pos.end }.last.pos.end)
+    CapturePosition(nodes.minBy { _.pos.start }.pos.start,
+                    nodes.maxBy { _.pos.end }.pos.end)
   }
   val basionym: Option[AuthorsGroup] =
     (basionymParsed || combination.isEmpty).option(authors)
