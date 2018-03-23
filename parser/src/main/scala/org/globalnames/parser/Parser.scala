@@ -185,7 +185,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
   }
 
   def species: RuleNodeMeta[Species] = rule {
-    word ~ (softSpace ~ authorship).? ~ &(spaceCharsEOI ++ "(,:.;") ~> {
+    word ~ (softSpace ~ authorship).? ~ &(spaceCharsEOI ++ "(") ~> {
       (sw: NodeMeta[SpeciesWord], a: Option[NodeMeta[Authorship]]) => FactoryAST.species(sw, a)
     }
   }
@@ -334,7 +334,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
 
   def word: RuleNodeMeta[SpeciesWord] = rule {
     !(authorPrefix | rankUninomial | approximation | word4) ~
-      (word3 | word2StartDigit | word2 | word1) ~ &(spaceCharsEOI ++ "().,:;") ~> {
+      (word3 | word2StartDigit | word2 | word1) ~ &(spaceCharsEOI ++ "()") ~> {
       (pos: CapturePosition) =>
         val word = input.sliceString(pos.start, pos.end)
         val warns = Vector(
