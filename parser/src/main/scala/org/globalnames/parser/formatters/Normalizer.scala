@@ -84,13 +84,31 @@ trait Normalizer { parsedResult: ScientificNameParser.Result =>
     }
   }
 
+  def normalizeAuthorSeparator(as: AuthorSep, last: Boolean): String = {
+    stringOf(as) match {
+      case "," => last ? " & " | ", "
+      case "&" | "and" | "et" => " & "
+      case "apud" => " apud "
+    }
+  }
+
   def normalizedAuthorsTeam(at: AuthorsTeam): Option[String] =
     if (at.authors.size == 1) {
       normalizedAuthor(at.authors.head).some
     } else {
-      val authsStr = at.authors.dropRight(1).map { normalizedAuthor }.mkString(", ") + " & " +
-                     normalizedAuthor(at.authors.last)
-      authsStr.some
+      val authsStr = at.authors.zipWithIndex.foldLeft(new StringBuilder) { case (sb, (a, idx)) =>
+        if (idx > 0) {
+          a.separator match {
+            case Some(sep) =>
+              val isLast = idx == at.authors.size - 1
+              sb.append(normalizeAuthorSeparator(sep, isLast))
+            case None =>
+              sb.append(", ")
+          }
+        }
+        sb.append(normalizedAuthor(a))
+      }
+      authsStr.toString.some
     }
 
   def normalizedAuthorsGroup(ag: AuthorsGroup): Option[String] = {

@@ -505,8 +505,8 @@ class Parser(preprocessorResult: Preprocessor.Result,
   }
 
   def authorSep: RuleNodeMeta[AuthorSep] = rule {
-    softSpace ~ capturePos("," | "&" | "and" | "et") ~ softSpace ~> { (pos: CapturePosition) =>
-      FactoryAST.authorSep(pos)
+    softSpace ~ capturePos("," | "&" | "and" | "et" | "apud") ~ softSpace ~> {
+      (pos: CapturePosition) => FactoryAST.authorSep(pos)
     }
   }
 

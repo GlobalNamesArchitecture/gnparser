@@ -22,6 +22,12 @@
 # "parsed: false"
 ####
 
+# TODO <
+Pseudocercospora dendrobii Goh apud W.H. Hsieh 1990
+{"name_string_id":"4dee6fc8-3be1-520c-9937-5a7342a17241","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Pseudocercospora dendrobii Goh apud W.H. Hsieh 1990","normalized":"Pseudocercospora dendrobii Goh apud W. H. Hsieh 1990","canonical_name":{"value":"Pseudocercospora dendrobii","value_ranked":"Pseudocercospora dendrobii"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Pseudocercospora"},"specific_epithet":{"value":"dendrobii","authorship":{"value":"Goh apud W. H. Hsieh 1990","basionym_authorship":{"authors":["Goh","W. H. Hsieh"],"year":{"value":"1990"}}}}}],"positions":[["genus",0,16],["specific_epithet",17,26],["author_word",27,30],["author_word",36,38],["author_word",38,40],["author_word",41,46],["year",47,51]]}
+4dee6fc8-3be1-520c-9937-5a7342a17241|Pseudocercospora dendrobii Goh apud W.H. Hsieh 1990|Pseudocercospora dendrobii|Pseudocercospora dendrobii|Goh apud W. H. Hsieh 1990|1990|1
+# >
+
 ### Uninomials
 
 #SECTION: Uninomial<
