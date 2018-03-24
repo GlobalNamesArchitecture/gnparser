@@ -903,6 +903,12 @@ Puya acris hort.
 78228a5e-dcd3-58f9-bf21-b452c378f6ee|Puya acris hort.|Puya acris|Puya acris|||2
 #>
 
+#SECTION: Treating apud (with) <
+Pseudocercospora dendrobii Goh apud W.H. Hsieh 1990
+{"name_string_id":"4dee6fc8-3be1-520c-9937-5a7342a17241","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Pseudocercospora dendrobii Goh apud W.H. Hsieh 1990","normalized":"Pseudocercospora dendrobii Goh apud W. H. Hsieh 1990","canonical_name":{"value":"Pseudocercospora dendrobii","value_ranked":"Pseudocercospora dendrobii"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Pseudocercospora"},"specific_epithet":{"value":"dendrobii","authorship":{"value":"Goh apud W. H. Hsieh 1990","basionym_authorship":{"authors":["Goh","W. H. Hsieh"],"year":{"value":"1990"}}}}}],"positions":[["genus",0,16],["specific_epithet",17,26],["author_word",27,30],["author_word",36,38],["author_word",38,40],["author_word",41,46],["year",47,51]]}
+4dee6fc8-3be1-520c-9937-5a7342a17241|Pseudocercospora dendrobii Goh apud W.H. Hsieh 1990|Pseudocercospora dendrobii|Pseudocercospora dendrobii|Goh apud W. H. Hsieh 1990|1990|1
+#>
+
 #SECTION: Names with ex authors (we follow ICZN convention)<
 Arthopyrenia hyalospora (Nyl. ex Banker) R.C. Harris
 {"name_string_id":"ab3998af-53dc-53fd-af8b-fab94dacbcbc","parsed":true,"quality":2,"quality_warnings":[[2,"Ex authors are not required"]],"parser_version":"test_version","verbatim":"Arthopyrenia hyalospora (Nyl. ex Banker) R.C. Harris","normalized":"Arthopyrenia hyalospora (Nyl. ex Banker) R. C. Harris","canonical_name":{"value":"Arthopyrenia hyalospora","value_ranked":"Arthopyrenia hyalospora"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Arthopyrenia"},"specific_epithet":{"value":"hyalospora","authorship":{"value":"(Nyl. ex Banker) R. C. Harris","basionym_authorship":{"authors":["Nyl."],"ex_authors":["Banker"]},"combination_authorship":{"authors":["R. C. Harris"]}}}}],"positions":[["genus",0,12],["specific_epithet",13,23],["author_word",25,29],["author_word",33,39],["author_word",41,43],["author_word",43,45],["author_word",46,52]]}
