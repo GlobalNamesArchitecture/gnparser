@@ -140,10 +140,16 @@ object FactoryAST {
     NodeMeta(at, warns)
   }
 
+  def authorSep(pos: CapturePosition): NodeMeta[AuthorSep] = {
+    val aSep = AuthorSep(pos)
+    NodeMeta(aSep)
+  }
+
   def author(words: Seq[NodeMeta[AuthorWord]],
              anon: Boolean = false,
+             separator: Option[NodeMeta[AuthorSep]] = None,
              filius: Option[NodeMeta[AuthorWord]] = None): NodeMeta[Author] = {
-    val au = Author(words.map { _.node }, anon, filius.map { _.node })
+    val au = Author(words.map { _.node }, anon, separator.map { _.node }, filius.map { _.node })
     val warns = words.flatMap { _.warnings } ++ filius.map { _.warnings }.orZero
     NodeMeta(au, warns.toVector)
   }

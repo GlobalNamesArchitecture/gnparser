@@ -158,6 +158,7 @@ case class AuthorWord(pos: CapturePosition,
 
 case class Author(words: Seq[AuthorWord],
                   anon: Boolean = false,
+                  separator: Option[AuthorSep] = None,
                   filius: Option[AuthorWord] = None) extends AstNode {
 
   val pos: CapturePosition = {
@@ -184,6 +185,8 @@ case class AuthorsGroup(authors: AuthorsTeam,
                     nodes.maxBy { _.pos.end }.pos.end)
   }
 }
+
+case class AuthorSep(pos: CapturePosition) extends AstNode
 
 case class Authorship(authors: AuthorsGroup,
                       combination: Option[AuthorsGroup] = None,
