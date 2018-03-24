@@ -495,12 +495,20 @@ class Parser(preprocessorResult: Preprocessor.Result,
   }
 
   def authorsTeam: RuleNodeMeta[AuthorsTeam] = rule {
-    oneOrMore(author).separatedBy(authorSep) ~> {
-      (asM: Seq[NodeMeta[Author]]) => FactoryAST.authorsTeam(asM)
-    }
+    author ~> { (aM: NodeMeta[Author]) => FactoryAST.authorsTeam(Seq(aM)) } ~
+      zeroOrMore(authorSep ~ author ~> {
+      (asM: NodeMeta[AuthorSep], auM: NodeMeta[Author]) =>
+        for { au <- auM; as <- asM } yield au.copy(separator = as.some)
+      } ~> { (atM: NodeMeta[AuthorsTeam], aM: NodeMeta[Author]) =>
+        for (at <- atM; a <- aM) yield at.copy(authors = at.authors :+ a)
+      })
   }
 
-  def authorSep: Rule0 = rule { softSpace ~ ("," | "&" | "and" | "et") ~ softSpace }
+  def authorSep: RuleNodeMeta[AuthorSep] = rule {
+    softSpace ~ capturePos("," | "&" | "and" | "et") ~ softSpace ~> { (pos: CapturePosition) =>
+      FactoryAST.authorSep(pos)
+    }
+  }
 
   def authorEx: RuleNodeMeta[AuthorWord] = rule {
     space ~ capturePos("ex" ~ '.'.? | "in") ~ space ~> { (pos: CapturePosition) =>
