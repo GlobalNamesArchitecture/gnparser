@@ -226,7 +226,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
   }
 
   def rankVar: RuleNodeMeta[Rank] = rule {
-    capturePos("variety" | "[var.]" | ("var" ~ (&(spaceCharsEOI) | '.'))) ~> {
+    capturePos("variety" | "[var.]" | "nvar." | ("var" ~ (&(spaceCharsEOI) | '.'))) ~> {
       (p: CapturePosition) => FactoryAST.rank(p, "var.".some)
     }
   }
