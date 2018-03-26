@@ -178,14 +178,14 @@ class Parser(preprocessorResult: Preprocessor.Result,
   }
 
   def infraspecies: RuleNodeMeta[Infraspecies] = rule {
-    (rank ~ softSpace).? ~ word ~ (space ~ authorship).? ~> {
+    (rank ~ softSpace).? ~ !(authorEx) ~ word ~ (space ~ authorship).? ~> {
       (r: Option[NodeMeta[Rank]], sw: NodeMeta[SpeciesWord], a: Option[NodeMeta[Authorship]]) =>
         FactoryAST.infraspecies(sw, r, a)
     }
   }
 
   def species: RuleNodeMeta[Species] = rule {
-    word ~ (softSpace ~ authorship).? ~ &(spaceCharsEOI ++ "(") ~> {
+     !(authorEx) ~ word ~ (softSpace ~ authorship).? ~ &(spaceCharsEOI ++ "(") ~> {
       (sw: NodeMeta[SpeciesWord], a: Option[NodeMeta[Authorship]]) => FactoryAST.species(sw, a)
     }
   }
@@ -513,7 +513,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
   }
 
   def authorEx: RuleNodeMeta[AuthorWord] = rule {
-    space ~ capturePos("ex" ~ '.'.? | "in") ~ space ~> { (pos: CapturePosition) =>
+    softSpace ~ capturePos("ex" ~ '.'.? | "in") ~ space ~> { (pos: CapturePosition) =>
       val aw = FactoryAST.authorWord(pos)
       val warns = (input.charAt(pos.end - 1) == '.').option { (3, "`ex` ends with dot") }.toVector
       aw.add(warnings = warns)
