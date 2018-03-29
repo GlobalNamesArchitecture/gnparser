@@ -80,7 +80,7 @@ trait Normalizer { parsedResult: ScientificNameParser.Result =>
         }
         sb.append(Util.normalizeAuthorWord(stringOf(aw)))
       }
-      (authorStr.toString.some |+| a.filius.map { _ => " f." }).orZero
+      (authorStr.toString.some |+| a.filius.map { _ => " fil." }).orZero
     }
   }
 
