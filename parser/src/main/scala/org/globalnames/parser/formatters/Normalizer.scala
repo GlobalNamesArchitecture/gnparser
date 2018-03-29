@@ -92,6 +92,14 @@ trait Normalizer { parsedResult: ScientificNameParser.Result =>
     }
   }
 
+  def normalizeAuthorSeparator(as: AuthorSep, last: Boolean): String = {
+    stringOf(as) match {
+      case "," => last ? " & " | ", "
+      case "&" | "and" | "et" => " & "
+      case "apud" => " apud "
+    }
+  }
+
   def normalizedAuthorsTeam(at: AuthorsTeam): Option[String] =
     if (at.authors.size == 1) {
       normalizedAuthor(at.authors.head).some
