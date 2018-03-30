@@ -24,8 +24,8 @@
 
 # todo <
 Crataegus curvisepala nvar. naviculiformis T. Petauer
-{"name_string_id":"f3e2ccac-4844-57a7-8903-4e3b6a0d0851","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Crataegus curvisepala nvar. naviculiformis T. Petauer","normalized":"Crataegus curvisepala var. naviculiformis T. Petauer","canonical_name":{"value":"Crataegus curvisepala naviculiformis","value_ranked":"Crataegus curvisepala var. naviculiformis"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Crataegus"},"specific_epithet":{"value":"curvisepala"},"infraspecific_epithets":[{"value":"naviculiformis","rank":"var.","authorship":{"value":"T. Petauer","basionym_authorship":{"authors":["T. Petauer"]}}}]}],"positions":[["genus",0,9],["specific_epithet",10,21],["rank",22,27],["infraspecific_epithet",28,42],["author_word",43,45],["author_word",46,53]]}
-f3e2ccac-4844-57a7-8903-4e3b6a0d0851|Crataegus curvisepala nvar. naviculiformis T. Petauer|Crataegus curvisepala naviculiformis|Crataegus curvisepala var. naviculiformis|T. Petauer||1
+{"name_string_id":"f3e2ccac-4844-57a7-8903-4e3b6a0d0851","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Crataegus curvisepala nvar. naviculiformis T. Petauer","normalized":"Crataegus curvisepala nvar. naviculiformis T. Petauer","canonical_name":{"value":"Crataegus curvisepala naviculiformis","value_ranked":"Crataegus curvisepala nvar. naviculiformis"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Crataegus"},"specific_epithet":{"value":"curvisepala"},"infraspecific_epithets":[{"value":"naviculiformis","rank":"nvar.","authorship":{"value":"T. Petauer","basionym_authorship":{"authors":["T. Petauer"]}}}]}],"positions":[["genus",0,9],["specific_epithet",10,21],["rank",22,27],["infraspecific_epithet",28,42],["author_word",43,45],["author_word",46,53]]}
+f3e2ccac-4844-57a7-8903-4e3b6a0d0851|Crataegus curvisepala nvar. naviculiformis T. Petauer|Crataegus curvisepala naviculiformis|Crataegus curvisepala nvar. naviculiformis|T. Petauer||1
 # >
 
 ### Uninomials

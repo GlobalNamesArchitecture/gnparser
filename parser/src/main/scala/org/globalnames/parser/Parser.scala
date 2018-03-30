@@ -227,7 +227,9 @@ class Parser(preprocessorResult: Preprocessor.Result,
 
   def rankVar: RuleNodeMeta[Rank] = rule {
     capturePos("variety" | "[var.]" | "nvar." | ("var" ~ (&(spaceCharsEOI) | '.'))) ~> {
-      (p: CapturePosition) => FactoryAST.rank(p, "var.".some)
+      (pos: CapturePosition) =>
+        val varStr = (pos.end - pos.start == "nvar.".length) ? "nvar." | "var."
+        FactoryAST.rank(pos, varStr.some)
     }
   }
 
