@@ -536,21 +536,27 @@ class Parser(preprocessorResult: Preprocessor.Result,
   def author2: RuleNodeMeta[Author] = rule {
     authorWord ~ zeroOrMore(authorWordSep) ~ !':' ~> {
       (auM: NodeMeta[AuthorWord], ausM: Seq[NodeMeta[AuthorWord]]) =>
-        for { au <- auM; aus <- lift(ausM) } yield Author(au +: aus)
+        for { au <- auM; aus <- lift(ausM) } yield {
+          val auths = aus.foldLeft(List(au)) { (as, a) =>
+            if (a.separator == AuthorWordSeparator.Dash) {
+              val a1 = as.last.copy(pos = CapturePosition(as.last.pos.start, a.pos.end))
+              as.dropRight(1) :+ a1
+            } else as :+ a
+          }
+          Author(auths)
+        }
     }
   }
 
   def authorWordSep: RuleNodeMeta[AuthorWord] = rule {
-    capture(ch(dash) | softSpace) ~ authorWord ~> {
-      (sep: String, awM: NodeMeta[AuthorWord]) =>
-        val aw1M = awM.map { aw => sep match {
-          case d if d.length == 1 && d(0) == dash =>
-            aw.copy(separator = AuthorWordSeparator.Dash)
-          case _ =>
-            awM.node.copy(separator = AuthorWordSeparator.Space)
-        }}
-        aw1M.changeWarningsRef((awM.node, aw1M.node))
-    }
+    (ch(dash) ~ authorWordSoft ~> { (awM: NodeMeta[AuthorWord]) =>
+      val aw1M = for (aw <- awM) yield aw.copy(separator = AuthorWordSeparator.Dash)
+      aw1M.changeWarningsRef((awM.node, aw1M.node))
+    }) |
+    (softSpace ~ authorWord ~> { (awM: NodeMeta[AuthorWord]) =>
+      val aw1M = awM.node.copy(separator = AuthorWordSeparator.Space)
+      aw1M.changeWarningsRef((awM.node, aw1M.node))
+    })
   }
 
   def unknownAuthor: RuleNodeMeta[Author] = rule {
@@ -583,6 +589,15 @@ class Parser(preprocessorResult: Preprocessor.Result,
 
   def authorWord2: RuleNodeMeta[AuthorWord] = rule {
     capturePos("d'".? ~ authCharUpper ~ zeroOrMore(authCharUpper | authCharLower) ~ '.'.?) ~> {
+      (pos: CapturePosition) => FactoryAST.authorWord(pos)
+    }
+  }
+
+  def authorWordSoft: RuleNodeMeta[AuthorWord] = rule {
+    capturePos((
+      (authCharUpper ~ (oneOrMore(authCharUpper) | oneOrMore(authCharLower))) |
+        oneOrMore(authCharLower)
+    ) ~ '.'.?) ~> {
       (pos: CapturePosition) => FactoryAST.authorWord(pos)
     }
   }
@@ -761,7 +776,7 @@ object Parser {
   private final val apostr = '\''
   private final val doubleSpacePattern = Pattern.compile("""[\s_]{2}""")
   private final val authCharLower = LowerAlpha ++
-    "àáâãäåæçèéêëìíîïðñòóóôõöøùúûüýÿāăąćĉčďđ'-ēĕėęěğīĭİıĺľłńņňŏőœŕřśşšţťũūŭůűźżžſǎǔǧșțȳß"
+    "àáâãäåæçèéêëìíîïðñòóóôõöøùúûüýÿāăąćĉčďđ'ēĕėęěğīĭİıĺľłńņňŏőœŕřśşšţťũūŭůűźżžſǎǔǧșțȳß"
   private final val authCharUpper = CharPredicate(authCharUpperStr + authCharMiscoded)
   private final val upperChar = UpperAlpha ++ "Ë" ++ sciUpperCharExtended
   private final val lowerChar = LowerAlpha ++ "ë" ++ sciCharsExtended
