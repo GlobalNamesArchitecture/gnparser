@@ -22,14 +22,6 @@
 # "parsed: false"
 ####
 
-# todo <
-Astatotilapia cf. bloyeti OS-2017
-{"name_string_id":"c841aa1d-78ea-5b6a-93fc-e18c54164144","parsed":true,"quality":3,"quality_warnings":[[3,"Name comparison"],[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Astatotilapia cf. bloyeti OS-2017","normalized":"Astatotilapia cf. bloyeti","canonical_name":{"value":"Astatotilapia bloyeti","value_ranked":"Astatotilapia bloyeti"},"hybrid":false,"surrogate":true,"unparsed_tail":" OS-2017","virus":false,"bacteria":false,"details":[{"genus":{"value":"Astatotilapia"},"specific_epithet":{"value":"bloyeti"},"annotation_identification":"cf."}],"positions":[["genus",0,13],["annotation_identification",14,17],["specific_epithet",18,25]]}
-c841aa1d-78ea-5b6a-93fc-e18c54164144|Astatotilapia cf. bloyeti OS-2017|Astatotilapia bloyeti|Astatotilapia bloyeti|||3
-
-# >
-
-
 ### Uninomials
 
 #SECTION: Uninomial<
@@ -1834,6 +1826,12 @@ c4dd80b7-984b-51f8-a4ec-573b4b32358b|Naviculadicta witkowskii LB & Metzeltin nov
 Lecanora strobilinoides GIRALT & GÓMEZ-BOLEA
 {"name_string_id":"f2bfaa25-c25f-5a31-90c6-a19bd4dc23f4","parsed":true,"quality":2,"quality_warnings":[[2,"Author in upper case"]],"parser_version":"test_version","verbatim":"Lecanora strobilinoides GIRALT & GÓMEZ-BOLEA","normalized":"Lecanora strobilinoides Giralt & Gómez-Bolea","canonical_name":{"value":"Lecanora strobilinoides","value_ranked":"Lecanora strobilinoides"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Lecanora"},"specific_epithet":{"value":"strobilinoides","authorship":{"value":"Giralt & Gómez-Bolea","basionym_authorship":{"authors":["Giralt","Gómez-Bolea"]}}}}],"positions":[["genus",0,8],["specific_epithet",9,23],["author_word",24,30],["author_word",33,44]]}
 f2bfaa25-c25f-5a31-90c6-a19bd4dc23f4|Lecanora strobilinoides GIRALT & GÓMEZ-BOLEA|Lecanora strobilinoides|Lecanora strobilinoides|Giralt & Gómez-Bolea||2
+#>
+
+#SECTION numbers and letters separated with '-' are not parsed as authors <
+Astatotilapia cf. bloyeti OS-2017
+{"name_string_id":"c841aa1d-78ea-5b6a-93fc-e18c54164144","parsed":true,"quality":3,"quality_warnings":[[3,"Name comparison"],[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Astatotilapia cf. bloyeti OS-2017","normalized":"Astatotilapia cf. bloyeti","canonical_name":{"value":"Astatotilapia bloyeti","value_ranked":"Astatotilapia bloyeti"},"hybrid":false,"surrogate":true,"unparsed_tail":" OS-2017","virus":false,"bacteria":false,"details":[{"genus":{"value":"Astatotilapia"},"specific_epithet":{"value":"bloyeti"},"annotation_identification":"cf."}],"positions":[["genus",0,13],["annotation_identification",14,17],["specific_epithet",18,25]]}
+c841aa1d-78ea-5b6a-93fc-e18c54164144|Astatotilapia cf. bloyeti OS-2017|Astatotilapia bloyeti|Astatotilapia bloyeti|||3
 #>
 
 #SECTION: Double parenthesis<
