@@ -22,12 +22,6 @@
 # "parsed: false"
 ####
 
-# todo <
-Pelargonium cucullatum ssp. cucullatum (L.) L'Her. ex [Soland.]
-{"name_string_id":"83811b74-a581-5801-aa49-d4eab6775fdb","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Pelargonium cucullatum ssp. cucullatum (L.) L'Her. ex [Soland.]","normalized":"Pelargonium cucullatum ssp. cucullatum (L.) L'Her.","canonical_name":{"value":"Pelargonium cucullatum cucullatum","value_ranked":"Pelargonium cucullatum ssp. cucullatum"},"hybrid":false,"surrogate":false,"unparsed_tail":" ex [Soland.]","virus":false,"bacteria":false,"details":[{"genus":{"value":"Pelargonium"},"specific_epithet":{"value":"cucullatum"},"infraspecific_epithets":[{"value":"cucullatum","rank":"ssp.","authorship":{"value":"(L.) L'Her.","basionym_authorship":{"authors":["L."]},"combination_authorship":{"authors":["L'Her."]}}}]}],"positions":[["genus",0,11],["specific_epithet",12,22],["rank",23,27],["infraspecific_epithet",28,38],["author_word",40,42],["author_word",44,50]]}
-83811b74-a581-5801-aa49-d4eab6775fdb|Pelargonium cucullatum ssp. cucullatum (L.) L'Her. ex [Soland.]|Pelargonium cucullatum cucullatum|Pelargonium cucullatum ssp. cucullatum|(L.) L'Her.||3
-# >
-
 ### Uninomials
 
 #SECTION: Uninomial<
@@ -1832,6 +1826,18 @@ Naviculadicta witkowskii LB & Metzeltin nov spec
 c4dd80b7-984b-51f8-a4ec-573b4b32358b|Naviculadicta witkowskii LB & Metzeltin nov spec|Naviculadicta witkowskii|Naviculadicta witkowskii|LB & Metzeltin||2
 #>
 
+#SECTION stray ex is not parsed as species<
+Pelargonium cucullatum ssp. cucullatum (L.) L'Her. ex [Soland.]
+{"name_string_id":"83811b74-a581-5801-aa49-d4eab6775fdb","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Pelargonium cucullatum ssp. cucullatum (L.) L'Her. ex [Soland.]","normalized":"Pelargonium cucullatum ssp. cucullatum (L.) L'Her.","canonical_name":{"value":"Pelargonium cucullatum cucullatum","value_ranked":"Pelargonium cucullatum ssp. cucullatum"},"hybrid":false,"surrogate":false,"unparsed_tail":" ex [Soland.]","virus":false,"bacteria":false,"details":[{"genus":{"value":"Pelargonium"},"specific_epithet":{"value":"cucullatum"},"infraspecific_epithets":[{"value":"cucullatum","rank":"ssp.","authorship":{"value":"(L.) L'Her.","basionym_authorship":{"authors":["L."]},"combination_authorship":{"authors":["L'Her."]}}}]}],"positions":[["genus",0,11],["specific_epithet",12,22],["rank",23,27],["infraspecific_epithet",28,38],["author_word",40,42],["author_word",44,50]]}
+83811b74-a581-5801-aa49-d4eab6775fdb|Pelargonium cucullatum ssp. cucullatum (L.) L'Her. ex [Soland.]|Pelargonium cucullatum cucullatum|Pelargonium cucullatum ssp. cucullatum|(L.) L'Her.||3
+
+# not dealing with ex. gr for now
+Acastella ex gr. rouaulti
+{"name_string_id":"c1864b52-848a-5de7-8f2d-a3cfe2025c40","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Acastella ex gr. rouaulti","normalized":"Acastella","canonical_name":{"value":"Acastella","value_ranked":"Acastella"},"hybrid":false,"surrogate":false,"unparsed_tail":" ex gr. rouaulti","virus":false,"bacteria":false,"details":[{"uninomial":{"value":"Acastella"}}],"positions":[["uninomial",0,9]]}
+c1864b52-848a-5de7-8f2d-a3cfe2025c40|Acastella ex gr. rouaulti|Acastella|Acastella|||3
+# >
+
+
 #SECTION: Authoship in upper case<
 Lecanora strobilinoides GIRALT & GÓMEZ-BOLEA
 {"name_string_id":"f2bfaa25-c25f-5a31-90c6-a19bd4dc23f4","parsed":true,"quality":2,"quality_warnings":[[2,"Author in upper case"]],"parser_version":"test_version","verbatim":"Lecanora strobilinoides GIRALT & GÓMEZ-BOLEA","normalized":"Lecanora strobilinoides Giralt & Gómez-Bolea","canonical_name":{"value":"Lecanora strobilinoides","value_ranked":"Lecanora strobilinoides"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Lecanora"},"specific_epithet":{"value":"strobilinoides","authorship":{"value":"Giralt & Gómez-Bolea","basionym_authorship":{"authors":["Giralt","Gómez-Bolea"]}}}}],"positions":[["genus",0,8],["specific_epithet",9,23],["author_word",24,30],["author_word",33,44]]}
@@ -2023,11 +2029,6 @@ Negaprion fronto (Jordan and Gilbert, 1882):
 Acanthochiton ex quisitus
 {"name_string_id":"00392ae2-1bd9-5a14-bea9-9d26f1107892","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Acanthochiton ex quisitus","normalized":"Acanthochiton","canonical_name":{"value":"Acanthochiton","value_ranked":"Acanthochiton"},"hybrid":false,"surrogate":false,"unparsed_tail":" ex quisitus","virus":false,"bacteria":false,"details":[{"uninomial":{"value":"Acanthochiton"}}],"positions":[["uninomial",0,13]]}
 00392ae2-1bd9-5a14-bea9-9d26f1107892|Acanthochiton ex quisitus|Acanthochiton|Acanthochiton|||3
-
-# not dealing with ex. gr for now
-Acastella ex gr. rouaulti
-{"name_string_id":"c1864b52-848a-5de7-8f2d-a3cfe2025c40","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Acastella ex gr. rouaulti","normalized":"Acastella","canonical_name":{"value":"Acastella","value_ranked":"Acastella"},"hybrid":false,"surrogate":false,"unparsed_tail":" ex gr. rouaulti","virus":false,"bacteria":false,"details":[{"uninomial":{"value":"Acastella"}}],"positions":[["uninomial",0,9]]}
-c1864b52-848a-5de7-8f2d-a3cfe2025c40|Acastella ex gr. rouaulti|Acastella|Acastella|||3
 #>
 
 ### Unparseable Tail
