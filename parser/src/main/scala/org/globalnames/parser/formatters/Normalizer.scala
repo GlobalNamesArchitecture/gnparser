@@ -111,20 +111,13 @@ trait Normalizer { parsedResult: ScientificNameParser.Result =>
         }
         authsStr.toString
       }
-    atStr.some
+    atStr.some |+| at.year.map(normalizedYear).map { " " + _ }
   }
 
   def normalizedAuthorsGroup(ag: AuthorsGroup): Option[String] = {
-    val year: Option[Year] = {
-      ag.authorsEx.flatMap { _.year } <+>
-        ag.authorsEmend.flatMap { _.year } <+>
-        ag.authors.year
-    }
-
     normalizedAuthorsTeam(ag.authors) |+|
       ag.authorsEx.flatMap(normalizedAuthorsTeam).map { " ex " + _ } |+|
-      ag.authorsEmend.flatMap(normalizedAuthorsTeam).map { " emend. " + _ } |+|
-      year.map(normalizedYear).map { " " + _ }
+      ag.authorsEmend.flatMap(normalizedAuthorsTeam).map { " emend. " + _ }
   }
 
   def normalizedAuthorship(as: Authorship): Option[String] = {
