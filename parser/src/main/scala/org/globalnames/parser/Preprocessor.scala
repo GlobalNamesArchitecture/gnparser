@@ -21,7 +21,7 @@ object Preprocessor {
   }
 
   private final val substitutionsPatterns = {
-    val notes = """(?ix)\s+(species\s+group|species\s+complex|group|author|emend)\b.*$"""
+    val notes = """(?ix)\s+(species\s+group|species\s+complex|group|author)\b.*$"""
     val taxonConcepts1 = """(?i)\s+(sensu|auct|sec|near|str)\.?\b.*$"""
     val taxonConcepts2 =
       """(?x)(,\s*|\s+)

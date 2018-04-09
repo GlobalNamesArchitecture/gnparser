@@ -417,11 +417,11 @@ class Parser(preprocessorResult: Preprocessor.Result,
   }
 
   def combinedAuthorship: RuleNodeMeta[Authorship] = rule {
-    combinedAuthorship1 | combinedAuthorship2
+    combinedAuthorship1 | combinedAuthorship2 | combinedAuthorship3
   }
 
   def combinedAuthorship1: RuleNodeMeta[Authorship] = rule {
-    basionymAuthorship ~ authorEx ~ authorship1 ~> {
+    basionymAuthorship ~ softSpace ~ authorEx ~ authorship1 ~> {
       (bauM: NodeMeta[Authorship], exM: NodeMeta[AuthorWord], exauM: NodeMeta[Authorship]) =>
         val authors1M = for { bau <- bauM; exau <- exauM }
                         yield bau.authors.copy(authorsEx = exau.authors.authors.some)
@@ -435,6 +435,19 @@ class Parser(preprocessorResult: Preprocessor.Result,
   }
 
   def combinedAuthorship2: RuleNodeMeta[Authorship] = rule {
+    basionymAuthorship ~ softSpace ~ authorEmend ~ authorship1 ~> {
+      (bauM: NodeMeta[Authorship], emendM: NodeMeta[AuthorWord], emendauM: NodeMeta[Authorship]) =>
+        val authors1M = for { bau <- bauM; emendau <- emendauM }
+                        yield bau.authors.copy(authorsEmend = emendau.authors.authors.some)
+        val bau1M = for { bau <- bauM; authors1 <- authors1M; _ <- emendM }
+                    yield bau.copy(authors = authors1)
+
+        bau1M.changeWarningsRef((bauM.node.authors, authors1M.node), (bauM.node, bau1M.node),
+                                (emendauM.node, bau1M.node))
+    }
+  }
+
+  def combinedAuthorship3: RuleNodeMeta[Authorship] = rule {
     basionymAuthorship ~ softSpace ~ authorship1 ~> {
       (bauM: NodeMeta[Authorship], cauM: NodeMeta[Authorship]) =>
         val r = for { bau <- bauM; cau <- cauM }
@@ -446,7 +459,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
   def basionymYearMisformed: RuleNodeMeta[Authorship] = rule {
     '(' ~ softSpace ~ authorsGroup ~ softSpace ~ ')' ~ (softSpace ~ ',').? ~ softSpace ~ year ~> {
       (aM: NodeMeta[AuthorsGroup], yM: NodeMeta[Year]) =>
-        val authors1 = aM.map { a => a.copy(year = yM.node.some) }
+        val authors1 = aM.map { a => a.copy(authors = a.authors.copy(year = yM.node.some)) }
         FactoryAST.authorship(authors = authors1, inparenthesis = true, basionymParsed = true)
           .add(warnings = Seq((2, "Misformed basionym year")))
           .changeWarningsRef((aM.node, authors1.node))
@@ -475,24 +488,33 @@ class Parser(preprocessorResult: Preprocessor.Result,
   }
 
   def authorship1: RuleNodeMeta[Authorship] = rule {
-    (authorsYear | authorsGroup) ~> { (a: NodeMeta[AuthorsGroup]) => FactoryAST.authorship(a) }
-  }
-
-  def authorsYear: RuleNodeMeta[AuthorsGroup] = rule {
-    authorsGroup ~ softSpace ~ (',' ~ softSpace).? ~ year ~> {
-      (aM: NodeMeta[AuthorsGroup], yM: NodeMeta[Year]) =>
-        val a1 = for { a <- aM; y <- yM } yield a.copy(year = y.some)
-        a1.changeWarningsRef((aM.node, a1.node))
-    }
+    authorsGroup ~> { (a: NodeMeta[AuthorsGroup]) => FactoryAST.authorship(a) }
   }
 
   def authorsGroup: RuleNodeMeta[AuthorsGroup] = rule {
-    authorsTeam ~ (authorEx ~ authorsTeam ~> {
-      (exM: NodeMeta[AuthorWord], atM: NodeMeta[AuthorsTeam]) => atM.add(exM.rawWarnings) }).? ~> {
-        (a: NodeMeta[AuthorsTeam], exAu: Option[NodeMeta[AuthorsTeam]]) =>
-          val ag = FactoryAST.authorsGroup(a, exAu)
-          val warns = exAu.map { _ => (2, "Ex authors are not required") }.toVector
-          ag.add(warnings = warns)
+    authorsTeam ~
+      (softSpace ~ authorEmend.? ~ authorEx.? ~ authorsTeam ~> { (x, y, z) => (x, (y, z)) }).? ~> {
+      (a: NodeMeta[AuthorsTeam],
+       cau: Option[(Option[NodeMeta[AuthorWord]],
+                    (Option[NodeMeta[AuthorWord]],
+                      NodeMeta[AuthorsTeam]))]) =>
+        val (auEmendOOM, auExOOM, auTeamOM) = Unzip[Option].unzip3(cau)
+        val auEmendOM = auEmendOOM.flatten
+        val auExOM = auExOOM.flatten
+        (auEmendOM, auExOM) match {
+          case (Some(auEmendM), Some(auExM)) => ???
+          case (None, auExMS) if auExMS.isDefined =>
+            val auTeam1OM = for (auTeamM <- auTeamOM)
+                            yield auTeamM.add(auExMS.get.rawWarnings)
+            val ag = FactoryAST.authorsGroup(a, authorsEx = auTeam1OM)
+            ag.add(warnings = Seq((2, "Ex authors are not required")))
+          case (auEmendMS, None) if auEmendMS.isDefined =>
+            val auTeam1OM = for (auTeamM <- auTeamOM)
+                            yield auTeamM.add(auEmendMS.get.rawWarnings)
+            FactoryAST.authorsGroup(a, authorsEmend = auTeam1OM)
+          case (None, None) =>
+            FactoryAST.authorsGroup(a)
+        }
     }
   }
 
@@ -503,7 +525,11 @@ class Parser(preprocessorResult: Preprocessor.Result,
         for { au <- auM; as <- asM } yield au.copy(separator = as.some)
       } ~> { (atM: NodeMeta[AuthorsTeam], aM: NodeMeta[Author]) =>
         for (at <- atM; a <- aM) yield at.copy(authors = at.authors :+ a)
-      })
+      }) ~ (softSpace ~ (',' ~ softSpace).? ~ year).? ~> {
+      (atM: NodeMeta[AuthorsTeam], yM: Option[NodeMeta[Year]]) =>
+        val at1M = for { at <- atM; y <- lift(yM) } yield at.copy(year = y)
+        at1M.changeWarningsRef((atM.node, at1M.node))
+    }
   }
 
   def authorSep: RuleNodeMeta[AuthorSep] = rule {
@@ -513,11 +539,15 @@ class Parser(preprocessorResult: Preprocessor.Result,
   }
 
   def authorEx: RuleNodeMeta[AuthorWord] = rule {
-    softSpace ~ capturePos("ex" ~ '.'.? | "in") ~ space ~> { (pos: CapturePosition) =>
+    capturePos("ex" ~ '.'.? | "in") ~ space ~> { (pos: CapturePosition) =>
       val aw = FactoryAST.authorWord(pos)
       val warns = (input.charAt(pos.end - 1) == '.').option { (3, "`ex` ends with dot") }.toVector
       aw.add(warnings = warns)
     }
+  }
+
+  def authorEmend: RuleNodeMeta[AuthorWord] = rule {
+    capturePos("emend" ~ '.'.?) ~ space ~> { (pos: CapturePosition) => FactoryAST.authorWord(pos) }
   }
 
   def author: RuleNodeMeta[Author] = rule {

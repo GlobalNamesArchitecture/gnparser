@@ -103,8 +103,9 @@ class ScientificNameParserSpec extends Specification {
                                    auth.combination.exists { cmb => hasRefNode(sourceNode, cmb) }
           case ag: AuthorsGroup => hasRefNode(sourceNode, ag.authors) ||
                                    ag.authorsEx.exists { auEx => hasRefNode(sourceNode, auEx) } ||
-                                   ag.year.exists { y => hasRefNode(sourceNode, y) }
-          case at: AuthorsTeam => at.authors.exists { a => hasRefNode(sourceNode, a) }
+                                   ag.authorsEmend.exists { auEm => hasRefNode(sourceNode, auEm) }
+          case at: AuthorsTeam => at.authors.exists { a => hasRefNode(sourceNode, a) } ||
+                                  at.year.exists { y => hasRefNode(sourceNode, y) }
           case au: Author => au.words.exists { aw => hasRefNode(sourceNode, aw) } ||
                              au.filius.exists { f => hasRefNode(sourceNode, f) }
           case _ => false

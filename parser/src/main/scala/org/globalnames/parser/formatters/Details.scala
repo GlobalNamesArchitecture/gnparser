@@ -78,14 +78,14 @@ trait Details { parsedResult: ScientificNameParser.Result =>
 
     def detailedAuthorship(as: Authorship): JObject = {
       def detailedAuthor(a: Author): String = normalizedAuthor(a)
-      def detailedAuthorsTeam(at: AuthorsTeam): JObject =
-        "authors" -> at.authors.map(detailedAuthor)
-      def detailedExAuthorsTeam(at: AuthorsTeam): Seq[String]  =
-        at.authors.map(detailedAuthor)
+      def detailedAuthorsTeam(at: AuthorsTeam): JObject = {
+        ("authors" -> at.authors.map(detailedAuthor)) ~
+          ("year" -> at.year.map(detailedYear))
+      }
       def detailedAuthorsGroup(ag: AuthorsGroup): JObject =
         detailedAuthorsTeam(ag.authors) ~
-          ("year" -> ag.year.map(detailedYear)) ~
-          ("ex_authors" -> ag.authorsEx.map(detailedExAuthorsTeam))
+          ("ex_authors" -> ag.authorsEx.map { at => detailedAuthorsTeam(at) }) ~
+          ("emend_authors" -> ag.authorsEmend.map { at => detailedAuthorsTeam(at) })
 
       "authorship" -> (
         ("value" -> parsedResult.normalizedAuthorship(as)) ~

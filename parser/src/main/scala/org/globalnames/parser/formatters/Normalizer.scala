@@ -92,29 +92,39 @@ trait Normalizer { parsedResult: ScientificNameParser.Result =>
     }
   }
 
-  def normalizedAuthorsTeam(at: AuthorsTeam): Option[String] =
-    if (at.authors.size == 1) {
-      normalizedAuthor(at.authors.head).some
-    } else {
-      val authsStr = at.authors.zipWithIndex.foldLeft(new StringBuilder) { case (sb, (a, idx)) =>
-        if (idx > 0) {
-          a.separator match {
-            case Some(sep) =>
-              val isLast = idx == at.authors.size - 1
-              sb.append(normalizeAuthorSeparator(sep, isLast))
-            case None =>
-              sb.append(", ")
+  def normalizedAuthorsTeam(at: AuthorsTeam): Option[String] = {
+    val atStr =
+      if (at.authors.size == 1) {
+        normalizedAuthor(at.authors.head)
+      } else {
+        val authsStr = at.authors.zipWithIndex.foldLeft(new StringBuilder) { case (sb, (a, idx)) =>
+          if (idx > 0) {
+            a.separator match {
+              case Some(sep) =>
+                val isLast = idx == at.authors.size - 1
+                sb.append(normalizeAuthorSeparator(sep, isLast))
+              case None =>
+                sb.append(", ")
+            }
           }
+          sb.append(normalizedAuthor(a))
         }
-        sb.append(normalizedAuthor(a))
+        authsStr.toString
       }
-      authsStr.toString.some
-    }
+    atStr.some
+  }
 
   def normalizedAuthorsGroup(ag: AuthorsGroup): Option[String] = {
+    val year: Option[Year] = {
+      ag.authorsEx.flatMap { _.year } <+>
+        ag.authorsEmend.flatMap { _.year } <+>
+        ag.authors.year
+    }
+
     normalizedAuthorsTeam(ag.authors) |+|
       ag.authorsEx.flatMap(normalizedAuthorsTeam).map { " ex " + _ } |+|
-      ag.year.map(normalizedYear).map { " " + _ }
+      ag.authorsEmend.flatMap(normalizedAuthorsTeam).map { " emend. " + _ } |+|
+      year.map(normalizedYear).map { " " + _ }
   }
 
   def normalizedAuthorship(as: Authorship): Option[String] = {

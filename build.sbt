@@ -115,6 +115,7 @@ lazy val parser = (project in file("./parser"))
 
     libraryDependencies ++= {
       Seq(shapeless, json4s, javaUuid, commonsText, parboiled, scalaz, specs2core)
+//      , "com.lihaoyi" %% "pprint" % "0.5.3"
     },
 
     scalacOptions in Test ++= Seq("-Yrangepos"),
