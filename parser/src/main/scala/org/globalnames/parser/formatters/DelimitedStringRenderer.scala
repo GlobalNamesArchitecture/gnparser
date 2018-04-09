@@ -1,6 +1,7 @@
-package org.globalnames.parser.formatters
+package org.globalnames
+package parser
+package formatters
 
-import org.globalnames.parser.ScientificNameParser
 import scalaz._
 import Scalaz._
 
@@ -22,7 +23,16 @@ trait DelimitedStringRenderer {
 
   val yearDelimited: Option[String] =
     (!ambiguousAuthorship).option {
-      parserResult.scientificName.year.map { normalizedYear }
+      val year: Option[Year] = scientificName.namesGroup.flatMap { ng =>
+        val infraspeciesYear = ng.name.infraspecies.flatMap {
+          _.group.last.authorship.flatMap { _.authors.authors.year }
+        }
+        val speciesYear =
+          ng.name.species.flatMap { _.authorship.flatMap { _.authors.authors.year } }
+        val uninomialYear = ng.name.uninomial.authorship.flatMap { _.authors.authors.year }
+        infraspeciesYear <+> speciesYear <+> uninomialYear
+      }
+      year.map { normalizedYear }
     }.flatten
 
   /**
@@ -56,7 +66,10 @@ trait DelimitedStringRenderer {
         val authorsExNames = as.authors.authorsEx.map { at => at.authors.map { a =>
           a.words.map { w => stringOf(w) }
         }}.getOrElse(Seq())
-        authorsNames ++ authorsExNames
+        val authorsEmendNames = as.authors.authorsEmend.map { at => at.authors.map { a =>
+          a.words.map { w => stringOf(w) }
+        }}.getOrElse(Seq())
+        authorsNames ++ authorsExNames ++ authorsEmendNames
       }.getOrElse(Seq())
     }
   }

@@ -84,10 +84,10 @@ trait Positions { parsedResult: ScientificNameParser.Result =>
         authorWord ++ filius
       }
       def positionedAuthorsTeam(at: AuthorsTeam): Vector[Position] =
-        at.authors.flatMap(positionedAuthor).toVector
+        at.authors.flatMap(positionedAuthor).toVector ++
+          at.year.map(positionedYear).toVector
       def positionedAuthorsGroup(ag: AuthorsGroup): Vector[Position] =
         positionedAuthorsTeam(ag.authors) ++
-          ag.year.map(positionedYear) ++
           ag.authorsEx.map(positionedAuthorsTeam).orZero
 
       as.basionym.map(positionedAuthorsGroup).orZero ++

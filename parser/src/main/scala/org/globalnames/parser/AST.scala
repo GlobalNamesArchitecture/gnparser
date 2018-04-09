@@ -49,15 +49,6 @@ case class ScientificName(
     val authorship = infraspeciesAuthorship <+> speciesAuthorship <+> uninomialAuthorship
     authorship.flatten
   }
-
-  val year: Option[Year] = namesGroup.flatMap { ng =>
-    val infraspeciesYear = ng.name.infraspecies.flatMap {
-      _.group.last.authorship.flatMap { _.authors.year }
-    }
-    val speciesYear = ng.name.species.flatMap { _.authorship.flatMap { _.authors.year } }
-    val uninomialYear = ng.name.uninomial.authorship.flatMap { _.authors.year }
-    infraspeciesYear <+> speciesYear <+> uninomialYear
-  }
 }
 
 case class NamesGroup(name: Name,
@@ -167,20 +158,28 @@ case class Author(words: Seq[AuthorWord],
   }
 }
 
-case class AuthorsTeam(authors: Seq[Author]) extends AstNode {
+case class AuthorsTeam(authors: Seq[Author],
+                       year: Option[Year] = None) extends AstNode {
 
   val pos: CapturePosition = {
-    CapturePosition(authors.minBy { _.pos.start }.pos.start,
-                    authors.minBy { _.pos.end }.pos.start)
+    val start = authors.headOption match {
+      case Some(a) => a.pos.start
+      case None => year.map { _.pos.start }.getOrElse(-1)
+    }
+    val end = year match {
+      case Some(y) => y.pos.end
+      case None => authors.lastOption.map { _.pos.end }.getOrElse(-1)
+    }
+    CapturePosition(start, end)
   }
 }
 
 case class AuthorsGroup(authors: AuthorsTeam,
                         authorsEx: Option[AuthorsTeam] = None,
-                        year: Option[Year] = None) extends AstNode {
+                        authorsEmend: Option[AuthorsTeam] = None) extends AstNode {
 
   val pos: CapturePosition = {
-    val nodes = Vector(authors.some, authorsEx, year).flatten
+    val nodes = Vector(authors.some, authorsEx).flatten
     CapturePosition(nodes.minBy { _.pos.start }.pos.start,
                     nodes.maxBy { _.pos.end }.pos.end)
   }

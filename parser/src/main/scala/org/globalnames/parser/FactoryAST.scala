@@ -127,17 +127,19 @@ object FactoryAST {
 
   def authorsGroup(authors: NodeMeta[AuthorsTeam],
                    authorsEx: Option[NodeMeta[AuthorsTeam]] = None,
-                   year: Option[NodeMeta[Year]] = None): NodeMeta[AuthorsGroup] = {
-    val ag = AuthorsGroup(authors.node, authorsEx.map { _.node }, year.map { _.node })
-    val warns = authors.warnings ++ authorsEx.map { _.warnings }.orZero ++
-                year.map { _.warnings }.orZero
+                   authorsEmend: Option[NodeMeta[AuthorsTeam]] = None): NodeMeta[AuthorsGroup] = {
+    val ag = AuthorsGroup(authors.node,
+                          authorsEx.map { _.node },
+                          authorsEmend.map { _.node })
+    val warns = authors.warnings ++ authorsEx.map { _.warnings }.orZero
     NodeMeta(ag, warns)
   }
 
-  def authorsTeam(authors: Seq[NodeMeta[Author]]): NodeMeta[AuthorsTeam] = {
-    val at = AuthorsTeam(authors.map { _.node })
-    val warns = authors.flatMap { _.warnings }.toVector
-    NodeMeta(at, warns)
+  def authorsTeam(authors: Seq[NodeMeta[Author]],
+                  year: Option[NodeMeta[Year]] = None): NodeMeta[AuthorsTeam] = {
+    val at = AuthorsTeam(authors.map { _.node }, year.map { _.node })
+    val warns = authors.flatMap { _.warnings } ++ year.map { _.warnings }.orZero
+    NodeMeta(at, warns.toVector)
   }
 
   def authorSep(pos: CapturePosition): NodeMeta[AuthorSep] = {
