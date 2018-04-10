@@ -78,7 +78,6 @@ class Parser(preprocessorResult: Preprocessor.Result,
             val r = FactoryAST.name(uninomial = uninomial1M,
                                     species = sp.some,
                                     infraspecies = ig)
-                    .changeWarningsRef((n1M.node, n2M.node), (n1M.node.uninomial, uninomial1M.node))
             (hc, r.some)
           case Right((hc, n)) => (hc, n)
         }
@@ -136,7 +135,6 @@ class Parser(preprocessorResult: Preprocessor.Result,
         val u1 = FactoryAST.uninomial(u)
         val nm = FactoryAST.name(uninomial = u1, species = s, comparison = c.some)
         nm.add(warnings = Seq((3, "Name comparison")))
-          .changeWarningsRef((u.node, u1.node))
     }
   }
 
@@ -165,9 +163,9 @@ class Parser(preprocessorResult: Preprocessor.Result,
                               infrOpt <- lift(maybeInfraspeciesGroupM) }
                         yield Name(u1, comparison = cmp,
                                    species = species.some, infraspecies = infrOpt)
-             nm.changeWarningsRef((ssM.node, uM1.node))
+             nm
          }
-         name.changeWarningsRef((uwM.node, uM1.node))
+         name
     }
   }
 
@@ -276,7 +274,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
     (uninomial ~ softSpace ~ rankUninomial ~ softSpace ~ uninomial) ~> {
       (u1M: NodeMeta[Uninomial], rM: NodeMeta[Rank], u2M: NodeMeta[Uninomial]) =>
         val r = for { u1 <- u1M; r <- rM; u2 <- u2M } yield u2.copy(rank = r.some, parent = u1.some)
-        r.changeWarningsRef((u2M.node, r.node))
+        r
       }
   }
 
@@ -284,7 +282,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
     uninomialWord ~ (space ~ authorship).? ~> {
       (uM: NodeMeta[UninomialWord], aM: Option[NodeMeta[Authorship]]) =>
         val r = for { u <- uM; a <- lift(aM) } yield Uninomial(u, a)
-        r.changeWarningsRef((uM.node, r.node))
+        r
     }
   }
 
@@ -324,7 +322,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
       (uwM: NodeMeta[UninomialWord], wM: NodeMeta[UninomialWord]) =>
         val uw1M = for { uw <- uwM; w <- wM }
                    yield uw.copy(pos = CapturePosition(uw.pos.start, w.pos.end))
-        uw1M.changeWarningsRef((uwM.node, uw1M.node), (wM.node, uw1M.node))
+        uw1M
     }
   }
 
@@ -429,8 +427,6 @@ class Parser(preprocessorResult: Preprocessor.Result,
                     yield bau.copy(authors = authors1)
 
         bau1M.add(warnings = Seq((2, "Ex authors are not required")))
-             .changeWarningsRef((bauM.node.authors, authors1M.node), (bauM.node, bau1M.node),
-                                (exM.node, bau1M.node))
     }
   }
 
@@ -442,8 +438,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
         val bau1M = for { bau <- bauM; authors1 <- authors1M; _ <- emendM }
                     yield bau.copy(authors = authors1)
 
-        bau1M.changeWarningsRef((bauM.node.authors, authors1M.node), (bauM.node, bau1M.node),
-                                (emendauM.node, bau1M.node))
+        bau1M
     }
   }
 
@@ -452,7 +447,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
       (bauM: NodeMeta[Authorship], cauM: NodeMeta[Authorship]) =>
         val r = for { bau <- bauM; cau <- cauM }
                 yield bau.copy(combination = cau.authors.some, basionymParsed = true)
-        r.changeWarningsRef((bauM.node, r.node))
+        r
     }
   }
 
@@ -462,7 +457,6 @@ class Parser(preprocessorResult: Preprocessor.Result,
         val authors1 = aM.map { a => a.copy(authors = a.authors.copy(year = yM.node.some)) }
         FactoryAST.authorship(authors = authors1, inparenthesis = true, basionymParsed = true)
           .add(warnings = Seq((2, "Misformed basionym year")))
-          .changeWarningsRef((aM.node, authors1.node))
     }
   }
 
@@ -474,7 +468,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
     '(' ~ softSpace ~ authorship1 ~ softSpace ~ ')' ~> {
       (aM: NodeMeta[Authorship]) =>
         val r = aM.map { a => a.copy(basionymParsed = true, inparenthesis = true) }
-        r.changeWarningsRef((aM.node, r.node))
+        r
     }
   }
 
@@ -483,12 +477,20 @@ class Parser(preprocessorResult: Preprocessor.Result,
       (aM: NodeMeta[Authorship]) =>
         val r = aM.map { a => a.copy(basionymParsed = true, inparenthesis = true) }
         r.add(warnings = Seq((3, "Authroship in double parentheses")))
-         .changeWarningsRef((aM.node, r.node))
     }
   }
 
   def authorship1: RuleNodeMeta[Authorship] = rule {
-    authorsGroup ~> { (a: NodeMeta[AuthorsGroup]) => FactoryAST.authorship(a) }
+    (authorsYear | authorsGroup) ~> { (a: NodeMeta[AuthorsGroup]) => FactoryAST.authorship(a) }
+  }
+
+  def authorsYear: RuleNodeMeta[AuthorsGroup] = rule {
+    authorsGroup ~ softSpace ~ (',' ~ softSpace).? ~ year ~> {
+      (aM: NodeMeta[AuthorsGroup], yM: NodeMeta[Year]) =>
+        val a1 = for { a <- aM; y <- yM }
+                 yield a.copy(authors = a.authors.copy(year = y.some))
+        a1
+    }
   }
 
   def authorsGroup: RuleNodeMeta[AuthorsGroup] = rule {
@@ -528,7 +530,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
       }) ~ (softSpace ~ (',' ~ softSpace).? ~ year).? ~> {
       (atM: NodeMeta[AuthorsTeam], yM: Option[NodeMeta[Year]]) =>
         val at1M = for { at <- atM; y <- lift(yM) } yield at.copy(year = y)
-        at1M.changeWarningsRef((atM.node, at1M.node))
+        at1M
     }
   }
 
@@ -561,7 +563,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
     author2 ~ softSpace ~ filius ~> {
       (auM: NodeMeta[Author], filiusM: NodeMeta[AuthorWord]) =>
         val au1M = for { au <- auM; filius <- filiusM } yield au.copy(filius = filius.some)
-        au1M.changeWarningsRef((auM.node, au1M.node))
+        au1M
     }
   }
 
@@ -583,11 +585,11 @@ class Parser(preprocessorResult: Preprocessor.Result,
   def authorWordSep: RuleNodeMeta[AuthorWord] = rule {
     (ch(dash) ~ authorWordSoft ~> { (awM: NodeMeta[AuthorWord]) =>
       val aw1M = for (aw <- awM) yield aw.copy(separator = AuthorWordSeparator.Dash)
-      aw1M.changeWarningsRef((awM.node, aw1M.node))
+      aw1M
     }) |
     (softSpace ~ authorWord ~> { (awM: NodeMeta[AuthorWord]) =>
-      val aw1M = awM.node.copy(separator = AuthorWordSeparator.Space)
-      aw1M.changeWarningsRef((awM.node, aw1M.node))
+      val aw1M = for (aw <- awM) yield { aw.copy(separator = AuthorWordSeparator.Space) }
+      aw1M
     })
   }
 
@@ -657,7 +659,6 @@ class Parser(preprocessorResult: Preprocessor.Result,
       (yStartM: NodeMeta[Year], yEnd: CapturePosition) =>
         val yrM = yStartM.map { yStart => yStart.copy(approximate = true, rangeEnd = Some(yEnd)) }
         yrM.add(warnings = Seq((3, "Years range")))
-           .changeWarningsRef((yStartM.node, yrM.node))
     }
   }
 
@@ -670,7 +671,6 @@ class Parser(preprocessorResult: Preprocessor.Result,
       (yM: NodeMeta[Year]) =>
         val yrM = yM.map { y => y.copy(approximate = true) }
         yrM.add(warnings = Seq((3, "Year with square brakets")))
-           .changeWarningsRef((yM.node, yrM.node))
     }
   }
 
@@ -685,7 +685,6 @@ class Parser(preprocessorResult: Preprocessor.Result,
       (yM: NodeMeta[Year]) =>
         val y1M = yM.map { y => y.copy(approximate = true) }
         y1M.add(warnings = Seq((2, "Year with parentheses")))
-           .changeWarningsRef((yM.node, y1M.node))
       }
   }
 
@@ -694,7 +693,6 @@ class Parser(preprocessorResult: Preprocessor.Result,
       (yM: NodeMeta[Year], pos: CapturePosition) =>
         val y1M = yM.map { y => y.copy(alpha = pos.some) }
         y1M.add(warnings = Seq((2, "Year with latin character")))
-           .changeWarningsRef((yM.node, y1M.node))
     }
   }
 
@@ -763,15 +761,7 @@ object Parser {
   case class NodeMeta[T <: AstNode](node: T, warnings: Vector[Warning] = Vector.empty)
     extends NodeMetaBase[T] {
 
-    val rawWarnings = warnings.map { w => (w.level, w.message) }
-
-    def changeWarningsRef(substitutions: (AstNode, AstNode)*): NodeMeta[T] = {
-      val substWarnsMap = substitutions.toMap
-      val ws = warnings.map { w =>
-        substWarnsMap.get(w.node).map { subst => w.copy(node = subst) }.getOrElse(w)
-      }
-      this.copy(warnings = ws)
-    }
+    val rawWarnings: Vector[(Int, String)] = warnings.map { w => (w.level, w.message) }
 
     def add(warnings: Seq[(Int, String)] = Seq.empty): NodeMeta[T] = {
       if (warnings.isEmpty) this
