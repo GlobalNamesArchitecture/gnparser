@@ -1,3 +1,18 @@
+Version 0.4.4 (2018-04-10)
+--------------------------
+
+- Fix #428: correctly parse `nomenyae`
+- Fix #429: don't parse `ex` as infraspecies
+- Fix #430: parse `nvar.` rank
+- Fix #431: parse "del" as part of authorship
+- Fix #432: fix author parsing (e.g. `OS-2017`)
+- Fix #433: revert punctuaiton parsing
+- Fix #434: support "emend." and "emend"
+- Fix #435: parse "& al." as a variant of "et al."
+- Fix #436: parse "apud" ("with") as a possible delimiter between authors
+- Fix #437: make filius less ambigous and normalise it to "fil." instead of "f."
+- minor bug fixes
+
 Version 0.4.3 (2017-12-06)
 --------------------------
 
