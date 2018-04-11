@@ -2,7 +2,7 @@ package org.globalnames.parser
 
 import java.io.Writer
 
-import org.apache.commons.lang3.text.translate._
+import org.apache.commons.text.translate._
 
 import scala.collection.mutable.ArrayBuffer
 
@@ -13,10 +13,7 @@ class TrackingPositionsUnescapeHtml4Translator extends AggregateTranslator {
   final var identity: Boolean = true
 
   override def translate(input: CharSequence, index: Int, out: Writer): Int = {
-    val consumed = translators.foldLeft(0) { (cnsmed, cst) =>
-      if (cnsmed == 0) cst.translate(input, index, out)
-      else cnsmed
-    }
+    val consumed = translators.translate(input, index, out)
     identity &&= consumed == 0
     positions += positions.last + (if (consumed == 0) 1 else consumed)
     consumed
@@ -27,11 +24,14 @@ class TrackingPositionsUnescapeHtml4Translator extends AggregateTranslator {
 
 object TrackingPositionsUnescapeHtml4Translator {
   private[TrackingPositionsUnescapeHtml4Translator] final val translators = {
-    val translator1 = new LookupTranslator(
-      (EntityArrays.BASIC_UNESCAPE ++
-        EntityArrays.ISO8859_1_UNESCAPE ++
-        EntityArrays.HTML40_EXTENDED_UNESCAPE).asInstanceOf[Array[Array[CharSequence]]]: _*)
+    val translator1 = {
+      val entityArrays = new java.util.HashMap[CharSequence, CharSequence]
+      entityArrays.putAll(EntityArrays.BASIC_UNESCAPE)
+      entityArrays.putAll(EntityArrays.ISO8859_1_UNESCAPE)
+      entityArrays.putAll(EntityArrays.HTML40_EXTENDED_UNESCAPE)
+      new LookupTranslator(entityArrays)
+    }
     val translator2 = new NumericEntityUnescaper
-    List(translator1, translator2)
+    new AggregateTranslator(translator1, translator2)
   }
 }
