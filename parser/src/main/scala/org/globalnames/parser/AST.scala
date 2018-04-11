@@ -159,14 +159,19 @@ case class Author(words: Seq[AuthorWord],
 }
 
 case class AuthorsTeam(authors: Seq[Author],
-                       year: Option[Year] = None) extends AstNode {
+                       years: Seq[Year] = Seq()) extends AstNode {
+
+  val year: Option[Year] = {
+    val yearNotApproximate = years.find { !_.approximate }
+    yearNotApproximate <+> years.headOption
+  }
 
   val pos: CapturePosition = {
     val start = authors.headOption match {
       case Some(a) => a.pos.start
-      case None => year.map { _.pos.start }.getOrElse(-1)
+      case None => years.headOption.map { _.pos.start }.getOrElse(-1)
     }
-    val end = year match {
+    val end = years.lastOption match {
       case Some(y) => y.pos.end
       case None => authors.lastOption.map { _.pos.end }.getOrElse(-1)
     }

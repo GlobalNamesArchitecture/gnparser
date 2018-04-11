@@ -454,7 +454,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
   def basionymYearMisformed: RuleNodeMeta[Authorship] = rule {
     '(' ~ softSpace ~ authorsGroup ~ softSpace ~ ')' ~ (softSpace ~ ',').? ~ softSpace ~ year ~> {
       (aM: NodeMeta[AuthorsGroup], yM: NodeMeta[Year]) =>
-        val authors1 = aM.map { a => a.copy(authors = a.authors.copy(year = yM.node.some)) }
+        val authors1 = aM.map { a => a.copy(authors = a.authors.copy(years = Seq(yM.node))) }
         FactoryAST.authorship(authors = authors1, inparenthesis = true, basionymParsed = true)
           .add(warnings = Seq((2, "Misformed basionym year")))
     }
@@ -481,16 +481,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
   }
 
   def authorship1: RuleNodeMeta[Authorship] = rule {
-    (authorsYear | authorsGroup) ~> { (a: NodeMeta[AuthorsGroup]) => FactoryAST.authorship(a) }
-  }
-
-  def authorsYear: RuleNodeMeta[AuthorsGroup] = rule {
-    authorsGroup ~ softSpace ~ (',' ~ softSpace).? ~ year ~> {
-      (aM: NodeMeta[AuthorsGroup], yM: NodeMeta[Year]) =>
-        val a1 = for { a <- aM; y <- yM }
-                 yield a.copy(authors = a.authors.copy(year = y.some))
-        a1
-    }
+    authorsGroup ~> { (a: NodeMeta[AuthorsGroup]) => FactoryAST.authorship(a) }
   }
 
   def authorsGroup: RuleNodeMeta[AuthorsGroup] = rule {
@@ -527,9 +518,10 @@ class Parser(preprocessorResult: Preprocessor.Result,
         for { au <- auM; as <- asM } yield au.copy(separator = as.some)
       } ~> { (atM: NodeMeta[AuthorsTeam], aM: NodeMeta[Author]) =>
         for (at <- atM; a <- aM) yield at.copy(authors = at.authors :+ a)
-      }) ~ (softSpace ~ (',' ~ softSpace).? ~ year).? ~> {
-      (atM: NodeMeta[AuthorsTeam], yM: Option[NodeMeta[Year]]) =>
-        val at1M = for { at <- atM; y <- lift(yM) } yield at.copy(year = y)
+      }) ~ (softSpace ~ oneOrMore(','.? ~ softSpace.? ~ year)).? ~> {
+      (atM: NodeMeta[AuthorsTeam], ysM: Option[Seq[NodeMeta[Year]]]) =>
+        val ys1M = ysM.getOrElse(Seq())
+        val at1M = for { at <- atM; ys <- lift(ys1M) } yield at.copy(years = ys)
         at1M
     }
   }

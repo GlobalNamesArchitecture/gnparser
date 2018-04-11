@@ -136,9 +136,9 @@ object FactoryAST {
   }
 
   def authorsTeam(authors: Seq[NodeMeta[Author]],
-                  year: Option[NodeMeta[Year]] = None): NodeMeta[AuthorsTeam] = {
-    val at = AuthorsTeam(authors.map { _.node }, year.map { _.node })
-    val warns = authors.flatMap { _.warnings } ++ year.map { _.warnings }.orZero
+                  years: Seq[NodeMeta[Year]] = Seq()): NodeMeta[AuthorsTeam] = {
+    val at = AuthorsTeam(authors.map { _.node }, years.map { _.node })
+    val warns = authors.flatMap { _.warnings } ++ years.flatMap { _.warnings }
     NodeMeta(at, warns.toVector)
   }
 

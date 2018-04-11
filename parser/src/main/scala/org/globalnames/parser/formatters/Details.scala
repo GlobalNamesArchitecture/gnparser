@@ -79,8 +79,8 @@ trait Details { parsedResult: ScientificNameParser.Result =>
     def detailedAuthorship(as: Authorship): JObject = {
       def detailedAuthor(a: Author): String = normalizedAuthor(a)
       def detailedAuthorsTeam(at: AuthorsTeam): JObject = {
-        ("authors" -> at.authors.map(detailedAuthor)) ~
-          ("year" -> at.year.map(detailedYear))
+        val res: JObject = "authors" -> at.authors.map(detailedAuthor)
+        at.years.foldLeft(res) { (r, y) => r ~ ("year" -> detailedYear(y)) }
       }
       def detailedAuthorsGroup(ag: AuthorsGroup): JObject =
         detailedAuthorsTeam(ag.authors) ~
