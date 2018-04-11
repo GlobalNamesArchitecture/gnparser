@@ -1,14 +1,19 @@
 import sbt.Keys._
+import scala.util.Try
 
 val scalaV11 = "2.11.12"
 val scalaV12 = "2.12.4"
 
 val commonSettings = Seq(
   version := {
-    val version = "0.4.3"
-    val release = sys.props.isDefinedAt("release")
+    val version = "0.4.4"
+    val release =
+      sys.props.get("release").flatMap { x => Try(x.toBoolean).toOption }.getOrElse(false)
     if (release) version
-    else version + sys.props.get("buildNumber").map { "-" + _ }.getOrElse("") + "-SNAPSHOT"
+    else {
+      val versionPostfix = sys.props.get("buildNumber").map { "-" + _ }.getOrElse("") + "-SNAPSHOT"
+      version + versionPostfix
+    }
   },
   scalaVersion := scalaV11,
   organization in ThisBuild := "org.globalnames",
