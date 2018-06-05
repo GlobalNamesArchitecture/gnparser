@@ -57,7 +57,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
   }
 
   def sciName2: RuleNodeMeta[NamesGroup] = rule {
-    name ~> { (n: NodeMeta[Name]) => FactoryAST.namesGroup(n) }
+    name ~> { n: NodeMeta[Name] => FactoryAST.namesGroup(n) }
   }
 
   private type HybridFormula1Type =
