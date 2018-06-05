@@ -6,7 +6,7 @@ val scalaV12 = "2.12.5"
 
 val commonSettings = Seq(
   version := {
-    val version = "0.4.4"
+    val version = "0.4.5"
     val release =
       sys.props.get("release").flatMap { x => Try(x.toBoolean).toOption }.getOrElse(false)
     if (release) version
