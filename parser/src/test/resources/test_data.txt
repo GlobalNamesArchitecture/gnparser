@@ -22,12 +22,6 @@
 # "parsed: false"
 ####
 
-### todo <
-Architectonica offlexa Iredale, 1931
-{"name_string_id":"d8088d2a-6d20-5ef6-9ec8-68753e2e6da0","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Architectonica offlexa Iredale, 1931","normalized":"Architectonica offlexa Iredale 1931","canonical_name":{"value":"Architectonica offlexa","value_ranked":"Architectonica offlexa"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Architectonica"},"specific_epithet":{"value":"offlexa","authorship":{"value":"Iredale 1931","basionym_authorship":{"authors":["Iredale"],"year":{"value":"1931"}}}}}],"positions":[["genus",0,14],["specific_epithet",15,22],["author_word",23,30],["year",32,36]]}
-d8088d2a-6d20-5ef6-9ec8-68753e2e6da0|Architectonica offlexa Iredale, 1931|Architectonica offlexa|Architectonica offlexa|Iredale 1931|1931|1
-### >
-
 ### Uninomials
 
 #SECTION: Uninomial<
@@ -259,6 +253,10 @@ Aëtosaurus ferratus
 #>
 
 #SECTION: Binomial with authorship<
+Architectonica offlexa Iredale, 1931
+{"name_string_id":"d8088d2a-6d20-5ef6-9ec8-68753e2e6da0","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Architectonica offlexa Iredale, 1931","normalized":"Architectonica offlexa Iredale 1931","canonical_name":{"value":"Architectonica offlexa","value_ranked":"Architectonica offlexa"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Architectonica"},"specific_epithet":{"value":"offlexa","authorship":{"value":"Iredale 1931","basionym_authorship":{"authors":["Iredale"],"year":{"value":"1931"}}}}}],"positions":[["genus",0,14],["specific_epithet",15,22],["author_word",23,30],["year",32,36]]}
+d8088d2a-6d20-5ef6-9ec8-68753e2e6da0|Architectonica offlexa Iredale, 1931|Architectonica offlexa|Architectonica offlexa|Iredale 1931|1931|1
+
 Scilla rupestris v.d. Merwe
 {"name_string_id":"72ec3a37-8a80-5a82-97dd-b6a67a52d209","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Scilla rupestris v.d. Merwe","normalized":"Scilla rupestris v.d. Merwe","canonical_name":{"value":"Scilla rupestris","value_ranked":"Scilla rupestris"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Scilla"},"specific_epithet":{"value":"rupestris","authorship":{"value":"v.d. Merwe","basionym_authorship":{"authors":["v.d. Merwe"]}}}}],"positions":[["genus",0,6],["specific_epithet",7,16],["author_word",17,21],["author_word",22,27]]}
 72ec3a37-8a80-5a82-97dd-b6a67a52d209|Scilla rupestris v.d. Merwe|Scilla rupestris|Scilla rupestris|v.d. Merwe||1
