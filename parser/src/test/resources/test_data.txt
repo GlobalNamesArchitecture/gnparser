@@ -22,12 +22,6 @@
 # "parsed: false"
 ####
 
-### todo <
-Fusinus eucos�nius
-{"name_string_id":"157cf8c1-0b0d-5b81-a3a9-f02bdc1413a5","parsed":true,"quality":3,"quality_warnings":[[3,"Incorrect conversion to UTF-8"]],"parser_version":"test_version","verbatim":"Fusinus eucos�nius","normalized":"Fusinus eucos�nius","canonical_name":{"value":"Fusinus eucos�nius","value_ranked":"Fusinus eucos�nius"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Fusinus"},"specific_epithet":{"value":"eucos�nius"}}],"positions":[["genus",0,7],["specific_epithet",8,18]]}
-157cf8c1-0b0d-5b81-a3a9-f02bdc1413a5|Fusinus eucos�nius|Fusinus eucos�nius|Fusinus eucos�nius|||3
-### >
-
 ### Uninomials
 
 #SECTION: Uninomial<
@@ -1991,6 +1985,10 @@ Deyeuxia coarctata Kunth, 1815 [1816]
 Macrotes cordovaria Guen�e 1857
 {"name_string_id":"9217d59c-d1e7-5c79-af65-f52623446c15","parsed":true,"quality":3,"quality_warnings":[[3,"Incorrect conversion to UTF-8"]],"parser_version":"test_version","verbatim":"Macrotes cordovaria Guen�e 1857","normalized":"Macrotes cordovaria Guen�e 1857","canonical_name":{"value":"Macrotes cordovaria","value_ranked":"Macrotes cordovaria"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Macrotes"},"specific_epithet":{"value":"cordovaria","authorship":{"value":"Guen�e 1857","basionym_authorship":{"authors":["Guen�e"],"year":{"value":"1857"}}}}}],"positions":[["genus",0,8],["specific_epithet",9,19],["author_word",20,26],["year",27,31]]}
 9217d59c-d1e7-5c79-af65-f52623446c15|Macrotes cordovaria Guen�e 1857|Macrotes cordovaria|Macrotes cordovaria|Guen�e 1857|1857|3
+
+Fusinus eucos�nius
+{"name_string_id":"157cf8c1-0b0d-5b81-a3a9-f02bdc1413a5","parsed":true,"quality":3,"quality_warnings":[[3,"Incorrect conversion to UTF-8"]],"parser_version":"test_version","verbatim":"Fusinus eucos�nius","normalized":"Fusinus eucos�nius","canonical_name":{"value":"Fusinus eucos�nius","value_ranked":"Fusinus eucos�nius"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Fusinus"},"specific_epithet":{"value":"eucos�nius"}}],"positions":[["genus",0,7],["specific_epithet",8,18]]}
+157cf8c1-0b0d-5b81-a3a9-f02bdc1413a5|Fusinus eucos�nius|Fusinus eucos�nius|Fusinus eucos�nius|||3
 #>
 
 #SECTION: UTF-8 0xA0 character (NO_BREAK_SPACE)<
