@@ -96,7 +96,7 @@ object Preprocessor {
 
   private final val comparisonPattern = """(?ix)(,\s*|\s+)cf\.?\s*$""".r
   private final val stopWordsPattern =
-    """(?ix)\s+(of
+    """(?ix)\s+(of\b
                |\(?ht\.?[^\w]
                |\(?hort\.?[^\w]
                |spec\.
