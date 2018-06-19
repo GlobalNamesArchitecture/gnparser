@@ -22,6 +22,12 @@
 # "parsed: false"
 ####
 
+### TODO<
+Notopholia corrusca
+{"name_string_id":"755cef9c-65e4-598d-abf5-4d4a91be9845","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Notopholia corrusca","normalized":"Notopholia corrusca","canonical_name":{"value":"Notopholia corrusca","value_ranked":"Notopholia corrusca"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Notopholia"},"specific_epithet":{"value":"corrusca"}}],"positions":[["genus",0,10],["specific_epithet",11,19]]}
+755cef9c-65e4-598d-abf5-4d4a91be9845|Notopholia corrusca|Notopholia corrusca|Notopholia corrusca|||1
+### >
+
 ### Uninomials
 
 #SECTION: Uninomial<
