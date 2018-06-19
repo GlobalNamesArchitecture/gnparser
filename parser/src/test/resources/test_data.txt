@@ -22,6 +22,12 @@
 # "parsed: false"
 ####
 
+### todo <
+Fusinus eucos�nius
+{"name_string_id":"157cf8c1-0b0d-5b81-a3a9-f02bdc1413a5","parsed":true,"quality":3,"quality_warnings":[[3,"Incorrect conversion to UTF-8"]],"parser_version":"test_version","verbatim":"Fusinus eucos�nius","normalized":"Fusinus eucos�nius","canonical_name":{"value":"Fusinus eucos�nius","value_ranked":"Fusinus eucos�nius"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Fusinus"},"specific_epithet":{"value":"eucos�nius"}}],"positions":[["genus",0,7],["specific_epithet",8,18]]}
+157cf8c1-0b0d-5b81-a3a9-f02bdc1413a5|Fusinus eucos�nius|Fusinus eucos�nius|Fusinus eucos�nius|||3
+### >
+
 ### Uninomials
 
 #SECTION: Uninomial<

@@ -34,7 +34,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
         name.exists { ch => spaceMiscoded.indexOf(ch) >= 0 }.option {
           Warning(3, "Non-standard space characters", ng.node)
         },
-        name.exists { ch => authCharMiscoded == ch }.option {
+        name.exists { ch => charMiscoded == ch }.option {
           Warning(3, "Incorrect conversion to UTF-8", ng.node)
         },
         unparsedTail.map {
@@ -786,13 +786,13 @@ object Parser {
   private final val sciUpperCharExtended = "ÆŒÖ"
   private final val authCharUpperStr =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝĆČĎİĶĹĺĽľŁłŅŌŐŒŘŚŜŞŠŸŹŻŽƒǾȘȚ"
-  private final val authCharMiscoded = '�'
+  private final val charMiscoded = '�'
   private final val apostr = '\''
   private final val doubleSpacePattern = Pattern.compile("""[\s_]{2}""")
   private final val authCharLower = LowerAlpha ++
     "àáâãäåæçèéêëìíîïðñòóóôõöøùúûüýÿāăąćĉčďđ'ēĕėęěğīĭİıĺľłńņňŏőœŕřśşšţťũūŭůűźżžſǎǔǧșțȳß"
-  private final val authCharUpper = CharPredicate(authCharUpperStr + authCharMiscoded)
-  private final val upperChar = UpperAlpha ++ "Ë" ++ sciUpperCharExtended
-  private final val lowerChar = LowerAlpha ++ "ë" ++ sciCharsExtended
+  private final val authCharUpper = CharPredicate(authCharUpperStr + charMiscoded)
+  private final val upperChar = UpperAlpha ++ "Ë" ++ sciUpperCharExtended ++ charMiscoded
+  private final val lowerChar = LowerAlpha ++ "ë" ++ sciCharsExtended ++ charMiscoded
   private final val anyVisible = upperChar ++ lowerChar ++ CharPredicate.Visible
 }
