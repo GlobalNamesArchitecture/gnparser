@@ -72,7 +72,7 @@ object Preprocessor {
 
   private final val noParsePatterns = {
     val threeOrMoreLettersGenus = """(?i)^\w{3,}\.""".r
-    val startsWithNot = """(?i)^(not|none|unidentified)(_|\b).*""".r
+    val startsWithNot = """(?i)^(not|none|unidentified)[\W_].*""".r
     val incertaeSedis1 = """(?i).*incertae\s+sedis.*""".r
     val incertaeSedis2 = """(?i)inc\.\s*sed\.""".r
     val phytoplasma = """(?i)phytoplasma\b""".r
@@ -96,9 +96,9 @@ object Preprocessor {
 
   private final val comparisonPattern = """(?ix)(,\s*|\s+)cf\.?\s*$""".r
   private final val stopWordsPattern =
-    """(?ix)\s+(of\b
-               |\(?ht\.?[^\w]
-               |\(?hort\.?[^\w]
+    """(?ix)\s+(of[\W_]
+               |\(?ht\.?\W
+               |\(?hort\.?\W
                |spec\.
                |nov\s+spec
                |cv).*$""".r
