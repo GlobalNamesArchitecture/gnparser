@@ -183,7 +183,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
   }
 
   def species: RuleNodeMeta[Species] = rule {
-     !(authorEx) ~ word ~ (softSpace ~ authorship).? ~ &(spaceCharsEOI ++ "(") ~> {
+     !(authorEx) ~ word ~ (softSpace ~ authorship).? ~ ','.? ~ &(spaceCharsEOI ++ "(") ~> {
       (sw: NodeMeta[SpeciesWord], a: Option[NodeMeta[Authorship]]) => FactoryAST.species(sw, a)
     }
   }
