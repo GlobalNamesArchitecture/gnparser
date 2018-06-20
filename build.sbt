@@ -78,18 +78,18 @@ val noPublishingSettings = Seq(
 /////////////////////// DEPENDENCIES /////////////////////////
 
 val akkaV            = "10.0.13"
-val specs2V          = "4.0.3"
+val specs2V          = "4.3.0"
 
 val akkaHttp         = "com.typesafe.akka"          %% "akka-http"                         % akkaV
 val akkaJson         = "com.typesafe.akka"          %% "akka-http-spray-json"              % akkaV
 val logbackClassic   = "ch.qos.logback"             %  "logback-classic"                   % "1.2.3"
 val spark            = "org.apache.spark"           %% "spark-core"                        % "2.1.1"        % Provided
 val shapeless        = "com.chuusai"                %% "shapeless"                         % "2.3.3"
-val json4s           = "org.json4s"                 %% "json4s-jackson"                    % "3.5.3"
+val json4s           = "org.json4s"                 %% "json4s-jackson"                    % "3.5.4"
 val javaUuid         = "com.fasterxml.uuid"         %  "java-uuid-generator"               % "3.1.5"
-val commonsText      = "org.apache.commons"         %  "commons-text"                      % "1.3"
+val commonsText      = "org.apache.commons"         %  "commons-text"                      % "1.4"
 val parboiled        = "org.globalnames"            %% "parboiled"                         % "2.1.4.1"
-val scalaz           = "org.scalaz"                 %% "scalaz-core"                       % "7.2.21"
+val scalaz           = "org.scalaz"                 %% "scalaz-core"                       % "7.2.24"
 val scalaArm         = "com.jsuereth"               %% "scala-arm"                         % "2.0"
 val scopt            = "com.github.scopt"           %% "scopt"                             % "3.7.0"
 val specs2core       = "org.specs2"                 %% "specs2-core"                       % specs2V        % Test
