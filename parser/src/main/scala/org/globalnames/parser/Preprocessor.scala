@@ -13,7 +13,7 @@ import Scalaz._
 
 object Preprocessor {
   case class Result(verbatim: String, unescaped: String, warnings: Seq[WarningInfo],
-                    virus: Boolean, noParse: Boolean, surrogate: Option[Boolean] = None,
+                    virus: Boolean, noParse: Boolean, surrogate: Boolean,
                     private val UNESCAPE_HTML4: TrackingPositionsUnescapeHtml4Translator) {
     val id: UUID = UuidGenerator.generate(verbatim)
 
@@ -131,7 +131,7 @@ object Preprocessor {
 
     Result(verbatim = input, unescaped = preprocessed, warnings = warnings,
            virus = checkVirus(input), noParse = noParse(input),
-           surrogate = isComparisonRemoved.option { true },
+           surrogate = isComparisonRemoved,
            UNESCAPE_HTML4)
   }
 }

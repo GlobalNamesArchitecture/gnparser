@@ -44,7 +44,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
       ).flatten ++ ng.warnings ++ preprocessorResult.warnings.map { wi => Warning(wi, ng.node) }
 
       val worstLevel = warnings.isEmpty ? 1 | warnings.maxBy { _.level }.level
-      val surrogatePreprocessed = preprocessorResult.surrogate.getOrElse(false)
+      val surrogatePreprocessed = preprocessorResult.surrogate
       val sn = ScientificName(namesGroup = ng.node.some, unparsedTail = unparsedTail,
                               quality = worstLevel,
                               surrogatePreprocessed = surrogatePreprocessed)
