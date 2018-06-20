@@ -38,6 +38,10 @@ Velutina haliotoides (Linnaeus, 1758), sensu Fabricius, 1780
 Velutina haliotoides (Linnaeus, 1758),
 {"name_string_id":"59093ba7-64a1-53c4-9795-12de7ff9e718","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Velutina haliotoides (Linnaeus, 1758),","normalized":"Velutina haliotoides (Linnaeus 1758)","canonical_name":{"value":"Velutina haliotoides","value_ranked":"Velutina haliotoides"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Velutina"},"specific_epithet":{"value":"haliotoides","authorship":{"value":"(Linnaeus 1758)","basionym_authorship":{"authors":["Linnaeus"],"year":{"value":"1758"}}}}}],"positions":[["genus",0,8],["specific_epithet",9,20],["author_word",22,30],["year",32,36]]}
 59093ba7-64a1-53c4-9795-12de7ff9e718|Velutina haliotoides (Linnaeus, 1758),|Velutina haliotoides|Velutina haliotoides|(Linnaeus 1758)|1758|1
+
+Fusinus clavilithoides Landau, Harzhauser, Büyükmeriç & Breitenberger, 20
+{"name_string_id":"76a62c41-361e-532c-852c-ab3dc7ab09cb","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Fusinus clavilithoides Landau, Harzhauser, Büyükmeriç & Breitenberger, 20","normalized":"Fusinus clavilithoides Landau, Harzhauser, Büyükmeriç & Breitenberger","canonical_name":{"value":"Fusinus clavilithoides","value_ranked":"Fusinus clavilithoides"},"hybrid":false,"surrogate":false,"unparsed_tail":" 20","virus":false,"bacteria":false,"details":[{"genus":{"value":"Fusinus"},"specific_epithet":{"value":"clavilithoides","authorship":{"value":"Landau, Harzhauser, Büyükmeriç & Breitenberger","basionym_authorship":{"authors":["Landau","Harzhauser","Büyükmeriç","Breitenberger"]}}}}],"positions":[["genus",0,7],["specific_epithet",8,22],["author_word",23,29],["author_word",31,41],["author_word",43,53],["author_word",56,69]]}
+76a62c41-361e-532c-852c-ab3dc7ab09cb|Fusinus clavilithoides Landau, Harzhauser, Büyükmeriç & Breitenberger, 20|Fusinus clavilithoides|Fusinus clavilithoides|Landau, Harzhauser, Büyükmeriç & Breitenberger||3
 ### >
 
 ### Uninomials
