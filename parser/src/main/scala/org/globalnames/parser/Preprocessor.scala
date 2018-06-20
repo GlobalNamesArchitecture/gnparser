@@ -72,7 +72,7 @@ object Preprocessor {
 
   private final val noParsePatterns = {
     val threeOrMoreLettersGenus = """(?i)^\w{3,}\.""".r
-    val startsWithNot = """(?i)^(not|none|unidentified).*""".r
+    val startsWithNot = """(?i)^(not|none|unidentified)(_|\b).*""".r
     val incertaeSedis1 = """(?i).*incertae\s+sedis.*""".r
     val incertaeSedis2 = """(?i)inc\.\s*sed\.""".r
     val phytoplasma = """(?i)phytoplasma\b""".r
