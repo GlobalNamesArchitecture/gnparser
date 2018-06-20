@@ -37,5 +37,9 @@ class TrackingPositionsUnescapeHtml4TranslatorSpec extends Specification {
     "Ætð" in {
       positions("&AElig;t&eth;") === List(0, 7, 8, 13)
     }
+
+    "<i>p</i>" in {
+      positions("<i>p</i>") === List(0, 3)
+    }
   }
 }

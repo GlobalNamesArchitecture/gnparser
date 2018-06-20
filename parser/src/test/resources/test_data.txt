@@ -22,6 +22,12 @@
 # "parsed: false"
 ####
 
+### todo <
+Velutina haliotoides (Linnaeus, 1758) <i>sensu</i> Fabricius, 1780
+{"name_string_id":"189c94f6-96aa-52bb-b019-103a2103ce21","parsed":true,"quality":2,"quality_warnings":[[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Velutina haliotoides (Linnaeus, 1758) <i>sensu</i> Fabricius, 1780","normalized":"Velutina haliotoides (Linnaeus 1758)","canonical_name":{"value":"Velutina haliotoides","value_ranked":"Velutina haliotoides"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Velutina"},"specific_epithet":{"value":"haliotoides","authorship":{"value":"(Linnaeus 1758)","basionym_authorship":{"authors":["Linnaeus"],"year":{"value":"1758"}}}}}],"positions":[["genus",0,8],["specific_epithet",9,20],["author_word",22,30],["year",32,36]]}
+189c94f6-96aa-52bb-b019-103a2103ce21|Velutina haliotoides (Linnaeus, 1758) <i>sensu</i> Fabricius, 1780|Velutina haliotoides|Velutina haliotoides|(Linnaeus 1758)|1758|2
+### >
+
 ### Uninomials
 
 #SECTION: Uninomial<

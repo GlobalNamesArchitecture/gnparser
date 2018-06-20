@@ -5,6 +5,7 @@ import java.io.Writer
 import org.apache.commons.text.translate._
 
 import scala.collection.mutable.ArrayBuffer
+import scala.collection.JavaConverters._
 
 class TrackingPositionsUnescapeHtml4Translator extends AggregateTranslator {
   import TrackingPositionsUnescapeHtml4Translator.translators
@@ -23,12 +24,15 @@ class TrackingPositionsUnescapeHtml4Translator extends AggregateTranslator {
 }
 
 object TrackingPositionsUnescapeHtml4Translator {
+  private val HTML_TAGS_REMOVE = Map("<i>" -> "", "</i>" -> "").asJava
+
   private[TrackingPositionsUnescapeHtml4Translator] final val translators = {
     val translator1 = {
       val entityArrays = new java.util.HashMap[CharSequence, CharSequence]
       entityArrays.putAll(EntityArrays.BASIC_UNESCAPE)
       entityArrays.putAll(EntityArrays.ISO8859_1_UNESCAPE)
       entityArrays.putAll(EntityArrays.HTML40_EXTENDED_UNESCAPE)
+      entityArrays.putAll(HTML_TAGS_REMOVE)
       new LookupTranslator(entityArrays)
     }
     val translator2 = new NumericEntityUnescaper
