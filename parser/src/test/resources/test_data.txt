@@ -22,6 +22,32 @@
 # "parsed: false"
 ####
 
+### todo <
+Velutina haliotoides (Linnaeus, 1758) <i>sensu</i> Fabricius, 1780
+{"name_string_id":"189c94f6-96aa-52bb-b019-103a2103ce21","parsed":true,"quality":2,"quality_warnings":[[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Velutina haliotoides (Linnaeus, 1758) <i>sensu</i> Fabricius, 1780","normalized":"Velutina haliotoides (Linnaeus 1758)","canonical_name":{"value":"Velutina haliotoides","value_ranked":"Velutina haliotoides"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Velutina"},"specific_epithet":{"value":"haliotoides","authorship":{"value":"(Linnaeus 1758)","basionym_authorship":{"authors":["Linnaeus"],"year":{"value":"1758"}}}}}],"positions":[["genus",0,8],["specific_epithet",9,20],["author_word",22,30],["year",32,36]]}
+189c94f6-96aa-52bb-b019-103a2103ce21|Velutina haliotoides (Linnaeus, 1758) <i>sensu</i> Fabricius, 1780|Velutina haliotoides|Velutina haliotoides|(Linnaeus 1758)|1758|2
+
+Velutina haliotoides (Linnaeus, 1758), <i>sensu</i> Fabricius, 1780
+{"name_string_id":"b8d77a78-2698-5050-9c7a-638f615bd357","parsed":true,"quality":2,"quality_warnings":[[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Velutina haliotoides (Linnaeus, 1758), <i>sensu</i> Fabricius, 1780","normalized":"Velutina haliotoides (Linnaeus 1758)","canonical_name":{"value":"Velutina haliotoides","value_ranked":"Velutina haliotoides"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Velutina"},"specific_epithet":{"value":"haliotoides","authorship":{"value":"(Linnaeus 1758)","basionym_authorship":{"authors":["Linnaeus"],"year":{"value":"1758"}}}}}],"positions":[["genus",0,8],["specific_epithet",9,20],["author_word",22,30],["year",32,36]]}
+b8d77a78-2698-5050-9c7a-638f615bd357|Velutina haliotoides (Linnaeus, 1758), <i>sensu</i> Fabricius, 1780|Velutina haliotoides|Velutina haliotoides|(Linnaeus 1758)|1758|2
+
+Velutina haliotoides (Linnaeus, 1758), sensu Fabricius, 1780
+{"name_string_id":"5efd63de-f4ec-55f1-bd5b-494988e58f9b","parsed":true,"quality":2,"quality_warnings":[[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Velutina haliotoides (Linnaeus, 1758), sensu Fabricius, 1780","normalized":"Velutina haliotoides (Linnaeus 1758)","canonical_name":{"value":"Velutina haliotoides","value_ranked":"Velutina haliotoides"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Velutina"},"specific_epithet":{"value":"haliotoides","authorship":{"value":"(Linnaeus 1758)","basionym_authorship":{"authors":["Linnaeus"],"year":{"value":"1758"}}}}}],"positions":[["genus",0,8],["specific_epithet",9,20],["author_word",22,30],["year",32,36]]}
+5efd63de-f4ec-55f1-bd5b-494988e58f9b|Velutina haliotoides (Linnaeus, 1758), sensu Fabricius, 1780|Velutina haliotoides|Velutina haliotoides|(Linnaeus 1758)|1758|2
+
+Velutina haliotoides (Linnaeus, 1758),
+{"name_string_id":"59093ba7-64a1-53c4-9795-12de7ff9e718","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Velutina haliotoides (Linnaeus, 1758),","normalized":"Velutina haliotoides (Linnaeus 1758)","canonical_name":{"value":"Velutina haliotoides","value_ranked":"Velutina haliotoides"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Velutina"},"specific_epithet":{"value":"haliotoides","authorship":{"value":"(Linnaeus 1758)","basionym_authorship":{"authors":["Linnaeus"],"year":{"value":"1758"}}}}}],"positions":[["genus",0,8],["specific_epithet",9,20],["author_word",22,30],["year",32,36]]}
+59093ba7-64a1-53c4-9795-12de7ff9e718|Velutina haliotoides (Linnaeus, 1758),|Velutina haliotoides|Velutina haliotoides|(Linnaeus 1758)|1758|1
+
+Fusinus clavilithoides Landau, Harzhauser, Büyükmeriç & Breitenberger, 20
+{"name_string_id":"76a62c41-361e-532c-852c-ab3dc7ab09cb","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Fusinus clavilithoides Landau, Harzhauser, Büyükmeriç & Breitenberger, 20","normalized":"Fusinus clavilithoides Landau, Harzhauser, Büyükmeriç & Breitenberger","canonical_name":{"value":"Fusinus clavilithoides","value_ranked":"Fusinus clavilithoides"},"hybrid":false,"surrogate":false,"unparsed_tail":" 20","virus":false,"bacteria":false,"details":[{"genus":{"value":"Fusinus"},"specific_epithet":{"value":"clavilithoides","authorship":{"value":"Landau, Harzhauser, Büyükmeriç & Breitenberger","basionym_authorship":{"authors":["Landau","Harzhauser","Büyükmeriç","Breitenberger"]}}}}],"positions":[["genus",0,7],["specific_epithet",8,22],["author_word",23,29],["author_word",31,41],["author_word",43,53],["author_word",56,69]]}
+76a62c41-361e-532c-852c-ab3dc7ab09cb|Fusinus clavilithoides Landau, Harzhauser, Büyükmeriç & Breitenberger, 20|Fusinus clavilithoides|Fusinus clavilithoides|Landau, Harzhauser, Büyükmeriç & Breitenberger||3
+
+<i>Velutina halioides</i> (Linnaeus, 1758)
+{"name_string_id":"653bbe42-aef4-5847-add4-8c7f8a4d1f9b","parsed":true,"quality":2,"quality_warnings":[[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"<i>Velutina halioides</i> (Linnaeus, 1758)","normalized":"Velutina halioides (Linnaeus 1758)","canonical_name":{"value":"Velutina halioides","value_ranked":"Velutina halioides"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Velutina"},"specific_epithet":{"value":"halioides","authorship":{"value":"(Linnaeus 1758)","basionym_authorship":{"authors":["Linnaeus"],"year":{"value":"1758"}}}}}],"positions":[["genus",0,10],["specific_epithet",11,20],["author_word",25,33],["year",35,39]]}
+653bbe42-aef4-5847-add4-8c7f8a4d1f9b|<i>Velutina halioides</i> (Linnaeus, 1758)|Velutina halioides|Velutina halioides|(Linnaeus 1758)|1758|2
+### >
+
 ### Uninomials
 
 #SECTION: Uninomial<
