@@ -1,3 +1,10 @@
+Version 0.4.5 (2018-06-22)
+--------------------------
+- Fix #462: handle comma in the end of name
+- Fix #460: correctly preparse `<i>` tag
+- Fix #455, #435: correctly preparse `of` and `not`
+- minor bug fixes
+
 Version 0.4.4 (2018-04-10)
 --------------------------
 
