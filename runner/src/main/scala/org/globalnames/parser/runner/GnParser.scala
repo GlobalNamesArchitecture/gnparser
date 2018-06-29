@@ -93,7 +93,7 @@ object GnParser {
   def startFileParse(config: Config): Unit = {
     val inputIteratorEither = config.inputFile match {
       case None =>
-        println(welcomeMessage)
+        Console.err.println(welcomeMessage)
         val iterator = Iterator.continually(StdIn.readLine())
         iterator.takeWhile { str => str != null && str.trim.nonEmpty }.right
       case Some(fp) =>
@@ -111,11 +111,11 @@ object GnParser {
         namesInputPar.tasksupport = new ForkJoinTaskSupport(new ForkJoinPool(config.parallelism))
         val parsedNamesCount = new AtomicInteger()
 
-        println(s"Running with parallelism: ${config.parallelism}")
+        Console.err.println(s"Running with parallelism: ${config.parallelism}")
         for (name <- namesInputPar) yield {
           val currentParsedCount = parsedNamesCount.incrementAndGet()
           if (currentParsedCount % 10000 == 0) {
-            println(s"Parsed $currentParsedCount of ${namesInputPar.size} lines")
+            Console.err.println(s"Parsed $currentParsedCount of ${namesInputPar.size} lines")
           }
           val result = scientificNameParser.fromString(name.trim)
           config.renderResult(result)
