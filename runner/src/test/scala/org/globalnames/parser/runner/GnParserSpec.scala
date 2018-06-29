@@ -26,16 +26,27 @@ class GnParserSpec extends Specification with StringMatchers with MatcherMacros 
       GnParser.main(args.split("\\s+"))
     }
 
-    def withInOut(input: String, thunk: () => Unit): Array[String] = {
+    def withInOut(input: String, thunk: () => Unit): (Array[String], Array[String]) = {
       val streamIn = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8))
       Console.withIn(streamIn) { withOut(thunk) }
     }
 
-    def withOut(thunk: () => Unit): Array[String] = {
+    def withOut(thunk: () => Unit): (Array[String], Array[String]) = {
+      def extractLinesFromStream(baos: ByteArrayOutputStream): Array[String] = {
+         val str = baos.toString(StandardCharsets.UTF_8.displayName)
+         str.split("\n").filterNot { x => x == null || x == "" }
+      }
+
+      java.lang.System.setErr(java.lang.System.out)
       val streamOut = new ByteArrayOutputStream()
+      val streamErr = new ByteArrayOutputStream()
       Console.withOut(streamOut) {
-        thunk()
-        streamOut.toString(StandardCharsets.UTF_8.displayName).split("\n")
+        Console.withErr(streamErr) {
+          thunk()
+          val outStr = extractLinesFromStream(streamOut)
+          val errStr = extractLinesFromStream(streamErr)
+          (outStr, errStr)
+        }
       }
     }
 
@@ -51,50 +62,57 @@ class GnParserSpec extends Specification with StringMatchers with MatcherMacros 
       }
 
       "should have correct preamble" >> {
-        val lines = withInOut("", () => gnparse("file -s"))
-        lines should have size 2
-        lines(0) should_== GnParser.welcomeMessage
-        lines(1) must startWith("Running with parallelism")
+        val (lines, errors) = withInOut("", () => gnparse("file -s"))
+        lines should beEmpty
+
+        errors should have size 2
+        errors(0) should_== GnParser.welcomeMessage
+        errors(1) must startWith("Running with parallelism")
       }
 
       "should parse single name from <stdin>" >> {
-        val lines = withInOut(name1, () => gnparse("file -s"))
-        lines should have size 3
-        lines(2) must startWith(name1uuid)
+        val (lines, _) = withInOut(name1, () => gnparse("file -s"))
+        lines should have size 1
+        lines(0) must startWith(name1uuid)
       }
 
       "should parse from <stdin> to <stdout> when no file is provided" >> {
         val input = s"""$name1
                        |$name2""".stripMargin
-        val lines = withInOut(input, () => gnparse("file -s"))
-        lines should have size 4
-        lines.drop(2).toSeq must contain(exactly(startWith(name1uuid), startWith(name2uuid)))
+        val (lines, _) = withInOut(input, () => gnparse("file -s"))
+        lines should have size 2
+        lines.toSeq should contain(exactly(startWith(name1uuid), startWith(name2uuid)))
       }
 
       "should parse from input file to <stdout>" >> {
-        val lines = withOut(() => gnparse(s"file -s -i $namesInputFilePath"))
-        lines should have size 3
-        lines.drop(1).toSeq must contain(exactly(startWith(name1uuid), startWith(name2uuid)))
+        val (lines, _) = withOut(() => gnparse(s"file -s -i $namesInputFilePath"))
+        lines should have size 2
+        lines.toSeq should contain(exactly(startWith(name1uuid), startWith(name2uuid)))
       }
 
       "should parse from <stdin> to output file" >> {
         val input = s"""$name1
                        |$name2""".stripMargin
         val nameOutputFilePath = Files.createTempFile("names_output1", ".txt")
-        val lines = withInOut(input, () => gnparse(s"file -s -o $nameOutputFilePath"))
-        lines should have size 2
+        val (lines, _) = withInOut(input, () => gnparse(s"file -s -o $nameOutputFilePath"))
+        lines should beEmpty
+
         val linesOut = Source.fromFile(nameOutputFilePath.toFile).getLines.toVector
         linesOut should have size 2
-        linesOut must contain(exactly(startWith(name1uuid), startWith(name2uuid)))
+        linesOut should contain(exactly(startWith(name1uuid), startWith(name2uuid)))
       }
 
       "should parse from input file to output file" >> {
         val nameOutputFilePath = Files.createTempFile("names_output2", ".txt")
-        val lines = withOut(() => gnparse(s"file -s -i $namesInputFilePath -o $nameOutputFilePath"))
-        lines should have size 1
+        val (lines, _) = withOut { () =>
+          gnparse(s"file -s -i $namesInputFilePath -o $nameOutputFilePath")
+        }
+
+        lines should beEmpty
+
         val linesOut = Source.fromFile(nameOutputFilePath.toFile).getLines.toVector
         linesOut should have size 2
-        linesOut must contain(exactly(startWith(name1uuid), startWith(name2uuid)))
+        linesOut should contain(exactly(startWith(name1uuid), startWith(name2uuid)))
       }
     }
   }
