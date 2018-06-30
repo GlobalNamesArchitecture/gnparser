@@ -39,7 +39,7 @@ trait Service extends Protocols {
 
   private def parseNames(names: Seq[String]) = {
     val namesJson = names.map { name =>
-      snp.fromString(name).renderCompactJson.parseJson
+      snp.fromString(name).jsonRenderer.renderCompactJson.parseJson
     }
     namesJson
   }

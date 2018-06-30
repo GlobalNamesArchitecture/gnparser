@@ -2,36 +2,66 @@ package org.globalnames
 package parser
 
 import formatters._
+import org.json4s.JsonAST.JValue
 import org.parboiled2._
 import shapeless._
 
 import scala.util.{Failure, Success}
 
-abstract class ScientificNameParser {
-  import ScientificNameParser.Result
+class Result(val preprocessorResult: Preprocessor.Result,
+             val scientificName: ScientificName,
+             val version: String,
+             val warnings: Vector[Warning] = Vector())
 
+class ResultFat(val result: Result) {
+
+  val canonizer: Canonizer = new Canonizer(result)
+  val normalizer: Normalizer = new Normalizer(result)
+  val details: Details = new Details(result, normalizer)
+  val positions: Positions = new Positions(result)
+  val jsonRenderer: JsonRenderer =
+    new JsonRenderer(result, result.version, canonizer, normalizer, positions, details)
+  val delimitedStringRenderer: DelimitedStringRenderer =
+    new DelimitedStringRenderer(result, canonizer, normalizer)
+
+  def json(showCanonicalUuid: Boolean = false): JValue =
+    jsonRenderer.json(showCanonicalUuid)
+
+  def delimitedString(delimiter: String = "\t"): String =
+    delimitedStringRenderer.delimitedString(delimiter)
+}
+
+object ResultFat {
+  def apply(result: Result): ResultFat = {
+    new ResultFat(result)
+  }
+}
+
+abstract class ScientificNameParser {
   val version: String
 
-  def fromString(input: String): Result =
+  def fromString(input: String): ResultFat =
     fromString(input, collectParsingErrors = false)
 
   def fromString(input: String,
-                 collectParsingErrors: Boolean): Result = {
+                 collectParsingErrors: Boolean): ResultFat = {
     val preprocessorResult = Preprocessor.process(Option(input).getOrElse(""))
-    if (preprocessorResult.virus || preprocessorResult.noParse) {
-      Result(preprocessorResult, ScientificName(), version)
-    } else {
-      val parser = new Parser(preprocessorResult, collectParsingErrors)
-      parser.sciName.run() match {
-        case Success(scientificName :: warnings :: HNil) =>
-          Result(preprocessorResult, scientificName, version, warnings)
-        case Failure(err: ParseError) if collectParsingErrors =>
-          Console.err.println(err.format(preprocessorResult.verbatim))
-          Result(preprocessorResult, ScientificName(), version)
-        case Failure(err) =>
-          Result(preprocessorResult, ScientificName(), version)
+    val result =
+      if (preprocessorResult.virus || preprocessorResult.noParse) {
+        new Result(preprocessorResult, ScientificName(), version)
+      } else {
+        val parser = new Parser(preprocessorResult, collectParsingErrors)
+        parser.sciName.run() match {
+          case Success(scientificName :: warnings :: HNil) =>
+            new Result(preprocessorResult, scientificName, version, warnings)
+          case Failure(err: ParseError) if collectParsingErrors =>
+            Console.err.println(err.format(preprocessorResult.verbatim))
+            new Result(preprocessorResult, ScientificName(), version)
+          case Failure(_) =>
+            new Result(preprocessorResult, ScientificName(), version)
+        }
       }
-    }
+    ResultFat(result)
   }
 }
 
@@ -39,22 +69,5 @@ object ScientificNameParser {
 
   final val instance = new ScientificNameParser {
     override final val version: String = BuildInfo.version
-  }
-
-  case class Result(preprocessorResult: Preprocessor.Result, scientificName: ScientificName,
-                    version: String, warnings: Vector[Warning] = Vector.empty)
-    extends JsonRenderer with DelimitedStringRenderer with Details
-       with Positions with Normalizer with Canonizer {
-
-    private[parser] def stringOf(astNode: AstNode): String =
-      preprocessorResult.unescaped.substring(astNode.pos.start, astNode.pos.end)
-
-    private[parser] def namesEqual(name1: Name, name2: Name): Boolean = {
-      val name1str = stringOf(name1)
-      val name2str = stringOf(name2)
-      !name1.uninomial.implied && !name2.uninomial.implied &&
-        (name1str.startsWith(name2str) ||
-        (name2str.endsWith(".") && name1str.startsWith(name2str.substring(0, name2str.length - 1))))
-    }
   }
 }

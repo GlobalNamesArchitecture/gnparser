@@ -5,7 +5,7 @@ package runner
 import java.io.{BufferedWriter, FileWriter}
 import java.util.concurrent.atomic.AtomicInteger
 
-import ScientificNameParser.{Result, instance => scientificNameParser}
+import ScientificNameParser.{instance => scientificNameParser}
 import tcp.TcpServer
 import web.controllers.WebServer
 import resource._
@@ -34,8 +34,10 @@ object GnParser {
                     private val simpleFormat: Boolean = false,
                     private val threadsNumber: Option[Int] = None) {
     val parallelism: Int = threadsNumber.getOrElse(ForkJoinPool.getCommonPoolParallelism)
-    def renderResult(result: Result): String =
-      simpleFormat ? result.delimitedString() | result.renderCompactJson
+    def renderResult(result: ResultFat): String = {
+      simpleFormat ?
+        result.delimitedStringRenderer.delimitedString() | result.jsonRenderer.renderCompactJson
+    }
   }
 
   private[runner] val gnParserVersion = BuildInfo.version

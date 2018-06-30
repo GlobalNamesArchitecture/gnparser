@@ -1,13 +1,15 @@
-package org.globalnames.parser.formatters
+package org.globalnames.parser
+package formatters
 
-import org.globalnames.parser._
 import org.json4s.JsonAST.{JBool, JNothing}
 import org.json4s.JsonDSL._
 import org.json4s.{JObject, JString, JValue}
 
 import scalaz.Scalaz._
 
-trait Details { parsedResult: ScientificNameParser.Result =>
+class Details(parsedResult: Result,
+              normalizer: Normalizer) extends CommonOps {
+  protected val preprocessorResult: Preprocessor.Result = parsedResult.preprocessorResult
 
   def detailed: JValue = {
     def detailedNamesGroup(namesGroup: NamesGroup): JValue = {
@@ -77,7 +79,7 @@ trait Details { parsedResult: ScientificNameParser.Result =>
     }
 
     def detailedAuthorship(as: Authorship): JObject = {
-      def detailedAuthor(a: Author): String = normalizedAuthor(a)
+      def detailedAuthor(a: Author): String = normalizer.normalizedAuthor(a)
       def detailedAuthorsTeam(at: AuthorsTeam): JObject = {
         val res: JObject = "authors" -> at.authors.map(detailedAuthor)
         at.years.foldLeft(res) { (r, y) => r ~ ("year" -> detailedYear(y)) }
@@ -88,10 +90,10 @@ trait Details { parsedResult: ScientificNameParser.Result =>
           ("emend_authors" -> ag.authorsEmend.map { at => detailedAuthorsTeam(at) })
 
       "authorship" -> (
-        ("value" -> parsedResult.normalizedAuthorship(as)) ~
+        ("value" -> normalizer.normalizedAuthorship(as)) ~
           ("basionym_authorship" -> as.basionym.map(detailedAuthorsGroup)) ~
           ("combination_authorship" -> as.combination.map(detailedAuthorsGroup))
-        )
+      )
     }
 
     parsedResult.scientificName.namesGroup.map(detailedNamesGroup)

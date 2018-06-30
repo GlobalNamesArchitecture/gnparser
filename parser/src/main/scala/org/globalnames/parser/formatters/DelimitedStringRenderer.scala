@@ -5,8 +5,10 @@ package formatters
 import scalaz._
 import Scalaz._
 
-trait DelimitedStringRenderer {
-  parserResult: ScientificNameParser.Result with Normalizer =>
+class DelimitedStringRenderer(parserResult: Result,
+                              canonizer: Canonizer,
+                              normalizer: Normalizer) extends CommonOps {
+  protected val preprocessorResult: Preprocessor.Result = parserResult.preprocessorResult
 
   protected[globalnames] val ambiguousAuthorship: Boolean = {
     val isAmbiguousOpt = for {
@@ -18,12 +20,12 @@ trait DelimitedStringRenderer {
 
   protected[globalnames] val authorshipDelimited: Option[String] =
     (!ambiguousAuthorship).option {
-      parserResult.scientificName.authorship.flatMap { normalizedAuthorship }
+      parserResult.scientificName.authorship.flatMap { normalizer.normalizedAuthorship }
     }.flatten
 
   val yearDelimited: Option[String] =
     (!ambiguousAuthorship).option {
-      val year: Option[Year] = scientificName.namesGroup.flatMap { ng =>
+      val year: Option[Year] = parserResult.scientificName.namesGroup.flatMap { ng =>
         val infraspeciesYear = ng.name.infraspecies.flatMap {
           _.group.last.authorship.flatMap { _.authors.authors.year }
         }
@@ -32,7 +34,7 @@ trait DelimitedStringRenderer {
         val uninomialYear = ng.name.uninomial.authorship.flatMap { _.authors.authors.year }
         infraspeciesYear <+> speciesYear <+> uninomialYear
       }
-      year.map { normalizedYear }
+      year.map { normalizer.normalizedYear }
     }.flatten
 
   /**
@@ -45,8 +47,8 @@ trait DelimitedStringRenderer {
   def delimitedString(delimiter: String = "\t"): String = {
     val uuid = parserResult.preprocessorResult.id
     val verbatim = parserResult.preprocessorResult.verbatim
-    val canonical = parserResult.canonized().orZero
-    val canonicalExtended = parserResult.canonized(showRanks = true).orZero
+    val canonical = canonizer.canonized().orZero
+    val canonicalExtended = canonizer.canonized(showRanks = true).orZero
     val quality = parserResult.scientificName.quality
     Seq(uuid, verbatim, canonical, canonicalExtended,
         authorshipDelimited.orZero, yearDelimited.orZero, quality).mkString(delimiter)
@@ -62,7 +64,9 @@ trait DelimitedStringRenderer {
       Seq()
     } else {
       parserResult.scientificName.authorship.map { as =>
-        val authorsNames = as.authors.authors.authors.map { a => a.words.map { w => stringOf(w) } }
+        val authorsNames = as.authors.authors.authors.map {
+          a => a.words.map { w => stringOf(w) }
+        }
         val authorsExNames = as.authors.authorsEx.map { at => at.authors.map { a =>
           a.words.map { w => stringOf(w) }
         }}.getOrElse(Seq())

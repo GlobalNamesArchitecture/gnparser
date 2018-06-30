@@ -8,6 +8,6 @@ class Parser {
   def parse(names: JavaRDD[String], compact: Boolean, showCanonicalUuid: Boolean): JavaRDD[String] =
     names.map(new Function[String, String] {
       override def call(name: String): String =
-        snp.fromString(name).render(compact, showCanonicalUuid)
+        snp.fromString(name).jsonRenderer.render(compact, showCanonicalUuid)
     })
 }

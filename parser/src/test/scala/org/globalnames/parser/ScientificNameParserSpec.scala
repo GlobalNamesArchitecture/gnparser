@@ -60,18 +60,18 @@ class ScientificNameParserSpec extends Specification {
       s"parse correctly delimited string: '${expectedName.verbatim}'" in {
         val pr = scientificNameParser.fromString(expectedName.verbatim)
 
-        uuid              === pr.preprocessorResult.id.toString
-        verbatim          === pr.preprocessorResult.verbatim
-        canonical         === pr.canonized().orZero
-        canonicalExtended === pr.canonized(showRanks = true).orZero
-        authorship        === pr.authorshipDelimited.orZero
-        year              === pr.yearDelimited.orZero
-        quality.toInt     === pr.scientificName.quality
+        uuid              === pr.result.preprocessorResult.id.toString
+        verbatim          === pr.result.preprocessorResult.verbatim
+        canonical         === pr.canonizer.canonized().orZero
+        canonicalExtended === pr.canonizer.canonized(showRanks = true).orZero
+        authorship        === pr.delimitedStringRenderer.authorshipDelimited.orZero
+        year              === pr.delimitedStringRenderer.yearDelimited.orZero
+        quality.toInt     === pr.result.scientificName.quality
       }
 
       s"contain no duplicates in warnings" in {
         val pr = scientificNameParser.fromString(expectedName.verbatim)
-        Set(pr.warnings: _*).size === pr.warnings.size
+        Set(pr.result.warnings: _*).size === pr.result.warnings.size
       }
   }
 }

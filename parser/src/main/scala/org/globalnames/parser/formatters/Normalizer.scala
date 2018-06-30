@@ -1,10 +1,12 @@
-package org.globalnames.parser.formatters
+package org.globalnames.parser
+package formatters
 
-import org.globalnames.parser._
 import scalaz.{Name => _, _}
 import Scalaz._
 
-trait Normalizer { parsedResult: ScientificNameParser.Result =>
+class Normalizer(parsedResult: Result) extends CommonOps {
+  private val canonizer: Canonizer = new Canonizer(parsedResult)
+  protected val preprocessorResult: Preprocessor.Result = parsedResult.preprocessorResult
 
   def normalized: Option[String] = {
 
@@ -37,7 +39,7 @@ trait Normalizer { parsedResult: ScientificNameParser.Result =>
     def normalizedUninomial(u: Uninomial): Option[String] =
       (!u.implied).option {
         val parts =
-          Vector(canonizedUninomial(u, showRanks = true),
+          Vector(canonizer.canonizedUninomial(u, showRanks = true),
                  u.authorship.flatMap { normalizedAuthorship })
         parts.flatten.mkString(" ")
       }

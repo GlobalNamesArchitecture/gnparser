@@ -1,6 +1,6 @@
-package org.globalnames.parser.formatters
+package org.globalnames.parser
+package formatters
 
-import org.globalnames.parser.ScientificNameParser
 import org.json4s.JsonAST.{JArray, JNothing, JValue}
 import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods
@@ -8,17 +8,23 @@ import org.json4s.jackson.JsonMethods
 import scalaz._
 import Scalaz._
 
-trait JsonRenderer { parserResult: ScientificNameParser.Result =>
+class JsonRenderer(parserResult: Result,
+                   version: String,
+                   canonizer: Canonizer,
+                   normalizer: Normalizer,
+                   positions: Positions,
+                   details: Details) {
 
-  def json(showCanonicalUuid: Boolean = false): JValue = {
-    val canonical = parserResult.canonized()
+  def json(showCanonicalUuid: Boolean): JValue = {
+    val canonical = canonizer.canonized()
     val parsed = canonical.isDefined
 
     val canonicalName: JValue =
       if (parsed) {
-        ("id" -> showCanonicalUuid.option { canonizedUuid().map { _.id.toString } }.join) ~
+        val canonizedUuidStrOpt = canonizer.canonizedUuid().map { _.id.toString }
+        ("id" -> showCanonicalUuid.option { canonizedUuidStrOpt }.join) ~
           ("value" -> canonical) ~
-          ("value_ranked" -> parserResult.canonized(showRanks = true))
+          ("value_ranked" -> canonizer.canonized(showRanks = true))
       } else JNothing
 
     val quality = canonical.map { _ => parserResult.scientificName.quality }
@@ -31,7 +37,7 @@ trait JsonRenderer { parserResult: ScientificNameParser.Result =>
         warningsJArr.some
       }
     val positionsJson: Option[JArray] = parsed.option {
-      parserResult.positioned.map { position =>
+      positions.positioned.map { position =>
         JArray(List(position.nodeName,
           parserResult.preprocessorResult.verbatimPosAt(position.start),
           parserResult.preprocessorResult.verbatimPosAt(position.end)))
@@ -45,14 +51,14 @@ trait JsonRenderer { parserResult: ScientificNameParser.Result =>
       ("quality_warnings" -> qualityWarnings) ~
       ("parser_version" -> version) ~
       ("verbatim" -> parserResult.preprocessorResult.verbatim) ~
-      ("normalized" -> parserResult.normalized) ~
+      ("normalized" -> normalizer.normalized) ~
       ("canonical_name" -> canonicalName) ~
       ("hybrid" -> parserResult.scientificName.hybrid) ~
       ("surrogate" -> parserResult.scientificName.surrogate) ~
       ("unparsed_tail" -> parserResult.scientificName.unparsedTail) ~
       ("virus" -> parserResult.preprocessorResult.virus) ~
       ("bacteria" -> parserResult.scientificName.bacteria) ~
-      ("details" -> parserResult.detailed) ~
+      ("details" -> details.detailed) ~
       ("positions" -> positionsJson))
   }
 

@@ -18,15 +18,15 @@ class ParserSpec extends Specification {
     "Homo sapiens" in {
       val res = parse("Homo sapiens")
       canonical(res.json()).extract[String] === "Homo sapiens"
-      res.warnings must beEmpty
+      res.result.warnings must beEmpty
     }
 
     """Homo\nsapiens""" in {
       val res = parse("Homo\nsapiens")
 
-      res.warnings must haveSize(1)
-      res.warnings(0).level === 3
-      res.warnings(0).message === "Non-standard space characters"
+      res.result.warnings must haveSize(1)
+      res.result.warnings(0).level === 3
+      res.result.warnings(0).message === "Non-standard space characters"
 
       canonical(res.json()).extract[String] === "Homo sapiens"
     }
@@ -34,11 +34,11 @@ class ParserSpec extends Specification {
     """Homo\r\nsapiens""" in {
       val res = parse("Homo\r\nsapiens")
 
-      res.warnings must haveSize(2)
-      res.warnings(0).level === 2
-      res.warnings(0).message === "Multiple adjacent space characters"
-      res.warnings(1).level === 3
-      res.warnings(1).message === "Non-standard space characters"
+      res.result.warnings must haveSize(2)
+      res.result.warnings(0).level === 2
+      res.result.warnings(0).message === "Multiple adjacent space characters"
+      res.result.warnings(1).level === 3
+      res.result.warnings(1).message === "Non-standard space characters"
 
       canonical(res.json()).extract[String] === "Homo sapiens"
     }
@@ -46,9 +46,9 @@ class ParserSpec extends Specification {
     """Homo sapiens\r""" in {
       val res = parse("Homo sapiens\r")
 
-      res.warnings must haveSize(1)
-      res.warnings(0).level === 2
-      res.warnings(0).message === "Trailing whitespace"
+      res.result.warnings must haveSize(1)
+      res.result.warnings(0).level === 2
+      res.result.warnings(0).message === "Trailing whitespace"
 
       canonical(res.json()).extract[String] === "Homo sapiens"
     }
@@ -56,11 +56,11 @@ class ParserSpec extends Specification {
     """Homo sp.\r""" in {
       val res = parse("Homo sp.\r")
 
-      res.warnings must haveSize(2)
-      res.warnings(0).level === 2
-      res.warnings(0).message === "Trailing whitespace"
-      res.warnings(1).level === 3
-      res.warnings(1).message === "Name is approximate"
+      res.result.warnings must haveSize(2)
+      res.result.warnings(0).level === 2
+      res.result.warnings(0).message === "Trailing whitespace"
+      res.result.warnings(1).level === 3
+      res.result.warnings(1).message === "Name is approximate"
 
       canonical(res.json()).extract[String] === "Homo"
     }

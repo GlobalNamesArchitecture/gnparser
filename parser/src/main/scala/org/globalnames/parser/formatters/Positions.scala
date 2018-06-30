@@ -4,7 +4,7 @@ import org.globalnames.parser._
 
 import scalaz.Scalaz._
 
-trait Positions { parsedResult: ScientificNameParser.Result =>
+class Positions(parsedResult: Result) {
 
   import Positions.Position
 

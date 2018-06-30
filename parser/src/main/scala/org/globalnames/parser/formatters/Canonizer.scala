@@ -16,7 +16,9 @@ case class Canonical(value: String) extends AnyVal {
   def id: UUID = UuidGenerator.generate(value)
 }
 
-trait Canonizer { parsedResult: ScientificNameParser.Result =>
+class Canonizer(parsedResult: Result) extends CommonOps {
+  protected val preprocessorResult: Preprocessor.Result = parsedResult.preprocessorResult
+
   private val canonicalRanked = computeCanonical(showRanks = true)
   private val canonicalRankedLess = computeCanonical(showRanks = false)
 
