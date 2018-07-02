@@ -3,7 +3,11 @@ package org.globalnames.parser
 import org.specs2.mutable.Specification
 
 class DelimitedStringRendererSpec extends Specification {
-  val scientificNameParser = new ScientificNameParser { val version = "test_version" }
+  val scientificNameParser: ScientificNameParserRenderer = new ScientificNameParserRenderer {
+    val parser: ScientificNameParser = new ScientificNameParser {
+      override val version: String = "test_version"
+    }
+  }
 
   "correctly generate delimited string with explicit delimiter" in {
     scientificNameParser.fromString("Aaaba de Laubenfels, 1936").delimitedString("|") ===

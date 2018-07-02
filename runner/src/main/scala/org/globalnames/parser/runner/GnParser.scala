@@ -15,8 +15,8 @@ import scala.collection.parallel.ForkJoinTaskSupport
 import scala.collection.parallel.immutable.ParVector
 import scala.concurrent.forkjoin.ForkJoinPool
 import scala.io.{Source, StdIn}
-import scalaz.Scalaz._
 import scalaz._
+import Scalaz._
 
 object GnParser {
   sealed trait Mode
@@ -34,7 +34,7 @@ object GnParser {
                     private val simpleFormat: Boolean = false,
                     private val threadsNumber: Option[Int] = None) {
     val parallelism: Int = threadsNumber.getOrElse(ForkJoinPool.getCommonPoolParallelism)
-    def renderResult(result: ResultFat): String = {
+    def renderResult(result: ResultRendered): String = {
       simpleFormat ?
         result.delimitedStringRenderer.delimitedString() | result.jsonRenderer.renderCompactJson
     }

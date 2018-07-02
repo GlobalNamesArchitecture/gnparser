@@ -5,9 +5,12 @@ import org.specs2.mutable.Specification
 
 class ParserSpec extends Specification {
 
-  val snp = new ScientificNameParser {
-    val version = "test_version"
+  val snp: ScientificNameParserRenderer = new ScientificNameParserRenderer {
+    val parser: ScientificNameParser = new ScientificNameParser {
+      override val version: String = "test_version"
+    }
   }
+
   import snp.{fromString => parse}
 
   implicit val formats = DefaultFormats

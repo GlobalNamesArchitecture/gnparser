@@ -3,18 +3,20 @@ package org.globalnames.parser
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
 import org.specs2.mutable.Specification
-
-import scala.io.Source
 import scalaz.std.string._
 import scalaz.syntax.std.option._
 
-class ScientificNameParserSpec extends Specification {
+import scala.io.Source
+
+class ScientificNameParserRendererSpec extends Specification {
   case class ExpectedName(verbatim: String, json: String, simple: String)
 
   "ScientificNameParser specification".p
 
-  val scientificNameParser = new ScientificNameParser {
-    val version = "test_version"
+  val scientificNameParser: ScientificNameParserRenderer = new ScientificNameParserRenderer {
+    val parser: ScientificNameParser = new ScientificNameParser {
+      override val version: String = "test_version"
+    }
   }
 
   def expectedNames(filePath: String): Vector[ExpectedName] = {
@@ -62,8 +64,8 @@ class ScientificNameParserSpec extends Specification {
 
         uuid              === pr.result.preprocessorResult.id.toString
         verbatim          === pr.result.preprocessorResult.verbatim
-        canonical         === pr.canonizer.canonized().orZero
-        canonicalExtended === pr.canonizer.canonized(showRanks = true).orZero
+        canonical         === pr.result.canonizer.canonized().orZero
+        canonicalExtended === pr.result.canonizer.canonized(showRanks = true).orZero
         authorship        === pr.delimitedStringRenderer.authorshipDelimited.orZero
         year              === pr.delimitedStringRenderer.yearDelimited.orZero
         quality.toInt     === pr.result.scientificName.quality

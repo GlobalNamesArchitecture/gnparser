@@ -4,11 +4,9 @@ package formatters
 import org.json4s.JsonAST.{JBool, JNothing}
 import org.json4s.JsonDSL._
 import org.json4s.{JObject, JString, JValue}
-
 import scalaz.Scalaz._
 
-class Details(parsedResult: Result,
-              normalizer: Normalizer) extends CommonOps {
+class Details(parsedResult: Result) extends CommonOps {
   protected val preprocessorResult: Preprocessor.Result = parsedResult.preprocessorResult
 
   def detailed: JValue = {
@@ -79,7 +77,7 @@ class Details(parsedResult: Result,
     }
 
     def detailedAuthorship(as: Authorship): JObject = {
-      def detailedAuthor(a: Author): String = normalizer.normalizedAuthor(a)
+      def detailedAuthor(a: Author): String = parsedResult.normalizer.normalizedAuthor(a)
       def detailedAuthorsTeam(at: AuthorsTeam): JObject = {
         val res: JObject = "authors" -> at.authors.map(detailedAuthor)
         at.years.foldLeft(res) { (r, y) => r ~ ("year" -> detailedYear(y)) }
@@ -90,7 +88,7 @@ class Details(parsedResult: Result,
           ("emend_authors" -> ag.authorsEmend.map { at => detailedAuthorsTeam(at) })
 
       "authorship" -> (
-        ("value" -> normalizer.normalizedAuthorship(as)) ~
+        ("value" -> parsedResult.normalizer.normalizedAuthorship(as)) ~
           ("basionym_authorship" -> as.basionym.map(detailedAuthorsGroup)) ~
           ("combination_authorship" -> as.combination.map(detailedAuthorsGroup))
       )

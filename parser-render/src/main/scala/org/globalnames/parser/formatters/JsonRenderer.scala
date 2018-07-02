@@ -8,23 +8,18 @@ import org.json4s.jackson.JsonMethods
 import scalaz._
 import Scalaz._
 
-class JsonRenderer(parserResult: Result,
-                   version: String,
-                   canonizer: Canonizer,
-                   normalizer: Normalizer,
-                   positions: Positions,
-                   details: Details) {
+class JsonRenderer(parserResult: Result, details: Details) {
 
   def json(showCanonicalUuid: Boolean): JValue = {
-    val canonical = canonizer.canonized()
+    val canonical = parserResult.canonizer.canonized()
     val parsed = canonical.isDefined
 
     val canonicalName: JValue =
       if (parsed) {
-        val canonizedUuidStrOpt = canonizer.canonizedUuid().map { _.id.toString }
+        val canonizedUuidStrOpt = parserResult.canonizer.canonizedUuid().map { _.id.toString }
         ("id" -> showCanonicalUuid.option { canonizedUuidStrOpt }.join) ~
           ("value" -> canonical) ~
-          ("value_ranked" -> canonizer.canonized(showRanks = true))
+          ("value_ranked" -> parserResult.canonizer.canonized(showRanks = true))
       } else JNothing
 
     val quality = canonical.map { _ => parserResult.scientificName.quality }
@@ -37,7 +32,7 @@ class JsonRenderer(parserResult: Result,
         warningsJArr.some
       }
     val positionsJson: Option[JArray] = parsed.option {
-      positions.positioned.map { position =>
+      parserResult.positions.positioned.map { position =>
         JArray(List(position.nodeName,
           parserResult.preprocessorResult.verbatimPosAt(position.start),
           parserResult.preprocessorResult.verbatimPosAt(position.end)))
@@ -49,9 +44,9 @@ class JsonRenderer(parserResult: Result,
       ("parsed" -> parsed) ~
       ("quality" -> quality) ~
       ("quality_warnings" -> qualityWarnings) ~
-      ("parser_version" -> version) ~
+      ("parser_version" -> parserResult.version) ~
       ("verbatim" -> parserResult.preprocessorResult.verbatim) ~
-      ("normalized" -> normalizer.normalized) ~
+      ("normalized" -> parserResult.normalizer.normalized) ~
       ("canonical_name" -> canonicalName) ~
       ("hybrid" -> parserResult.scientificName.hybrid) ~
       ("surrogate" -> parserResult.scientificName.surrogate) ~

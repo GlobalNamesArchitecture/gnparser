@@ -40,7 +40,16 @@ val commonSettings = Seq(
     "-Xlint",
     "-language:_",
     "-target:jvm-1.8",
-    "-Xlog-reflective-calls"))
+    "-Xlog-reflective-calls"),
+
+  initialCommands in console :=
+    """import org.globalnames.parser.{ScientificNameParser => SNP, _}
+      |import SNP.instance._
+      |import org.globalnames.parser.Parser._
+      |import scala.util.{Failure, Success, Try}
+      |import org.parboiled2._
+      |import org.json4s.jackson.JsonMethods._""".stripMargin
+)
 
 val publishingSettings = Seq(
   publishMavenStyle := true,
@@ -119,6 +128,27 @@ lazy val parser = (project in file("./parser"))
     test in assembly := {},
 
     libraryDependencies ++= {
+      Seq(shapeless, javaUuid, commonsText, parboiled, scalaz, specs2core)
+          // , "com.lihaoyi" %% "pprint" % "0.5.3"
+    },
+
+    scalacOptions in Test ++= Seq("-Yrangepos")
+  )
+
+lazy val `parser-render` = (project in file("./parser-render"))
+  .dependsOn(parser)
+  .enablePlugins(BuildInfoPlugin)
+  .settings(commonSettings: _*)
+  .settings(publishingSettings: _*)
+  .settings(
+    name := "gnparser-render",
+    crossScalaVersions := Seq(scalaV11, scalaV12),
+
+    buildInfoKeys := Seq[BuildInfoKey](version),
+    buildInfoPackage := "org.globalnames.parser",
+    test in assembly := {},
+
+    libraryDependencies ++= {
       Seq(shapeless, json4s, javaUuid, commonsText, parboiled, scalaz, specs2core)
 //      , "com.lihaoyi" %% "pprint" % "0.5.3"
     },
@@ -135,7 +165,7 @@ lazy val parser = (project in file("./parser"))
   )
 
 lazy val benchmark = (project in file("./benchmark"))
-  .dependsOn(parser)
+  .dependsOn(`parser-render`)
   .enablePlugins(JmhPlugin)
   .settings(commonSettings: _*)
   .settings(noPublishingSettings: _*)
@@ -144,7 +174,7 @@ lazy val benchmark = (project in file("./benchmark"))
   )
 
 lazy val runner = (project in file("./runner"))
-  .dependsOn(parser)
+  .dependsOn(`parser-render`)
   .enablePlugins(JavaAppPackaging, BuildInfoPlugin, SbtTwirl)
   .settings(commonSettings: _*)
   .settings(noPublishingSettings: _*)
@@ -167,7 +197,7 @@ lazy val runner = (project in file("./runner"))
   )
 
 lazy val exampleJavaScala = (project in file("./examples/java-scala"))
-  .dependsOn(parser)
+  .dependsOn(`parser-render`)
   .settings(commonSettings: _*)
   .settings(noPublishingSettings: _*)
   .settings(
@@ -176,7 +206,7 @@ lazy val exampleJavaScala = (project in file("./examples/java-scala"))
   )
 
 lazy val exampleSpark = (project in file("./examples/spark"))
-  .dependsOn(parser)
+  .dependsOn(`parser-render`)
   .settings(commonSettings: _*)
   .settings(noPublishingSettings: _*)
   .settings(
@@ -186,7 +216,7 @@ lazy val exampleSpark = (project in file("./examples/spark"))
   )
 
 lazy val sparkPython = (project in file("./spark-python"))
-  .dependsOn(parser)
+  .dependsOn(`parser-render`)
   .settings(commonSettings: _*)
   .settings(publishingSettings: _*)
   .settings(

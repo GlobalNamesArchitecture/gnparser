@@ -5,9 +5,7 @@ package formatters
 import scalaz._
 import Scalaz._
 
-class DelimitedStringRenderer(parserResult: Result,
-                              canonizer: Canonizer,
-                              normalizer: Normalizer) extends CommonOps {
+class DelimitedStringRenderer(parserResult: Result) extends CommonOps {
   protected val preprocessorResult: Preprocessor.Result = parserResult.preprocessorResult
 
   protected[globalnames] val ambiguousAuthorship: Boolean = {
@@ -20,7 +18,9 @@ class DelimitedStringRenderer(parserResult: Result,
 
   protected[globalnames] val authorshipDelimited: Option[String] =
     (!ambiguousAuthorship).option {
-      parserResult.scientificName.authorship.flatMap { normalizer.normalizedAuthorship }
+      parserResult.scientificName.authorship.flatMap {
+        parserResult.normalizer.normalizedAuthorship
+      }
     }.flatten
 
   val yearDelimited: Option[String] =
@@ -34,7 +34,7 @@ class DelimitedStringRenderer(parserResult: Result,
         val uninomialYear = ng.name.uninomial.authorship.flatMap { _.authors.authors.year }
         infraspeciesYear <+> speciesYear <+> uninomialYear
       }
-      year.map { normalizer.normalizedYear }
+      year.map { parserResult.normalizer.normalizedYear }
     }.flatten
 
   /**
@@ -47,8 +47,8 @@ class DelimitedStringRenderer(parserResult: Result,
   def delimitedString(delimiter: String = "\t"): String = {
     val uuid = parserResult.preprocessorResult.id
     val verbatim = parserResult.preprocessorResult.verbatim
-    val canonical = canonizer.canonized().orZero
-    val canonicalExtended = canonizer.canonized(showRanks = true).orZero
+    val canonical = parserResult.canonizer.canonized().orZero
+    val canonicalExtended = parserResult.canonizer.canonized(showRanks = true).orZero
     val quality = parserResult.scientificName.quality
     Seq(uuid, verbatim, canonical, canonicalExtended,
         authorshipDelimited.orZero, yearDelimited.orZero, quality).mkString(delimiter)
