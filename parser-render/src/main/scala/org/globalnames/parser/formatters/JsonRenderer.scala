@@ -10,7 +10,7 @@ import Scalaz._
 
 class JsonRenderer(parserResult: Result, details: Details) {
 
-  def json(showCanonicalUuid: Boolean): JValue = {
+  def json(showCanonicalUuid: Boolean = false): JValue = {
     val canonical = parserResult.canonizer.canonized()
     val parsed = canonical.isDefined
 
