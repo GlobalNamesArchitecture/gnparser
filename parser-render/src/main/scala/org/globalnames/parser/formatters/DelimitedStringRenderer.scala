@@ -45,13 +45,16 @@ class DelimitedStringRenderer(parserResult: Result) extends CommonOps {
     * @return fields concatenated to single string with delimiter
     */
   def delimitedString(delimiter: String = "\t"): String = {
-    val uuid = parserResult.preprocessorResult.id
-    val verbatim = parserResult.preprocessorResult.verbatim
-    val canonical = parserResult.canonizer.canonized().orZero
-    val canonicalExtended = parserResult.canonizer.canonized(showRanks = true).orZero
-    val quality = parserResult.scientificName.quality
-    Seq(uuid, verbatim, canonical, canonicalExtended,
-        authorshipDelimited.orZero, yearDelimited.orZero, quality).mkString(delimiter)
+    val uuid: String = parserResult.preprocessorResult.id.toString
+    val verbatim: String = parserResult.preprocessorResult.verbatim
+    val canonical: String = parserResult.canonical.map { _.value }.orZero
+    val canonicalExtended: String = parserResult.canonical.map { _.ranked }.orZero
+    val quality: Int = parserResult.scientificName.quality
+    val fields: Seq[String] = Seq(
+      uuid, verbatim, canonical, canonicalExtended,
+      authorshipDelimited.orZero, yearDelimited.orZero,
+      quality.toString)
+    fields.mkString(delimiter)
   }
 
   /**

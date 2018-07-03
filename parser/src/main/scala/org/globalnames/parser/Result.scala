@@ -8,9 +8,9 @@ import shapeless._
 import scala.util.{Failure, Success}
 
 abstract class Result(val preprocessorResult: Preprocessor.Result,
-             val scientificName: ScientificName,
-             val warnings: Vector[Warning]) {
-  val canonizer: Canonizer
+                      val scientificName: ScientificName,
+                      val canonical: Option[Canonical],
+                      val warnings: Vector[Warning]) {
   val normalizer: Normalizer
   val positions: Positions
 }
@@ -19,17 +19,19 @@ object Result {
   private def composeResult(preprocessorResult: Preprocessor.Result,
                             scientificName: ScientificName,
                             warnings: Vector[Warning] = Vector()): Result = {
+    val canonizer: Canonizer =
+      new Canonizer(scientificName.namesGroup, preprocessorResult.unescaped)
 
-    new Result(preprocessorResult, scientificName, warnings) {
-      val canonizer: Canonizer =
-        new Canonizer(scientificName.namesGroup, preprocessorResult.unescaped)
+    new Result(preprocessorResult,
+               scientificName,
+               canonizer.canonical(),
+               warnings) {
       val normalizer: Normalizer =
         new Normalizer(scientificName.namesGroup, canonizer, preprocessorResult.unescaped)
       val positions: Positions =
         new Positions(parsedResult = this)
     }
   }
-
 
   def fromString(input: String): Result =
     fromString(input, collectParsingErrors = false)

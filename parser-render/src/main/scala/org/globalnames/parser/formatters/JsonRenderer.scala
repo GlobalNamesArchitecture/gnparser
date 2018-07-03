@@ -11,15 +11,15 @@ import Scalaz._
 class JsonRenderer(parserResult: Result, version: String, details: Details) {
 
   def json(showCanonicalUuid: Boolean = false): JValue = {
-    val canonical = parserResult.canonizer.canonized()
+    val canonical = parserResult.canonical
     val parsed = canonical.isDefined
 
     val canonicalName: JValue =
       if (parsed) {
-        val canonizedUuidStrOpt = parserResult.canonizer.canonizedUuid().map { _.id.toString }
+        val canonizedUuidStrOpt = parserResult.canonical.map { _.id.toString }
         ("id" -> showCanonicalUuid.option { canonizedUuidStrOpt }.join) ~
-          ("value" -> canonical) ~
-          ("value_ranked" -> parserResult.canonizer.canonized(showRanks = true))
+          ("value" -> canonical.map { _.value }) ~
+          ("value_ranked" -> parserResult.canonical.map { _.ranked })
       } else JNothing
 
     val quality = canonical.map { _ => parserResult.scientificName.quality }

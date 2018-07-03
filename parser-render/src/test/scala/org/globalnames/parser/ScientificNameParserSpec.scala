@@ -8,7 +8,7 @@ import scalaz.syntax.std.option._
 
 import scala.io.Source
 
-class ScientificNameParserRendererSpec extends Specification with TestParserInstance {
+class ScientificNameParserSpec extends Specification with TestParserInstance {
   case class ExpectedName(verbatim: String, json: String, simple: String)
 
   "ScientificNameParser specification".p
@@ -58,8 +58,8 @@ class ScientificNameParserRendererSpec extends Specification with TestParserInst
 
         uuid              === pr.result.preprocessorResult.id.toString
         verbatim          === pr.result.preprocessorResult.verbatim
-        canonical         === pr.result.canonizer.canonized().orZero
-        canonicalExtended === pr.result.canonizer.canonized(showRanks = true).orZero
+        canonical         === pr.result.canonical.map { _.value }.orZero
+        canonicalExtended === pr.result.canonical.map { _.ranked }.orZero
         authorship        === pr.delimitedStringRenderer.authorshipDelimited.orZero
         year              === pr.delimitedStringRenderer.yearDelimited.orZero
         quality.toInt     === pr.result.scientificName.quality

@@ -12,23 +12,23 @@ import scalaz.syntax.semigroup._
 import scalaz.syntax.std.boolean._
 import scalaz.syntax.std.option._
 
-case class Canonical(value: String) extends AnyVal {
-  def id: UUID = UuidGenerator.generate(value)
+case class Canonical(ranked: String, value: String) {
+  val id: UUID = UuidGenerator.generate(value)
+  val idRanked: UUID = UuidGenerator.generate(ranked)
 }
 
 class Canonizer(namesGroup: Option[NamesGroup],
                 protected override val unescapedInput: String) extends CommonOps {
 
-  private val canonicalRanked = computeCanonical(showRanks = true)
-  private val canonicalRankedLess = computeCanonical(showRanks = false)
+  def canonical(): Option[Canonical] = {
+    for (canonical <- computeCanonical(showRanks = false)) yield {
+      Canonical(value = canonical,
+                ranked = computeCanonical(showRanks = true).orZero)
+    }
+  }
 
-  def canonizedUuid(showRanks: Boolean = false): Option[Canonical] =
-    canonized(showRanks).map { Canonical }
-
-  def canonized(showRanks: Boolean = false): Option[String] =
-    showRanks ? canonicalRanked | canonicalRankedLess
-
-  private def computeCanonical(showRanks: Boolean): Option[String] = {
+  private
+  def computeCanonical(showRanks: Boolean): Option[String] = {
     def canonizedNamesGroup(namesGroup: NamesGroup): String = {
       val name = namesGroup.name
       if (namesGroup.namedHybrid) {
