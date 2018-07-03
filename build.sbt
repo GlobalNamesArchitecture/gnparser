@@ -109,7 +109,7 @@ val scalatest        = "org.scalatest"              %% "scalatest"              
 /////////////////////// PROJECTS /////////////////////////
 
 lazy val `gnparser-root` = project.in(file("."))
-  .aggregate(parser, exampleJavaScala, runner, sparkPython)
+  .aggregate(parser, `parser-render`, exampleJavaScala, runner, sparkPython)
   .settings(noPublishingSettings: _*)
   .settings(
     crossScalaVersions := Seq()
