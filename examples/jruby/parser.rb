@@ -3,7 +3,7 @@ require "json"
 java_import "org.globalnames.parser.ScientificNameParser"
 
 snp = ScientificNameParser.instance
-result = JSON.parse(snp.fromString("Homo sapiens L.").renderCompactJson)
+result = JSON.parse(snp.fromString("Homo sapiens L.").jsonRenderer.renderCompactJson)
 
 raise "not parsed" unless result["parsed"]
 raise "positions are wrong" unless

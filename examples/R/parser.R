@@ -6,7 +6,7 @@ library(jsonlite)
 .jinit(classpath=Sys.getenv('GNPARSER_JAR_PATH'))
 
 snp=J('org.globalnames.parser.ScientificNameParser','instance')
-result=snp$fromString("Homo sapiens L.")$renderCompactJson()
+result=snp$fromString("Homo sapiens L.")$jsonRenderer()$renderCompactJson()
 jsonResult=fromJSON(result)
 
 stopifnot(jsonResult$parsed)
