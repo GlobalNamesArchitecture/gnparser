@@ -18,6 +18,9 @@ import scala.io.{Source, StdIn}
 import scalaz._
 import Scalaz._
 
+import org.json4s.JsonAST.JArray
+import org.json4s.jackson.JsonMethods
+
 object GnParser {
   sealed trait Mode
   case object InputFileParsing extends Mode
@@ -33,11 +36,25 @@ object GnParser {
                     name: String = "",
                     private val simpleFormat: Boolean = false,
                     private val threadsNumber: Option[Int] = None) {
+
     val parallelism: Int = threadsNumber.getOrElse(ForkJoinPool.getCommonPoolParallelism)
+
     def renderResult(result: ResultRendered): String = {
       simpleFormat ?
         result.delimitedStringRenderer.delimitedString() | result.jsonRenderer.renderCompactJson
     }
+
+    def resultsToJson(results: Vector[ResultRendered]): String = {
+      if (simpleFormat) {
+        val resultsStrings = for (r <- results) yield r.delimitedString()
+        resultsStrings.mkString("\n")
+      } else {
+        val resultsJsonArr = for (r <- results.toList) yield r.jsonRenderer.json()
+        val resultsJson = JArray(resultsJsonArr)
+        JsonMethods.pretty(resultsJson)
+      }
+    }
+
   }
 
   private[runner] val gnParserVersion = BuildInfo.version
@@ -107,7 +124,7 @@ object GnParser {
     val namesParsed = inputIteratorEither match {
       case -\/(errors) =>
         Console.err.println(errors.map { _.getMessage }.mkString("\n"))
-        ParVector.empty[String]
+        ParVector.empty
       case \/-(res) =>
         val namesInputPar = res.toVector.par
         namesInputPar.tasksupport = new ForkJoinTaskSupport(new ForkJoinPool(config.parallelism))
@@ -120,16 +137,18 @@ object GnParser {
             Console.err.println(s"Parsed $currentParsedCount of ${namesInputPar.size} lines")
           }
           val result = scientificNameParser.fromString(name.trim)
-          config.renderResult(result)
+          result
         }
     }
+
+    val resultsJsonStr = config.resultsToJson(namesParsed.seq)
 
     config.outputFile match {
       case Some(fp) =>
         for { writer <- managed(new BufferedWriter(new FileWriter(fp))) } {
-          namesParsed.seq.foreach { name => writer.write(name + System.lineSeparator) }
+          writer.write(resultsJsonStr)
         }
-      case None => namesParsed.seq.foreach { name => println(name) }
+      case None => println(resultsJsonStr)
     }
   }
 }
