@@ -14,7 +14,7 @@ class ParserSpec extends Specification with TestParserInstance {
   "Parses:" >> {
     "Homo sapiens" in {
       val res = parse("Homo sapiens")
-      res.canonizer.canonized() === "Homo sapiens"
+      res.canonizer.canonized() should beSome(===("Homo sapiens"))
       res.warnings must beEmpty
     }
 
@@ -25,7 +25,7 @@ class ParserSpec extends Specification with TestParserInstance {
       res.warnings(0).level === 3
       res.warnings(0).message === "Non-standard space characters"
 
-      res.canonizer.canonized() === "Homo sapiens"
+      res.canonizer.canonized() should beSome(===("Homo sapiens"))
     }
 
     """Homo\r\nsapiens""" in {
@@ -37,7 +37,7 @@ class ParserSpec extends Specification with TestParserInstance {
       res.warnings(1).level === 3
       res.warnings(1).message === "Non-standard space characters"
 
-      res.canonizer.canonized() === "Homo sapiens"
+      res.canonizer.canonized() should beSome(===("Homo sapiens"))
     }
 
     """Homo sapiens\r""" in {
@@ -47,7 +47,7 @@ class ParserSpec extends Specification with TestParserInstance {
       res.warnings(0).level === 2
       res.warnings(0).message === "Trailing whitespace"
 
-      res.canonizer.canonized() === "Homo sapiens"
+      res.canonizer.canonized() should beSome(===("Homo sapiens"))
     }
 
     """Homo sp.\r""" in {
@@ -59,7 +59,7 @@ class ParserSpec extends Specification with TestParserInstance {
       res.warnings(1).level === 3
       res.warnings(1).message === "Name is approximate"
 
-      res.canonizer.canonized() === "Homo"
+      res.canonizer.canonized() should beSome(===("Homo"))
     }
   }
 
