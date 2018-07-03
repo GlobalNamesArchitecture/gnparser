@@ -123,8 +123,6 @@ lazy val parser = (project in file("./parser"))
     name := "gnparser",
     crossScalaVersions := Seq(scalaV11, scalaV12),
 
-    buildInfoKeys := Seq[BuildInfoKey](version),
-    buildInfoPackage := "org.globalnames.parser",
     test in assembly := {},
 
     libraryDependencies ++= {

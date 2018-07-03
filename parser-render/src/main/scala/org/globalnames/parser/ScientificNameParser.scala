@@ -4,9 +4,9 @@ import formatters._
 
 import org.json4s.JValue
 
-class ResultRendered(val result: Result) {
+class ResultRendered(val result: Result, version: String) {
   val details: Details = new Details(result)
-  val jsonRenderer: JsonRenderer = new JsonRenderer(result, details)
+  val jsonRenderer: JsonRenderer = new JsonRenderer(result, version, details)
   val delimitedStringRenderer: DelimitedStringRenderer = new DelimitedStringRenderer(result)
 
   def json(showCanonicalUuid: Boolean = false): JValue =
@@ -16,27 +16,23 @@ class ResultRendered(val result: Result) {
     delimitedStringRenderer.delimitedString(delimiter)
 }
 
-object ResultRendered {
-  def apply(result: Result): ResultRendered = new ResultRendered(result)
-}
-
-abstract class ScientificNameParserRenderer {
-  val parser: ScientificNameParser
+abstract class ScientificNameParser {
+  val version: String
 
   def fromString(input: String): ResultRendered =
     fromString(input, collectParsingErrors = false)
 
   def fromString(input: String,
                  collectParsingErrors: Boolean): ResultRendered = {
-    val result = parser.fromString(input, collectParsingErrors)
-    ResultRendered(result)
+    val result = Result.fromString(input, collectParsingErrors)
+    new ResultRendered(result, version)
   }
 }
 
-object ScientificNameParserRenderer {
+object ScientificNameParser {
 
-  final val instance = new ScientificNameParserRenderer {
-    override final val parser: ScientificNameParser = ScientificNameParser.instance
+  final val instance = new ScientificNameParser {
+    val version: String = BuildInfo.version
   }
 
 }

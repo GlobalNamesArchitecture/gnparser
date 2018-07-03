@@ -8,7 +8,7 @@ import org.json4s.jackson.JsonMethods
 import scalaz._
 import Scalaz._
 
-class JsonRenderer(parserResult: Result, details: Details) {
+class JsonRenderer(parserResult: Result, version: String, details: Details) {
 
   def json(showCanonicalUuid: Boolean = false): JValue = {
     val canonical = parserResult.canonizer.canonized()
@@ -44,7 +44,7 @@ class JsonRenderer(parserResult: Result, details: Details) {
       ("parsed" -> parsed) ~
       ("quality" -> quality) ~
       ("quality_warnings" -> qualityWarnings) ~
-      ("parser_version" -> parserResult.version) ~
+      ("parser_version" -> version) ~
       ("verbatim" -> parserResult.preprocessorResult.verbatim) ~
       ("normalized" -> parserResult.normalizer.normalized) ~
       ("canonical_name" -> canonicalName) ~

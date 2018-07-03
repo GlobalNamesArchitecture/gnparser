@@ -6,7 +6,7 @@ import scalaz._
 import Scalaz._
 
 class DelimitedStringRenderer(parserResult: Result) extends CommonOps {
-  protected val preprocessorResult: Preprocessor.Result = parserResult.preprocessorResult
+  protected val unescapedInput: String = parserResult.preprocessorResult.unescaped
 
   protected[globalnames] val ambiguousAuthorship: Boolean = {
     val isAmbiguousOpt = for {

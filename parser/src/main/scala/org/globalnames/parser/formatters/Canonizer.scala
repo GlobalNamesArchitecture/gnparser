@@ -16,8 +16,8 @@ case class Canonical(value: String) extends AnyVal {
   def id: UUID = UuidGenerator.generate(value)
 }
 
-class Canonizer(parsedResult: Result) extends CommonOps {
-  protected val preprocessorResult: Preprocessor.Result = parsedResult.preprocessorResult
+class Canonizer(namesGroup: Option[NamesGroup],
+                protected override val unescapedInput: String) extends CommonOps {
 
   private val canonicalRanked = computeCanonical(showRanks = true)
   private val canonicalRankedLess = computeCanonical(showRanks = false)
@@ -63,7 +63,7 @@ class Canonizer(parsedResult: Result) extends CommonOps {
     def canonizedInfraspeciesGroup(isg: InfraspeciesGroup): String =
       isg.group.map(canonizedInfraspecies).mkString(" ")
 
-    parsedResult.scientificName.namesGroup.map(canonizedNamesGroup)
+    namesGroup.map(canonizedNamesGroup)
   }
 
   private[formatters]

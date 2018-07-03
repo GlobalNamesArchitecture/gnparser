@@ -7,7 +7,7 @@ import org.json4s.{JObject, JString, JValue}
 import scalaz.Scalaz._
 
 class Details(parsedResult: Result) extends CommonOps {
-  protected val preprocessorResult: Preprocessor.Result = parsedResult.preprocessorResult
+  protected val unescapedInput: String = parsedResult.preprocessorResult.unescaped
 
   def detailed: JValue = {
     def detailedNamesGroup(namesGroup: NamesGroup): JValue = {

@@ -4,9 +4,9 @@ package formatters
 import scalaz.{Name => _, _}
 import Scalaz._
 
-class Normalizer(parsedResult: Result) extends CommonOps {
-  private val canonizer: Canonizer = new Canonizer(parsedResult)
-  protected val preprocessorResult: Preprocessor.Result = parsedResult.preprocessorResult
+class Normalizer(namesGroup: Option[NamesGroup],
+                 canonizer: Canonizer,
+                 protected override val unescapedInput: String) extends CommonOps {
 
   def normalized: Option[String] = {
 
@@ -64,7 +64,7 @@ class Normalizer(parsedResult: Result) extends CommonOps {
     def normalizedInfraspeciesGroup(isg: InfraspeciesGroup): Option[String] =
       isg.group.map(normalizedInfraspecies).toVector.sequence.map { _.mkString(" ") }
 
-    parsedResult.scientificName.namesGroup.flatMap { normalizedNamesGroup }
+    namesGroup.flatMap { normalizedNamesGroup }
   }
 
   def normalizedYear(y: Year): String = {
