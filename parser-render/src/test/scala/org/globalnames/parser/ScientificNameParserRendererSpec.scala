@@ -8,16 +8,10 @@ import scalaz.syntax.std.option._
 
 import scala.io.Source
 
-class ScientificNameParserRendererSpec extends Specification {
+class ScientificNameParserRendererSpec extends Specification with TestParserInstance {
   case class ExpectedName(verbatim: String, json: String, simple: String)
 
   "ScientificNameParser specification".p
-
-  val scientificNameParser: ScientificNameParserRenderer = new ScientificNameParserRenderer {
-    val parser: ScientificNameParser = new ScientificNameParser {
-      override val version: String = "test_version"
-    }
-  }
 
   def expectedNames(filePath: String): Vector[ExpectedName] = {
     Source.fromURL(getClass.getResource(filePath), "UTF-8")

@@ -3,24 +3,18 @@ package org.globalnames.parser
 import org.json4s._
 import org.specs2.mutable.Specification
 
-class ParserSpec extends Specification {
-
-  val snp: ScientificNameParserRenderer = new ScientificNameParserRenderer {
-    val parser: ScientificNameParser = new ScientificNameParser {
-      override val version: String = "test_version"
-    }
-  }
+class ParserSpec extends Specification with TestParserInstance {
 
   implicit val formats = DefaultFormats
 
   def parse(input: String): Result = {
-    snp.fromString(input).result
+     scientificNameParser.fromString(input).result
   }
 
   "Parses:" >> {
     "Homo sapiens" in {
       val res = parse("Homo sapiens")
-      res.canonizer.canonized().value === "Homo sapiens"
+      res.canonizer.canonized() === "Homo sapiens"
       res.warnings must beEmpty
     }
 
@@ -71,7 +65,7 @@ class ParserSpec extends Specification {
 
   "Does not parse:" >> {
     "whateva" in {
-      val res = snp.fromString("whateva")
+      val res = scientificNameParser.fromString("whateva")
       (res.jsonRenderer.json() \\ "parsed").extract[Boolean] must beFalse
     }
   }
