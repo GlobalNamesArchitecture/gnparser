@@ -28,31 +28,49 @@ object GnParser {
   case object WebServerMode extends Mode
   case object NameParsing extends Mode
 
+  sealed trait Format
+  case object Format {
+    case object Simple extends Format
+    case object JsonPretty extends Format
+    case object JsonCompact extends Format
+
+    def parse(v: String): Format = v match {
+      case "simple" => Format.Simple
+      case "json-pretty" => Format.JsonPretty
+      case "json-compact" => Format.JsonCompact
+      case x => throw new IllegalArgumentException(s"Unexpected value of `format` flag: $x")
+    }
+  }
+
   case class Config(mode: Option[Mode] = Some(InputFileParsing),
                     inputFile: Option[String] = None,
                     outputFile: Option[String] = None,
                     host: String = "0.0.0.0",
                     port: Int = 4334,
                     name: String = "",
-                    private val simpleFormat: Boolean = false,
+                    private val format: Format = Format.JsonPretty,
                     private val threadsNumber: Option[Int] = None) {
 
     val parallelism: Int = threadsNumber.getOrElse(ForkJoinPool.getCommonPoolParallelism)
 
-    def renderResult(result: ResultRendered): String = {
-      simpleFormat ?
-        result.delimitedStringRenderer.delimitedString() | result.jsonRenderer.renderCompactJson
+    def renderResult(result: ResultRendered): String = format match {
+      case Format.Simple => result.delimitedStringRenderer.delimitedString()
+      case Format.JsonCompact => result.jsonRenderer.renderCompactJson
+      case Format.JsonPretty => result.jsonRenderer.render(compact = false)
     }
 
-    def resultsToJson(results: Vector[ResultRendered]): String = {
-      if (simpleFormat) {
+    def resultsToJson(results: Vector[ResultRendered]): String = format match {
+      case Format.Simple =>
         val resultsStrings = for (r <- results) yield r.delimitedString()
         resultsStrings.mkString("\n")
-      } else {
+      case f =>
         val resultsJsonArr = for (r <- results.toList) yield r.jsonRenderer.json()
         val resultsJson = JArray(resultsJsonArr)
-        JsonMethods.pretty(resultsJson)
-      }
+        val resultString = f match {
+          case Format.JsonCompact => JsonMethods.compact(resultsJson)
+          case _ => JsonMethods.pretty(resultsJson)
+        }
+        resultString
     }
 
   }
@@ -64,8 +82,8 @@ object GnParser {
     head("gnparser", gnParserVersion)
     head("NOTE: if no command is provided then `file` is executed by default")
     help("help").text("prints this usage text")
-    opt[Unit]('s', "simple").text("return simple CSV format instead of JSON")
-                            .optional.action { (_, c) => c.copy(simpleFormat = true) }
+    opt[String]('f', "format").text("format result: simple CSV, JSON compact or pretty")
+               .optional.action { (x, c) => c.copy(format = Format.parse(x)) }
     cmd("name").action { (_, c) => c.copy(mode = NameParsing.some) }
                .text("parse single scientific name").children(
       arg[String]("<scientific_name>").required.action { (x, c) => c.copy(name = x) }

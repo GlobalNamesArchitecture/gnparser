@@ -62,7 +62,7 @@ class GnParserSpec extends Specification with StringMatchers with MatcherMacros 
       }
 
       "should have correct preamble" >> {
-        val (lines, errors) = withInOut("", () => gnparse("file -s"))
+        val (lines, errors) = withInOut("", () => gnparse("file -f simple"))
         lines should beEmpty
 
         errors should have size 2
@@ -71,7 +71,7 @@ class GnParserSpec extends Specification with StringMatchers with MatcherMacros 
       }
 
       "should parse single name from <stdin>" >> {
-        val (lines, _) = withInOut(name1, () => gnparse("file -s"))
+        val (lines, _) = withInOut(name1, () => gnparse("file -f simple"))
         lines should have size 1
         lines(0) must startWith(name1uuid)
       }
@@ -79,13 +79,13 @@ class GnParserSpec extends Specification with StringMatchers with MatcherMacros 
       "should parse from <stdin> to <stdout> when no file is provided" >> {
         val input = s"""$name1
                        |$name2""".stripMargin
-        val (lines, _) = withInOut(input, () => gnparse("file -s"))
+        val (lines, _) = withInOut(input, () => gnparse("file -f simple"))
         lines should have size 2
         lines.toSeq should contain(exactly(startWith(name1uuid), startWith(name2uuid)))
       }
 
       "should parse from input file to <stdout>" >> {
-        val (lines, _) = withOut(() => gnparse(s"file -s -i $namesInputFilePath"))
+        val (lines, _) = withOut(() => gnparse(s"file -f simple -i $namesInputFilePath"))
         lines should have size 2
         lines.toSeq should contain(exactly(startWith(name1uuid), startWith(name2uuid)))
       }
@@ -94,7 +94,7 @@ class GnParserSpec extends Specification with StringMatchers with MatcherMacros 
         val input = s"""$name1
                        |$name2""".stripMargin
         val nameOutputFilePath = Files.createTempFile("names_output1", ".txt")
-        val (lines, _) = withInOut(input, () => gnparse(s"file -s -o $nameOutputFilePath"))
+        val (lines, _) = withInOut(input, () => gnparse(s"file -f simple -o $nameOutputFilePath"))
         lines should beEmpty
 
         val linesOut = Source.fromFile(nameOutputFilePath.toFile).getLines.toVector
@@ -105,7 +105,7 @@ class GnParserSpec extends Specification with StringMatchers with MatcherMacros 
       "should parse from input file to output file" >> {
         val nameOutputFilePath = Files.createTempFile("names_output2", ".txt")
         val (lines, _) = withOut { () =>
-          gnparse(s"file -s -i $namesInputFilePath -o $nameOutputFilePath")
+          gnparse(s"file -f simple -i $namesInputFilePath -o $nameOutputFilePath")
         }
 
         lines should beEmpty
