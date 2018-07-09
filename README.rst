@@ -155,7 +155,7 @@ information when dealing with names like
 "*Prosthechea cochleata* (L.) W.E.Higgins *var. grandiflora*
 (Mutel) Christenson". However, if this is the use case, a combination of
 ``canonical_extended`` with the authorship from the lowest taxon will do
-the job. You can also use ``--simple`` flag for ``gnparse`` command line tool.
+the job. You can also use ``--format simple`` flag for ``gnparse`` command line tool.
 
 Figuring out if names are well-formed
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -323,6 +323,15 @@ To parse names from a file (one name per line)
 ::
 
     cat file_with_names.txt | gnparser > file_with_parsed_names.txt
+
+``gnparser`` accepts the flag ``--format`` (or simply ``-f``) that determines
+the output representation. The values are ``simple`` for simple tab-delimited format,
+``json-pretty`` and ``json-compact`` for the JSON extended pretty form and the compact form
+correspondingly
+
+::
+
+    gnparser name "Parus major Linnaeus, 1788" --format simple
 
 To see help
 
