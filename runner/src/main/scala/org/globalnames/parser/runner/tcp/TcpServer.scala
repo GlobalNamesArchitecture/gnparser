@@ -77,15 +77,12 @@ class TcpServiceConnection(tcpConnection: ActorRef, config: Config)
     case Tcp.Received(data) =>
       val inputNames = data.utf8String.split("\n").map { _.trim }.filterNot { _.isEmpty }
       val result = if (inputNames.isEmpty) {
-        "No name provided?\n"
+        "No name provided?"
       } else {
-        val parsedNames = inputNames.map { name =>
-          val result = snp.fromString(name)
-          config.renderResult(result)
-        }
-        parsedNames.mkString("", "\n", "\n")
+        val parsedNames = inputNames.map { name => snp.fromString(name) }
+        config.resultsToJson(parsedNames.toVector)
       }
-      tcpConnection ! Tcp.Write(ByteString(result), ack = SentOk)
+      tcpConnection ! Tcp.Write(ByteString(result + "\n"), ack = SentOk)
       context.become(waitingForAck)
 
     case x: Tcp.ConnectionClosed =>
