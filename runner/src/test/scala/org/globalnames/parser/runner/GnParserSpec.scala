@@ -2,20 +2,24 @@ package org.globalnames
 package parser
 package runner
 
-import java.io.{Console => JavaConsole, _}
+import java.io.{Console => _, _}
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Path}
 
-import GnParser.{Config, InputFileParsing}
+import GnParser.{Config, Mode}
 import org.specs2.matcher.{MatcherMacros, StringMatchers}
 import org.specs2.mutable.Specification
+
+import scalaz.syntax.std.option._
 
 import scala.io.Source
 
 class GnParserSpec extends Specification with StringMatchers with MatcherMacros {
   "GnParserSpec" >> {
-    "should parse from file by default" >> {
-      GnParser.parse(Array()).get must matchA[Config].mode(Some(InputFileParsing))
+    "should parse from file by default and accept the flags" >> {
+      GnParser.parse(Array()).get must matchA[Config].mode(Mode.InputFileParsing)
+      GnParser.parse(Array("-i", "foo.txt")).get must matchA[Config].inputFile("foo.txt".some)
+      GnParser.parse(Array("-o", "foo.txt")).get must matchA[Config].outputFile("foo.txt".some)
     }
 
     "should have correct version" >> {
@@ -65,9 +69,10 @@ class GnParserSpec extends Specification with StringMatchers with MatcherMacros 
         val (lines, errors) = withInOut("", () => gnparse("file -f simple"))
         lines should beEmpty
 
-        errors should have size 2
-        errors(0) should_== GnParser.welcomeMessage
-        errors(1) must startWith("Running with parallelism")
+        errors should have size 3
+        errors(0) must startWith("Actual command line args:")
+        errors(1) should_== GnParser.welcomeMessage
+        errors(2) must startWith("Running with parallelism")
       }
 
       "should parse single name from <stdin>" >> {

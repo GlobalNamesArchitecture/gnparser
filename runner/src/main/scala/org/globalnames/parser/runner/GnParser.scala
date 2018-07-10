@@ -23,13 +23,15 @@ import org.json4s.jackson.JsonMethods
 
 object GnParser {
   sealed trait Mode
-  case object InputFileParsing extends Mode
-  case object TcpServerMode extends Mode
-  case object WebServerMode extends Mode
-  case object NameParsing extends Mode
+  object Mode {
+    case object InputFileParsing extends Mode
+    case object TcpServerMode extends Mode
+    case object WebServerMode extends Mode
+    case object NameParsing extends Mode
+  }
 
   sealed trait Format
-  case object Format {
+  object Format {
     case object Simple extends Format
     case object JsonPretty extends Format
     case object JsonCompact extends Format
@@ -42,7 +44,7 @@ object GnParser {
     }
   }
 
-  case class Config(mode: Option[Mode] = Some(InputFileParsing),
+  case class Config(mode: Mode = Mode.InputFileParsing,
                     inputFile: Option[String] = None,
                     outputFile: Option[String] = None,
                     host: String = "0.0.0.0",
@@ -77,54 +79,74 @@ object GnParser {
 
   private[runner] val gnParserVersion = BuildInfo.version
   private[runner] val welcomeMessage = "Enter scientific names line by line"
+  private[runner] val fileCommandName = "file"
+  private[runner] def actualCommandLineArgs(args: Array[String]): String = {
+    s"Actual command line args: ${args.mkString(" ")}"
+  }
 
   private val parser = new scopt.OptionParser[Config]("gnparser") {
     head("gnparser", gnParserVersion)
     head("NOTE: if no command is provided then `file` is executed by default")
     help("help").text("prints this usage text")
-    opt[String]('f', "format").text("format result: simple CSV, JSON compact or pretty")
-               .optional.action { (x, c) => c.copy(format = Format.parse(x)) }
-    cmd("name").action { (_, c) => c.copy(mode = NameParsing.some) }
+
+    opt[String]('f', "format")
+      .text("format representation: simple, json-compact or json-pretty").optional
+      .action { (x, c) => c.copy(format = Format.parse(x)) }
+
+    cmd("name").action { (_, c) => c.copy(mode = Mode.NameParsing) }
                .text("parse single scientific name").children(
       arg[String]("<scientific_name>").required.action { (x, c) => c.copy(name = x) }
     )
-    cmd("file").action { (_, c) => c.copy(mode = InputFileParsing.some) }
-               .text("parse scientific names from input file").children(
+
+    cmd(fileCommandName).action { (_, c) => c.copy(mode = Mode.InputFileParsing) }
+               .text("parse scientific names from input file (default)").children(
       opt[String]('i', "input").text("if not present then input from <stdin>")
-                               .optional.valueName("<path_to_input_file>")
-                               .action { (x, c) => c.copy(inputFile = x.some) },
-      opt[String]('o', "output").optional.text("if not present then output to <stdout>")
-                                .valueName("<path_to_output_file>")
-                                .action { (x, c) => c.copy(outputFile = x.some) },
-      opt[Int]('t', "threads").valueName("<threads_number>")
-                              .action { (x, c) => c.copy(threadsNumber = x.some)}
+        .optional
+        .valueName("<path_to_input_file>")
+        .action { (x, c) => c.copy(inputFile = x.some) },
+      opt[String]('o', "output").text("if not present then output to <stdout>")
+        .optional
+        .valueName("<path_to_output_file>")
+        .action { (x, c) => c.copy(outputFile = x.some) },
+      opt[Int]('t', "threads")
+        .optional
+        .valueName("<threads_number>")
+        .action { (x, c) => c.copy(threadsNumber = x.some)}
     )
-    cmd("socket").action { (_, c) => c.copy(mode = TcpServerMode.some) }
-                 .text("run socket server for parsing").children(
+
+    cmd("socket").action { (_, c) => c.copy(mode = Mode.TcpServerMode) }
+               .text("run socket server for parsing").children(
       opt[Int]('p', "port").valueName("<port>").action { (x, c) => c.copy(port = x)},
       opt[String]('h', "host").valueName("<host>").action { (x, c) => c.copy(host = x) }
     )
-    cmd("web").action { (_, c) => c.copy(mode = WebServerMode.some) }
-              .text("run web server for parsing").children(
+
+    cmd("web").action { (_, c) => c.copy(mode = Mode.WebServerMode) }
+               .text("run web server for parsing").children(
       opt[Int]('p', "port").valueName("<port>").action { (x, c) => c.copy(port = x) },
       opt[String]('h', "host").valueName("<host>").action { (x, c) => c.copy(host = x) }
     )
+
   }
 
-  protected[runner] def parse(args: Array[String]): Option[Config] =
-    parser.parse(args, Config())
+  protected[runner] def parse(args: Array[String]): Option[Config] = {
+    val argsWithDefaultCommand =
+      (args.isEmpty || args(0).startsWith("-")) ? (fileCommandName +: args) | args
+    Console.err.println(actualCommandLineArgs(argsWithDefaultCommand))
+    val parsedArgs = parser.parse(argsWithDefaultCommand, Config())
+    parsedArgs
+  }
 
-  def main(args: Array[String]): Unit = parse(args) match {
-    case Some(cfg) => cfg.mode.get match {
-      case InputFileParsing => startFileParse(cfg)
-      case TcpServerMode => TcpServer.run(cfg)
-      case WebServerMode => WebServer.run(cfg)
-      case NameParsing =>
-        val result = scientificNameParser.fromString(cfg.name)
-        println(cfg.renderResult(result))
+  def main(args: Array[String]): Unit = {
+    for {cfg <- parse(args); mode = cfg.mode} {
+      mode match {
+        case Mode.InputFileParsing => startFileParse(cfg)
+        case Mode.TcpServerMode => TcpServer.run(cfg)
+        case Mode.WebServerMode => WebServer.run(cfg)
+        case Mode.NameParsing =>
+          val result = scientificNameParser.fromString(cfg.name)
+          println(cfg.renderResult(result))
+      }
     }
-    case None =>
-      Console.err.println("Invalid configuration of parameters. Check --help")
   }
 
   def startFileParse(config: Config): Unit = {
