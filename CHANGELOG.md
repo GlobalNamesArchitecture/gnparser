@@ -1,8 +1,9 @@
 Version 1.0.0 (2018-07-09)
--------------------------
+--------------------------
 - Fix #463: the bug with positioning in the result JSON
 - Fix #438, #439: redirect service information to STDERR to ease the parsing from STDOUT
-- Fix #465: Introduce `json_pretty` format flag
+- Fix #465: introduce `json_pretty` format flag
+- Fix #466: make `file` completely default command
 - minor bug fixes
 
 Version 0.4.5 (2018-06-22)
