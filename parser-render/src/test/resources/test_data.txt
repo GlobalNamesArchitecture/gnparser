@@ -46,6 +46,10 @@ Fusinus clavilithoides Landau, Harzhauser, Büyükmeriç & Breitenberger, 20
 <i>Velutina halioides</i> (Linnaeus, 1758)
 {"name_string_id":"653bbe42-aef4-5847-add4-8c7f8a4d1f9b","parsed":true,"quality":2,"quality_warnings":[[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"<i>Velutina halioides</i> (Linnaeus, 1758)","normalized":"Velutina halioides (Linnaeus 1758)","canonical_name":{"value":"Velutina halioides","value_ranked":"Velutina halioides"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Velutina"},"specific_epithet":{"value":"halioides","authorship":{"value":"(Linnaeus 1758)","basionym_authorship":{"authors":["Linnaeus"],"year":{"value":"1758"}}}}}],"positions":[["genus",3,11],["specific_epithet",12,25],["author_word",27,35],["year",37,41]]}
 653bbe42-aef4-5847-add4-8c7f8a4d1f9b|<i>Velutina halioides</i> (Linnaeus, 1758)|Velutina halioides|Velutina halioides|(Linnaeus 1758)|1758|2
+
+Quadrella steyermarkii (Standl.) Iltis &amp; Cornejo
+{"name_string_id":"fbd1b4fe-f8ed-5390-9cb1-e0f798691b1e","parsed":true,"quality":2,"quality_warnings":[[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Quadrella steyermarkii (Standl.) Iltis &amp; Cornejo","normalized":"Quadrella steyermarkii (Standl.) Iltis & Cornejo","canonical_name":{"value":"Quadrella steyermarkii","value_ranked":"Quadrella steyermarkii"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Quadrella"},"specific_epithet":{"value":"steyermarkii","authorship":{"value":"(Standl.) Iltis & Cornejo","basionym_authorship":{"authors":["Standl."]},"combination_authorship":{"authors":["Iltis","Cornejo"]}}}}],"positions":[["genus",0,9],["specific_epithet",10,22],["author_word",24,31],["author_word",33,38],["author_word",45,52]]}
+fbd1b4fe-f8ed-5390-9cb1-e0f798691b1e|Quadrella steyermarkii (Standl.) Iltis &amp; Cornejo|Quadrella steyermarkii|Quadrella steyermarkii|(Standl.) Iltis & Cornejo||2
 ### >
 
 ### Uninomials

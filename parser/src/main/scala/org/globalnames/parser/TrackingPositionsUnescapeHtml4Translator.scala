@@ -34,7 +34,8 @@ class TrackingPositionsUnescapeHtml4Translator extends AggregateTranslator {
     }
 
     this.translate(input, stringWriter)
-    stringWriter.toString
+    val result = stringWriter.toString
+    result
   }
 
   override def translate(input: CharSequence, index: Int, out: Writer): Int = {
@@ -44,7 +45,15 @@ class TrackingPositionsUnescapeHtml4Translator extends AggregateTranslator {
     consumed
   }
 
-  def at(pos: Int): Int = if (identity) pos else positions(pos)
+  def at(pos: Int): Int = {
+    if (identity) {
+      pos
+    } else if (pos < positions.length) {
+      positions(pos)
+    } else {
+      positions.last + pos - positions.length + 1
+    }
+  }
 }
 
 object TrackingPositionsUnescapeHtml4Translator {
