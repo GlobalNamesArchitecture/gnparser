@@ -22,39 +22,13 @@
 # "parsed: false"
 ####
 
-### todo <
-Velutina haliotoides (Linnaeus, 1758) <i>sensu</i> Fabricius, 1780
-{"name_string_id":"189c94f6-96aa-52bb-b019-103a2103ce21","parsed":true,"quality":2,"quality_warnings":[[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Velutina haliotoides (Linnaeus, 1758) <i>sensu</i> Fabricius, 1780","normalized":"Velutina haliotoides (Linnaeus 1758)","canonical_name":{"value":"Velutina haliotoides","value_ranked":"Velutina haliotoides"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Velutina"},"specific_epithet":{"value":"haliotoides","authorship":{"value":"(Linnaeus 1758)","basionym_authorship":{"authors":["Linnaeus"],"year":{"value":"1758"}}}}}],"positions":[["genus",0,8],["specific_epithet",9,20],["author_word",22,30],["year",32,36]]}
-189c94f6-96aa-52bb-b019-103a2103ce21|Velutina haliotoides (Linnaeus, 1758) <i>sensu</i> Fabricius, 1780|Velutina haliotoides|Velutina haliotoides|(Linnaeus 1758)|1758|2
-
-Velutina haliotoides (Linnaeus, 1758), <i>sensu</i> Fabricius, 1780
-{"name_string_id":"b8d77a78-2698-5050-9c7a-638f615bd357","parsed":true,"quality":2,"quality_warnings":[[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Velutina haliotoides (Linnaeus, 1758), <i>sensu</i> Fabricius, 1780","normalized":"Velutina haliotoides (Linnaeus 1758)","canonical_name":{"value":"Velutina haliotoides","value_ranked":"Velutina haliotoides"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Velutina"},"specific_epithet":{"value":"haliotoides","authorship":{"value":"(Linnaeus 1758)","basionym_authorship":{"authors":["Linnaeus"],"year":{"value":"1758"}}}}}],"positions":[["genus",0,8],["specific_epithet",9,20],["author_word",22,30],["year",32,36]]}
-b8d77a78-2698-5050-9c7a-638f615bd357|Velutina haliotoides (Linnaeus, 1758), <i>sensu</i> Fabricius, 1780|Velutina haliotoides|Velutina haliotoides|(Linnaeus 1758)|1758|2
-
-Velutina haliotoides (Linnaeus, 1758), sensu Fabricius, 1780
-{"name_string_id":"5efd63de-f4ec-55f1-bd5b-494988e58f9b","parsed":true,"quality":2,"quality_warnings":[[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Velutina haliotoides (Linnaeus, 1758), sensu Fabricius, 1780","normalized":"Velutina haliotoides (Linnaeus 1758)","canonical_name":{"value":"Velutina haliotoides","value_ranked":"Velutina haliotoides"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Velutina"},"specific_epithet":{"value":"haliotoides","authorship":{"value":"(Linnaeus 1758)","basionym_authorship":{"authors":["Linnaeus"],"year":{"value":"1758"}}}}}],"positions":[["genus",0,8],["specific_epithet",9,20],["author_word",22,30],["year",32,36]]}
-5efd63de-f4ec-55f1-bd5b-494988e58f9b|Velutina haliotoides (Linnaeus, 1758), sensu Fabricius, 1780|Velutina haliotoides|Velutina haliotoides|(Linnaeus 1758)|1758|2
-
-Velutina haliotoides (Linnaeus, 1758),
-{"name_string_id":"59093ba7-64a1-53c4-9795-12de7ff9e718","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Velutina haliotoides (Linnaeus, 1758),","normalized":"Velutina haliotoides (Linnaeus 1758)","canonical_name":{"value":"Velutina haliotoides","value_ranked":"Velutina haliotoides"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Velutina"},"specific_epithet":{"value":"haliotoides","authorship":{"value":"(Linnaeus 1758)","basionym_authorship":{"authors":["Linnaeus"],"year":{"value":"1758"}}}}}],"positions":[["genus",0,8],["specific_epithet",9,20],["author_word",22,30],["year",32,36]]}
-59093ba7-64a1-53c4-9795-12de7ff9e718|Velutina haliotoides (Linnaeus, 1758),|Velutina haliotoides|Velutina haliotoides|(Linnaeus 1758)|1758|1
-
-Fusinus clavilithoides Landau, Harzhauser, Büyükmeriç & Breitenberger, 20
-{"name_string_id":"76a62c41-361e-532c-852c-ab3dc7ab09cb","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Fusinus clavilithoides Landau, Harzhauser, Büyükmeriç & Breitenberger, 20","normalized":"Fusinus clavilithoides Landau, Harzhauser, Büyükmeriç & Breitenberger","canonical_name":{"value":"Fusinus clavilithoides","value_ranked":"Fusinus clavilithoides"},"hybrid":false,"surrogate":false,"unparsed_tail":" 20","virus":false,"bacteria":false,"details":[{"genus":{"value":"Fusinus"},"specific_epithet":{"value":"clavilithoides","authorship":{"value":"Landau, Harzhauser, Büyükmeriç & Breitenberger","basionym_authorship":{"authors":["Landau","Harzhauser","Büyükmeriç","Breitenberger"]}}}}],"positions":[["genus",0,7],["specific_epithet",8,22],["author_word",23,29],["author_word",31,41],["author_word",43,53],["author_word",56,69]]}
-76a62c41-361e-532c-852c-ab3dc7ab09cb|Fusinus clavilithoides Landau, Harzhauser, Büyükmeriç & Breitenberger, 20|Fusinus clavilithoides|Fusinus clavilithoides|Landau, Harzhauser, Büyükmeriç & Breitenberger||3
-
-<i>Velutina halioides</i> (Linnaeus, 1758)
-{"name_string_id":"653bbe42-aef4-5847-add4-8c7f8a4d1f9b","parsed":true,"quality":2,"quality_warnings":[[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"<i>Velutina halioides</i> (Linnaeus, 1758)","normalized":"Velutina halioides (Linnaeus 1758)","canonical_name":{"value":"Velutina halioides","value_ranked":"Velutina halioides"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Velutina"},"specific_epithet":{"value":"halioides","authorship":{"value":"(Linnaeus 1758)","basionym_authorship":{"authors":["Linnaeus"],"year":{"value":"1758"}}}}}],"positions":[["genus",3,11],["specific_epithet",12,25],["author_word",27,35],["year",37,41]]}
-653bbe42-aef4-5847-add4-8c7f8a4d1f9b|<i>Velutina halioides</i> (Linnaeus, 1758)|Velutina halioides|Velutina halioides|(Linnaeus 1758)|1758|2
-
-Quadrella steyermarkii (Standl.) Iltis &amp; Cornejo
-{"name_string_id":"fbd1b4fe-f8ed-5390-9cb1-e0f798691b1e","parsed":true,"quality":2,"quality_warnings":[[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Quadrella steyermarkii (Standl.) Iltis &amp; Cornejo","normalized":"Quadrella steyermarkii (Standl.) Iltis & Cornejo","canonical_name":{"value":"Quadrella steyermarkii","value_ranked":"Quadrella steyermarkii"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Quadrella"},"specific_epithet":{"value":"steyermarkii","authorship":{"value":"(Standl.) Iltis & Cornejo","basionym_authorship":{"authors":["Standl."]},"combination_authorship":{"authors":["Iltis","Cornejo"]}}}}],"positions":[["genus",0,9],["specific_epithet",10,22],["author_word",24,31],["author_word",33,38],["author_word",45,52]]}
-fbd1b4fe-f8ed-5390-9cb1-e0f798691b1e|Quadrella steyermarkii (Standl.) Iltis &amp; Cornejo|Quadrella steyermarkii|Quadrella steyermarkii|(Standl.) Iltis & Cornejo||2
+# TODO: should not be parsed because of 'incertae sedis' <
 
 </i>Hipponicidae<i>_incertae_sedis</i>
 {"name_string_id":"be79ec79-fad8-5dfe-af5e-d3a47ccaf788","parsed":true,"quality":3,"quality_warnings":[[3,"Non-standard space characters"],[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"</i>Hipponicidae<i>_incertae_sedis</i>","normalized":"Hipponicidae incertae sedis","canonical_name":{"value":"Hipponicidae incertae sedis","value_ranked":"Hipponicidae incertae sedis"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Hipponicidae"},"specific_epithet":{"value":"incertae"},"infraspecific_epithets":[{"value":"sedis"}]}],"positions":[["genus",4,19],["specific_epithet",20,28],["infraspecific_epithet",29,34]]}
 be79ec79-fad8-5dfe-af5e-d3a47ccaf788|</i>Hipponicidae<i>_incertae_sedis</i>|Hipponicidae incertae sedis|Hipponicidae incertae sedis|||3
-### >
+
+#>
 
 ### Uninomials
 
@@ -303,8 +277,7 @@ Pompilus cinctellus v. d. L.
 {"name_string_id":"8954c0f2-eab4-561d-9f94-6cebd4f8024d","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Pompilus cinctellus v. d. L.","normalized":"Pompilus cinctellus v. d. L.","canonical_name":{"value":"Pompilus cinctellus","value_ranked":"Pompilus cinctellus"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Pompilus"},"specific_epithet":{"value":"cinctellus","authorship":{"value":"v. d. L.","basionym_authorship":{"authors":["v. d. L."]}}}}],"positions":[["genus",0,8],["specific_epithet",9,19],["author_word",20,25],["author_word",26,28]]}
 8954c0f2-eab4-561d-9f94-6cebd4f8024d|Pompilus cinctellus v. d. L.|Pompilus cinctellus|Pompilus cinctellus|v. d. L.||1
 
-Setaphis viridis v. d.G.
-{"name_string_id":"19792117-31fc-52d7-9990-e89b67c459d3","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Setaphis viridis v. d.G.","normalized":"Setaphis viridis v. d. G.","canonical_name":{"value":"Setaphis viridis","value_ranked":"Setaphis viridis"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Setaphis"},"specific_epithet":{"value":"viridis","authorship":{"value":"v. d. G.","basionym_authorship":{"authors":["v. d. G."]}}}}],"positions":[["genus",0,8],["specific_epithet",9,16],["author_word",17,22],["author_word",22,24]]}
+Setaphis viridis v. d.G.  {"name_string_id":"19792117-31fc-52d7-9990-e89b67c459d3","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Setaphis viridis v. d.G.","normalized":"Setaphis viridis v. d. G.","canonical_name":{"value":"Setaphis viridis","value_ranked":"Setaphis viridis"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Setaphis"},"specific_epithet":{"value":"viridis","authorship":{"value":"v. d. G.","basionym_authorship":{"authors":["v. d. G."]}}}}],"positions":[["genus",0,8],["specific_epithet",9,16],["author_word",17,22],["author_word",22,24]]}
 19792117-31fc-52d7-9990-e89b67c459d3|Setaphis viridis v. d.G.|Setaphis viridis|Setaphis viridis|v. d. G.||1
 
 Coleophora mendica Baldizzone & v. d.Wolf 2000
@@ -402,6 +375,15 @@ Strombus guidoi Man in't Veld & De Turck, 1998
 Strombus vittatus entropi Man in't Veld & Visser, 1993
 {"name_string_id":"c74691e3-0f71-576b-81ea-6173bdae9817","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Strombus vittatus entropi Man in't Veld & Visser, 1993","normalized":"Strombus vittatus entropi Man in't Veld & Visser 1993","canonical_name":{"value":"Strombus vittatus entropi","value_ranked":"Strombus vittatus entropi"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Strombus"},"specific_epithet":{"value":"vittatus"},"infraspecific_epithets":[{"value":"entropi","authorship":{"value":"Man in't Veld & Visser 1993","basionym_authorship":{"authors":["Man in't Veld","Visser"],"year":{"value":"1993"}}}}]}],"positions":[["genus",0,8],["specific_epithet",9,17],["infraspecific_epithet",18,25],["author_word",26,29],["author_word",30,34],["author_word",35,39],["author_word",42,48],["year",50,54]]}
 c74691e3-0f71-576b-81ea-6173bdae9817|Strombus vittatus entropi Man in't Veld & Visser, 1993|Strombus vittatus entropi|Strombus vittatus entropi|Man in't Veld & Visser 1993|1993|1
+
+Velutina haliotoides (Linnaeus, 1758), sensu Fabricius, 1780
+{"name_string_id":"5efd63de-f4ec-55f1-bd5b-494988e58f9b","parsed":true,"quality":2,"quality_warnings":[[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Velutina haliotoides (Linnaeus, 1758), sensu Fabricius, 1780","normalized":"Velutina haliotoides (Linnaeus 1758)","canonical_name":{"value":"Velutina haliotoides","value_ranked":"Velutina haliotoides"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Velutina"},"specific_epithet":{"value":"haliotoides","authorship":{"value":"(Linnaeus 1758)","basionym_authorship":{"authors":["Linnaeus"],"year":{"value":"1758"}}}}}],"positions":[["genus",0,8],["specific_epithet",9,20],["author_word",22,30],["year",32,36]]}
+5efd63de-f4ec-55f1-bd5b-494988e58f9b|Velutina haliotoides (Linnaeus, 1758), sensu Fabricius, 1780|Velutina haliotoides|Velutina haliotoides|(Linnaeus 1758)|1758|2
+
+Velutina haliotoides (Linnaeus, 1758),
+{"name_string_id":"59093ba7-64a1-53c4-9795-12de7ff9e718","parsed":true,"quality":1,"parser_version":"test_version","verbatim":"Velutina haliotoides (Linnaeus, 1758),","normalized":"Velutina haliotoides (Linnaeus 1758)","canonical_name":{"value":"Velutina haliotoides","value_ranked":"Velutina haliotoides"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Velutina"},"specific_epithet":{"value":"haliotoides","authorship":{"value":"(Linnaeus 1758)","basionym_authorship":{"authors":["Linnaeus"],"year":{"value":"1758"}}}}}],"positions":[["genus",0,8],["specific_epithet",9,20],["author_word",22,30],["year",32,36]]}
+59093ba7-64a1-53c4-9795-12de7ff9e718|Velutina haliotoides (Linnaeus, 1758),|Velutina haliotoides|Velutina haliotoides|(Linnaeus 1758)|1758|1
+
 #>
 
 #SECTION: Binomial with an abbreviated genus<
@@ -1837,6 +1819,28 @@ Xanthomonas axonopodis pv.
 #>
 
 ### Miscellaneous Inconsistencies
+
+# Section HTML tags and entities<
+Velutina haliotoides (Linnaeus, 1758) <i>sensu</i> Fabricius, 1780
+{"name_string_id":"189c94f6-96aa-52bb-b019-103a2103ce21","parsed":true,"quality":2,"quality_warnings":[[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Velutina haliotoides (Linnaeus, 1758) <i>sensu</i> Fabricius, 1780","normalized":"Velutina haliotoides (Linnaeus 1758)","canonical_name":{"value":"Velutina haliotoides","value_ranked":"Velutina haliotoides"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Velutina"},"specific_epithet":{"value":"haliotoides","authorship":{"value":"(Linnaeus 1758)","basionym_authorship":{"authors":["Linnaeus"],"year":{"value":"1758"}}}}}],"positions":[["genus",0,8],["specific_epithet",9,20],["author_word",22,30],["year",32,36]]}
+189c94f6-96aa-52bb-b019-103a2103ce21|Velutina haliotoides (Linnaeus, 1758) <i>sensu</i> Fabricius, 1780|Velutina haliotoides|Velutina haliotoides|(Linnaeus 1758)|1758|2
+
+Velutina haliotoides (Linnaeus, 1758), <i>sensu</i> Fabricius, 1780
+{"name_string_id":"b8d77a78-2698-5050-9c7a-638f615bd357","parsed":true,"quality":2,"quality_warnings":[[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Velutina haliotoides (Linnaeus, 1758), <i>sensu</i> Fabricius, 1780","normalized":"Velutina haliotoides (Linnaeus 1758)","canonical_name":{"value":"Velutina haliotoides","value_ranked":"Velutina haliotoides"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Velutina"},"specific_epithet":{"value":"haliotoides","authorship":{"value":"(Linnaeus 1758)","basionym_authorship":{"authors":["Linnaeus"],"year":{"value":"1758"}}}}}],"positions":[["genus",0,8],["specific_epithet",9,20],["author_word",22,30],["year",32,36]]}
+b8d77a78-2698-5050-9c7a-638f615bd357|Velutina haliotoides (Linnaeus, 1758), <i>sensu</i> Fabricius, 1780|Velutina haliotoides|Velutina haliotoides|(Linnaeus 1758)|1758|2
+
+Fusinus clavilithoides Landau, Harzhauser, Büyükmeriç & Breitenberger, 20
+{"name_string_id":"76a62c41-361e-532c-852c-ab3dc7ab09cb","parsed":true,"quality":3,"quality_warnings":[[3,"Unparseable tail"]],"parser_version":"test_version","verbatim":"Fusinus clavilithoides Landau, Harzhauser, Büyükmeriç & Breitenberger, 20","normalized":"Fusinus clavilithoides Landau, Harzhauser, Büyükmeriç & Breitenberger","canonical_name":{"value":"Fusinus clavilithoides","value_ranked":"Fusinus clavilithoides"},"hybrid":false,"surrogate":false,"unparsed_tail":" 20","virus":false,"bacteria":false,"details":[{"genus":{"value":"Fusinus"},"specific_epithet":{"value":"clavilithoides","authorship":{"value":"Landau, Harzhauser, Büyükmeriç & Breitenberger","basionym_authorship":{"authors":["Landau","Harzhauser","Büyükmeriç","Breitenberger"]}}}}],"positions":[["genus",0,7],["specific_epithet",8,22],["author_word",23,29],["author_word",31,41],["author_word",43,53],["author_word",56,69]]}
+76a62c41-361e-532c-852c-ab3dc7ab09cb|Fusinus clavilithoides Landau, Harzhauser, Büyükmeriç & Breitenberger, 20|Fusinus clavilithoides|Fusinus clavilithoides|Landau, Harzhauser, Büyükmeriç & Breitenberger||3
+
+<i>Velutina halioides</i> (Linnaeus, 1758)
+{"name_string_id":"653bbe42-aef4-5847-add4-8c7f8a4d1f9b","parsed":true,"quality":2,"quality_warnings":[[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"<i>Velutina halioides</i> (Linnaeus, 1758)","normalized":"Velutina halioides (Linnaeus 1758)","canonical_name":{"value":"Velutina halioides","value_ranked":"Velutina halioides"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Velutina"},"specific_epithet":{"value":"halioides","authorship":{"value":"(Linnaeus 1758)","basionym_authorship":{"authors":["Linnaeus"],"year":{"value":"1758"}}}}}],"positions":[["genus",3,11],["specific_epithet",12,25],["author_word",27,35],["year",37,41]]}
+653bbe42-aef4-5847-add4-8c7f8a4d1f9b|<i>Velutina halioides</i> (Linnaeus, 1758)|Velutina halioides|Velutina halioides|(Linnaeus 1758)|1758|2
+
+Quadrella steyermarkii (Standl.) Iltis &amp; Cornejo
+{"name_string_id":"fbd1b4fe-f8ed-5390-9cb1-e0f798691b1e","parsed":true,"quality":2,"quality_warnings":[[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Quadrella steyermarkii (Standl.) Iltis &amp; Cornejo","normalized":"Quadrella steyermarkii (Standl.) Iltis & Cornejo","canonical_name":{"value":"Quadrella steyermarkii","value_ranked":"Quadrella steyermarkii"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Quadrella"},"specific_epithet":{"value":"steyermarkii","authorship":{"value":"(Standl.) Iltis & Cornejo","basionym_authorship":{"authors":["Standl."]},"combination_authorship":{"authors":["Iltis","Cornejo"]}}}}],"positions":[["genus",0,9],["specific_epithet",10,22],["author_word",24,31],["author_word",33,38],["author_word",45,52]]}
+fbd1b4fe-f8ed-5390-9cb1-e0f798691b1e|Quadrella steyermarkii (Standl.) Iltis &amp; Cornejo|Quadrella steyermarkii|Quadrella steyermarkii|(Standl.) Iltis & Cornejo||2
+#>
 
 #SECTION: Names with spec., nov spec<
 Lampona spec Platnick, 2000
