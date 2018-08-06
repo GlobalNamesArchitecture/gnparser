@@ -50,6 +50,10 @@ Fusinus clavilithoides Landau, Harzhauser, Büyükmeriç & Breitenberger, 20
 Quadrella steyermarkii (Standl.) Iltis &amp; Cornejo
 {"name_string_id":"fbd1b4fe-f8ed-5390-9cb1-e0f798691b1e","parsed":true,"quality":2,"quality_warnings":[[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"Quadrella steyermarkii (Standl.) Iltis &amp; Cornejo","normalized":"Quadrella steyermarkii (Standl.) Iltis & Cornejo","canonical_name":{"value":"Quadrella steyermarkii","value_ranked":"Quadrella steyermarkii"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Quadrella"},"specific_epithet":{"value":"steyermarkii","authorship":{"value":"(Standl.) Iltis & Cornejo","basionym_authorship":{"authors":["Standl."]},"combination_authorship":{"authors":["Iltis","Cornejo"]}}}}],"positions":[["genus",0,9],["specific_epithet",10,22],["author_word",24,31],["author_word",33,38],["author_word",45,52]]}
 fbd1b4fe-f8ed-5390-9cb1-e0f798691b1e|Quadrella steyermarkii (Standl.) Iltis &amp; Cornejo|Quadrella steyermarkii|Quadrella steyermarkii|(Standl.) Iltis & Cornejo||2
+
+</i>Hipponicidae<i>_incertae_sedis</i>
+{"name_string_id":"be79ec79-fad8-5dfe-af5e-d3a47ccaf788","parsed":true,"quality":3,"quality_warnings":[[3,"Non-standard space characters"],[2,"Name had to be changed by preprocessing"]],"parser_version":"test_version","verbatim":"</i>Hipponicidae<i>_incertae_sedis</i>","normalized":"Hipponicidae incertae sedis","canonical_name":{"value":"Hipponicidae incertae sedis","value_ranked":"Hipponicidae incertae sedis"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Hipponicidae"},"specific_epithet":{"value":"incertae"},"infraspecific_epithets":[{"value":"sedis"}]}],"positions":[["genus",4,19],["specific_epithet",20,28],["infraspecific_epithet",29,34]]}
+be79ec79-fad8-5dfe-af5e-d3a47ccaf788|</i>Hipponicidae<i>_incertae_sedis</i>|Hipponicidae incertae sedis|Hipponicidae incertae sedis|||3
 ### >
 
 ### Uninomials
