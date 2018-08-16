@@ -13,7 +13,7 @@ is an SBT subproject. To run it complete steps as follows:
 
 1. build a fat-jar of the example with ``sbt ";++2.10.6;exampleSpark/assembly"``
 
-2. run it with Spark by executing ``$SPARK_HOME/bin/spark-submit ./examples/spark/target/scala-2.10/gnparser-example-spark-assembly-1.0.1.jar``
+2. run it with Spark by executing ``$SPARK_HOME/bin/spark-submit ./examples/spark/target/scala-2.10/gnparser-example-spark-assembly-1.0.2.jar``
 
 Python
 ~~~~~~
@@ -25,8 +25,8 @@ Python
 .. code:: bash
 
     $SPARK_HOME/bin/pyspark \
-      --jars "`pwd`/spark-python/target/scala-2.10/gnparser-spark-python-assembly-1.0.1.jar" \
-      --driver-class-path="`pwd`/spark-python/target/scala-2.10/gnparser-spark-python-assembly-1.0.1.jar"`
+      --jars "`pwd`/spark-python/target/scala-2.10/gnparser-spark-python-assembly-1.0.2.jar" \
+      --driver-class-path="`pwd`/spark-python/target/scala-2.10/gnparser-spark-python-assembly-1.0.2.jar"`
 
 3. add Python snippet to call the wrapper:
 

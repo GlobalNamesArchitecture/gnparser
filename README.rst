@@ -9,7 +9,7 @@ Important Changes
 
 **The change as follows might break your code!** ``gnparser 0.4.1`` optionally returned
 ``canonical_name.value_extended`` in output JSON. **Only** if input name contains ranks,
-the field contains a canonical name with ranks. Otherwise the field is ``null``. ``gnparser 1.0.1``
+the field contains a canonical name with ranks. Otherwise the field is ``null``. ``gnparser 1.0.2``
 renames the field to ``canonical_name.value_ranked``. Also it always returns it, even if input name
 doesn't contain ranks.
 
@@ -31,10 +31,10 @@ Try it as a command line tool under Linux/Mac:
 
 .. code:: bash
 
-    wget https://github.com/GlobalNamesArchitecture/gnparser/releases/download/release-1.0.1/gnparser-1.0.1.zip
-    unzip gnparser-1.0.1.zip
+    wget https://github.com/GlobalNamesArchitecture/gnparser/releases/download/release-1.0.2/gnparser-1.0.2.zip
+    unzip gnparser-1.0.2.zip
     sudo rm -rf /opt/gnparser
-    sudo mv gnparser-1.0.1 /opt/gnparser
+    sudo mv gnparser-1.0.2 /opt/gnparser
     sudo rm -f /usr/local/bin/gnparser
     sudo ln -s /opt/gnparser/bin/gnparser /usr/local/bin
     gnparser name "Homo sapiens Linnaeus"
@@ -56,7 +56,7 @@ Finally, run it right from your SBT console:
 
     $ mkdir -p project
     $ echo 'sbt.version=0.13.12' > project/build.properties
-    $ sbt ';set libraryDependencies += "org.globalnames" %% "gnparser" % "1.0.1";console'
+    $ sbt ';set libraryDependencies += "org.globalnames" %% "gnparser" % "1.0.2";console'
     scala> import org.globalnames.parser.ScientificNameParser.{instance => scientificNameParser}
     scala> scientificNameParser.fromString("Homo sapiens Linnaeus").renderCompactJson
 
@@ -215,7 +215,7 @@ SBT:
 
 .. code:: Scala
 
-    libraryDependencies += "org.globalnames" %% "gnparser" % "1.0.1"
+    libraryDependencies += "org.globalnames" %% "gnparser" % "1.0.2"
 
 Maven:
 
@@ -224,20 +224,20 @@ Maven:
     <dependency>
         <groupId>org.globalnames</groupId>
         <artifactId>gnparser_2.11</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2</version>
     </dependency>
 
     <dependency>
         <groupId>org.globalnames</groupId>
         <artifactId>gnparser_2.10</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2</version>
     </dependency>
 
 Release Package
 ---------------
 
 `Release
-package <https://github.com/GlobalNamesArchitecture/gnparser/releases/tag/release-1.0.1>`_
+package <https://github.com/GlobalNamesArchitecture/gnparser/releases/tag/release-1.0.2>`_
 should be sufficient for all usages but development. It is not needed
 for including ``gnparser`` into Java or Scala code -- `declare dependency
 instead <#dependency-declaration-for-java-or-scala>`_.
@@ -253,11 +253,11 @@ Released Files
 ===============================   ===============================================
 File                              Description
 ===============================   ===============================================
-``gnparser-assembly-1.0.1.jar``   `Fat Jar <#fat-jar>`_
-``gnparser-1.0.1.zip``            `Command line tool, web and socket
+``gnparser-assembly-1.0.2.jar``   `Fat Jar <#fat-jar>`_
+``gnparser-1.0.2.zip``            `Command line tool, web and socket
                                   server <#command-line-tool-and-socket-server>`_
-``release-1.0.1.zip``             Source code's zip file
-``release-1.0.1.tar.gz``          Source code's tar file
+``release-1.0.2.zip``             Source code's zip file
+``release-1.0.2.tar.gz``          Source code's tar file
 ===============================   ===============================================
 
 Fat Jar
@@ -268,9 +268,9 @@ necessary to run a program. Such a jar would include Scala and all
 required libraries.
 
 `Fat
-jar <https://github.com/GlobalNamesArchitecture/gnparser/releases/download/release-1.0.1/gnparser-assembly-1.0.1.jar>`_
+jar <https://github.com/GlobalNamesArchitecture/gnparser/releases/download/release-1.0.2/gnparser-assembly-1.0.2.jar>`_
 for ``gnparser`` can be found in the `current
-release <https://github.com/GlobalNamesArchitecture/gnparser/releases/tag/release-1.0.1>`_.
+release <https://github.com/GlobalNamesArchitecture/gnparser/releases/tag/release-1.0.2>`_.
 
 Command Line Tool and Socket Server
 -----------------------------------
@@ -280,10 +280,10 @@ Installation on Linux/Mac
 
 .. code:: bash
 
-    wget https://github.com/GlobalNamesArchitecture/gnparser/releases/download/release-1.0.1/gnparser-1.0.1.zip
-    unzip gnparser-1.0.1.zip
+    wget https://github.com/GlobalNamesArchitecture/gnparser/releases/download/release-1.0.2/gnparser-1.0.2.zip
+    unzip gnparser-1.0.2.zip
     sudo rm -rf /opt/gnparser
-    sudo mv gnparser-1.0.1 /opt/gnparser
+    sudo mv gnparser-1.0.2 /opt/gnparser
     sudo rm -f /usr/local/bin/gnparser
     sudo ln -s /opt/gnparser/bin/gnparser /usr/local/bin
 
@@ -291,7 +291,7 @@ Installation on Windows
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 1. Download
-   `gnparser-1.0.1.zip <https://github.com/GlobalNamesArchitecture/gnparser/releases/download/release-1.0.1/gnparser-1.0.1.zip>`_
+   `gnparser-1.0.2.zip <https://github.com/GlobalNamesArchitecture/gnparser/releases/download/release-1.0.2/gnparser-1.0.2.zip>`_
 2. Extract it to a place where you usually store program files
 3. Update your `PATH <https://java.com/en/download/help/path.xml>`_ to
    point to bin subdirectory
@@ -443,7 +443,7 @@ To avoid declaring multiple dependencies Jython, JRuby and R need a
 `reference gnparser fat-jar <#fat-jar>`_.
 
 If you decide to follow examples get the code from the
-`release <https://github.com/GlobalNamesArchitecture/gnparser/releases/tag/release-1.0.1>`_
+`release <https://github.com/GlobalNamesArchitecture/gnparser/releases/tag/release-1.0.2>`_
 or `clone it from GitHub <#getting-code-for-development>`_
 
 Scala
@@ -497,7 +497,7 @@ To run it execute the command:
 
 .. code:: bash
 
-    GNPARSER_JAR_PATH=/path/to/gnparser-assembly-1.0.1.jar \
+    GNPARSER_JAR_PATH=/path/to/gnparser-assembly-1.0.2.jar \
       jython examples/jython/parser.py
 
 R
@@ -523,7 +523,7 @@ To run it execute the command:
 
 .. code:: bash
 
-    jruby -J-classpath /path/to/gnparser-assembly-1.0.1.jar \
+    jruby -J-classpath /path/to/gnparser-assembly-1.0.2.jar \
       examples/jruby/parser.rb
 
 Getting Code for Development
