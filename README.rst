@@ -318,7 +318,7 @@ To parse names from a file (one name per line)
 
     gnparser file --input file_with_names.txt [--output output_file.json --threads 8]
 
-``file`` is default command if no command is given. To parse names from STDIN to STDOUT:
+``file`` is the default command if no command is given. To parse names from STDIN to STDOUT:
 
 ::
 
@@ -328,6 +328,13 @@ To parse names from a file (one name per line)
 the output representation. The values are ``simple`` for simple tab-delimited format,
 ``json-pretty`` and ``json-compact`` for the JSON extended pretty form and the compact form
 correspondingly
+
+Finally, ``gnparser`` tool is not optimized for parsing huge input files.
+`Speed`_ is measured by interacting with ``gnparser`` as the socket server. Using
+it as file parser intends that it constructs JSON tree in memory and then saves
+it to the disk. 1 million names might be hundreds of megabytes, while parsed
+results JSON would be more than gigabyte. ``gnparser`` would consume a lot of RAM and
+time to handle that.
 
 ::
 
