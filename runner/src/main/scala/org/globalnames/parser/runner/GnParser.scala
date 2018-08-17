@@ -171,10 +171,14 @@ object GnParser {
         val parsedNamesCount = new AtomicInteger()
 
         Console.err.println(s"Running with parallelism: ${config.parallelism}")
+        val start = System.nanoTime()
         for (name <- namesInputPar) yield {
           val currentParsedCount = parsedNamesCount.incrementAndGet()
           if (currentParsedCount % 10000 == 0) {
-            Console.err.println(s"Parsed $currentParsedCount of ${namesInputPar.size} lines")
+            val elapsed = (System.nanoTime() - start) * 1e-6
+            val msg =
+              f"Parsed $currentParsedCount of ${namesInputPar.size} lines, elapsed $elapsed%.2fms"
+            Console.err.println(msg)
           }
           val result = scientificNameParser.fromString(name.trim)
           result
