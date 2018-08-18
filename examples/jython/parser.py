@@ -8,7 +8,7 @@ import json
 from org.globalnames.parser import ScientificNameParser
 
 snp = ScientificNameParser.instance()
-result = snp.fromString("Homo sapiens L.").jsonRenderer().renderCompactJson()
+result = snp.fromString("Homo sapiens L.").renderJson(False)
 
 json_result = json.loads(result)
 assert json_result["parsed"]

@@ -56,12 +56,4 @@ class JsonRenderer(parserResult: Result, version: String, details: Details) {
       ("details" -> details.detailed) ~
       ("positions" -> positionsJson))
   }
-
-  def renderCompactJson: String = render(compact = true)
-
-  def render(compact: Boolean, showCanonicalUuid: Boolean = false): String = {
-    val jsonResult = json(showCanonicalUuid)
-    if (compact) JsonMethods.compact(jsonResult)
-    else JsonMethods.pretty(jsonResult)
-  }
 }
