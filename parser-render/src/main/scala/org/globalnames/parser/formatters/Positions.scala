@@ -1,10 +1,14 @@
-package org.globalnames.parser.formatters
+package org.globalnames
+package parser
+package formatters
 
-import org.globalnames.parser._
+import scalaz.syntax.traverse._
+import scalaz.syntax.std.boolean._
+import scalaz.syntax.std.option._
+import scalaz.std.option._
+import scalaz.std.vector._
 
-import scalaz.Scalaz._
-
-class Positions(parsedResult: Result) {
+class Positions(result: Result) {
 
   import Positions.Position
 
@@ -94,7 +98,7 @@ class Positions(parsedResult: Result) {
         as.combination.map(positionedAuthorsGroup).orZero
     }
 
-    parsedResult.scientificName.namesGroup.map { ng =>
+    result.scientificName.namesGroup.map { ng =>
       positionedNamesGroup(ng).sortBy { _.start }
     }.orZero
   }

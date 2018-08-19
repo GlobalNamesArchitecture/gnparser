@@ -1,11 +1,9 @@
 package org.globalnames.parser
 package formatters
 
-trait CommonOps {
-  protected val unescapedInput: String
-
+trait ResultOps { self: Result =>
   private[parser] def stringOf(astNode: AstNode): String =
-    unescapedInput.substring(astNode.pos.start, astNode.pos.end)
+    self.preprocessorResult.unescaped.substring(astNode.pos.start, astNode.pos.end)
 
   private[parser] def namesEqual(name1: Name, name2: Name): Boolean = {
     val name1str = stringOf(name1)

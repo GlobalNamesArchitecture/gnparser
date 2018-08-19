@@ -55,18 +55,18 @@ object GnParser {
 
     val parallelism: Int = threadsNumber.getOrElse(ForkJoinPool.getCommonPoolParallelism)
 
-    def renderResult(result: ResultRendered): String = format match {
-      case Format.Simple => result.delimitedStringRenderer.delimitedString()
-      case Format.JsonCompact => result.jsonRenderer.renderCompactJson
-      case Format.JsonPretty => result.jsonRenderer.render(compact = false)
+    def renderResult(result: RenderableResult): String = format match {
+      case Format.Simple => result.renderDelimitedString()
+      case Format.JsonCompact => result.renderJson(compact = true)
+      case Format.JsonPretty => result.renderJson(compact = false)
     }
 
-    def resultsToJson(results: Vector[ResultRendered]): String = format match {
+    def resultsToJson(results: Vector[RenderableResult]): String = format match {
       case Format.Simple =>
-        val resultsStrings = for (r <- results) yield r.delimitedString()
+        val resultsStrings = for (r <- results) yield r.renderDelimitedString()
         resultsStrings.mkString("\n")
       case f =>
-        val resultsJsonArr = for (r <- results.toList) yield r.jsonRenderer.json()
+        val resultsJsonArr = for (r <- results.toList) yield r.json
         val resultsJson = JArray(resultsJsonArr)
         val resultString = f match {
           case Format.JsonCompact => JsonMethods.compact(resultsJson)

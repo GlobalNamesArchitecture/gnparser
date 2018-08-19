@@ -37,19 +37,19 @@ trait Service extends Protocols {
     (indexMenu, apiMenu)
   }
 
-  private def parseNames(names: Seq[String]) = {
+  private def parseNames(names: Seq[String]): Seq[JsValue] = {
     val namesJson = names.map { name =>
-      snp.fromString(name).jsonRenderer.renderCompactJson.parseJson
+      snp.fromString(name).renderJson(compact = true).parseJson
     }
     namesJson
   }
 
   val route =
     pathSingleSlash {
-      (get & parameter('q ?)) { namesReq =>
+      (get & parameter('q.?)) { namesReq =>
         complete {
           val inputNames = namesReq.map { _.split("\r\n") }.getOrElse(Array())
-          val parsedNames = parseNames(inputNames).map { _.prettyPrint }
+          val parsedNames = parseNames(inputNames).map { x => x.prettyPrint }
           html.index(namesReq.getOrElse(""), parsedNames, indexMenu)
         }
       }

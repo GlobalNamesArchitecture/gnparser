@@ -25,8 +25,8 @@ class ScientificNameParserSpec extends Specification with TestParserInstance {
 
   expectedNames("/test_data.txt").foreach { expectedName =>
       val json = parse(expectedName.json)
-      val jsonParsed = scientificNameParser.fromString(expectedName.verbatim).json()
-                         .removeField { case (_, v) => v == JNothing }
+      val jsonParsed = scientificNameParser.fromString(expectedName.verbatim).json
+                                           .removeField { case (_, v) => v == JNothing }
 
       val jsonDiff = {
         val Diff(changed, added, deleted) = jsonParsed.diff(json)

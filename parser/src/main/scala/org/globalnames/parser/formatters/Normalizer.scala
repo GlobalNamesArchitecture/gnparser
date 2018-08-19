@@ -1,12 +1,15 @@
 package org.globalnames.parser
 package formatters
 
-import scalaz.{Name => _, _}
-import Scalaz._
+import scalaz.syntax.semigroup._
+import scalaz.syntax.traverse._
+import scalaz.syntax.std.boolean._
+import scalaz.syntax.std.option._
+import scalaz.std.string._
+import scalaz.std.option._
+import scalaz.std.vector._
 
-class Normalizer(namesGroup: Option[NamesGroup],
-                 canonizer: Canonizer,
-                 protected override val unescapedInput: String) extends CommonOps {
+trait Normalizer { self: Result with ResultOps with Canonizer =>
 
   def normalized: Option[String] = {
 
@@ -39,7 +42,7 @@ class Normalizer(namesGroup: Option[NamesGroup],
     def normalizedUninomial(u: Uninomial): Option[String] =
       (!u.implied).option {
         val parts =
-          Vector(canonizer.canonizedUninomial(u, showRanks = true),
+          Vector(self.canonizedUninomial(u, showRanks = true),
                  u.authorship.flatMap { normalizedAuthorship })
         parts.flatten.mkString(" ")
       }
@@ -64,7 +67,7 @@ class Normalizer(namesGroup: Option[NamesGroup],
     def normalizedInfraspeciesGroup(isg: InfraspeciesGroup): Option[String] =
       isg.group.map(normalizedInfraspecies).toVector.sequence.map { _.mkString(" ") }
 
-    namesGroup.flatMap { normalizedNamesGroup }
+    self.scientificName.namesGroup.flatMap { normalizedNamesGroup }
   }
 
   def normalizedYear(y: Year): String = {

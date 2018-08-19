@@ -8,51 +8,55 @@ import org.json4s.jackson.JsonMethods
 import scalaz._
 import Scalaz._
 
-class JsonRenderer(parserResult: Result, version: String, details: Details) {
+class JsonRenderer(result: Result,
+                   positions: Positions,
+                   details: Details,
+                   version: String) {
+
+  private val canonicalOpt = result.canonical
 
   def json(showCanonicalUuid: Boolean = false): JValue = {
-    val canonical = parserResult.canonical
-    val parsed = canonical.isDefined
+    val parsed = canonicalOpt.isDefined
 
     val canonicalName: JValue =
       if (parsed) {
-        val canonizedUuidStrOpt = parserResult.canonical.map { _.id.toString }
+        val canonizedUuidStrOpt = canonicalOpt.map { _.id.toString }
         ("id" -> showCanonicalUuid.option { canonizedUuidStrOpt }.join) ~
-          ("value" -> canonical.map { _.value }) ~
-          ("value_ranked" -> parserResult.canonical.map { _.ranked })
+          ("value" -> canonicalOpt.map { _.value }) ~
+          ("value_ranked" -> canonicalOpt.map { _.ranked })
       } else JNothing
 
-    val quality = canonical.map { _ => parserResult.scientificName.quality }
+    val quality = canonicalOpt.map { _ => result.scientificName.quality }
     val qualityWarnings: Option[JArray] =
-      if (parserResult.warnings.isEmpty) None
+      if (result.warnings.isEmpty) None
       else {
         val warningsJArr: JArray =
-          parserResult.warnings.sorted
+          result.warnings.sorted
             .map { w => JArray(List(w.level, w.message)) }.distinct
         warningsJArr.some
       }
     val positionsJson: Option[JArray] = parsed.option {
-      parserResult.positions.positioned.map { position =>
+      positions.positioned.map { position =>
         JArray(List(position.nodeName,
-          parserResult.preprocessorResult.verbatimPosAt(position.start),
-          parserResult.preprocessorResult.verbatimPosAt(position.end)))
+          result.preprocessorResult.verbatimPosAt(position.start),
+          result.preprocessorResult.verbatimPosAt(position.end)))
       }
     }
 
     JsonMethods.render(
-      ("name_string_id" -> parserResult.preprocessorResult.id.toString) ~
+      ("name_string_id" -> result.preprocessorResult.id.toString) ~
       ("parsed" -> parsed) ~
       ("quality" -> quality) ~
       ("quality_warnings" -> qualityWarnings) ~
       ("parser_version" -> version) ~
-      ("verbatim" -> parserResult.preprocessorResult.verbatim) ~
-      ("normalized" -> parserResult.normalizer.normalized) ~
+      ("verbatim" -> result.preprocessorResult.verbatim) ~
+      ("normalized" -> result.normalized) ~
       ("canonical_name" -> canonicalName) ~
-      ("hybrid" -> parserResult.scientificName.hybrid) ~
-      ("surrogate" -> parserResult.scientificName.surrogate) ~
-      ("unparsed_tail" -> parserResult.scientificName.unparsedTail) ~
-      ("virus" -> parserResult.preprocessorResult.virus) ~
-      ("bacteria" -> parserResult.scientificName.bacteria) ~
+      ("hybrid" -> result.scientificName.hybrid) ~
+      ("surrogate" -> result.scientificName.surrogate) ~
+      ("unparsed_tail" -> result.scientificName.unparsedTail) ~
+      ("virus" -> result.preprocessorResult.virus) ~
+      ("bacteria" -> result.scientificName.bacteria) ~
       ("details" -> details.detailed) ~
       ("positions" -> positionsJson))
   }

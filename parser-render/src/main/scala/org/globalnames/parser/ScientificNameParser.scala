@@ -1,17 +1,25 @@
-package org.globalnames.parser
+package org.globalnames
+package parser
 
 import formatters._
 
 import org.json4s.JValue
 import org.json4s.jackson.JsonMethods
 
-class ResultRendered(val result: Result, version: String) {
-  private val details: Details = new Details(result)
-  private val delimitedStringRenderer: DelimitedStringRenderer = new DelimitedStringRenderer(result)
+class RenderableResult(val result: Result, version: String) {
+  private[parser] val details: Details = new Details(result)
+  private[parser] val positions: Positions = new Positions(result)
+  private[parser] val delimitedStringRenderer: DelimitedStringRenderer =
+    new DelimitedStringRenderer(result)
+  private[parser] val jsonRenderer: JsonRenderer =
+    new JsonRenderer(result, positions, details, version)
 
   def json(showCanonicalUuid: Boolean): JValue = {
-    val jsonRenderer: JsonRenderer = new JsonRenderer(result, version, details)
     jsonRenderer.json(showCanonicalUuid)
+  }
+
+  def json: JValue = {
+    json(showCanonicalUuid = false)
   }
 
   def renderJson(compact: Boolean, showCanonicalUuid: Boolean): String = {
@@ -20,8 +28,9 @@ class ResultRendered(val result: Result, version: String) {
     else JsonMethods.pretty(jsonResult)
   }
 
-  def renderJson(compact: Boolean): String =
+  def renderJson(compact: Boolean): String = {
     renderJson(compact, showCanonicalUuid = false)
+  }
 
   def renderDelimitedString(delimiter: String = "\t"): String = {
     delimitedStringRenderer.delimitedString(delimiter)
@@ -31,13 +40,14 @@ class ResultRendered(val result: Result, version: String) {
 abstract class ScientificNameParser {
   val version: String
 
-  def fromString(input: String): ResultRendered =
+  def fromString(input: String): RenderableResult = {
     fromString(input, collectParsingErrors = false)
+  }
 
   def fromString(input: String,
-                 collectParsingErrors: Boolean): ResultRendered = {
+                 collectParsingErrors: Boolean): RenderableResult = {
     val result = Result.fromString(input, collectParsingErrors)
-    new ResultRendered(result, version)
+    new RenderableResult(result, version)
   }
 }
 

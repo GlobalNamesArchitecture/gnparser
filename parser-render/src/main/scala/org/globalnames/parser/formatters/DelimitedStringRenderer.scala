@@ -5,27 +5,26 @@ package formatters
 import scalaz._
 import Scalaz._
 
-class DelimitedStringRenderer(parserResult: Result) extends CommonOps {
-  protected val unescapedInput: String = parserResult.preprocessorResult.unescaped
+class DelimitedStringRenderer(result: Result) {
 
-  protected[globalnames] val ambiguousAuthorship: Boolean = {
+  private[parser] val ambiguousAuthorship: Boolean = {
     val isAmbiguousOpt = for {
-      hybrid <- parserResult.scientificName.hybrid
-      ng <- parserResult.scientificName.namesGroup
+      hybrid <- result.scientificName.hybrid
+      ng <- result.scientificName.namesGroup
     } yield hybrid && !ng.namedHybrid
     isAmbiguousOpt.getOrElse(false)
   }
 
-  protected[globalnames] val authorshipDelimited: Option[String] =
+  private[parser] val authorshipDelimited: Option[String] =
     (!ambiguousAuthorship).option {
-      parserResult.scientificName.authorship.flatMap {
-        parserResult.normalizer.normalizedAuthorship
+      result.scientificName.authorship.flatMap {
+        result.normalizedAuthorship
       }
     }.flatten
 
-  val yearDelimited: Option[String] =
+  private[parser] def yearDelimited: Option[String] =
     (!ambiguousAuthorship).option {
-      val year: Option[Year] = parserResult.scientificName.namesGroup.flatMap { ng =>
+      val year: Option[Year] = result.scientificName.namesGroup.flatMap { ng =>
         val infraspeciesYear = ng.name.infraspecies.flatMap {
           _.group.last.authorship.flatMap { _.authors.authors.year }
         }
@@ -34,7 +33,7 @@ class DelimitedStringRenderer(parserResult: Result) extends CommonOps {
         val uninomialYear = ng.name.uninomial.authorship.flatMap { _.authors.authors.year }
         infraspeciesYear <+> speciesYear <+> uninomialYear
       }
-      year.map { parserResult.normalizer.normalizedYear }
+      year.map { result.normalizedYear }
     }.flatten
 
   /**
@@ -45,13 +44,14 @@ class DelimitedStringRenderer(parserResult: Result) extends CommonOps {
     * @return fields concatenated to single string with delimiter
     */
   def delimitedString(delimiter: String = "\t"): String = {
-    val uuid: String = parserResult.preprocessorResult.id.toString
-    val verbatim: String = parserResult.preprocessorResult.verbatim
-    val canonical: String = parserResult.canonical.map { _.value }.orZero
-    val canonicalExtended: String = parserResult.canonical.map { _.ranked }.orZero
-    val quality: Int = parserResult.scientificName.quality
+    val uuid: String = result.preprocessorResult.id.toString
+    val verbatim: String = result.preprocessorResult.verbatim
+    val canonicalOpt: Option[Canonical] = result.canonical
+    val canonicalStr: String = canonicalOpt.map { _.value }.orZero
+    val canonicalRankedStr: String = canonicalOpt.map { _.ranked }.orZero
+    val quality: Int = result.scientificName.quality
     val fields: Seq[String] = Seq(
-      uuid, verbatim, canonical, canonicalExtended,
+      uuid, verbatim, canonicalStr, canonicalRankedStr,
       authorshipDelimited.orZero, yearDelimited.orZero,
       quality.toString)
     fields.mkString(delimiter)
@@ -62,19 +62,19 @@ class DelimitedStringRenderer(parserResult: Result) extends CommonOps {
     * "Nothoprodontia boliviana MONNÉ Miguel Ángel, MONNÉ Marcela Laura, 2004" authorship names as
     * Seq(Seq(MONNÉ, Miguel, Ángel), Seq(MONNÉ, Marcela, Laura))
     */
-  val authorshipNames: Seq[Seq[String]] = {
+  private[parser] val authorshipNames: Seq[Seq[String]] = {
     if (ambiguousAuthorship) {
       Seq()
     } else {
-      parserResult.scientificName.authorship.map { as =>
+      result.scientificName.authorship.map { as =>
         val authorsNames = as.authors.authors.authors.map {
-          a => a.words.map { w => stringOf(w) }
+          a => a.words.map { w => result.stringOf(w) }
         }
         val authorsExNames = as.authors.authorsEx.map { at => at.authors.map { a =>
-          a.words.map { w => stringOf(w) }
+          a.words.map { w => result.stringOf(w) }
         }}.getOrElse(Seq())
         val authorsEmendNames = as.authors.authorsEmend.map { at => at.authors.map { a =>
-          a.words.map { w => stringOf(w) }
+          a.words.map { w => result.stringOf(w) }
         }}.getOrElse(Seq())
         authorsNames ++ authorsExNames ++ authorsEmendNames
       }.getOrElse(Seq())

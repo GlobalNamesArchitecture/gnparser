@@ -66,7 +66,7 @@ class ParserSpec extends Specification with TestParserInstance {
   "Does not parse:" >> {
     "whateva" in {
       val res = scientificNameParser.fromString("whateva")
-      (res.jsonRenderer.json() \\ "parsed").extract[Boolean] must beFalse
+      (res.json \\ "parsed").extract[Boolean] must beFalse
     }
   }
 }

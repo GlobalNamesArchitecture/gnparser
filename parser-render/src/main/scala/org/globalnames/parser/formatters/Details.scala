@@ -6,8 +6,8 @@ import org.json4s.JsonDSL._
 import org.json4s.{JObject, JString, JValue}
 import scalaz.Scalaz._
 
-class Details(parsedResult: Result) extends CommonOps {
-  protected val unescapedInput: String = parsedResult.preprocessorResult.unescaped
+
+class Details(result: Result) {
 
   def detailed: JValue = {
     def detailedNamesGroup(namesGroup: NamesGroup): JValue = {
@@ -22,7 +22,7 @@ class Details(parsedResult: Result) extends CommonOps {
           if (nm.uninomial.implied) JNothing
           else {
             val firstNameUninomial =
-              firstName.flatMap { fn => namesEqual(fn, nm).option { fn.uninomial } }
+              firstName.flatMap { fn => result.namesEqual(fn, nm).option { fn.uninomial } }
             detailedUninomial(nm.uninomial, firstNameUninomial)
           }
         typ -> typVal
@@ -38,30 +38,33 @@ class Details(parsedResult: Result) extends CommonOps {
         ("infraspecific_epithets" ->
           nm.infraspecies.map(detailedInfraspeciesGroup)) ~
         ("annotation_identification" ->
-          (nm.approximation.map { stringOf } |+|
-            nm.comparison.map { stringOf })) ~
+          (nm.approximation.map { result.stringOf } |+|
+            nm.comparison.map { result.stringOf })) ~
         ignoredObj
     }
 
     def detailedUninomial(u: Uninomial, firstName: Option[Uninomial]): JValue = {
-      val rankStr = u.rank.map { r => r.typ.getOrElse(stringOf(r)) }
-      val fnVal = firstName.map { fn => Util.normalize(stringOf(fn)) }.getOrElse(Util.normalize(stringOf(u)))
+      val rankStr = u.rank.map { r => r.typ.getOrElse(result.stringOf(r)) }
+      val fnVal = firstName.map { fn =>
+        Util.normalize(result.stringOf(fn))
+      }.getOrElse(Util.normalize(result.stringOf(u)))
+
       ("value" -> fnVal) ~
         ("rank" -> rankStr) ~
-        ("parent" -> u.parent.map { p => Util.normalize(stringOf(p)) }) ~
+        ("parent" -> u.parent.map { p => Util.normalize(result.stringOf(p)) }) ~
         u.authorship.map(detailedAuthorship).getOrElse(JObject())
     }
 
     def detailedSubGenus(sg: SubGenus): JValue =
-      "value" -> Util.normalize(stringOf(sg.word))
+      "value" -> Util.normalize(result.stringOf(sg.word))
 
     def detailedSpecies(sp: Species): JValue =
-      ("value" -> Util.normalize(stringOf(sp))) ~
+      ("value" -> Util.normalize(result.stringOf(sp))) ~
         sp.authorship.map(detailedAuthorship).getOrElse(JObject())
 
     def detailedInfraspecies(is: Infraspecies): JValue = {
-      val rankStr = is.rank.map { r => r.typ.getOrElse(stringOf(r)) }
-      ("value" -> Util.normalize(stringOf(is))) ~
+      val rankStr = is.rank.map { r => r.typ.getOrElse(result.stringOf(r)) }
+      ("value" -> Util.normalize(result.stringOf(is))) ~
         ("rank" -> rankStr) ~
         is.authorship.map(detailedAuthorship).getOrElse(JObject())
     }
@@ -73,11 +76,11 @@ class Details(parsedResult: Result) extends CommonOps {
       val approximate: JObject =
         if (y.approximate) "approximate" -> JBool(true)
         else JObject()
-      ("value" -> stringOf(y)) ~ approximate
+      ("value" -> result.stringOf(y)) ~ approximate
     }
 
     def detailedAuthorship(as: Authorship): JObject = {
-      def detailedAuthor(a: Author): String = parsedResult.normalizer.normalizedAuthor(a)
+      def detailedAuthor(a: Author): String = result.normalizedAuthor(a)
       def detailedAuthorsTeam(at: AuthorsTeam): JObject = {
         val res: JObject = "authors" -> at.authors.map(detailedAuthor)
         at.years.foldLeft(res) { (r, y) => r ~ ("year" -> detailedYear(y)) }
@@ -88,12 +91,12 @@ class Details(parsedResult: Result) extends CommonOps {
           ("emend_authors" -> ag.authorsEmend.map { at => detailedAuthorsTeam(at) })
 
       "authorship" -> (
-        ("value" -> parsedResult.normalizer.normalizedAuthorship(as)) ~
+        ("value" -> result.normalizedAuthorship(as)) ~
           ("basionym_authorship" -> as.basionym.map(detailedAuthorsGroup)) ~
           ("combination_authorship" -> as.combination.map(detailedAuthorsGroup))
       )
     }
 
-    parsedResult.scientificName.namesGroup.map(detailedNamesGroup)
+    result.scientificName.namesGroup.map(detailedNamesGroup)
   }
 }
