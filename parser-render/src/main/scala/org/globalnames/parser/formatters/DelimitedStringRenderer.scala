@@ -2,8 +2,12 @@ package org.globalnames
 package parser
 package formatters
 
-import scalaz._
-import Scalaz._
+import scalaz.std.string._
+import scalaz.std.option._
+import scalaz.syntax.plus._
+import scalaz.syntax.std.option._
+import scalaz.syntax.std.boolean._
+import Canonizer.Canonical
 
 class DelimitedStringRenderer(result: Result) {
 

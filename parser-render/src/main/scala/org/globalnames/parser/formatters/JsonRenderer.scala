@@ -5,8 +5,10 @@ import org.json4s.JsonAST.{JArray, JNothing, JValue}
 import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods
 
-import scalaz._
-import Scalaz._
+import scalaz.syntax.bind._
+import scalaz.syntax.std.boolean._
+import scalaz.syntax.std.option._
+import scalaz.std.option._
 
 class JsonRenderer(result: Result,
                    positions: Positions,

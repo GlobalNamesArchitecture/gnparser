@@ -2,9 +2,14 @@ package org.globalnames.parser
 
 import org.parboiled2.CapturePosition
 
-import scalaz._
-import Tags.{Disjunction => Disj}
-import Scalaz._
+import scalaz.syntax.plus._
+import scalaz.syntax.semigroup._
+import scalaz.syntax.std.boolean._
+import scalaz.syntax.std.option._
+import scalaz.std.option._
+import scalaz.std.anyVal._
+
+import scalaz.Tags.{Disjunction => Disj}
 
 trait AstNode {
   val pos: CapturePosition

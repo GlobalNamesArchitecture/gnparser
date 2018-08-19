@@ -8,8 +8,7 @@ import shapeless._
 
 import scala.util.matching.Regex
 
-import scalaz._
-import Scalaz._
+import scalaz.syntax.std.boolean._
 
 object Preprocessor {
   case class Result(verbatim: String, unescaped: String, warnings: Seq[WarningInfo],

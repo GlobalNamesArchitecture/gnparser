@@ -5,8 +5,10 @@ import java.util.regex.Pattern
 import org.parboiled2.CharPredicate.{Alpha, Digit, LowerAlpha, UpperAlpha}
 import org.parboiled2._
 
-import scalaz.{Name => _, _}
-import Scalaz._
+import scalaz.syntax.std.boolean._
+import scalaz.syntax.std.option._
+import scalaz.std.option._
+import scalaz.Unzip
 
 import shapeless._
 

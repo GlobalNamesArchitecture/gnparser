@@ -4,8 +4,12 @@ package formatters
 import org.json4s.JsonAST.{JBool, JNothing}
 import org.json4s.JsonDSL._
 import org.json4s.{JObject, JString, JValue}
-import scalaz.Scalaz._
 
+import scalaz.syntax.semigroup._
+import scalaz.syntax.std.boolean._
+import scalaz.syntax.std.option._
+import scalaz.std.string._
+import scalaz.std.option._
 
 class Details(result: Result) {
 

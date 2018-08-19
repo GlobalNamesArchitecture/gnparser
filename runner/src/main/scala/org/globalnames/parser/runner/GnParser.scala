@@ -9,14 +9,16 @@ import ScientificNameParser.{instance => scientificNameParser}
 import tcp.TcpServer
 import web.controllers.WebServer
 import resource._
-import parser.BuildInfo
 
 import scala.collection.parallel.ForkJoinTaskSupport
 import scala.collection.parallel.immutable.ParVector
 import scala.concurrent.forkjoin.ForkJoinPool
 import scala.io.{Source, StdIn}
-import scalaz._
-import Scalaz._
+
+import scalaz.syntax.std.boolean._
+import scalaz.syntax.std.option._
+import scalaz.syntax.either._
+import scalaz.{\/, -\/, \/-}
 
 import org.json4s.JsonAST.JArray
 import org.json4s.jackson.JsonMethods

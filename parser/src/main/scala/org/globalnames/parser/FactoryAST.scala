@@ -1,10 +1,13 @@
-package org.globalnames.parser
+package org.globalnames
+package parser
 
-import org.globalnames.parser.Parser.NodeMeta
+import Parser.NodeMeta
 import org.parboiled2.{CapturePosition, ParserInput}
 
-import scalaz.{Name => _, _}
-import Scalaz._
+import scalaz.syntax.std.boolean._
+import scalaz.syntax.std.option._
+import scalaz.std.vector._
+
 import scala.io.Source
 
 object FactoryAST {
