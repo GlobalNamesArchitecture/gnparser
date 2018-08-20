@@ -1,4 +1,4 @@
-package org.globalnames.parser
+package org.globalnames.parser.ast
 
 import org.parboiled2.CapturePosition
 

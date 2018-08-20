@@ -4,6 +4,7 @@ package parser
 import formatters._
 import org.parboiled2._
 import shapeless._
+import ast.ScientificName
 
 import scala.util.{Failure, Success}
 

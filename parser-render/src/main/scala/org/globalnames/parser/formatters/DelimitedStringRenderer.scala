@@ -28,7 +28,7 @@ class DelimitedStringRenderer(result: Result) {
 
   private[parser] def yearDelimited: Option[String] =
     (!ambiguousAuthorship).option {
-      val year: Option[Year] = result.scientificName.namesGroup.flatMap { ng =>
+      val year: Option[ast.Year] = result.scientificName.namesGroup.flatMap { ng =>
         val infraspeciesYear = ng.name.infraspecies.flatMap {
           _.group.last.authorship.flatMap { _.authors.authors.year }
         }

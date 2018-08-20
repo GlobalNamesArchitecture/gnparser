@@ -1,5 +1,7 @@
 package org.globalnames.parser
 
+import ast.AstNode
+
 case class WarningInfo(level: Int, message: String)
 
 case class Warning(info: WarningInfo, node: AstNode) extends Ordered[Warning] {

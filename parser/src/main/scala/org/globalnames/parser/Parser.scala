@@ -10,6 +10,8 @@ import scalaz.syntax.std.option._
 import scalaz.std.option._
 import scalaz.Unzip
 
+import ast._
+
 import shapeless._
 
 class Parser(preprocessorResult: Preprocessor.Result,

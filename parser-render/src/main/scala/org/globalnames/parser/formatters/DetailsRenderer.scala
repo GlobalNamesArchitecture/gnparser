@@ -1,4 +1,5 @@
-package org.globalnames.parser
+package org.globalnames
+package parser
 package formatters
 
 import org.json4s.JsonAST.{JBool, JNothing}
@@ -11,15 +12,15 @@ import scalaz.syntax.std.option._
 import scalaz.std.string._
 import scalaz.std.option._
 
-class Details(result: Result) {
+class DetailsRenderer(result: parser.Result) {
 
   def detailed: JValue = {
-    def detailedNamesGroup(namesGroup: NamesGroup): JValue = {
+    def detailedNamesGroup(namesGroup: ast.NamesGroup): JValue = {
       val hybs = namesGroup.hybridParts.flatMap { _._2.map { (_, namesGroup.name.some) } }
       ((namesGroup.name, None) +: hybs).map { case (n, fn) => detailedName(n, fn) }
     }
 
-    def detailedName(nm: Name, firstName: Option[Name]): JValue = {
+    def detailedName(nm: ast.Name, firstName: Option[ast.Name]): JValue = {
       val uninomialDetails = {
         val typ = if (nm.genus) "genus" else "uninomial"
         val typVal =
@@ -47,7 +48,7 @@ class Details(result: Result) {
         ignoredObj
     }
 
-    def detailedUninomial(u: Uninomial, firstName: Option[Uninomial]): JValue = {
+    def detailedUninomial(u: ast.Uninomial, firstName: Option[ast.Uninomial]): JValue = {
       val rankStr = u.rank.map { r => r.typ.getOrElse(result.stringOf(r)) }
       val fnVal = firstName.map { fn =>
         Util.normalize(result.stringOf(fn))
@@ -59,37 +60,37 @@ class Details(result: Result) {
         u.authorship.map(detailedAuthorship).getOrElse(JObject())
     }
 
-    def detailedSubGenus(sg: SubGenus): JValue =
+    def detailedSubGenus(sg: ast.SubGenus): JValue =
       "value" -> Util.normalize(result.stringOf(sg.word))
 
-    def detailedSpecies(sp: Species): JValue =
+    def detailedSpecies(sp: ast.Species): JValue =
       ("value" -> Util.normalize(result.stringOf(sp))) ~
         sp.authorship.map(detailedAuthorship).getOrElse(JObject())
 
-    def detailedInfraspecies(is: Infraspecies): JValue = {
+    def detailedInfraspecies(is: ast.Infraspecies): JValue = {
       val rankStr = is.rank.map { r => r.typ.getOrElse(result.stringOf(r)) }
       ("value" -> Util.normalize(result.stringOf(is))) ~
         ("rank" -> rankStr) ~
         is.authorship.map(detailedAuthorship).getOrElse(JObject())
     }
 
-    def detailedInfraspeciesGroup(isg: InfraspeciesGroup): JValue =
+    def detailedInfraspeciesGroup(isg: ast.InfraspeciesGroup): JValue =
       isg.group.map(detailedInfraspecies)
 
-    def detailedYear(y: Year): JValue = {
+    def detailedYear(y: ast.Year): JValue = {
       val approximate: JObject =
         if (y.approximate) "approximate" -> JBool(true)
         else JObject()
       ("value" -> result.stringOf(y)) ~ approximate
     }
 
-    def detailedAuthorship(as: Authorship): JObject = {
-      def detailedAuthor(a: Author): String = result.normalizedAuthor(a)
-      def detailedAuthorsTeam(at: AuthorsTeam): JObject = {
+    def detailedAuthorship(as: ast.Authorship): JObject = {
+      def detailedAuthor(a: ast.Author): String = result.normalizedAuthor(a)
+      def detailedAuthorsTeam(at: ast.AuthorsTeam): JObject = {
         val res: JObject = "authors" -> at.authors.map(detailedAuthor)
         at.years.foldLeft(res) { (r, y) => r ~ ("year" -> detailedYear(y)) }
       }
-      def detailedAuthorsGroup(ag: AuthorsGroup): JObject =
+      def detailedAuthorsGroup(ag: ast.AuthorsGroup): JObject =
         detailedAuthorsTeam(ag.authors) ~
           ("ex_authors" -> ag.authorsEx.map { at => detailedAuthorsTeam(at) }) ~
           ("emend_authors" -> ag.authorsEmend.map { at => detailedAuthorsTeam(at) })

@@ -12,7 +12,7 @@ import scalaz.std.option._
 
 class JsonRenderer(result: Result,
                    positions: Positions,
-                   details: Details,
+                   details: DetailsRenderer,
                    version: String) {
 
   private val canonicalOpt = result.canonical

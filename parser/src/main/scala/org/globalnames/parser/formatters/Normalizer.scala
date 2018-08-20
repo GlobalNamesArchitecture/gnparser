@@ -1,6 +1,8 @@
 package org.globalnames.parser
 package formatters
 
+import ast._
+
 import scalaz.syntax.semigroup._
 import scalaz.syntax.traverse._
 import scalaz.syntax.std.boolean._

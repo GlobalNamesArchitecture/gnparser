@@ -1,5 +1,6 @@
 package org.globalnames
 package parser
+package ast
 
 import Parser.NodeMeta
 import org.parboiled2.{CapturePosition, ParserInput}
@@ -13,19 +14,19 @@ import scala.io.Source
 object FactoryAST {
   private val bacteriaGenera: Set[String] =
     Source.fromURL(getClass.getResource("/bacteria_genera.txt")).getLines
-          .map { _.trim }.toSet
+      .map { _.trim }.toSet
 
   private val bacteriaHomonymsGenera: Set[String] =
     Source.fromURL(getClass.getResource("/bacteria_genera_homonyms.txt")).getLines
-          .map { _.trim }.toSet
+      .map { _.trim }.toSet
 
   def namesGroup(name: NodeMeta[Name],
                  hybridParts: Seq[(HybridChar, Option[NodeMeta[Name]])] = Seq.empty,
                  namedHybrid: Option[HybridChar] = None,
                  bacteria: Boolean = false): NodeMeta[NamesGroup] = {
     val ng = NamesGroup(name.node,
-                        hybridParts.map { case (hc, nm) => (hc, nm.map { _.node }) },
-                        namedHybrid)
+      hybridParts.map { case (hc, nm) => (hc, nm.map { _.node }) },
+      namedHybrid)
     val warns = name.warnings ++ hybridParts.flatMap{ case (_, nm) => nm.map { _.warnings }.orZero }
     NodeMeta(ng, warns)
   }
@@ -41,15 +42,15 @@ object FactoryAST {
     val genus = input.sliceString(uninomial.node.pos.start, uninomial.node.pos.end)
     val bacteria = bacteriaGenera.contains(genus)
     val name = Name(uninomial.node, subgenus.map { _.node }, species.map { _.node },
-                    infraspecies.map { _.node }, comparison.map { _.node },
-                    approximation.map { _.node }, ignored, bacteria, genusParsed)
+      infraspecies.map { _.node }, comparison.map { _.node },
+      approximation.map { _.node }, ignored, bacteria, genusParsed)
     val bacteriaHomonymWarning = bacteriaHomonymsGenera.contains(genus).option {
       Vector(Warning(1, "The genus is a homonym of a bacterial genus", name))
     }.getOrElse(Vector())
     val warns = uninomial.warnings ++ subgenus.map { _.warnings }.orZero ++
-                species.map { _.warnings }.orZero ++ infraspecies.map { _.warnings }.orZero ++
-                comparison.map { _.warnings }.orZero ++ approximation.map { _.warnings }.orZero ++
-                bacteriaHomonymWarning
+      species.map { _.warnings }.orZero ++ infraspecies.map { _.warnings }.orZero ++
+      comparison.map { _.warnings }.orZero ++ approximation.map { _.warnings }.orZero ++
+      bacteriaHomonymWarning
     NodeMeta(name, warns)
   }
 
@@ -59,9 +60,9 @@ object FactoryAST {
                 parent: Option[NodeMeta[Uninomial]] = None,
                 implied: Boolean = false): NodeMeta[Uninomial] = {
     val unin = Uninomial(word.node, authorship.map { _.node }, rank.map { _.node },
-                         parent.map { _.node }, implied)
+      parent.map { _.node }, implied)
     val warns = word.warnings ++ authorship.map { _.warnings }.orZero ++
-                rank.map { _.warnings }.orZero ++ parent.map { _.warnings }.orZero
+      rank.map { _.warnings }.orZero ++ parent.map { _.warnings }.orZero
     NodeMeta(unin, warns)
   }
 
@@ -76,7 +77,7 @@ object FactoryAST {
                    authorship: Option[NodeMeta[Authorship]]): NodeMeta[Infraspecies] = {
     val inf = Infraspecies(word.node, rank.map { _.node }, authorship.map { _.node })
     val warns = word.warnings ++ rank.map { _.warnings }.orZero ++
-                authorship.map { _.warnings }.orZero
+      authorship.map { _.warnings }.orZero
     NodeMeta(inf, warns)
   }
 
@@ -123,7 +124,7 @@ object FactoryAST {
                  inparenthesis: Boolean = false,
                  basionymParsed: Boolean = false): NodeMeta[Authorship] = {
     val authorship = Authorship(authors.node, combination.map { _.node },
-                                inparenthesis, basionymParsed)
+      inparenthesis, basionymParsed)
     val warns = authors.warnings ++ combination.map { _.warnings }.orZero
     NodeMeta(authorship, warns)
   }
@@ -132,8 +133,8 @@ object FactoryAST {
                    authorsEx: Option[NodeMeta[AuthorsTeam]] = None,
                    authorsEmend: Option[NodeMeta[AuthorsTeam]] = None): NodeMeta[AuthorsGroup] = {
     val ag = AuthorsGroup(authors.node,
-                          authorsEx.map { _.node },
-                          authorsEmend.map { _.node })
+      authorsEx.map { _.node },
+      authorsEmend.map { _.node })
     val warns = authors.warnings ++ authorsEx.map { _.warnings }.orZero
     NodeMeta(ag, warns)
   }
@@ -160,7 +161,7 @@ object FactoryAST {
   }
 
   def authorWord(pos: CapturePosition,
-                separator: AuthorWordSeparator = AuthorWordSeparator.None): NodeMeta[AuthorWord] = {
+                 separator: AuthorWordSeparator = AuthorWordSeparator.None): NodeMeta[AuthorWord] = {
     val aw = AuthorWord(pos, separator)
     NodeMeta(aw)
   }

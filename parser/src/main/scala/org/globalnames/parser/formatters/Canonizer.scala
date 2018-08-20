@@ -2,6 +2,8 @@ package org.globalnames
 package parser
 package formatters
 
+import ast._
+
 import java.util.UUID
 
 import scalaz.std.option._

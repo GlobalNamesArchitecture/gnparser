@@ -1,6 +1,8 @@
 package org.globalnames.parser
 package formatters
 
+import ast._
+
 trait ResultOps { self: Result =>
   private[parser] def stringOf(astNode: AstNode): String =
     self.preprocessorResult.unescaped.substring(astNode.pos.start, astNode.pos.end)
