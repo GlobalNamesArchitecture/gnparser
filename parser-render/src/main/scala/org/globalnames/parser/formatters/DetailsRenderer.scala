@@ -87,8 +87,10 @@ class DetailsRenderer(result: parser.Result) {
     def detailedAuthorship(as: ast.Authorship): JObject = {
       def detailedAuthor(a: ast.Author): String = result.normalizedAuthor(a)
       def detailedAuthorsTeam(at: ast.AuthorsTeam): JObject = {
-        val res: JObject = "authors" -> at.authors.map(detailedAuthor)
-        at.years.foldLeft(res) { (r, y) => r ~ ("year" -> detailedYear(y)) }
+        val authors = "authors" -> at.authors.map(detailedAuthor)
+        val years = at.years.map { detailedYear }
+        val yearsJson = "years" -> (years.isEmpty ? (JNothing: JValue) | years)
+        authors ~ yearsJson
       }
       def detailedAuthorsGroup(ag: ast.AuthorsGroup): JObject =
         detailedAuthorsTeam(ag.authors) ~
