@@ -38,11 +38,11 @@ class DetailsRenderer(result: parser.Result) {
       }.getOrElse(JObject())
 
       uninomialDetails ~
-        ("specific_epithet" -> nm.species.map(detailedSpecies)) ~
-        ("infrageneric_epithet" -> nm.subgenus.map(detailedSubGenus)) ~
-        ("infraspecific_epithets" ->
+        ("specificEpithet" -> nm.species.map(detailedSpecies)) ~
+        ("infragenericEpithet" -> nm.subgenus.map(detailedSubGenus)) ~
+        ("infraspecificEpithets" ->
           nm.infraspecies.map(detailedInfraspeciesGroup)) ~
-        ("annotation_identification" ->
+        ("annotationIdentification" ->
           (nm.approximation.map { result.stringOf } |+|
             nm.comparison.map { result.stringOf })) ~
         ignoredObj
@@ -94,13 +94,13 @@ class DetailsRenderer(result: parser.Result) {
       }
       def detailedAuthorsGroup(ag: ast.AuthorsGroup): JObject =
         detailedAuthorsTeam(ag.authors) ~
-          ("ex_authors" -> ag.authorsEx.map { at => detailedAuthorsTeam(at) }) ~
-          ("emend_authors" -> ag.authorsEmend.map { at => detailedAuthorsTeam(at) })
+          ("exAuthors" -> ag.authorsEx.map { at => detailedAuthorsTeam(at) }) ~
+          ("emendAuthors" -> ag.authorsEmend.map { at => detailedAuthorsTeam(at) })
 
       "authorship" -> (
         ("value" -> result.normalizedAuthorship(as)) ~
-          ("basionym_authorship" -> as.basionym.map(detailedAuthorsGroup)) ~
-          ("combination_authorship" -> as.combination.map(detailedAuthorsGroup))
+          ("basionymAuthorship" -> as.basionym.map(detailedAuthorsGroup)) ~
+          ("combinationAuthorship" -> as.combination.map(detailedAuthorsGroup))
       )
     }
 
