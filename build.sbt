@@ -147,7 +147,7 @@ lazy val `parser-render` = (project in file("./parser-render"))
     test in assembly := {},
 
     libraryDependencies ++= {
-      Seq(shapeless, json4s, javaUuid, commonsText, parboiled, scalaz, specs2core)
+      Seq(shapeless, akkaJson, json4s, javaUuid, commonsText, parboiled, scalaz, specs2core)
 //      , "com.lihaoyi" %% "pprint" % "0.5.3"
     },
 

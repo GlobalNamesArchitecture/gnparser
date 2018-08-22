@@ -10,12 +10,20 @@ import scalaz.syntax.std.boolean._
 import scalaz.syntax.std.option._
 import scalaz.std.option._
 
+import spray.json._
+
 class JsonRenderer(result: Result,
                    positions: Positions,
-                   details: DetailsRenderer,
+                   detailsRenderer: DetailsRenderer,
                    version: String) {
 
+  import DetailsRendererJsonProtocol._
+
   private val canonicalOpt = result.canonical
+
+  private def convert(inputJson: JsValue): JValue = {
+    JsonMethods.parse(inputJson.compactPrint)
+  }
 
   def json(showCanonicalUuid: Boolean = false): JValue = {
     val parsed = canonicalOpt.isDefined
@@ -45,6 +53,11 @@ class JsonRenderer(result: Result,
       }
     }
 
+    val details =
+      detailsRenderer.details.isEmpty ?
+        (JNothing: JValue) |
+        convert(detailsRenderer.details.toJson)
+
     JsonMethods.render(
       ("name_string_id" -> result.preprocessorResult.id.toString) ~
       ("parsed" -> parsed) ~
@@ -59,7 +72,7 @@ class JsonRenderer(result: Result,
       ("unparsed_tail" -> result.scientificName.unparsedTail) ~
       ("virus" -> result.preprocessorResult.virus) ~
       ("bacteria" -> result.scientificName.bacteria) ~
-      ("details" -> details.detailed) ~
+      ("details" -> details) ~
       ("positions" -> positionsJson))
   }
 }
