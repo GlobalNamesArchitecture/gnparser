@@ -32,16 +32,16 @@ class PositionsRenderer(result: Result) {
     }
 
     def positionedHybridChar(hybridChar: ast.HybridChar): Position =
-      Position("hybrid_char", hybridChar.pos.start, hybridChar.pos.end)
+      Position("hybridChar", hybridChar.pos.start, hybridChar.pos.end)
 
     def positionedApproximation(approximation: Option[ast.Approximation]): Option[Position] =
       approximation.map { app =>
-        Position("annotation_identification", app.pos.start, app.pos.end)
+        Position("annotationIdentification", app.pos.start, app.pos.end)
       }
 
     def positionedComparison(comparison: Option[ast.Comparison]): Option[Position] =
       comparison.map { c =>
-        Position("annotation_identification", c.pos.start, c.pos.end)
+        Position("annotationIdentification", c.pos.start, c.pos.end)
       }
 
     def positionedRank(rank: Option[ast.Rank]): Option[Position] =
@@ -59,15 +59,15 @@ class PositionsRenderer(result: Result) {
 
     def positionedSubGenus(subGenus: Option[ast.SubGenus]): Option[Position] =
       subGenus.map { sg =>
-        Position("infrageneric_epithet", sg.pos.start, sg.pos.end)
+        Position("infragenericEpithet", sg.pos.start, sg.pos.end)
       }
 
     def positionedSpecies(sp: ast.Species): Vector[Position] =
-      Position("specific_epithet", sp.pos.start, sp.pos.end) +:
+      Position("specificEpithet", sp.pos.start, sp.pos.end) +:
         sp.authorship.map(positionedAuthorship).orZero
 
     def positionedInfraspecies(is: ast.Infraspecies): Vector[Position] =
-      Vector(Position("infraspecific_epithet", is.pos.start, is.pos.end).some,
+      Vector(Position("infraspecificEpithet", is.pos.start, is.pos.end).some,
              positionedRank(is.rank)).flatten ++
         is.authorship.map(positionedAuthorship).orZero
 
@@ -75,16 +75,16 @@ class PositionsRenderer(result: Result) {
       isg.group.flatMap(positionedInfraspecies).toVector
 
     def positionedYear(y: ast.Year) = {
-      val yearNodeName = if (y.approximate) "approximate_year" else "year"
+      val yearNodeName = if (y.approximate) "approximateYear" else "year"
       Position(yearNodeName, y.pos.start, y.alpha.getOrElse(y.pos).end)
     }
 
     def positionedAuthorship(as: ast.Authorship): Vector[Position] = {
       def positionedAuthor(a: ast.Author): Vector[Position] = {
         val authorWord = a.words.map { w =>
-          Position("author_word", w.pos.start, w.pos.end) }.toVector
+          Position("authorWord", w.pos.start, w.pos.end) }.toVector
         val filius = a.filius.map { f =>
-          Position("author_word_filius", f.pos.start, f.pos.end) }.toVector
+          Position("authorWordFilius", f.pos.start, f.pos.end) }.toVector
         authorWord ++ filius
       }
       def positionedAuthorsTeam(at: ast.AuthorsTeam): Vector[Position] =
