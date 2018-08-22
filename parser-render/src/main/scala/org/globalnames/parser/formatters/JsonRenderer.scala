@@ -13,7 +13,7 @@ import scalaz.std.option._
 import spray.json._
 
 class JsonRenderer(result: Result,
-                   positions: Positions,
+                   positionsRenderer: PositionsRenderer,
                    detailsRenderer: DetailsRenderer,
                    version: String) {
 
@@ -46,7 +46,7 @@ class JsonRenderer(result: Result,
         warningsJArr.some
       }
     val positionsJson: Option[JArray] = parsed.option {
-      positions.positioned.map { position =>
+      positionsRenderer.positioned.map { position =>
         JArray(List(position.nodeName,
           result.preprocessorResult.verbatimPosAt(position.start),
           result.preprocessorResult.verbatimPosAt(position.end)))

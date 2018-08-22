@@ -8,9 +8,9 @@ import scalaz.syntax.std.option._
 import scalaz.std.option._
 import scalaz.std.vector._
 
-class Positions(result: Result) {
+class PositionsRenderer(result: Result) {
 
-  import Positions.Position
+  import PositionsRenderer.Position
 
   def positioned: Seq[Position] = {
     def positionedNamesGroup(namesGroup: ast.NamesGroup): Vector[Position] = {
@@ -99,11 +99,17 @@ class Positions(result: Result) {
     }
 
     result.scientificName.namesGroup.map { ng =>
-      positionedNamesGroup(ng).sortBy { _.start }
+      positionedNamesGroup(ng).sortWith { (p1, p2) =>
+        if (p1.start == p2.start) {
+          p1.end < p2.end
+        } else {
+          p1.start < p2.start
+        }
+      }
     }.orZero
   }
 }
 
-object Positions {
+object PositionsRenderer {
   case class Position(nodeName: String, start: Int, end: Int)
 }

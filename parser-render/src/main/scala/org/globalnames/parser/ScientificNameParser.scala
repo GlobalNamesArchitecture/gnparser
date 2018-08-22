@@ -7,12 +7,12 @@ import org.json4s.JValue
 import org.json4s.jackson.JsonMethods
 
 class RenderableResult(val result: Result, version: String) {
-  private[parser] val details: DetailsRenderer = new DetailsRenderer(result)
-  private[parser] val positions: Positions = new Positions(result)
+  private[parser] val detailsRenderer: DetailsRenderer = new DetailsRenderer(result)
+  private[parser] val positionsRenderer: PositionsRenderer = new PositionsRenderer(result)
   private[parser] val delimitedStringRenderer: DelimitedStringRenderer =
     new DelimitedStringRenderer(result)
   private[parser] val jsonRenderer: JsonRenderer =
-    new JsonRenderer(result, positions, details, version)
+    new JsonRenderer(result, positionsRenderer, detailsRenderer, version)
 
   def json(showCanonicalUuid: Boolean): JValue = {
     jsonRenderer.json(showCanonicalUuid)
