@@ -5,6 +5,7 @@ import formatters._
 
 import org.json4s.JValue
 import org.json4s.jackson.JsonMethods
+import spray.json._
 
 class RenderableResult(val result: Result, version: String) {
   private[parser] val detailsRenderer: DetailsRenderer = new DetailsRenderer(result)
@@ -15,7 +16,8 @@ class RenderableResult(val result: Result, version: String) {
     new JsonRenderer(result, positionsRenderer, detailsRenderer, version)
 
   def json(showCanonicalUuid: Boolean): JValue = {
-    jsonRenderer.json(showCanonicalUuid)
+    import JsonRendererProtocol.summaryFormat
+    JsonMethods.parse(jsonRenderer.json(showCanonicalUuid).toJson.compactPrint)
   }
 
   def json: JValue = {
