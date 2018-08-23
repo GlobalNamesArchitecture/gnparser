@@ -33,7 +33,7 @@ class JsonRenderer(result: Result,
         val canonizedUuidStrOpt = canonicalOpt.map { _.id.toString }
         ("id" -> showCanonicalUuid.option { canonizedUuidStrOpt }.join) ~
           ("value" -> canonicalOpt.map { _.value }) ~
-          ("value_ranked" -> canonicalOpt.map { _.ranked })
+          ("valueRanked" -> canonicalOpt.map { _.ranked })
       } else JNothing
 
     val quality = canonicalOpt.map { _ => result.scientificName.quality }
@@ -59,17 +59,17 @@ class JsonRenderer(result: Result,
         convert(detailsRenderer.details.toJson)
 
     JsonMethods.render(
-      ("name_string_id" -> result.preprocessorResult.id.toString) ~
+      ("nameStringId" -> result.preprocessorResult.id.toString) ~
       ("parsed" -> parsed) ~
       ("quality" -> quality) ~
-      ("quality_warnings" -> qualityWarnings) ~
-      ("parser_version" -> version) ~
+      ("qualityWarnings" -> qualityWarnings) ~
+      ("parserVersion" -> version) ~
       ("verbatim" -> result.preprocessorResult.verbatim) ~
       ("normalized" -> result.normalized) ~
-      ("canonical_name" -> canonicalName) ~
+      ("canonicalName" -> canonicalName) ~
       ("hybrid" -> result.scientificName.hybrid) ~
       ("surrogate" -> result.scientificName.surrogate) ~
-      ("unparsed_tail" -> result.scientificName.unparsedTail) ~
+      ("unparsedTail" -> result.scientificName.unparsedTail) ~
       ("virus" -> result.preprocessorResult.virus) ~
       ("bacteria" -> result.scientificName.bacteria) ~
       ("details" -> details) ~
