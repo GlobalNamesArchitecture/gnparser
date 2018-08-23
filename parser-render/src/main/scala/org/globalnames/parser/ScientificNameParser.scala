@@ -8,16 +8,14 @@ import org.json4s.jackson.JsonMethods
 import spray.json._
 
 class RenderableResult(val result: Result, version: String) {
-  private[parser] val detailsRenderer: DetailsRenderer = new DetailsRenderer(result)
-  private[parser] val positionsRenderer: PositionsRenderer = new PositionsRenderer(result)
   private[parser] val delimitedStringRenderer: DelimitedStringRenderer =
     new DelimitedStringRenderer(result)
-  private[parser] val jsonRenderer: JsonRenderer =
-    new JsonRenderer(result, positionsRenderer, detailsRenderer, version)
+  private[parser] val summarizer: Summarizer =
+    new Summarizer(result, version)
 
   def json(showCanonicalUuid: Boolean): JValue = {
-    import JsonRendererProtocol.summaryFormat
-    JsonMethods.parse(jsonRenderer.json(showCanonicalUuid).toJson.compactPrint)
+    import SummarizerProtocol.summaryFormat
+    JsonMethods.parse(summarizer.summary(showCanonicalUuid).toJson.compactPrint)
   }
 
   def json: JValue = {

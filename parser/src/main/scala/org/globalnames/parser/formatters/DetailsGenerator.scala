@@ -7,51 +7,22 @@ import scalaz.syntax.std.boolean._
 import scalaz.syntax.std.option._
 import scalaz.std.string._
 import scalaz.std.option._
-import formatters.{DetailsRenderer => dr}
-import spray.json._
+import formatters.{DetailsGenerator => dg}
 
-object DetailsRendererJsonProtocol extends DefaultJsonProtocol {
+private[formatters] class DetailsGenerator(result: parser.Result) {
 
-  implicit val ignoredFormat = jsonFormat1(dr.Ignored)
-
-  implicit val yearFormat = jsonFormat2(dr.Year)
-
-  implicit val subGenusFormat = jsonFormat1(dr.SubGenus)
-
-  implicit val authorsTeamFormat = jsonFormat2(dr.AuthorsTeam)
-
-  implicit val authorsGroupFormat = jsonFormat3(dr.AuthorsGroup)
-
-  implicit val basionymAuthorsGroupFormat = jsonFormat4(dr.BasionymAuthorsGroup)
-
-  implicit val combinationAuthorsGroupFormat = jsonFormat4(dr.CombinationAuthorsGroup)
-
-  implicit val authorshipFormat = jsonFormat3(dr.Authorship)
-
-  implicit val speciesFormat = jsonFormat2(dr.Species)
-
-  implicit val infraSpeciesFormat = jsonFormat3(dr.Infraspecies)
-
-  implicit val uninomialFormat = jsonFormat6(dr.Uninomial)
-
-  implicit val nameFormat = jsonFormat7(dr.Name)
-
-}
-
-class DetailsRenderer(result: parser.Result) {
-
-  private def year(y: ast.Year): dr.Year = {
+  private def year(y: ast.Year): dg.Year = {
     val approximate = y.approximate.option { true }
-    dr.Year(result.stringOf(y), approximate)
+    dg.Year(result.stringOf(y), approximate)
   }
 
-  private def infraspeciesGroup(isg: ast.InfraspeciesGroup): Seq[dr.Infraspecies] = {
+  private def infraspeciesGroup(isg: ast.InfraspeciesGroup): Seq[dg.Infraspecies] = {
     isg.group.map { infraspecies }
   }
 
-  private def infraspecies(is: ast.Infraspecies): dr.Infraspecies = {
+  private def infraspecies(is: ast.Infraspecies): dg.Infraspecies = {
     val rankStr = is.rank.map { r => r.typ.getOrElse(result.stringOf(r)) }
-    val isDR = dr.Infraspecies(
+    val isDR = dg.Infraspecies(
       value = Util.normalize(result.stringOf(is)),
       rank = rankStr,
       authorship = is.authorship.map { authorship }
@@ -63,20 +34,20 @@ class DetailsRenderer(result: parser.Result) {
     result.normalizedAuthor(a)
   }
 
-  private def authorsTeam(at: ast.AuthorsTeam): dr.AuthorsTeam = {
+  private def authorsTeam(at: ast.AuthorsTeam): dg.AuthorsTeam = {
     val yearsArr = at.years.map { y => year(y) }
-    val atDR = dr.AuthorsTeam(
+    val atDR = dg.AuthorsTeam(
       authors = at.authors.map { author },
       years = yearsArr.nonEmpty ? yearsArr.some | None
     )
     atDR
   }
 
-  private def authorsGroup(ag: ast.AuthorsGroup): dr.AuthorsGroup = {
+  private def authorsGroup(ag: ast.AuthorsGroup): dg.AuthorsGroup = {
     val authorsDR = authorsTeam(ag.authors)
     val exAuthorsDR = ag.authorsEx.map { at => authorsTeam(at) }
     val emendAuthorsDR = ag.authorsEmend.map { at => authorsTeam(at) }
-    val agDR = dr.AuthorsGroup(
+    val agDR = dg.AuthorsGroup(
       authors = authorsDR,
       exAuthors = exAuthorsDR,
       emendAuthors = emendAuthorsDR
@@ -84,7 +55,7 @@ class DetailsRenderer(result: parser.Result) {
     agDR
   }
 
-  private def namesGroup(namesGroup: ast.NamesGroup): Seq[dr.Name] = {
+  private def namesGroup(namesGroup: ast.NamesGroup): Seq[dg.Name] = {
     val hybs = for {
       (_, nmOpt) <- namesGroup.hybridParts
       nm <- nmOpt
@@ -93,7 +64,7 @@ class DetailsRenderer(result: parser.Result) {
     nms
   }
 
-  private def name(nm: ast.Name, firstName: Option[ast.Name]): dr.Name = {
+  private def name(nm: ast.Name, firstName: Option[ast.Name]): dg.Name = {
     val implied = nm.uninomial.implied
     val isGenus = !implied && nm.genus
     val isUninomial = !implied && !nm.genus
@@ -105,12 +76,12 @@ class DetailsRenderer(result: parser.Result) {
       uninomial(nm.uninomial, fnuniOpt)
     }
 
-    val ignoredDR = nm.ignored.map { ign => dr.Ignored(ign) }
+    val ignoredDR = nm.ignored.map { ign => dg.Ignored(ign) }
 
     val annotIdent =
       nm.approximation.map { result.stringOf } |+| nm.comparison.map { result.stringOf }
 
-    val nameDR = dr.Name(
+    val nameDR = dg.Name(
       uninomial = isUninomial.option { uninomialDR },
       genus = isGenus.option { uninomialDR },
       specificEpithet = nm.species.map { species },
@@ -123,13 +94,13 @@ class DetailsRenderer(result: parser.Result) {
   }
 
   private def uninomial(uni: ast.Uninomial,
-                        firstName: Option[ast.Uninomial]): dr.Uninomial = {
+                        firstName: Option[ast.Uninomial]): dg.Uninomial = {
     val rankStr = uni.rank.map { r => r.typ.getOrElse(result.stringOf(r)) }
     val firstNameStr = firstName.map { fn =>
       Util.normalize(result.stringOf(fn))
     }.getOrElse(Util.normalize(result.stringOf(uni)))
 
-    val uniDR = dr.Uninomial(
+    val uniDR = dg.Uninomial(
       value = firstNameStr,
       rank = rankStr,
       parent = uni.parent.map { p => Util.normalize(result.stringOf(p)) },
@@ -138,30 +109,30 @@ class DetailsRenderer(result: parser.Result) {
     uniDR
   }
 
-  private def subGenus(sg: ast.SubGenus): dr.SubGenus = {
-    dr.SubGenus(value = Util.normalize(result.stringOf(sg.word)))
+  private def subGenus(sg: ast.SubGenus): dg.SubGenus = {
+    dg.SubGenus(value = Util.normalize(result.stringOf(sg.word)))
   }
 
-  private def species(sp: ast.Species): dr.Species = {
-    val spDR = dr.Species(
+  private def species(sp: ast.Species): dg.Species = {
+    val spDR = dg.Species(
       value = Util.normalize(result.stringOf(sp)),
       authorship = sp.authorship.map { authorship }
     )
     spDR
   }
 
-  private def authorship(as: ast.Authorship): dr.Authorship = {
-    val auDR = dr.Authorship(
+  private def authorship(as: ast.Authorship): dg.Authorship = {
+    val auDR = dg.Authorship(
       value = result.normalizedAuthorship(as),
       basionymAuthorship = as.basionym.map { ag => {
         val agDR = authorsGroup(ag)
-        dr.BasionymAuthorsGroup(
+        dg.BasionymAuthorsGroup(
           agDR.authors.authors, agDR.authors.years, agDR.exAuthors, agDR.emendAuthors
         )
       }},
       combinationAuthorship = as.combination.map { ag => {
         val agDR = authorsGroup(ag)
-        dr.CombinationAuthorsGroup(
+        dg.CombinationAuthorsGroup(
           agDR.authors.authors, agDR.authors.years, agDR.exAuthors, agDR.emendAuthors
         )
       }}
@@ -169,7 +140,7 @@ class DetailsRenderer(result: parser.Result) {
     auDR
   }
 
-  def details: Seq[DetailsRenderer.Name] = {
+  def generate: Seq[dg.Name] = {
     val nameDRs = for {
       ngAST <- result.scientificName.namesGroup.toSeq
       nmDR <- namesGroup(ngAST)
@@ -178,7 +149,7 @@ class DetailsRenderer(result: parser.Result) {
   }
 }
 
-object DetailsRenderer {
+object DetailsGenerator {
 
   case class Name(uninomial: Option[Uninomial],
                   genus: Option[Uninomial],

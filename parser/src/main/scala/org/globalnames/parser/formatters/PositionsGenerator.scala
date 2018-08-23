@@ -1,5 +1,4 @@
-package org.globalnames
-package parser
+package org.globalnames.parser
 package formatters
 
 import scalaz.syntax.traverse._
@@ -8,23 +7,23 @@ import scalaz.syntax.std.option._
 import scalaz.std.option._
 import scalaz.std.vector._
 
-class PositionsRenderer(result: Result) {
+private[formatters] class PositionsGenerator(result: Result) {
 
-  import PositionsRenderer.Position
+  import PositionsGenerator.Position
 
   private def namesGroup(namesGroup: ast.NamesGroup): Vector[Position] = {
     val (hchars, names) = namesGroup.hybridParts.unzip
     val namesPositions = names.flatMap { _.map { name } }.flatten
     val hcharsPositions = hchars.map { hybridChar } ++
-                          namesGroup.leadingHybridChar.map { hybridChar }
+      namesGroup.leadingHybridChar.map { hybridChar }
     name(namesGroup.name) ++ namesPositions ++ hcharsPositions
   }
 
   private def name(nm: ast.Name): Vector[Position] = {
     val typ = if (nm.genus) "genus" else "uninomial"
     Vector(approximation(nm.approximation),
-           subGenus(nm.subgenus),
-           comparison(nm.comparison)).flatten ++
+      subGenus(nm.subgenus),
+      comparison(nm.comparison)).flatten ++
       uninomial(typ, nm.uninomial) ++
       nm.species.map(species).orZero ++
       nm.infraspecies.map(infraspeciesGroup).orZero
@@ -57,7 +56,7 @@ class PositionsRenderer(result: Result) {
     if (u.implied) Vector.empty
     else {
       Vector(Position(typ, u.pos.start, u.pos.end).some,
-             rank(u.rank)).flatten ++
+        rank(u.rank)).flatten ++
         u.parent.map { uninomial("uninomial", _) }.orZero ++
         u.authorship.map(authorship).orZero
     }
@@ -76,7 +75,7 @@ class PositionsRenderer(result: Result) {
 
   private def infraspecies(is: ast.Infraspecies): Vector[Position] = {
     Vector(Position("infraspecificEpithet", is.pos.start, is.pos.end).some,
-           rank(is.rank)).flatten ++
+      rank(is.rank)).flatten ++
       is.authorship.map(authorship).orZero
   }
 
@@ -110,7 +109,7 @@ class PositionsRenderer(result: Result) {
       as.combination.map(authorsGroup).orZero
   }
 
-  def positioned: Seq[Position] = {
+  def generate: Seq[Position] = {
     result.scientificName.namesGroup.map { ng =>
       namesGroup(ng).sortWith { (p1, p2) =>
         if (p1.start == p2.start) {
@@ -123,6 +122,8 @@ class PositionsRenderer(result: Result) {
   }
 }
 
-object PositionsRenderer {
+object PositionsGenerator {
+
   case class Position(nodeName: String, start: Int, end: Int)
+
 }

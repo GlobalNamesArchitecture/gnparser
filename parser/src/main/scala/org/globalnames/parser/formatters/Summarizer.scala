@@ -1,35 +1,21 @@
 package org.globalnames.parser
 package formatters
 
+import formatters.{Summarizer => s}
 import scalaz.syntax.std.boolean._
 import scalaz.syntax.std.option._
 
-import spray.json._
-
-import formatters.{JsonRenderer => jr}
-
-object JsonRendererProtocol extends DefaultJsonProtocol {
-
-  import DetailsRendererJsonProtocol.nameFormat
-
-  implicit val canonicalNameFormat = jsonFormat3(jr.CanonicalName)
-
-  implicit val summaryFormat = jsonFormat15(jr.Summary)
-
-}
-
-class JsonRenderer(result: Result,
-                   positionsRenderer: PositionsRenderer,
-                   detailsRenderer: DetailsRenderer,
-                   version: String) {
+class Summarizer(result: Result, version: String) {
 
   private val canonicalOpt = result.canonical
+  private val positionsGenerator: PositionsGenerator = new PositionsGenerator(result)
+  private val detailsGenerator: DetailsGenerator = new DetailsGenerator(result)
 
-  def json(showCanonicalUuid: Boolean = false): jr.Summary = {
+  def summary(showCanonicalUuid: Boolean = false): s.Summary = {
     val parsed = canonicalOpt.isDefined
 
     val canonicalName = result.canonical.map { can =>
-      jr.CanonicalName(
+      s.CanonicalName(
         id = showCanonicalUuid.option { can.id.toString },
         value = can.value,
         valueRanked = can.ranked
@@ -39,26 +25,26 @@ class JsonRenderer(result: Result,
     val quality = parsed.option { result.scientificName.quality }
 
     val qualityWarnings =
-      (!parsed || result.warnings.isEmpty) ? Option.empty[Vector[jr.WarningSummary]] |
+      (!parsed || result.warnings.isEmpty) ? Option.empty[Vector[s.WarningSummary]] |
         result.warnings.sorted
-              .map { w => (w.level, w.message) }
-              .distinct
-              .some
+          .map { w => (w.level, w.message) }
+          .distinct
+          .some
 
-    val positions: Option[Seq[jr.PositionSummary]] = parsed.option {
-      positionsRenderer.positioned.map { position =>
+    val positions: Option[Seq[s.PositionSummary]] = parsed.option {
+      positionsGenerator.generate.map { position =>
         (position.nodeName,
-         result.preprocessorResult.verbatimPosAt(position.start),
-         result.preprocessorResult.verbatimPosAt(position.end))
+          result.preprocessorResult.verbatimPosAt(position.start),
+          result.preprocessorResult.verbatimPosAt(position.end))
       }
     }
 
     val detailsSummary = {
-      val detailsOpt = parsed.option { detailsRenderer.details }
+      val detailsOpt = parsed.option { detailsGenerator.generate }
       detailsOpt.flatMap { det => det.nonEmpty ? det.some | None }
     }
 
-    jr.Summary(
+    s.Summary(
       nameStringId = result.preprocessorResult.id.toString,
       parsed = parsed,
       quality = quality,
@@ -78,7 +64,8 @@ class JsonRenderer(result: Result,
   }
 }
 
-object JsonRenderer {
+object Summarizer {
+
   type PositionSummary = (String, Int, Int)
   type WarningSummary = (Int, String)
 
@@ -95,10 +82,11 @@ object JsonRenderer {
                      unparsedTail: Option[String],
                      virus: Boolean,
                      bacteria: Boolean,
-                     details: Option[Seq[DetailsRenderer.Name]],
+                     details: Option[Seq[DetailsGenerator.Name]],
                      positions: Option[Seq[(String, Int, Int)]])
 
   case class CanonicalName(id: Option[String],
                            value: String,
                            valueRanked: String)
+
 }
