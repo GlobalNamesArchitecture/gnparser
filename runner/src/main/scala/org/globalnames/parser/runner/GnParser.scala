@@ -33,12 +33,12 @@ object GnParser {
 
   sealed trait Format
   object Format {
-    case object Simple extends Format
+    case class Simple(delimiter: Option[String] = None) extends Format
     case object JsonPretty extends Format
     case object JsonCompact extends Format
 
     def parse(v: String): Format = v match {
-      case "simple" => Format.Simple
+      case "simple" => Format.Simple()
       case "json-pretty" => Format.JsonPretty
       case "json-compact" => Format.JsonCompact
       case x => throw new IllegalArgumentException(s"Unexpected value of `format` flag: $x")
@@ -57,15 +57,17 @@ object GnParser {
     val parallelism: Int = threadsNumber.getOrElse(ForkJoinPool.getCommonPoolParallelism)
 
     def renderResult(result: RenderableResult): String = format match {
-      case Format.Simple => result.renderDelimitedString()
+      case Format.Simple(None) => result.renderDelimitedString()
+      case Format.Simple(Some(delimiter)) => result.renderDelimitedString(delimiter)
       case Format.JsonCompact => result.renderJsonString(compact = true)
       case Format.JsonPretty => result.renderJsonString(compact = false)
     }
 
     def resultsToString(results: Vector[RenderableResult]): String = format match {
-      case Format.Simple =>
-        val resultsStrings = for (r <- results) yield r.renderDelimitedString()
-        resultsStrings.mkString("\n")
+      case Format.Simple(None) =>
+        results.map { r => r.renderDelimitedString() }.mkString("\n")
+      case Format.Simple(Some(delimiter)) =>
+        results.map { r => r.renderDelimitedString(delimiter) }.mkString("\n")
       case f =>
         import DefaultJsonProtocol._
         import formatters.SummarizerProtocol.summaryFormat
