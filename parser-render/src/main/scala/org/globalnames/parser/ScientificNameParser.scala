@@ -3,33 +3,25 @@ package parser
 
 import formatters._
 
-import org.json4s.JValue
-import org.json4s.jackson.JsonMethods
 import spray.json._
 
 class RenderableResult(val result: Result, version: String) {
-  private[parser] val delimitedStringRenderer: DelimitedStringRenderer =
-    new DelimitedStringRenderer(result)
-  private[parser] val summarizer: Summarizer =
-    new Summarizer(result, version)
+  private[parser] val delimitedStringRenderer = DelimitedStringRenderer(result)
+  private[parser] val summarizer = new Summarizer(result, version)
 
-  def json(showCanonicalUuid: Boolean): JValue = {
+  def summary(showCanonicalUuid: Boolean = false): Summarizer.Summary = {
+    summarizer.summary(showCanonicalUuid)
+  }
+
+  def renderJsonString(compact: Boolean, showCanonicalUuid: Boolean): String = {
     import SummarizerProtocol.summaryFormat
-    JsonMethods.parse(summarizer.summary(showCanonicalUuid).toJson.compactPrint)
+    val jsonResult = summary(showCanonicalUuid).toJson
+    if (compact) jsonResult.compactPrint
+    else jsonResult.prettyPrint
   }
 
-  def json: JValue = {
-    json(showCanonicalUuid = false)
-  }
-
-  def renderJson(compact: Boolean, showCanonicalUuid: Boolean): String = {
-    val jsonResult = json(showCanonicalUuid)
-    if (compact) JsonMethods.compact(jsonResult)
-    else JsonMethods.pretty(jsonResult)
-  }
-
-  def renderJson(compact: Boolean): String = {
-    renderJson(compact, showCanonicalUuid = false)
+  def renderJsonString(compact: Boolean): String = {
+    renderJsonString(compact, showCanonicalUuid = false)
   }
 
   def renderDelimitedString(delimiter: String = "\t"): String = {

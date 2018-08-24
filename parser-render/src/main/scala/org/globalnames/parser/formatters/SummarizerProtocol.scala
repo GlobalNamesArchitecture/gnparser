@@ -5,7 +5,7 @@ import spray.json._
 
 import formatters.{Summarizer => s}
 
-object SummarizerProtocol extends DefaultJsonProtocol {
+trait SummarizerProtocol extends DefaultJsonProtocol {
 
   import DetailsGeneratorProtocol.nameFormat
 
@@ -15,3 +15,4 @@ object SummarizerProtocol extends DefaultJsonProtocol {
 
 }
 
+object SummarizerProtocol extends SummarizerProtocol

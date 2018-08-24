@@ -20,8 +20,7 @@ import scalaz.syntax.std.option._
 import scalaz.syntax.either._
 import scalaz.{\/, -\/, \/-}
 
-import org.json4s.JsonAST.JArray
-import org.json4s.jackson.JsonMethods
+import spray.json._
 
 object GnParser {
   sealed trait Mode
@@ -59,20 +58,22 @@ object GnParser {
 
     def renderResult(result: RenderableResult): String = format match {
       case Format.Simple => result.renderDelimitedString()
-      case Format.JsonCompact => result.renderJson(compact = true)
-      case Format.JsonPretty => result.renderJson(compact = false)
+      case Format.JsonCompact => result.renderJsonString(compact = true)
+      case Format.JsonPretty => result.renderJsonString(compact = false)
     }
 
-    def resultsToJson(results: Vector[RenderableResult]): String = format match {
+    def resultsToString(results: Vector[RenderableResult]): String = format match {
       case Format.Simple =>
         val resultsStrings = for (r <- results) yield r.renderDelimitedString()
         resultsStrings.mkString("\n")
       case f =>
-        val resultsJsonArr = for (r <- results.toList) yield r.json
-        val resultsJson = JArray(resultsJsonArr)
+        import DefaultJsonProtocol._
+        import formatters.SummarizerProtocol.summaryFormat
+
+        val summariesJson = results.map { r => r.summary() }.toJson
         val resultString = f match {
-          case Format.JsonCompact => JsonMethods.compact(resultsJson)
-          case _ => JsonMethods.pretty(resultsJson)
+          case Format.JsonCompact => summariesJson.compactPrint
+          case _ => summariesJson.prettyPrint
         }
         resultString
     }
@@ -187,14 +188,14 @@ object GnParser {
         }
     }
 
-    val resultsJsonStr = config.resultsToJson(namesParsed.seq)
+    val resultsString = config.resultsToString(namesParsed.seq)
 
     config.outputFile match {
       case Some(fp) =>
         for { writer <- managed(new BufferedWriter(new FileWriter(fp))) } {
-          writer.write(resultsJsonStr)
+          writer.write(resultsString)
         }
-      case None => println(resultsJsonStr)
+      case None => println(resultsString)
     }
   }
 }

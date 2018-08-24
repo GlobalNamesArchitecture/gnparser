@@ -9,7 +9,7 @@ import scalaz.syntax.std.option._
 import scalaz.syntax.std.boolean._
 import Canonizer.Canonical
 
-class DelimitedStringRenderer(result: Result) {
+private[formatters] class DelimitedStringRenderer(result: Result) {
 
   private[parser] val ambiguousAuthorship: Boolean = {
     val isAmbiguousOpt = for {
@@ -84,4 +84,12 @@ class DelimitedStringRenderer(result: Result) {
       }.getOrElse(Seq())
     }
   }
+}
+
+object DelimitedStringRenderer {
+
+  def apply(result: Result): DelimitedStringRenderer = {
+    new DelimitedStringRenderer(result)
+  }
+
 }

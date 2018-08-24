@@ -16,7 +16,7 @@ import akkahttptwirl.TwirlSupport._
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 import scala.concurrent.ExecutionContextExecutor
 
-trait Protocols extends DefaultJsonProtocol {
+trait Protocols extends DefaultJsonProtocol with formatters.SummarizerProtocol {
   implicit val nameRequestFormat  = jsonFormat1(NamesRequest.apply)
   implicit val nameResponseFormat = jsonFormat1(NamesResponse.apply)
 }
@@ -37,11 +37,8 @@ trait Service extends Protocols {
     (indexMenu, apiMenu)
   }
 
-  private def parseNames(names: Seq[String]): Seq[JsValue] = {
-    val namesJson = names.map { name =>
-      snp.fromString(name).renderJson(compact = true).parseJson
-    }
-    namesJson
+  private def parseNames(names: Seq[String]): Seq[formatters.Summarizer.Summary] = {
+    names.map { name => snp.fromString(name).summary() }
   }
 
   val route =
@@ -49,7 +46,7 @@ trait Service extends Protocols {
       (get & parameter('q.?)) { namesReq =>
         complete {
           val inputNames = namesReq.map { _.split("\r\n") }.getOrElse(Array())
-          val parsedNames = parseNames(inputNames).map { x => x.prettyPrint }
+          val parsedNames = parseNames(inputNames).map { x => x.toJson.prettyPrint }
           html.index(namesReq.getOrElse(""), parsedNames, indexMenu)
         }
       }

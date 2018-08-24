@@ -7,7 +7,7 @@ public class ParserJava {
         String jsonStr = ScientificNameParser
                 .instance()
                 .fromString("Homo sapiens L.")
-                .renderJson(true);
+                .renderJsonString(true);
         System.out.println(jsonStr);
     }
 }

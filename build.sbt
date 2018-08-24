@@ -47,8 +47,7 @@ val commonSettings = Seq(
       |import SNP.instance._
       |import org.globalnames.parser.Parser._
       |import scala.util.{Failure, Success, Try}
-      |import org.parboiled2._
-      |import org.json4s.jackson.JsonMethods._""".stripMargin
+      |import org.parboiled2._""".stripMargin
 )
 
 val publishingSettings = Seq(
@@ -94,7 +93,6 @@ val akkaJson         = "com.typesafe.akka"          %% "akka-http-spray-json"   
 val logbackClassic   = "ch.qos.logback"             %  "logback-classic"                   % "1.2.3"
 val spark            = "org.apache.spark"           %% "spark-core"                        % "2.1.1"        % Provided
 val shapeless        = "com.chuusai"                %% "shapeless"                         % "2.3.3"
-val json4s           = "org.json4s"                 %% "json4s-jackson"                    % "3.6.0"
 val javaUuid         = "com.fasterxml.uuid"         %  "java-uuid-generator"               % "3.1.5"
 val commonsText      = "org.apache.commons"         %  "commons-text"                      % "1.4"
 val parboiled        = "org.globalnames"            %% "parboiled"                         % "2.1.4.1"
@@ -105,6 +103,7 @@ val specs2core       = "org.specs2"                 %% "specs2-core"            
 val specs2extra      = "org.specs2"                 %% "specs2-matcher-extra"              % specs2V        % Test
 val akkaHttpTestkit  = "com.typesafe.akka"          %% "akka-http-testkit"                 % akkaV          % Test
 val scalatest        = "org.scalatest"              %% "scalatest"                         % "3.0.5"        % Test
+val json4s           = "org.json4s"                 %% "json4s-jackson"                    % "3.6.0"        % Test
 
 /////////////////////// PROJECTS /////////////////////////
 
@@ -147,7 +146,7 @@ lazy val `parser-render` = (project in file("./parser-render"))
     test in assembly := {},
 
     libraryDependencies ++= {
-      Seq(shapeless, akkaJson, json4s, javaUuid, commonsText, parboiled, scalaz, specs2core)
+      Seq(shapeless, akkaJson, javaUuid, commonsText, parboiled, scalaz, specs2core, json4s)
 //      , "com.lihaoyi" %% "pprint" % "0.5.3"
     },
 
@@ -158,8 +157,7 @@ lazy val `parser-render` = (project in file("./parser-render"))
         |import SNP.instance._
         |import org.globalnames.parser.Parser._
         |import scala.util.{Failure, Success, Try}
-        |import org.parboiled2._
-        |import org.json4s.jackson.JsonMethods._""".stripMargin
+        |import org.parboiled2._""".stripMargin
   )
 
 lazy val benchmark = (project in file("./benchmark"))

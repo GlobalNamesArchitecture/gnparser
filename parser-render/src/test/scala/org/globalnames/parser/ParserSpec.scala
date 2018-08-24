@@ -1,11 +1,8 @@
 package org.globalnames.parser
 
-import org.json4s._
 import org.specs2.mutable.Specification
 
 class ParserSpec extends Specification with TestParserInstance {
-
-  implicit val formats = DefaultFormats
 
   def parse(input: String): Result = {
      scientificNameParser.fromString(input).result
@@ -65,8 +62,8 @@ class ParserSpec extends Specification with TestParserInstance {
 
   "Does not parse:" >> {
     "whateva" in {
-      val res = scientificNameParser.fromString("whateva")
-      (res.json \\ "parsed").extract[Boolean] must beFalse
+      val res = scientificNameParser.fromString("whateva").summary()
+      res.parsed must beFalse
     }
   }
 }

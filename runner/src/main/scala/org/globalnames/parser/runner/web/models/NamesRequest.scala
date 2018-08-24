@@ -1,7 +1,9 @@
-package org.globalnames.parser.runner.web.models
+package org.globalnames
+package parser
+package runner.web.models
 
 import spray.json.JsValue
 
 case class NamesRequest(names: Seq[String])
 
-case class NamesResponse(namesJson: Seq[JsValue])
+case class NamesResponse(namesJson: Seq[formatters.Summarizer.Summary])

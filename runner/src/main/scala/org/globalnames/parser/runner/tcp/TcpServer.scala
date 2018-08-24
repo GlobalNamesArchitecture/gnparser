@@ -80,7 +80,7 @@ class TcpServiceConnection(tcpConnection: ActorRef, config: Config)
         "No name provided?"
       } else {
         val parsedNames = inputNames.map { name => snp.fromString(name) }
-        config.resultsToJson(parsedNames.toVector)
+        config.resultsToString(parsedNames.toVector)
       }
       tcpConnection ! Tcp.Write(ByteString(result + "\n"), ack = SentOk)
       context.become(waitingForAck)
