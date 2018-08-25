@@ -12,8 +12,8 @@ object ParserSpark {
                      "Salinator solida Martens 1878",
                      "Kanisamys indicus Wood 1937")
     val canonicals = sc.parallelize(names).map { name =>
-      val canonical = snp.fromString(name).canonized()
-      canonical.getOrElse("")
+      val canonical = snp.fromString(name).summary().canonicalName
+      canonical.map { _.value }.getOrElse("")
     }
     println(canonicals.collect().mkString("\n"))
   }
