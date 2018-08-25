@@ -8,11 +8,11 @@ import json
 from org.globalnames.parser import ScientificNameParser
 
 snp = ScientificNameParser.instance()
-result = snp.fromString("Homo sapiens L.").renderJson(False)
+result = snp.fromString("Homo sapiens L.").renderJsonString(False)
 
 json_result = json.loads(result)
 assert json_result["parsed"]
 assert json_result["positions"] == \
-        [["genus", 0, 4], ["specific_epithet", 5, 12], ["author_word", 13, 15]]
+        [["genus", 0, 4], ["specificEpithet", 5, 12], ["authorWord", 13, 15]]
 
 print "Name is parsed:\n", json_result
