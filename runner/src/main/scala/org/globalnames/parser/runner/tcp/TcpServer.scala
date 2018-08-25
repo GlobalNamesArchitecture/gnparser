@@ -64,6 +64,8 @@ class TcpServiceActor(config: Config) extends Actor with ActorLogging {
 class TcpServiceConnection(tcpConnection: ActorRef, config: Config)
   extends Actor with ActorLogging {
 
+  import TcpServiceConnection._
+
   context.watch(tcpConnection)
 
   def receive = idle
@@ -77,7 +79,7 @@ class TcpServiceConnection(tcpConnection: ActorRef, config: Config)
     case Tcp.Received(data) =>
       val inputNames = data.utf8String.split("\n").map { _.trim }.filterNot { _.isEmpty }
       val result = if (inputNames.isEmpty) {
-        "No name provided?"
+        NoNameProvidedMessage
       } else {
         val parsedNames = inputNames.map { name => snp.fromString(name) }
         config.resultsToString(parsedNames.toVector)
@@ -133,6 +135,10 @@ class TcpServiceConnection(tcpConnection: ActorRef, config: Config)
       log.debug("TCP connection actor terminated, stopping...")
       context.stop(self)
   }
+}
 
+object TcpServiceConnection {
   object SentOk extends Tcp.Event
+
+  private[tcp] val NoNameProvidedMessage = "No name provided?"
 }
