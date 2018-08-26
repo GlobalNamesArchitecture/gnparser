@@ -11,7 +11,7 @@ import scala.util.matching.Regex
 import scalaz.syntax.std.boolean._
 
 object Preprocessor {
-  case class Result(verbatim: String, unescaped: String, warnings: Seq[WarningInfo],
+  case class Result(verbatim: String, unescaped: String, warnings: Seq[Warning],
                     virus: Boolean, noParse: Boolean, surrogate: Boolean,
                     private val UNESCAPE_HTML4: TrackingPositionsUnescapeHtml4Translator) {
     val id: UUID = UuidGenerator.generate(verbatim)
@@ -123,9 +123,9 @@ object Preprocessor {
       !UNESCAPE_HTML4.identity || unescaped.length != preprocessed.length
 
     val warnings = (isComparisonRemoved || isPreprocessed || areStopWordsRemoved).option {
-      WarningInfo(2, "Name had to be changed by preprocessing")
+      Warning(2, "Name had to be changed by preprocessing")
     }.toVector ++ isComparisonRemoved.option {
-      WarningInfo(3, "Name comparison")
+      Warning(3, "Name comparison")
     }.toVector
 
     Result(verbatim = input, unescaped = preprocessed, warnings = warnings,

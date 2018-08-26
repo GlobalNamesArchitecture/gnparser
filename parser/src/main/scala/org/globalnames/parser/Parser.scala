@@ -31,28 +31,29 @@ class Parser(preprocessorResult: Preprocessor.Result,
       (ng: NodeMeta[NamesGroup], pos: CapturePosition, unparsedTail: Option[String]) =>
       val name = input.sliceString(pos.start, pos.end)
 
-      val warnings = Vector(
+      val warnings = Set(
         doubleSpacePattern.matcher(name).find().option {
-          Warning(2, "Multiple adjacent space characters", ng.node)
+          Warning(2, "Multiple adjacent space characters")
         },
         name.exists { ch => spaceMiscoded.indexOf(ch) >= 0 }.option {
-          Warning(3, "Non-standard space characters", ng.node)
+          Warning(3, "Non-standard space characters")
         },
         name.exists { ch => charMiscoded == ch }.option {
-          Warning(3, "Incorrect conversion to UTF-8", ng.node)
+          Warning(3, "Incorrect conversion to UTF-8")
         },
         unparsedTail.map {
-          case g if g.trim.isEmpty => Warning(2, "Trailing whitespace", ng.node)
-          case _                   => Warning(3, "Unparseable tail", ng.node)
+          case g if g.trim.isEmpty => Warning(2, "Trailing whitespace")
+          case _                   => Warning(3, "Unparseable tail")
         }
-      ).flatten ++ ng.warnings ++ preprocessorResult.warnings.map { wi => Warning(wi, ng.node) }
+      ).flatten ++ ng.warnings ++ preprocessorResult.warnings
 
       val worstLevel = warnings.isEmpty ? 1 | warnings.maxBy { _.level }.level
       val surrogatePreprocessed = preprocessorResult.surrogate
       val sn = ScientificName(namesGroup = ng.node.some, unparsedTail = unparsedTail,
                               quality = worstLevel,
                               surrogatePreprocessed = surrogatePreprocessed)
-      sn :: warnings :: HNil
+      val warningsRes = warnings.toVector.distinct.sorted
+      sn :: warningsRes :: HNil
     }
   }
 
@@ -86,9 +87,9 @@ class Parser(preprocessorResult: Preprocessor.Result,
           case Right((hc, n)) => (hc, n)
         }
         val r0 = FactoryAST.namesGroup(n2M, hybs1M)
-        val r1 = isFormula2 ? r0.add(warnings = Seq((2, "Hybrid formula"))) | r0
-        val r2 = isFormula1 ? r1.add(warnings = Seq((3, "Incomplete hybrid formula"))) | r1
-        isFormula2emptyName ? r2.add(warnings = Seq((2, "Probably incomplete hybrid formula"))) | r2
+        val r1 = isFormula2 ? r0.warn((2, "Hybrid formula")) | r0
+        val r2 = isFormula1 ? r1.warn((3, "Incomplete hybrid formula")) | r1
+        isFormula2emptyName ? r2.warn((2, "Probably incomplete hybrid formula")) | r2
     }
   }
 
@@ -112,7 +113,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
         val warns = Vector(
           (spacePos.start == spacePos.end).option { (3, "Hybrid char not separated by space") },
           (2, "Named hybrid").some).flatten
-        ng.add(warnings = warns)
+        ng.warn(warns: _*)
     }
   }
 
@@ -129,7 +130,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
       (uM: NodeMeta[UninomialWord], apprM: NodeMeta[Approximation],
        spM: Option[NodeMeta[Species]]) =>
         FactoryAST.name(FactoryAST.uninomial(uM), approximation = apprM.some)
-                  .add(warnings = Seq((3, "Name is approximate")))
+                  .warn((3, "Name is approximate"))
     }
   }
 
@@ -138,7 +139,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
       (u: NodeMeta[UninomialWord], c: NodeMeta[Comparison], s: Option[NodeMeta[Species]]) =>
         val u1 = FactoryAST.uninomial(u)
         val nm = FactoryAST.name(uninomial = u1, species = s, comparison = c.some)
-        nm.add(warnings = Seq((3, "Name comparison")))
+        nm.warn((3, "Name comparison"))
     }
   }
 
@@ -215,7 +216,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
 
   def rankOtherUncommon: RuleNodeMeta[Rank] = rule {
     capturePos("*" | "nat" | "f.sp" | "mut.") ~ &(spaceCharsEOI) ~> {
-      (p: CapturePosition) => FactoryAST.rank(p).add(warnings = Seq((3, "Uncommon rank")))
+      (p: CapturePosition) => FactoryAST.rank(p).warn((3, "Uncommon rank"))
     }
   }
 
@@ -249,7 +250,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
 
   def subGenusOrSuperspecies: RuleNodeMeta[SpeciesWord] = rule {
     ('(' ~ softSpace ~ word ~ softSpace ~ ')') ~> { (wM: NodeMeta[SpeciesWord]) =>
-      wM.add(Seq((2, "Ambiguity: subgenus or superspecies found")))
+      wM.warn((2, "Ambiguity: subgenus or superspecies found"))
     }
   }
 
@@ -261,7 +262,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
 
   def uninomialCombo: RuleNodeMeta[Uninomial] = rule {
     (uninomialCombo1 | uninomialCombo2) ~> { (u: NodeMeta[Uninomial]) =>
-      u.add(warnings = Seq((2, "Combination of two uninomials")))
+      u.warn((2, "Combination of two uninomials"))
     }
   }
 
@@ -296,7 +297,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
 
   def abbrGenus: RuleNodeMeta[UninomialWord] = rule {
     capturePos(upperChar ~ lowerChar.? ~ '.') ~> { (wp: CapturePosition) =>
-      FactoryAST.uninomialWord(wp).add(warnings = Seq((3, "Abbreviated uninomial word")))
+      FactoryAST.uninomialWord(wp).warn((3, "Abbreviated uninomial word"))
     }
   }
 
@@ -305,8 +306,9 @@ class Parser(preprocessorResult: Preprocessor.Result,
       val word = input.sliceString(uw.node.pos.start, uw.node.pos.end)
       val hasForbiddenChars = word.exists { ch => sciCharsExtended.indexOf(ch) >= 0 ||
                                                   sciUpperCharExtended.indexOf(ch) >= 0 }
-      uw.add(warnings =
-        hasForbiddenChars.option { (2, "Non-standard characters in canonical") }.toVector)
+      uw.warn(
+        hasForbiddenChars.option { (2, "Non-standard characters in canonical") }.toSeq: _*
+      )
     }}
   }
 
@@ -316,7 +318,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
         val warns = (input.charAt(p.end - 1) == '?').option {
           (3, "Uninomial word with question mark")
         }.toVector
-        FactoryAST.uninomialWord(p).add(warnings = warns)
+        FactoryAST.uninomialWord(p).warn(warns: _*)
     }
   }
 
@@ -348,7 +350,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
             (2, "Non-standard characters in canonical")
           }
         )
-        FactoryAST.speciesWord(pos).add(warnings = warns.flatten)
+        FactoryAST.speciesWord(pos).warn(warns.flatten: _*)
     }
   }
 
@@ -388,7 +390,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
   def approxName: RuleNodeMeta[NamesGroup] = rule {
     uninomial ~ space ~ (approxName1 | approxName2) ~> {
       (n: NodeMeta[Name]) =>
-        FactoryAST.namesGroup(n).add(warnings = Seq((3, "Name is approximate")))
+        FactoryAST.namesGroup(n).warn((3, "Name is approximate"))
     }
   }
 
@@ -430,7 +432,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
         val bau1M = for { bau <- bauM; authors1 <- authors1M; _ <- exM }
                     yield bau.copy(authors = authors1)
 
-        bau1M.add(warnings = Seq((2, "Ex authors are not required")))
+        bau1M.warn((2, "Ex authors are not required"))
     }
   }
 
@@ -460,7 +462,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
       (aM: NodeMeta[AuthorsGroup], yM: NodeMeta[Year]) =>
         val authors1 = aM.map { a => a.copy(authors = a.authors.copy(years = Seq(yM.node))) }
         FactoryAST.authorship(authors = authors1, inparenthesis = true, basionymParsed = true)
-          .add(warnings = Seq((2, "Misformed basionym year")))
+                  .warn((2, "Misformed basionym year"))
     }
   }
 
@@ -480,7 +482,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
     '(' ~ softSpace ~ '(' ~ softSpace ~ authorship1 ~ softSpace ~ ')' ~ softSpace ~ ')' ~> {
       (aM: NodeMeta[Authorship]) =>
         val r = aM.map { a => a.copy(basionymParsed = true, inparenthesis = true) }
-        r.add(warnings = Seq((3, "Authroship in double parentheses")))
+        r.warn((3, "Authroship in double parentheses"))
     }
   }
 
@@ -499,15 +501,16 @@ class Parser(preprocessorResult: Preprocessor.Result,
         val auEmendOM = auEmendOOM.flatten
         val auExOM = auExOOM.flatten
         (auEmendOM, auExOM) match {
-          case (Some(auEmendM), Some(auExM)) => ???
+          case (Some(auEmendM), Some(auExM)) =>
+            throw new Exception("Authors ex and emend simultaneously?! Please report the issue!")
           case (None, auExMS) if auExMS.isDefined =>
             val auTeam1OM = for (auTeamM <- auTeamOM)
-                            yield auTeamM.add(auExMS.get.rawWarnings)
+                            yield auTeamM.warn(auExMS.get.rawWarnings.toSeq: _*)
             val ag = FactoryAST.authorsGroup(a, authorsEx = auTeam1OM)
-            ag.add(warnings = Seq((2, "Ex authors are not required")))
+            ag.warn((2, "Ex authors are not required"))
           case (auEmendMS, None) if auEmendMS.isDefined =>
             val auTeam1OM = for (auTeamM <- auTeamOM)
-                            yield auTeamM.add(auEmendMS.get.rawWarnings)
+                            yield auTeamM.warn(auEmendMS.get.rawWarnings.toSeq: _*)
             FactoryAST.authorsGroup(a, authorsEmend = auTeam1OM)
           case (None, None) =>
             FactoryAST.authorsGroup(a)
@@ -539,8 +542,8 @@ class Parser(preprocessorResult: Preprocessor.Result,
   def authorEx: RuleNodeMeta[AuthorWord] = rule {
     capturePos("ex" ~ '.'.? | "in") ~ space ~> { (pos: CapturePosition) =>
       val aw = FactoryAST.authorWord(pos)
-      val warns = (input.charAt(pos.end - 1) == '.').option { (3, "`ex` ends with dot") }.toVector
-      aw.add(warnings = warns)
+      val warnOpt = (input.charAt(pos.end - 1) == '.').option { (3, "`ex` ends with dot") }
+      aw.warn(warnOpt.toSeq: _*)
     }
   }
 
@@ -550,8 +553,9 @@ class Parser(preprocessorResult: Preprocessor.Result,
 
   def author: RuleNodeMeta[Author] = rule {
     (author1 | author2 | unknownAuthor) ~> { (auM: NodeMeta[Author]) =>
-      val warns = (auM.node.pos.end - auM.node.pos.start < 2).option { (3, "Author is too short") }
-      auM.add(warnings = warns.toVector)
+      val warnOpt =
+        (auM.node.pos.end - auM.node.pos.start < 2).option { (3, "Author is too short") }
+      auM.warn(warnOpt.toSeq: _*)
     }
   }
 
@@ -593,10 +597,10 @@ class Parser(preprocessorResult: Preprocessor.Result,
     capturePos("?" | (("auct" | "anon") ~ (&(spaceCharsEOI) | '.'))) ~> {
       (authPos: CapturePosition) =>
         val endsWithQuestion = input.charAt(authPos.end - 1) == '?'
-        val warns = Vector((2, "Author is unknown").some,
-                           endsWithQuestion.option((3, "Author as a question mark")))
+        val warns = Seq((2, "Author is unknown").some,
+                        endsWithQuestion.option((3, "Author as a question mark")))
         FactoryAST.author(Seq(FactoryAST.authorWord(authPos)), anon = true)
-                  .add(warnings = warns.flatten)
+                  .warn(warns.flatten: _*)
     }
   }
 
@@ -606,8 +610,8 @@ class Parser(preprocessorResult: Preprocessor.Result,
         val word = input.sliceString(awM.node.pos.start, awM.node.pos.end)
         val authorIsUpperCase =
           word.length > 2 && word.forall { ch => ch == dash || authCharUpperStr.indexOf(ch) >= 0 }
-        val warns = authorIsUpperCase.option { (2, "Author in upper case") }.toVector
-        awM.add(warnings = warns)
+        val warnOpt = authorIsUpperCase.option { (2, "Author in upper case") }
+        awM.warn(warnOpt.toSeq: _*)
     }
   }
 
@@ -654,25 +658,25 @@ class Parser(preprocessorResult: Preprocessor.Result,
     yearNumber ~ dash ~ capturePos(oneOrMore(Digit)) ~ zeroOrMore(Alpha ++ "?") ~> {
       (yStartM: NodeMeta[Year], yEnd: CapturePosition) =>
         val yrM = yStartM.map { yStart => yStart.copy(approximate = true, rangeEnd = Some(yEnd)) }
-        yrM.add(warnings = Seq((3, "Years range")))
+        yrM.warn((3, "Years range"))
     }
   }
 
   def yearWithDot: RuleNodeMeta[Year] = rule {
-    yearNumber ~ '.' ~> { (y: NodeMeta[Year]) => y.add(warnings = Seq((2, "Year with period"))) }
+    yearNumber ~ '.' ~> { (y: NodeMeta[Year]) => y.warn((2, "Year with period")) }
   }
 
   def yearApprox: RuleNodeMeta[Year] = rule {
     '[' ~ softSpace ~ yearNumber ~ softSpace ~ ']' ~> {
       (yM: NodeMeta[Year]) =>
         val yrM = yM.map { y => y.copy(approximate = true) }
-        yrM.add(warnings = Seq((3, "Year with square brakets")))
+        yrM.warn((3, "Year with square brakets"))
     }
   }
 
   def yearWithPage: RuleNodeMeta[Year] = rule {
     (yearWithChar | yearNumber) ~ softSpace ~ ':' ~ softSpace ~ oneOrMore(Digit) ~> {
-      (yM: NodeMeta[Year]) => yM.add(warnings = Seq((3, "Year with page info")))
+      (yM: NodeMeta[Year]) => yM.warn((3, "Year with page info"))
     }
   }
 
@@ -680,7 +684,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
     '(' ~ softSpace ~ (yearWithChar | yearNumber) ~ softSpace ~ ')' ~> {
       (yM: NodeMeta[Year]) =>
         val y1M = yM.map { y => y.copy(approximate = true) }
-        y1M.add(warnings = Seq((2, "Year with parentheses")))
+        y1M.warn((2, "Year with parentheses"))
       }
   }
 
@@ -688,7 +692,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
     yearNumber ~ capturePos(Alpha) ~> {
       (yM: NodeMeta[Year], pos: CapturePosition) =>
         val y1M = yM.map { y => y.copy(alpha = pos.some) }
-        y1M.add(warnings = Seq((2, "Year with latin character")))
+        y1M.warn((2, "Year with latin character"))
     }
   }
 
@@ -698,7 +702,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
         val yrM = FactoryAST.year(yPos)
         if (input.charAt(yPos.end - 1) == '?') {
           val yr1M = yrM.map { yr => yr.copy(approximate = true) }
-          yr1M.add(warnings = Seq((2, "Year with question mark")))
+          yr1M.warn((2, "Year with question mark"))
         } else yrM
     }
   }
@@ -713,7 +717,7 @@ object Parser {
 
   trait NodeMetaBase[T] {
     val node: T
-    val warnings: Vector[Warning]
+    val warnings: Set[Warning]
   }
 
   def lift[T <: AstNode](nodeOpt: Option[NodeMeta[T]]): NodeMetaOpt[T] = nodeOpt match {
@@ -722,11 +726,11 @@ object Parser {
   }
 
   def lift[T <: AstNode](nodeSeq: Seq[NodeMeta[T]]): NodeMetaSeq[T] = {
-    val warns = nodeSeq.flatMap { _.warnings }.toVector
+    val warns = nodeSeq.flatMap { _.warnings }.toSet
     NodeMetaSeq(nodeSeq.map { _.node }, warns)
   }
 
-  case class NodeMetaSeq[T <: AstNode](node: Seq[T], warnings: Vector[Warning] = Vector.empty)
+  case class NodeMetaSeq[T <: AstNode](node: Seq[T], warnings: Set[Warning] = Set.empty)
     extends NodeMetaBase[Seq[T]] {
 
     def map[M <: AstNode](f: Seq[T] => M): NodeMeta[M] = {
@@ -740,7 +744,7 @@ object Parser {
     }
   }
 
-  case class NodeMetaOpt[T <: AstNode](node: Option[T], warnings: Vector[Warning] = Vector.empty)
+  case class NodeMetaOpt[T <: AstNode](node: Option[T], warnings: Set[Warning] = Set.empty)
     extends NodeMetaBase[Option[T]] {
 
     def map[M <: AstNode](f: Option[T] => M): NodeMeta[M] = {
@@ -754,16 +758,15 @@ object Parser {
     }
   }
 
-  case class NodeMeta[T <: AstNode](node: T, warnings: Vector[Warning] = Vector.empty)
+  case class NodeMeta[T <: AstNode](node: T, warnings: Set[Warning] = Set.empty)
     extends NodeMetaBase[T] {
 
-    val rawWarnings: Vector[(Int, String)] = warnings.map { w => (w.level, w.message) }
+    val rawWarnings: Set[(Int, String)] = warnings.map { w => Warning.unapply(w).get }
 
-    def add(warnings: Seq[(Int, String)] = Seq.empty): NodeMeta[T] = {
+    def warn(warnings: (Int, String)*): NodeMeta[T] = {
       if (warnings.isEmpty) this
       else {
-        val ws =
-          this.warnings ++ warnings.map { case (level, message) => Warning(level, message, node) }
+        val ws = this.warnings ++ warnings.map { Warning.tupled }
         this.copy(warnings = ws)
       }
     }

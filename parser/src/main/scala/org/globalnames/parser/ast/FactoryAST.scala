@@ -7,7 +7,7 @@ import org.parboiled2.{CapturePosition, ParserInput}
 
 import scalaz.syntax.std.boolean._
 import scalaz.syntax.std.option._
-import scalaz.std.vector._
+import scalaz.std.set._
 
 import scala.io.Source
 
@@ -45,8 +45,8 @@ object FactoryAST {
       infraspecies.map { _.node }, comparison.map { _.node },
       approximation.map { _.node }, ignored, bacteria, genusParsed)
     val bacteriaHomonymWarning = bacteriaHomonymsGenera.contains(genus).option {
-      Vector(Warning(1, "The genus is a homonym of a bacterial genus", name))
-    }.getOrElse(Vector())
+      Warning(1, "The genus is a homonym of a bacterial genus")
+    }.toSet
     val warns = uninomial.warnings ++ subgenus.map { _.warnings }.orZero ++
       species.map { _.warnings }.orZero ++ infraspecies.map { _.warnings }.orZero ++
       comparison.map { _.warnings }.orZero ++ approximation.map { _.warnings }.orZero ++
@@ -68,7 +68,7 @@ object FactoryAST {
 
   def infraspeciesGroup(group: Seq[NodeMeta[Infraspecies]]): NodeMeta[InfraspeciesGroup] = {
     val ig = InfraspeciesGroup(group.map { _.node })
-    val warns = group.flatMap { _.warnings }.toVector
+    val warns = group.flatMap { _.warnings }.toSet
     NodeMeta(ig, warns)
   }
 
@@ -142,8 +142,8 @@ object FactoryAST {
   def authorsTeam(authors: Seq[NodeMeta[Author]],
                   years: Seq[NodeMeta[Year]] = Seq()): NodeMeta[AuthorsTeam] = {
     val at = AuthorsTeam(authors.map { _.node }, years.map { _.node })
-    val warns = authors.flatMap { _.warnings } ++ years.flatMap { _.warnings }
-    NodeMeta(at, warns.toVector)
+    val warns = authors.flatMap { _.warnings }.toSet ++ years.flatMap { _.warnings }
+    NodeMeta(at, warns)
   }
 
   def authorSep(pos: CapturePosition): NodeMeta[AuthorSep] = {
@@ -156,8 +156,8 @@ object FactoryAST {
              separator: Option[NodeMeta[AuthorSep]] = None,
              filius: Option[NodeMeta[AuthorWord]] = None): NodeMeta[Author] = {
     val au = Author(words.map { _.node }, anon, separator.map { _.node }, filius.map { _.node })
-    val warns = words.flatMap { _.warnings } ++ filius.map { _.warnings }.orZero
-    NodeMeta(au, warns.toVector)
+    val warns = words.flatMap { _.warnings }.toSet ++ filius.map { _.warnings }.orZero
+    NodeMeta(au, warns)
   }
 
   def authorWord(pos: CapturePosition,

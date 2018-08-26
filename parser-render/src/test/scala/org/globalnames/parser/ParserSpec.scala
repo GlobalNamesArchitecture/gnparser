@@ -29,10 +29,10 @@ class ParserSpec extends Specification with TestParserInstance {
       val res = parse("Homo\r\nsapiens")
 
       res.warnings must haveSize(2)
-      res.warnings(0).level === 2
-      res.warnings(0).message === "Multiple adjacent space characters"
-      res.warnings(1).level === 3
-      res.warnings(1).message === "Non-standard space characters"
+      res.warnings(0).level === 3
+      res.warnings(0).message === "Non-standard space characters"
+      res.warnings(1).level === 2
+      res.warnings(1).message === "Multiple adjacent space characters"
 
       res.canonical.map { _.value } should beSome(===("Homo sapiens"))
     }
@@ -51,18 +51,18 @@ class ParserSpec extends Specification with TestParserInstance {
       val res = parse("Homo sp.\r")
 
       res.warnings must haveSize(2)
-      res.warnings(0).level === 2
-      res.warnings(0).message === "Trailing whitespace"
-      res.warnings(1).level === 3
-      res.warnings(1).message === "Name is approximate"
+      res.warnings(0).level === 3
+      res.warnings(0).message === "Name is approximate"
+      res.warnings(1).level === 2
+      res.warnings(1).message === "Trailing whitespace"
 
       res.canonical.map { _.value } should beSome(===("Homo"))
     }
   }
 
   "Does not parse:" >> {
-    "whateva" in {
-      val res = scientificNameParser.fromString("whateva").summary()
+    "whatever" in {
+      val res = scientificNameParser.fromString("whatever").summary()
       res.parsed must beFalse
     }
   }

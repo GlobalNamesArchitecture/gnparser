@@ -25,11 +25,9 @@ class Summarizer(result: Result, version: String) {
     val quality = parsed.option { result.scientificName.quality }
 
     val qualityWarnings =
-      (!parsed || result.warnings.isEmpty) ? Option.empty[Vector[s.WarningSummary]] |
-        result.warnings.sorted
-          .map { w => (w.level, w.message) }
-          .distinct
-          .some
+      (parsed && result.warnings.nonEmpty).option {
+        result.warnings.map { w => (w.level, w.message) }
+      }
 
     val positions: Option[Seq[s.PositionSummary]] = parsed.option {
       positionsGenerator.generate.map { position =>
