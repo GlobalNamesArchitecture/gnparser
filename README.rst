@@ -435,8 +435,22 @@ http://0.0.0.0:9000
 Make sure to CGI-escape name strings for GET requests. An '&' character
 needs to be converted to '%26'
 
--  ``GET /api?q=Aus+bus|Aus+bus+D.+%26+M.,+1870`
+-  ``GET /api?q=Aus+bus|Aus+bus+D.+%26+M.,+1870``
 -  ``POST /api`` with request body of JSON array of strings
+
+.. code:: ruby
+
+    require 'json'
+    require 'net/http'
+
+    uri = URI('https://parser.globalnames.org/api')
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
+    request = Net::HTTP::Post.new(uri, 'Content-Type' => 'application/json',
+                                       'accept' => 'json')
+    request.body = ['Solanum mariae Särkinen & S.Knapp',
+                    'Ahmadiago Vánky 2004'].to_json
+    response = http.request(request)
 
 Usage as a Library
 ------------------
