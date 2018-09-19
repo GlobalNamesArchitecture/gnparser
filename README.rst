@@ -4,15 +4,6 @@ Global Names Parser
 .. image:: https://circleci.com/gh/GlobalNamesArchitecture/gnparser.svg?style=svg
     :target: https://circleci.com/gh/GlobalNamesArchitecture/gnparser
 
-Important Changes
------------------
-
-**The change as follows might break your code!** ``gnparser 0.4.1`` optionally returned
-``canonical_name.value_extended`` in output JSON. **Only** if input name contains ranks,
-the field contains a canonical name with ranks. Otherwise the field is ``null``. ``gnparser 1.0.2``
-renames the field to ``canonical_name.value_ranked``. Also it always returns it, even if input name
-doesn't contain ranks.
-
 Brief Intro
 -----------
 
@@ -23,7 +14,7 @@ For example, ``"Homo sapiens Linnaeus"`` is parsed into human readable informati
 Element   Meaning           Position
 ========  ================  ========
 Homo      genus             (0,4)
-sapiens   specific_epithet  (5,12)
+sapiens   specificEpithet   (5,12)
 Linnaeus  author            (13,21)
 ========  ================  ========
 
@@ -79,14 +70,14 @@ This approach works well for extracting canonical forms in simple cases.
 However, for complex scientific names and to parse scientific names into
 all semantic elements regular expressions often fail, unable to overcome
 the recursive nature of data embedded in names. By contrast, ``gnparser``
-is able to deal with the most complex scientific name strings.
+is able to deal with the most complex scientific name-strings.
 
-``gnparser`` takes a name string like
+``gnparser`` takes a name-string like
 ``Drosophila (Sophophora) melanogaster Meigen, 1830`` and returns parsed
-components in JSON format. We supply a `description of
-the output fields as JSON schema <http://globalnames.org/schemas/gnparser.json>`_.
+components in
+`JSON format <http://parser.globalnames.org/?q=Drosophila+%28Sophophora%29+melanogaster+Meigen%2C+1830>`_.
 This parser's behavior is defined in its tests and the `test
-file <https://raw.githubusercontent.com/GlobalNamesArchitecture/gnparser/master/parser/src/test/resources/test_data.txt>`_
+file <https://raw.githubusercontent.com/GlobalNamesArchitecture/gnparser/readme/parser-render/src/test/resources/test_data.txt>`_
 is a good source of information about parser's capabilities, its input and output.
 
 Speed
@@ -108,8 +99,7 @@ Threads   Millions/hr
 Features
 --------
 
--  Fast (~8x faster than biodiversity
-   `gem <https://github.com/GlobalNamesArchitecture/biodiversity>`_),
+-  Fast (~8x faster than `biodiversity gem <https://github.com/GlobalNamesArchitecture/biodiversity>`_),
    rock solid and elegant
 -  Extracts all elements from a name, not only canonical forms
 -  Works with very complex scientific names, including hybrids
@@ -130,16 +120,16 @@ Getting the simplest possible canonical form
 
 Canonical forms of a scientific name are the latinized components without
 annotations, authors or dates. They are great for matching names despite
-alternative spellings. Use the ``canonical_form`` field from parsing
+alternative spellings. Use the ``canonicalName -> value`` field from parsing
 results for this use case.
 
 Getting canonical form with infraspecies ranks
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In botany infraspecific ranks play an important role. Use
-``canonical_extended`` field to preserve them.
+``canonicalName -> valueRanked`` field to preserve them.
 
-Normalizing name strings
+Normalizing name-strings
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 There are many inconsistencies in how scientific names may be written.
@@ -149,19 +139,20 @@ ranks).
 Removing authorships in the middle of the name
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Many data administrators store name strings in two columns and split
+Many data administrators store name-strings in two columns and split
 them into "name part" and "authorship part". This practice misses some
 information when dealing with names like
 "*Prosthechea cochleata* (L.) W.E.Higgins *var. grandiflora*
 (Mutel) Christenson". However, if this is the use case, a combination of
-``canonical_extended`` with the authorship from the lowest taxon will do
-the job. You can also use ``--format simple`` flag for ``gnparse`` command line tool.
+``canonicalName -> valueRanked`` with the authorship from the lowest taxon
+will do the job. You can also use ``--format simple`` flag
+for ``gnparse`` command line tool.
 
 Figuring out if names are well-formed
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If there are problems with parsing a name, parser generates
-``quality_warning`` messages and lowers parsing ``quality`` of the name.
+``qualityWarnings`` messages and lowers parsing ``quality`` of the name.
 Quality values mean the following:
 
 -  ``"quality": 1`` - No problems were detected
@@ -172,14 +163,14 @@ Quality values mean the following:
 -  ``"parse": false`` - A string could not be recognized as a scientific
    name
 
-Creating stable GUIDs for name strings
+Creating stable GUIDs for name-strings
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ``gnparser`` uses UUID version 5 to generate its ``id`` field.
-There is algorithmic 1:1 relationship between the name string and the UUID.
+There is algorithmic 1:1 relationship between the name-string and the UUID.
 Moreover the same algorithm can be used in any popular language to
 generate the same UUID. Such IDs can be used to globally connect information
-about name strings or information associated with name-strings.
+about name-strings or information associated with name-strings.
 
 More information about UUID version 5 can be found in the `Global Names
 blog <http://globalnames.org/news/2015/05/31/gn-uuid-0-5-0/>`_.
@@ -193,7 +184,7 @@ Assembling canonical forms etc. from original spelling
 ``gnparser`` tries to correct problems with spelling, but sometimes it is
 important to keep original spelling of the canonical forms or authorships.
 The ``positions`` field attaches semantic meaning to every word in the
-original name string and allows users to create canonical forms or other
+original name-string and allows users to create canonical forms or other
 combinations using the original verbatim spelling of the words. Each element
 in ``positions`` contains 3 parts:
 
@@ -201,13 +192,13 @@ in ``positions`` contains 3 parts:
 2. start position of the word
 3. end position of the word
 
-For example ``["species", 6, 11]`` means that a specific epithet starts
+For example ``["specificEpithet", 6, 11]`` means that a specific epithet starts
 at 6th character and ends *before* 11th character of the string.
 
 Dependency Declaration for Java or Scala
 ----------------------------------------
 
-The artifacts for ``gnparser`` live on `Maven
+The artifacts for ``gnparser`` are located on `Maven
 Central <http://search.maven.org/#search%7Cga%7C1%7Cgnparser>`_ and can
 be set as a dependency in following ways:
 
@@ -253,24 +244,11 @@ Released Files
 ===============================   ===============================================
 File                              Description
 ===============================   ===============================================
-``gnparser-assembly-1.0.2.jar``   `Fat Jar <#fat-jar>`_
 ``gnparser-1.0.2.zip``            `Command line tool, web and socket
                                   server <#command-line-tool-and-socket-server>`_
 ``release-1.0.2.zip``             Source code's zip file
 ``release-1.0.2.tar.gz``          Source code's tar file
 ===============================   ===============================================
-
-Fat Jar
--------
-
-Sometimes it is beneficial to have a jar that contains everything
-necessary to run a program. Such a jar would include Scala and all
-required libraries.
-
-`Fat
-jar <https://github.com/GlobalNamesArchitecture/gnparser/releases/download/release-1.0.2/gnparser-assembly-1.0.2.jar>`_
-for ``gnparser`` can be found in the `current
-release <https://github.com/GlobalNamesArchitecture/gnparser/releases/tag/release-1.0.2>`_.
 
 Command Line Tool and Socket Server
 -----------------------------------
@@ -304,7 +282,7 @@ Usage of Executable
 Note that ``gnparser`` loads Java runtime environment every time it is
 called. As a result parsing one name at a time is **much** slower than
 parsing many names from a file. When parsing large file expect rates of
-6000-9000 name strings per second on one CPU.
+6000-9000 name-strings per second on one CPU.
 
 To parse one name
 
@@ -318,7 +296,10 @@ To parse names from a file (one name per line)
 
     gnparser file --input file_with_names.txt [--output output_file.json --threads 8]
 
-``file`` is the default command if no command is given. To parse names from STDIN to STDOUT:
+``file`` is the default command if no command is given. If you want to parse
+very large number of name-strings using ``file`` subcommand, break data into
+several files with about 500,000 name-strings in each. To parse names
+from STDIN to STDOUT:
 
 ::
 
@@ -329,18 +310,15 @@ the output representation. The values are ``simple`` for simple tab-delimited fo
 ``json-pretty`` and ``json-compact`` for the JSON extended pretty form and the compact form
 correspondingly
 
-Finally, ``gnparser`` tool is not optimized for parsing huge input files.
-`Speed`_ is measured by interacting with ``gnparser`` as the socket server. Using
-it as file parser intends that it constructs JSON tree in memory and then saves
-it to the disk. 1 million names might be hundreds of megabytes, while parsed
-results JSON would be more than gigabyte. ``gnparser`` would consume a lot of RAM and
-time to handle that.
+To parse a name-string
 
 ::
 
     gnparser name "Parus major Linnaeus, 1788" --format simple
 
 To see help
+
+Note that ``gnparser -h``  shows the ``JVM`` help instead of ``gnparser`` help.
 
 ::
 
@@ -377,23 +355,7 @@ core. For example in Ruby it would be:
     s.gets
 
 ``gnparser`` TCP server can parse new-line delimited string in a single run.
-For example if you have a file ``names.txt`` with many name-strings:
-
-.. code:: text
-    Dicalix glomeratus (King ex C.B.Clarke) Migo
-    Mongoliolites Bondarenko & Minzhin 1977
-    Spalacopsis macra Monn� & Giesbert 1994
-    Scaphiodon Heckel 1843 sec. Eschmeyer 1998
-    Cinnamomum calcareum Y.K.Li
-    Eleala
-    Haemanota abdominalis (Rothschild 1909)
-    Astronidium anomalum Merr. & L.M. Perry
-    Setaria chrysochaeta T. Durand & Schinz
-    Metalimnobia flavobdominalis
-    Clinopodium calamintha
-    ...
-
-it is more efficient to send several new-line delimited names at once through
+It is more efficient to send several new-line delimited names at once through
 the socket. ``gnparser`` server returns a string which contains new-line
 delimited chunks, where each line is a JSON string for a corresponding input
 name.
@@ -432,7 +394,7 @@ http://0.0.0.0:9000
 
     gnparser web --port 9000
 
-Make sure to CGI-escape name strings for GET requests. An '&' character
+Make sure to CGI-escape name-strings for GET requests. An '&' character
 needs to be converted to '%26'
 
 -  ``GET /api?q=Aus+bus|Aus+bus+D.+%26+M.,+1870``
@@ -593,9 +555,18 @@ Command                 Description
 ``sbt assembly``        Creates `fat jars <#fat-jar>`_ for
                         command line and web
 ``sbt stage``           Creates executables for
-                        command line and web
+                        command line and web at
+                        `./runner/target/universal/stage/bin`_
 ``sbt web/run``         Runs the web server in development mode
 =====================   =======================================
+
+Fat Jar
+-------
+
+Sometimes it is beneficial to have a jar that contains everything
+necessary to run a program. Such a jar would include Scala and all
+required libraries. In the table above you can see that it can be
+generated with the command ``sbt assembly``
 
 Docker container
 ----------------
