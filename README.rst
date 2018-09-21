@@ -517,9 +517,9 @@ Requirements
 
 -  `Git <https://git-scm.com/>`_
 -  `Scala version >=
-   2.10.6 <http://www.scala-lang.org/download/install.html>`_
+   2.11 <http://www.scala-lang.org/download/install.html>`_
 -  Java SDK version >= 1.8.0
--  `SBT <http://www.scala-sbt.org/download.html>`_ >= 0.13.12
+-  `SBT <http://www.scala-sbt.org/download.html>`_ >= 0.13.17
 
 Installation
 ~~~~~~~~~~~~
@@ -537,28 +537,34 @@ Project Structure
 
 The project consists of four parts:
 
--  ``parser`` contains core routines for parsing input string
--  ``examples`` contains usage samples for some popular programming
-   languages
+-  ``parser`` contains core routines for parsing input string. It is a minimalistic
+   library and doesn't contain any reference to any rendering library, such as JSON
+-  ``parser-render`` extends ``parser`` functionality to render inner structures
+   to JSON
+-  ``examples`` contains usage samples for some popular programming languages
 -  ``runner`` contains code required to run ``parser`` from a command
-   line as a standalone tool or to run it as a TCP/IP server
--  ``web`` contains a web app and a RESTful interface to ``parser``
+   line as a standalone tool, as a TCP/IP server, or as a web server
+-  ``spark-python`` provides facilities to call ``parser`` from Spark
+-  ``benchmark`` contains performance tests
 
 Commands
 ~~~~~~~~
 
-=====================   =======================================
-Command                 Description
-=====================   =======================================
-``sbt test``            Runs all tests
-``sbt ++2.10.6 test``   Runs all tests against Scala v2.10.6
-``sbt assembly``        Creates `fat jars <#fat-jar>`_ for
-                        command line and web
-``sbt stage``           Creates executables for
-                        command line and web at
-                        `./runner/target/universal/stage/bin`_
-``sbt web/run``         Runs the web server in development mode
-=====================   =======================================
+=========================================== =======================================
+Command                                     Description
+=========================================== =======================================
+``sbt test``                                Runs all tests
+``sbt ++2.11.12 test``                      Runs all tests against Scala v2.10.6
+``sbt assembly``                            Creates `fat jars <#fat-jar>`_ for
+                                            command line and web
+``sbt runner/universal:packageBin``         Creates executables for command line and
+                                            web at ``./runner/target/universal/``
+``sbt 'runner/run name "Homo sapiens"'``    Parses single name
+``sbt 'runner/run web --port 9000'``        Runs the web server in development mode
+                                            at port 9000
+``sbt 'runner/run socket -p 1234'``         Runs the TCP/IP server at port 1234
+=========================================== =======================================
+
 
 Fat Jar
 -------
