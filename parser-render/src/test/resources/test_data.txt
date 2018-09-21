@@ -981,7 +981,7 @@ Mycosphaerella eryngii (Fr. Duby) ex. Oudem. 1897
 #>
 
 #SECTION: Empty spaces<
-    Asplenium       X inexpectatum(E. L. Braun ex Friesner      )Morton
+    Asplenium       X inexpectatum(E. L. Braun ex Friesner      )Morton   
 {"nameStringId":"b736628c-0c76-5fdf-88d6-77e14b10bd28","parsed":true,"quality":3,"qualityWarnings":[[3,"Incomplete hybrid formula"],[2,"Ex authors are not required"],[2,"Multiple adjacent space characters"],[2,"Trailing whitespace"]],"parserVersion":"test_version","verbatim":"    Asplenium       X inexpectatum(E. L. Braun ex Friesner      )Morton   ","normalized":"Asplenium × inexpectatum (E. L. Braun ex Friesner) Morton","canonicalName":{"value":"Asplenium × inexpectatum","valueRanked":"Asplenium × inexpectatum"},"hybrid":true,"surrogate":false,"unparsedTail":"   ","virus":false,"bacteria":false,"details":[{"genus":{"value":"Asplenium"}},{"specificEpithet":{"value":"inexpectatum","authorship":{"value":"(E. L. Braun ex Friesner) Morton","basionymAuthorship":{"authors":["E. L. Braun"],"exAuthors":{"authors":["Friesner"]}},"combinationAuthorship":{"authors":["Morton"]}}}}],"positions":[["genus",4,13],["hybridChar",20,21],["specificEpithet",22,34],["authorWord",35,37],["authorWord",38,40],["authorWord",41,46],["authorWord",50,58],["authorWord",65,71]]}
 b736628c-0c76-5fdf-88d6-77e14b10bd28|    Asplenium       X inexpectatum(E. L. Braun ex Friesner      )Morton   |Asplenium × inexpectatum|Asplenium × inexpectatum|||3
 #>
@@ -1908,7 +1908,7 @@ ae8a4688-2b2a-5974-81bf-1962838a9cbe|Pseudocercospora__dendrobii|Pseudocercospor
 {"nameStringId":"1c4bb48b-d134-54c8-bac1-6771d1f4c9c6","parsed":true,"quality":3,"qualityWarnings":[[3,"Non-standard space characters"],[2,"Multiple adjacent space characters"]],"parserVersion":"test_version","verbatim":"  Oxalis_barrelieri","normalized":"Oxalis barrelieri","canonicalName":{"value":"Oxalis barrelieri","valueRanked":"Oxalis barrelieri"},"hybrid":false,"surrogate":false,"virus":false,"bacteria":false,"details":[{"genus":{"value":"Oxalis"},"specificEpithet":{"value":"barrelieri"}}],"positions":[["genus",2,8],["specificEpithet",9,19]]}
 1c4bb48b-d134-54c8-bac1-6771d1f4c9c6|  Oxalis_barrelieri|Oxalis barrelieri|Oxalis barrelieri|||3
 
-Oxalis_barrelieri
+Oxalis_barrelieri  
 {"nameStringId":"c57de7fd-b94e-54e1-a856-72b0668ab818","parsed":true,"quality":3,"qualityWarnings":[[3,"Non-standard space characters"],[2,"Trailing whitespace"]],"parserVersion":"test_version","verbatim":"Oxalis_barrelieri  ","normalized":"Oxalis barrelieri","canonicalName":{"value":"Oxalis barrelieri","valueRanked":"Oxalis barrelieri"},"hybrid":false,"surrogate":false,"unparsedTail":"  ","virus":false,"bacteria":false,"details":[{"genus":{"value":"Oxalis"},"specificEpithet":{"value":"barrelieri"}}],"positions":[["genus",0,6],["specificEpithet",7,17]]}
 c57de7fd-b94e-54e1-a856-72b0668ab818|Oxalis_barrelieri  |Oxalis barrelieri|Oxalis barrelieri|||3
 #>
