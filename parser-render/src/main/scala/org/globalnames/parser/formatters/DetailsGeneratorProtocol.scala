@@ -15,11 +15,7 @@ object DetailsGeneratorProtocol extends DefaultJsonProtocol {
 
   implicit val authorsTeamFormat = jsonFormat2(dg.AuthorsTeam)
 
-  implicit val authorsGroupFormat = jsonFormat3(dg.AuthorsGroup)
-
-  implicit val basionymAuthorsGroupFormat = jsonFormat4(dg.BasionymAuthorsGroup)
-
-  implicit val combinationAuthorsGroupFormat = jsonFormat4(dg.CombinationAuthorsGroup)
+  implicit val authorsGroupFormat = jsonFormat4(dg.AuthorsGroup)
 
   implicit val authorshipFormat = jsonFormat3(dg.Authorship)
 

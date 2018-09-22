@@ -48,7 +48,8 @@ private[formatters] class DetailsGenerator(result: parser.Result) {
     val exAuthorsDR = ag.authorsEx.map { at => authorsTeam(at) }
     val emendAuthorsDR = ag.authorsEmend.map { at => authorsTeam(at) }
     val agDR = dg.AuthorsGroup(
-      authors = authorsDR,
+      authors = authorsDR.authors,
+      years = authorsDR.years,
       exAuthors = exAuthorsDR,
       emendAuthors = emendAuthorsDR
     )
@@ -124,18 +125,8 @@ private[formatters] class DetailsGenerator(result: parser.Result) {
   private def authorship(as: ast.Authorship): dg.Authorship = {
     val auDR = dg.Authorship(
       value = result.normalizedAuthorship(as),
-      basionymAuthorship = as.basionym.map { ag => {
-        val agDR = authorsGroup(ag)
-        dg.BasionymAuthorsGroup(
-          agDR.authors.authors, agDR.authors.years, agDR.exAuthors, agDR.emendAuthors
-        )
-      }},
-      combinationAuthorship = as.combination.map { ag => {
-        val agDR = authorsGroup(ag)
-        dg.CombinationAuthorsGroup(
-          agDR.authors.authors, agDR.authors.years, agDR.exAuthors, agDR.emendAuthors
-        )
-      }}
+      basionymAuthorship = as.basionym.map { ag => authorsGroup(ag) },
+      combinationAuthorship = as.combination.map { ag => authorsGroup(ag) }
     )
     auDR
   }
@@ -162,25 +153,16 @@ object DetailsGenerator {
   }
 
   case class Authorship(value: Option[String],
-                        basionymAuthorship: Option[BasionymAuthorsGroup],
-                        combinationAuthorship: Option[CombinationAuthorsGroup])
+                        basionymAuthorship: Option[AuthorsGroup],
+                        combinationAuthorship: Option[AuthorsGroup])
 
   case class AuthorsTeam(authors: Seq[String],
                          years: Option[Seq[Year]])
 
-  case class AuthorsGroup(authors: AuthorsTeam,
+  case class AuthorsGroup(authors: Seq[String],
+                          years: Option[Seq[Year]],
                           exAuthors: Option[AuthorsTeam],
                           emendAuthors: Option[AuthorsTeam])
-
-  case class BasionymAuthorsGroup(authors: Seq[String],
-                                  years: Option[Seq[Year]],
-                                  exAuthors: Option[AuthorsTeam],
-                                  emendAuthors: Option[AuthorsTeam])
-
-  case class CombinationAuthorsGroup(authors: Seq[String],
-                                     years: Option[Seq[Year]],
-                                     exAuthors: Option[AuthorsTeam],
-                                     emendAuthors: Option[AuthorsTeam])
 
   case class Uninomial(value: String,
                        rank: Option[String] = None,
