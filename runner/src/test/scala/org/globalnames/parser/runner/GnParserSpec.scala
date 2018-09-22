@@ -15,11 +15,13 @@ import scalaz.syntax.std.option._
 import scala.io.Source
 
 class GnParserSpec extends Specification with StringMatchers with MatcherMacros {
+  val maximumParsableLines = 5
+
   "GnParserSpec" >> {
     "should parse from file by default and accept the flags" >> {
-      GnParser.parse(Array()).get must matchA[Config].mode(Mode.InputFileParsing)
-      GnParser.parse(Array("-i", "foo.txt")).get must matchA[Config].inputFile("foo.txt".some)
-      GnParser.parse(Array("-o", "foo.txt")).get must matchA[Config].outputFile("foo.txt".some)
+      new GnParser().parse(Array()).get must matchA[Config].mode(Mode.InputFileParsing)
+      new GnParser().parse(Array("-i", "foo.txt")).get must matchA[Config].inputFile("foo.txt".some)
+      new GnParser().parse(Array("-o", "foo.txt")).get must matchA[Config].outputFile("foo.txt".some)
     }
 
     "should have correct version" >> {
@@ -27,7 +29,13 @@ class GnParserSpec extends Specification with StringMatchers with MatcherMacros 
     }
 
     def gnparse(args: String): Unit = {
-      GnParser.main(args.split("\\s+"))
+      val gp = new GnParser() {
+        override protected[runner] def parse(args: Array[String]): Option[Config] = {
+          val cfg = super.parse(args)
+          cfg.map { c => c.copy(maximumParsableLines = maximumParsableLines) }
+        }
+      }
+      gp.run(args.split("\\s+"))
     }
 
     def withInOut(input: String, thunk: () => Unit): (Array[String], Array[String]) = {
@@ -98,7 +106,7 @@ class GnParserSpec extends Specification with StringMatchers with MatcherMacros 
       "should parse from <stdin> to output file" >> {
         val input = s"""$name1
                        |$name2""".stripMargin
-        val nameOutputFilePath = Files.createTempFile("names_output1", ".txt")
+        val nameOutputFilePath = Files.createTempFile("names_output", ".txt")
         val (lines, _) = withInOut(input, () => gnparse(s"file -f simple -o $nameOutputFilePath"))
         lines should beEmpty
 
@@ -108,7 +116,7 @@ class GnParserSpec extends Specification with StringMatchers with MatcherMacros 
       }
 
       "should parse from input file to output file" >> {
-        val nameOutputFilePath = Files.createTempFile("names_output2", ".txt")
+        val nameOutputFilePath = Files.createTempFile("names_output", ".txt")
         val (lines, _) = withOut { () =>
           gnparse(s"file -f simple -i $namesInputFilePath -o $nameOutputFilePath")
         }
@@ -118,6 +126,24 @@ class GnParserSpec extends Specification with StringMatchers with MatcherMacros 
         val linesOut = Source.fromFile(nameOutputFilePath.toFile).getLines.toVector
         linesOut should have size 2
         linesOut should contain(exactly(startWith(name1uuid), startWith(name2uuid)))
+      }
+
+      "should not parse too much lines from input" >> {
+        val inputChars = Vector.range('A', 'Z')
+        val input = inputChars.mkString("\n")
+        val nameOutputFilePath = Files.createTempFile("names_output", ".txt")
+        val (lines, linesErr) =
+          withInOut(input, () => gnparse(s"file -f simple -o $nameOutputFilePath"))
+        lines should beEmpty
+
+        val lastThreeLines = linesErr.slice(linesErr.length - 3, linesErr.length)
+        lastThreeLines(0) must_=== s"The input file contains ${inputChars.length} lines."
+        lastThreeLines(1) must_===
+          s"gnparser could only parse $maximumParsableLines lines or less for the single run."
+        lastThreeLines(2) must_=== s"Please, split the input file to chunks."
+
+        val linesOut = Source.fromFile(nameOutputFilePath.toFile).getLines.toVector
+        linesOut should beEmpty
       }
     }
   }

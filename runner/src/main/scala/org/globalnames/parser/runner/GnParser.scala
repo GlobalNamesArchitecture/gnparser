@@ -22,6 +22,84 @@ import scalaz.{\/, -\/, \/-}
 
 import spray.json._
 
+class GnParser {
+  import GnParser._
+
+  protected[runner] def parse(args: Array[String]): Option[Config] = {
+    val argsWithDefaultCommand =
+      (args.isEmpty || args(0).startsWith("-")) ? (fileCommandName +: args) | args
+    Console.err.println(actualCommandLineArgs(argsWithDefaultCommand))
+    val parsedArgs = parser.parse(argsWithDefaultCommand, Config())
+    parsedArgs
+  }
+
+  def run(args: Array[String]): Unit = {
+    for (cfg <- parse(args); mode = cfg.mode) {
+      mode match {
+        case Mode.InputFileParsing => startFileParse(cfg)
+        case Mode.TcpServerMode => TcpServer.run(cfg)
+        case Mode.WebServerMode => WebServer.run(cfg)
+        case Mode.NameParsing =>
+          val result = scientificNameParser.fromString(cfg.name)
+          println(cfg.renderResult(result))
+      }
+    }
+  }
+
+  def startFileParse(config: Config): Unit = {
+    val inputIteratorEither = config.inputFile match {
+      case None =>
+        Console.err.println(welcomeMessage)
+        val iterator = Iterator.continually(StdIn.readLine())
+        iterator.takeWhile { str => str != null && str.trim.nonEmpty }.toVector.right
+      case Some(fp) =>
+        val sourceFile = Source.fromFile(fp)
+        val inputLinesManaged = managed(sourceFile).map { _.getLines.toVector }
+        \/.fromEither(inputLinesManaged.either.either)
+    }
+
+    val namesParsed = inputIteratorEither match {
+      case -\/(errors) =>
+        Console.err.println(errors.map { _.getMessage }.mkString("\n"))
+        ParVector.empty
+      case \/-(res) if res.length > config.maximumParsableLines =>
+        Console.err.println(f"""
+            |The input file contains ${res.length}%,d lines.
+            |gnparser could only parse ${config.maximumParsableLines}%,d lines or less for the single run.
+            |Please, split the input file to chunks.""".stripMargin)
+        ParVector.empty
+      case \/-(res) =>
+        val namesInputPar = res.par
+        namesInputPar.tasksupport = new ForkJoinTaskSupport(new ForkJoinPool(config.parallelism))
+        val parsedNamesCount = new AtomicInteger()
+
+        Console.err.println(s"Running with parallelism: ${config.parallelism}")
+        val start = System.nanoTime()
+        for (name <- namesInputPar) yield {
+          val currentParsedCount = parsedNamesCount.incrementAndGet()
+          if (currentParsedCount % 10000 == 0) {
+            val elapsed = (System.nanoTime() - start) * 1e-6
+            val msg =
+              f"Parsed $currentParsedCount of ${namesInputPar.size} lines, elapsed $elapsed%.2fms"
+            Console.err.println(msg)
+          }
+          val result = scientificNameParser.fromString(name.trim)
+          result
+        }
+    }
+
+    val resultsString = config.resultsToString(namesParsed.seq)
+
+    config.outputFile match {
+      case Some(fp) =>
+        for { writer <- managed(new BufferedWriter(new FileWriter(fp))) } {
+          writer.write(resultsString)
+        }
+      case None => println(resultsString)
+    }
+  }
+}
+
 object GnParser {
   sealed trait Mode
   object Mode {
@@ -51,6 +129,7 @@ object GnParser {
                     host: String = "0.0.0.0",
                     port: Int = 4334,
                     name: String = "",
+                    maximumParsableLines: Int = 500000,
                     private val format: Format = Format.JsonPretty,
                     private val threadsNumber: Option[Int] = None) {
 
@@ -133,71 +212,7 @@ object GnParser {
 
   }
 
-  protected[runner] def parse(args: Array[String]): Option[Config] = {
-    val argsWithDefaultCommand =
-      (args.isEmpty || args(0).startsWith("-")) ? (fileCommandName +: args) | args
-    Console.err.println(actualCommandLineArgs(argsWithDefaultCommand))
-    val parsedArgs = parser.parse(argsWithDefaultCommand, Config())
-    parsedArgs
-  }
-
   def main(args: Array[String]): Unit = {
-    for {cfg <- parse(args); mode = cfg.mode} {
-      mode match {
-        case Mode.InputFileParsing => startFileParse(cfg)
-        case Mode.TcpServerMode => TcpServer.run(cfg)
-        case Mode.WebServerMode => WebServer.run(cfg)
-        case Mode.NameParsing =>
-          val result = scientificNameParser.fromString(cfg.name)
-          println(cfg.renderResult(result))
-      }
-    }
-  }
-
-  def startFileParse(config: Config): Unit = {
-    val inputIteratorEither = config.inputFile match {
-      case None =>
-        Console.err.println(welcomeMessage)
-        val iterator = Iterator.continually(StdIn.readLine())
-        iterator.takeWhile { str => str != null && str.trim.nonEmpty }.right
-      case Some(fp) =>
-        val sourceFile = Source.fromFile(fp)
-        val inputLinesManaged = managed(sourceFile).map { _.getLines.toVector }
-        \/.fromEither(inputLinesManaged.either.either)
-    }
-
-    val namesParsed = inputIteratorEither match {
-      case -\/(errors) =>
-        Console.err.println(errors.map { _.getMessage }.mkString("\n"))
-        ParVector.empty
-      case \/-(res) =>
-        val namesInputPar = res.toVector.par
-        namesInputPar.tasksupport = new ForkJoinTaskSupport(new ForkJoinPool(config.parallelism))
-        val parsedNamesCount = new AtomicInteger()
-
-        Console.err.println(s"Running with parallelism: ${config.parallelism}")
-        val start = System.nanoTime()
-        for (name <- namesInputPar) yield {
-          val currentParsedCount = parsedNamesCount.incrementAndGet()
-          if (currentParsedCount % 10000 == 0) {
-            val elapsed = (System.nanoTime() - start) * 1e-6
-            val msg =
-              f"Parsed $currentParsedCount of ${namesInputPar.size} lines, elapsed $elapsed%.2fms"
-            Console.err.println(msg)
-          }
-          val result = scientificNameParser.fromString(name.trim)
-          result
-        }
-    }
-
-    val resultsString = config.resultsToString(namesParsed.seq)
-
-    config.outputFile match {
-      case Some(fp) =>
-        for { writer <- managed(new BufferedWriter(new FileWriter(fp))) } {
-          writer.write(resultsString)
-        }
-      case None => println(resultsString)
-    }
+    new GnParser().run(args)
   }
 }
