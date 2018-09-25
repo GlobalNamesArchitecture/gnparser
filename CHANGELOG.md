@@ -1,3 +1,18 @@
+Version 1.0.2 (2018-09-25)
+--------------------------
+- Fix #470: Add logging of parsing time
+- Rearrange the codebase: `gnparser` core does not depend on JSON rendering library
+- Fix 463045a79: minor issues with multiple `year` node rendering
+- Fix cfd9b1d20: JSON snake_case is converted to camelCase
+- Fix 86fe367b3: spray-json is used for rendering, that drops redundant conversion in Akka-based servers of `runner`
+- Fix #381: cover TcpServiceConnection with Spec
+- Fix #471: Limit the size of input stream for CLI to 500K
+- README is synchronized with the project current state
+
+Version 1.0.1 (2018-08-06)
+--------------------------
+- Fix #468, #469: handle out-of-range positions tracking
+
 Version 1.0.0 (2018-07-09)
 --------------------------
 - Fix #463: the bug with positioning in the result JSON
