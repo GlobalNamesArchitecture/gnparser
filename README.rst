@@ -77,7 +77,7 @@ is able to deal with the most complex scientific name-strings.
 components in
 `JSON format <http://parser.globalnames.org/?q=Drosophila+%28Sophophora%29+melanogaster+Meigen%2C+1830>`_.
 This parser's behavior is defined in its tests and the `test
-file <https://raw.githubusercontent.com/GlobalNamesArchitecture/gnparser/readme/parser-render/src/test/resources/test_data.txt>`_
+file <https://github.com/GlobalNamesArchitecture/gnparser/blob/master/parser-render/src/test/resources/test_data.txt>`_
 is a good source of information about parser's capabilities, its input and output.
 
 Speed
