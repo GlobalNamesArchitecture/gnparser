@@ -18,9 +18,13 @@ sapiens   specificEpithet   (5,12)
 Linnaeus  author            (13,21)
 ========  ================  ========
 
-Try it as a web-service:
+Try it as a web-page:
 
 `https://parser.globalnames.org <https://parser.globalnames.org>`_
+
+Try it as an web-service:
+
+`https://parser.globalnames.org/doc/api <https://parser.globalnames.org/doc/api>`_
 
 Try it as a command line tool under Linux/Mac:
 
