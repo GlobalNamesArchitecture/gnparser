@@ -642,7 +642,7 @@ class Parser(preprocessorResult: Preprocessor.Result,
 
   def authorPrefix: RuleNodeMeta[AuthorWord] = rule {
     capturePos((("ab" | "af" | "bis" | "da" | "der" | "des" | "den" | "del" | "della" | "dela" |
-                 "de" | "di" | "du" | "el" | "la" | "le" | "ter" | "van" |
+                 "de" | "di" | "du" | "el" | "la" | "le" | "ter" | "van" | "zur" |
                  ("von" ~ (space ~ "dem").?) |
                  ("v" ~ (space ~ "d").?) | "d'" | "in't") ~ &(spaceCharsEOI)) |
       ("v." ~ (space.? ~ "d.").?) | "'t") ~> {

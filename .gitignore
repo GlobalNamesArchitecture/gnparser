@@ -35,6 +35,7 @@ output.json
 logs/
 .ensime*
 .vim.custom
+.vscode
 
 # Play Framework
 RUNNING_PID
