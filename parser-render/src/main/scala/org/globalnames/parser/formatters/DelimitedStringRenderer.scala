@@ -11,7 +11,7 @@ import Canonizer.Canonical
 
 private[formatters] class DelimitedStringRenderer(result: Result) {
 
-  private[parser] val ambiguousAuthorship: Boolean = {
+  val ambiguousAuthorship: Boolean = {
     val isAmbiguousOpt = for {
       hybrid <- result.scientificName.hybrid
       ng <- result.scientificName.namesGroup
@@ -19,14 +19,14 @@ private[formatters] class DelimitedStringRenderer(result: Result) {
     isAmbiguousOpt.getOrElse(false)
   }
 
-  private[parser] val authorshipDelimited: Option[String] =
+  val authorshipDelimited: Option[String] =
     (!ambiguousAuthorship).option {
       result.scientificName.authorship.flatMap {
         result.normalizedAuthorship
       }
     }.flatten
 
-  private[parser] def yearDelimited: Option[String] =
+  def yearDelimited: Option[String] =
     (!ambiguousAuthorship).option {
       val year: Option[ast.Year] = result.scientificName.namesGroup.flatMap { ng =>
         val infraspeciesYear = ng.name.infraspecies.flatMap {
@@ -66,7 +66,7 @@ private[formatters] class DelimitedStringRenderer(result: Result) {
     * "Nothoprodontia boliviana MONNÉ Miguel Ángel, MONNÉ Marcela Laura, 2004" authorship names as
     * Seq(Seq(MONNÉ, Miguel, Ángel), Seq(MONNÉ, Marcela, Laura))
     */
-  private[parser] val authorshipNames: Seq[Seq[String]] = {
+  val authorshipNames: Seq[Seq[String]] = {
     if (ambiguousAuthorship) {
       Seq()
     } else {

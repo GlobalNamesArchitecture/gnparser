@@ -6,7 +6,7 @@ import formatters._
 import spray.json._
 
 class RenderableResult(val result: Result, version: String) {
-  private[parser] val delimitedStringRenderer = DelimitedStringRenderer(result)
+  val delimitedStringRenderer = DelimitedStringRenderer(result)
   private[parser] val summarizer = new Summarizer(result, version)
 
   def summary(showCanonicalUuid: Boolean = false): Summarizer.Summary = {
