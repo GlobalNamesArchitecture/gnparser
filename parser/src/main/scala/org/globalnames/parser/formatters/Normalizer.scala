@@ -94,8 +94,8 @@ trait Normalizer { self: Result with ResultOps with Canonizer =>
   def normalizeAuthorSeparator(as: AuthorSep, last: Boolean): String = {
     stringOf(as) match {
       case "," => last ? " & " | ", "
-      case "&" | "and" | "et" => " & "
-      case "apud" => " apud "
+      case x if x.endsWith("apud") => " apud "
+      case x if x.endsWith("&") || x.endsWith("and") || x.endsWith("et") => " & "
     }
   }
 
