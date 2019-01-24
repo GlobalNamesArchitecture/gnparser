@@ -20,11 +20,11 @@ Linnaeus  author            (13,21)
 
 Try it as a web-page:
 
-`https://parser.globalnames.org <https://parser.globalnames.org>`_
+`http://scala.parser.globalnames.org <http://scala.parser.globalnames.org>`_
 
 Try it as an web-service:
 
-`https://parser.globalnames.org/doc/api <https://parser.globalnames.org/doc/api>`_
+`http://scala.parser.globalnames.org/doc/api <http://scala.parser.globalnames.org/doc/api>`_
 
 Try it as a command line tool under Linux/Mac:
 
@@ -83,7 +83,7 @@ is able to deal with the most complex scientific name-strings.
 ``gnparser`` takes a name-string like
 ``Drosophila (Sophophora) melanogaster Meigen, 1830`` and returns parsed
 components in
-`JSON format <http://parser.globalnames.org/?q=Drosophila+%28Sophophora%29+melanogaster+Meigen%2C+1830>`_.
+`JSON format <http://scala.parser.globalnames.org/?q=Drosophila+%28Sophophora%29+melanogaster+Meigen%2C+1830>`_.
 This parser's behavior is defined in its tests and the `test
 file <https://github.com/GlobalNamesArchitecture/gnparser/blob/master/parser-render/src/test/resources/test_data.txt>`_
 is a good source of information about parser's capabilities, its input and output.
@@ -424,7 +424,7 @@ needs to be converted to '%26'
     require 'json'
     require 'net/http'
 
-    uri = URI('https://parser.globalnames.org/api')
+    uri = URI('http://scala.parser.globalnames.org/api')
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
     request = Net::HTTP::Post.new(uri, 'Content-Type' => 'application/json',
