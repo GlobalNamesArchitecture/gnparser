@@ -4,12 +4,14 @@ Global Names Parser
 .. image:: https://circleci.com/gh/GlobalNamesArchitecture/gnparser.svg?style=svg
     :target: https://circleci.com/gh/GlobalNamesArchitecture/gnparser
     
-Important: Scala version of ``gnparser`` is entering `archive` state. Use https://gitlab.com/gogna/gnparser
+Important: Scala version of gnparser is entering an 'archive' state. Use https://gitlab.com/gogna/gnparser
 -----------------------------------------------------------------------------------------------------------
 
 We do not have a Scala expert in our group anymore, therefore we ported ``gnparser`` to Go. We 
 strongly recommend to switch to new version and submit bugs/suggestions according to its
 `CONTRIBUTING <https://gitlab.com/gogna/gnparser/blob/master/CONTRIBUTING.md>`_ doc.
+
+If you have means and a desire to continue development of Scala version please do so!
 
 Brief Intro
 -----------
