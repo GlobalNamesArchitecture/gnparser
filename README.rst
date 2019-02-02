@@ -9,7 +9,9 @@ Important: Scala version of gnparser is entering an 'archive' state. Use https:/
 
 We do not have a Scala expert in our group anymore, therefore we ported ``gnparser`` to Go. We 
 strongly recommend to switch to new version and submit bugs/suggestions according to its
-`CONTRIBUTING <https://gitlab.com/gogna/gnparser/blob/master/CONTRIBUTING.md>`_ doc.
+`CONTRIBUTING <https://gitlab.com/gogna/gnparser/blob/master/CONTRIBUTING.md>`_ doc. 
+
+Note: To submit issues you can login to GitLab with your GitHub account.
 
 If you have means and a desire to continue development of Scala version please do so!
 
