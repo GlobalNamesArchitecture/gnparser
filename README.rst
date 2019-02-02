@@ -7,9 +7,9 @@ Global Names Parser
 Important: Scala version of ``gnparser`` is entering `archive` state. Use https://gitlab.com/gogna/gnparser
 -----------------------------------------------------------------------------------------------------------
 
-We do not have a Scala expert in our reach anymore, therefore we ported ``gnparser`` to Go. We 
+We do not have a Scala expert in our group anymore, therefore we ported ``gnparser`` to Go. We 
 strongly recommend to switch to new version and submit bugs/suggestions according to its
-`CONTRIBUTING DOCUMENT<https://gitlab.com/gogna/gnparser/blob/master/CONTRIBUTING.md>`_
+`CONTRIBUTING doc. <https://gitlab.com/gogna/gnparser/blob/master/CONTRIBUTING.md>`_
 
 Brief Intro
 -----------
